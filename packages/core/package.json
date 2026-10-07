@@ -1,9 +1,11 @@
 {
   "dependencies": {
     "@adrienlcp/result": "^0.1.1",
-    "@arbor/protocol": "workspace:*"
+    "@arbor/protocol": "workspace:*",
+    "d3-hierarchy": "^3.1.2"
   },
   "devDependencies": {
+    "@types/d3-hierarchy": "^3.1.7",
     "vitest": "^5.0.2"
   },
   "exports": {
