@@ -79,6 +79,11 @@ Dev ports: web **5520** (`strictPort`), worker **8790** (5173, 5186, 5373,
 5391, 5480 and 8788 belong to other projects). The web dev server proxies
 `/api` to the worker, as in Scoreboard.
 
+Dates are Temporal, in `packages/core` and in `packages/protocol` too (the
+fuzzy-date schema checks a day exists in its month). Node 26 has it; the Worker
+and Safari do not, so each entry — the Worker's `index.ts`, the web app's
+`main.tsx` — loads `temporal-polyfill` first.
+
 ## Security notes
 
 - Keys: 128-bit random, base64url, sent in an `Authorization` header; only

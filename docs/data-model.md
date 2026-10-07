@@ -8,37 +8,51 @@ layout input) in `packages/core`.
 ## Entities
 
 **Person** — `id`, given names, surname, birth surname, sex (`female`,
-`male`, `unknown`), birth and death as events, `living` (derived: no death
-event and born less than 110 years ago, overridable), notes, portrait photo id.
+`male`, `unknown`), birth and death (each an *occurrence*: a fuzzy date and a
+place, both optional; a death with neither says "died, details unknown"),
+`livingOverride`, notes, portrait photo id. Living is derived (no death and
+born less than 110 years ago, or no birth date at all) unless overridden.
 
-**Union** — two partners (one may be unknown), `kind` (`marriage`, `pacs`,
-`partnership`, `unknown`), start event, end (`separation`, `divorce`, or
-none — a death ends it implicitly). A person has any number of unions, ordered
-by start date.
+**Union** — two partners (the second may be unknown), `kind` (`marriage`,
+`pacs`, `partnership`, `unknown`), start occurrence, end (`separation` or
+`divorce` with its occurrence, or none — a death ends it implicitly). Partners
+are fixed for the union's life. A person has any number of unions, ordered by
+start date.
 
 **Filiation** — a child, a parent, and a `kind`: `birth`, `adoption`, `step`,
 `foster`, `unknown`. A child links to a union through two filiations to its
 partners; a single parent is one filiation. Half-siblings fall out of this
 (one shared parent), never stored.
 
-**Event** — a kind (birth, death, marriage, divorce, baptism, burial, other with
-a label), a fuzzy date, a free-text place.
+**Life event** — what else happened to a person: baptism, burial, or other
+with a label; an occurrence. Birth and death sit on the person, marriage and
+divorce on the union.
 
-**Fuzzy date** — `{ precision: 'day' | 'month' | 'year', value }` plus a
-qualifier `exact | about | before | after | between` (with a second value for
-`between`). GEDCOM's `ABT`, `BEF`, `AFT`, `BET … AND …` map onto it. Sorting
-and age computation use the earliest plausible day; display says the qualifier
-("vers 1880").
+**Fuzzy date** — a calendar point (`{ precision: 'year' | 'month' | 'day',
+year, month?, day? }`) with a qualifier `exact | about | before | after`, or
+`between` two points. GEDCOM's `ABT`/`CAL`/`EST`, `BEF`, `AFT`, `BET … AND …`
+map onto it. Sorting and age computation use the earliest plausible day (the
+day before a "before", the day after an "after"); display says the qualifier
+("vers 1880"). A warning fires only when no reading of two dates can make them
+plausible, an "about" stretching two years either side.
 
 **Photo** — id, owner person (optional), caption, date, the full image and a
 thumbnail (see storage in `docs/architecture.md`).
 
 ## The change log is the source of truth
 
-Every write is an **operation** (`person.create`, `person.update` with the
-changed fields, `union.end`, `filiation.remove`, `photo.attach`, …) appended to
+Every write is an **operation** — `<entity>.create | update | remove` for
+unions, filiations, life events and photos, `person.create | update | bin |
+restore | remove`, and `group` for several applied all-or-nothing — appended to
 the family's log with `revision`, author (the person picked in "Who are you?",
-or a typed name), timestamp, and the before/after values of each field.
+or a typed name) and timestamp. An update carries the before and after values
+of the fields it changes; a removal carries the whole entity. Inverting one
+swaps them, so any operation followed by its inverse leaves the family as it
+was (tested over the demo family).
+
+Deleting a person **bins** them: every link is kept, the person is hidden, and
+restoring brings them back whole. `person.remove` exists only to undo a
+creation while nothing links to the person yet.
 
 - The current state is a projection of the log, kept materialised in tables
   for reads; replaying the log rebuilds it exactly (tested).
@@ -55,6 +69,8 @@ or a typed name), timestamp, and the before/after values of each field.
 - No one is their own ancestor (cycle check on every filiation write).
 - At most two `birth` parents per child.
 - A union's partners are two distinct people.
+- No new link (union, filiation, event, photo) points at a person in the bin.
+- A photo used as someone's portrait cannot be removed.
 - Dates: a child born before a parent's birth, or a death before a birth, is
   allowed but flagged (old records are wrong; the tool warns, never blocks).
 

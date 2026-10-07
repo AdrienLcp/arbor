@@ -10,7 +10,7 @@ Steps run in order: each one ends deployed and seen in a browser.
 | # | Step | In one line | State |
 |---|---|---|---|
 | 01 | Bootstrap | Workspace, Worker + web skeleton, CI, deploy to `arbor.adrienlcp.com` | done 2026-10-07 |
-| 02 | Genealogy core | Schemas, operations, log projection, fuzzy dates, rules, fixture family | to do |
+| 02 | Genealogy core | Schemas, operations, log projection, fuzzy dates, rules, fixture family | done 2026-10-07 |
 | 03 | Family storage | FamilyRoom Durable Object: SQLite schema, keys, change log, API | to do |
 | 04 | Design direction | `impeccable`: full example pages per direction, Adrien picks, DESIGN.md + tokens | to do |
 | 05 | Create and join | Landing, create a family, links + QR, "Who are you?", keeper settings | to do |

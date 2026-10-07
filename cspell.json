@@ -5,27 +5,56 @@
   "language": "en,en-GB",
   "overrides": [
     {
-      "filename": ["**/i18n/dictionary-fr.ts", "docs/**/*.md"],
+      "filename": [
+        "**/i18n/dictionary-fr.ts",
+        "docs/**/*.md",
+        "packages/core/src/family/demo-family.ts",
+        "packages/core/src/**/*.test.ts",
+        "packages/core/src/fuzzy-date/fuzzy-date-wording.ts"
+      ],
       "language": "en,en-GB,fr"
     }
   ],
   "version": "0.2",
   "words": [
     "adrienlcp",
+    "anne",
     "ANSEL",
+    "bertin",
     "biomejs",
     "cloudflare",
+    "dubois",
     "elkjs",
+    "emma",
     "esbuild",
+    "francoise",
+    "garnier",
     "GEDCOM",
+    "goff",
+    "guerin",
+    "guérin",
+    "helene",
+    "ines",
+    "jeanne",
+    "karim",
     "Lacourpaille",
+    "lucie",
+    "michel",
     "misreadable",
+    "noah",
+    "odile",
     "oklch",
     "OKLCH",
+    "pouldergat",
     "Referer",
     "refetches",
+    "rene",
     "rhysd",
+    "simone",
+    "sophie",
     "Supabase",
-    "workerd"
+    "thomas",
+    "workerd",
+    "yvonne"
   ]
 }
