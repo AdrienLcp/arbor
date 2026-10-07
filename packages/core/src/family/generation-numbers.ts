@@ -13,7 +13,9 @@ type Lineage = {
 
 /**
  * Each person's generation, counted from the oldest: a child is one below
- * its lowest parent, and partners share the lower of their two generations.
+ * its lowest parent, partners share the lower of their two generations, and
+ * someone with no known parent sits one above their highest child — so the
+ * parents of someone who married in stand right above them, not at the top.
  * Partners married across generations would push each other down forever,
  * so the count stops once no generation can be deeper than the family is large.
  */
@@ -27,6 +29,18 @@ export const generationNumbers = ({
 
   const links = [...filiations]
   const couples = [...unions].map(({ partnerIds }) => partnerIds)
+  const children = new Set(links.map(({ childId }) => childId))
+  const founderLinks = links.filter(({ parentId }) => !children.has(parentId))
+
+  const highestChildOfFounders = (): ReadonlyMap<EntityId, number> => {
+    const highest = new Map<EntityId, number>()
+    for (const { childId, parentId } of founderLinks) {
+      const child = generations.get(childId)
+      if (child === undefined) continue
+      highest.set(parentId, Math.min(highest.get(parentId) ?? child, child))
+    }
+    return highest
+  }
   const deepestPossible = generations.size
 
   const pushDown = (personId: EntityId, atLeast: number): boolean => {
@@ -48,6 +62,10 @@ export const generationNumbers = ({
     for (const { childId, parentId } of links) {
       const parent = generations.get(parentId)
       if (parent !== undefined && pushDown(childId, parent + 1)) hasMoved = true
+    }
+
+    for (const [founderId, highestChild] of highestChildOfFounders()) {
+      if (pushDown(founderId, highestChild - 1)) hasMoved = true
     }
 
     for (const [first, second] of couples) {

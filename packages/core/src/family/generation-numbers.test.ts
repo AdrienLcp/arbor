@@ -59,6 +59,43 @@ describe('[generations] numbering a family from the oldest', () => {
     expect(generations.get('lea')).toBe(3)
   })
 
+  it('[generations] places the parents of someone who married in one row above them', () => {
+    const generations = generationNumbers({
+      filiations: [
+        childOf('paul', 'louis'),
+        childOf('lea', 'paul'),
+        childOf('marc', 'jacques'),
+        childOf('marc', 'odette')
+      ],
+      personIds: ['louis', 'paul', 'lea', 'marc', 'jacques', 'odette'],
+      unions: [couple('lea', 'marc'), couple('jacques', 'odette')]
+    })
+
+    expect(Object.fromEntries(generations)).toEqual({
+      jacques: 2,
+      lea: 3,
+      louis: 1,
+      marc: 3,
+      odette: 2,
+      paul: 2
+    })
+  })
+
+  it('[generations] keeps someone with no known parent above all their children', () => {
+    const generations = generationNumbers({
+      filiations: [
+        childOf('paul', 'louis'),
+        childOf('lea', 'paul'),
+        childOf('lea', 'anne'),
+        childOf('tom', 'anne')
+      ],
+      personIds: ['louis', 'paul', 'lea', 'anne', 'tom'],
+      unions: []
+    })
+
+    expect(generations.get('anne')).toBe(1)
+  })
+
   it('[generations] ends on partners from different generations', () => {
     const generations = generationNumbers({
       filiations: [childOf('paul', 'louis')],
