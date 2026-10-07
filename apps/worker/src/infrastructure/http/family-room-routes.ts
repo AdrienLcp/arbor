@@ -27,13 +27,17 @@ import { apiError } from './api-response'
 import { FAMILY_ROUTES } from './family-routes'
 import { PHOTO_ROUTES } from './photo-routes'
 import type { RoomStores } from './room-request'
+import { SETTINGS_ROUTES } from './settings-routes'
 
-const ROOM_ROUTES = [...FAMILY_ROUTES, ...PHOTO_ROUTES, ...ACCESS_ROUTES].map(
-  (route) => ({
-    ...route,
-    urlPattern: new URLPattern({ pathname: route.pattern })
-  })
-)
+const ROOM_ROUTES = [
+  ...FAMILY_ROUTES,
+  ...PHOTO_ROUTES,
+  ...ACCESS_ROUTES,
+  ...SETTINGS_ROUTES
+].map((route) => ({
+  ...route,
+  urlPattern: new URLPattern({ pathname: route.pattern })
+}))
 
 /** The keys a new family starts with. */
 export type FamilyKeys = Omit<CreatedFamily, 'familyId'>
@@ -104,6 +108,7 @@ export const familyRoomRoutes = (database: SqlDatabase): FamilyRoomRoutes => {
 
   const stores: RoomStores = {
     access: createSqlAccessStore(database),
+    databaseSize: database.size,
     family: createSqlFamilyStore(database),
     photos: createSqlPhotoStore(database),
     transaction: database.transaction

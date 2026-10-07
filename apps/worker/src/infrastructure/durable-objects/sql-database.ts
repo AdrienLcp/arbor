@@ -7,6 +7,8 @@ export type SqlValue = Uint8Array | number | string | null
  */
 export type SqlDatabase = {
   exec: (query: string, ...bindings: SqlValue[]) => Record<string, unknown>[]
+  /** The bytes the database takes on disk, blobs included. */
+  size: () => number
   transaction: <T>(run: () => T) => T
 }
 
@@ -30,5 +32,6 @@ export const sqlDatabaseOf = (storage: DurableObjectStorage): SqlDatabase => ({
           ])
         )
       ),
+  size: () => storage.sql.databaseSize,
   transaction: (run) => storage.transactionSync(run)
 })

@@ -20,7 +20,9 @@ export const API_ROUTES = {
   keys: `${FAMILY}/keys`,
   operations: `${FAMILY}/operations`,
   photo: `${FAMILY}/photos/:photoId`,
-  photoFile: `${FAMILY}/photos/:photoId/:variant`
+  photoFile: `${FAMILY}/photos/:photoId/:variant`,
+  settings: `${FAMILY}/settings`,
+  usage: `${FAMILY}/usage`
 } as const
 
 type PathParameters<Pattern extends string> =
@@ -87,6 +89,26 @@ export const issueKeyInputSchema = z.object({
   role: z.enum(['reader', 'keeper'])
 })
 export type IssueKeyInput = z.infer<typeof issueKeyInputSchema>
+
+/** The settings a keeper changes, the others kept as they are. */
+export const updateFamilySettingsInputSchema = familySettingsSchema
+  .partial()
+  .refine(
+    (input) => Object.values(input).some((value) => value !== undefined),
+    {
+      message: 'At least one setting must change'
+    }
+  )
+export type UpdateFamilySettingsInput = z.infer<
+  typeof updateFamilySettingsInputSchema
+>
+
+/** How much of its storage the family uses, photos included. */
+export const storageUsageSchema = z.object({
+  limitBytes: z.int().min(1),
+  usedBytes: z.int().min(0)
+})
+export type StorageUsage = z.infer<typeof storageUsageSchema>
 
 export const keyListSchema = z.object({ keys: z.array(keyViewSchema) })
 export type KeyList = z.infer<typeof keyListSchema>

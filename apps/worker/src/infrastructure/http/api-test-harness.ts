@@ -32,7 +32,7 @@ const memoryFamilyRooms = (): FamilyRooms => {
 type Call = {
   body?: BodyInit | object
   key?: AccessKey
-  method?: 'DELETE' | 'GET' | 'POST'
+  method?: 'DELETE' | 'GET' | 'PATCH' | 'POST'
 }
 
 /** The whole API as the worker serves it, over in-memory families. */
@@ -76,5 +76,11 @@ export const openTestApi = () => {
 /** The address of one of a family's routes. */
 export const familyPath = (
   familyId: FamilyId,
-  route: 'family' | 'familyKey' | 'keys' | 'operations' = 'family'
+  route:
+    | 'family'
+    | 'familyKey'
+    | 'keys'
+    | 'operations'
+    | 'settings'
+    | 'usage' = 'family'
 ) => pathFor(API_ROUTES[route], { familyId })

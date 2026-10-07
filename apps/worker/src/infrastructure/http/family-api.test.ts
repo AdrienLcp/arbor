@@ -2,7 +2,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { issuedKeySchema } from '@arbor/protocol/access'
 import type { Author } from '@arbor/protocol/change-log'
-import { familyResponseSchema } from '@arbor/protocol/family'
+import {
+  familyResponseSchema,
+  familySettingsSchema
+} from '@arbor/protocol/family'
 import type { Operation } from '@arbor/protocol/operation'
 import type { Person } from '@arbor/protocol/person'
 import {
@@ -10,7 +13,8 @@ import {
   apiErrorResponseSchema,
   changeLogPageSchema,
   keyListSchema,
-  pathFor
+  pathFor,
+  storageUsageSchema
 } from '@arbor/protocol/routes'
 
 import { MAX_FAILED_KEY_CHECKS } from '@/domain/access/key-check-limit'
@@ -402,5 +406,99 @@ describe('[photos] images', () => {
     })
 
     expect(response.status).toBe(415)
+  })
+})
+
+describe('[settings] the keeper settings', () => {
+  it('[settings] lets the keeper change one setting, and the reader link follows it', async () => {
+    const { api, family, record } = await familyWithOneEdit()
+    await record(
+      [
+        {
+          person: personNamed('lucie', { notes: 'Allergique aux arachides' }),
+          type: 'person.create'
+        }
+      ],
+      0
+    )
+    const issued = await api.call(familyPath(family.familyId, 'keys'), {
+      body: { role: 'reader' },
+      key: family.keeperKey,
+      method: 'POST'
+    })
+    const reader = issuedKeySchema.parse(await issued.json())
+
+    const response = await api.call(familyPath(family.familyId, 'settings'), {
+      body: { hidesLivingFromReaders: false },
+      key: family.keeperKey,
+      method: 'PATCH'
+    })
+    const seen = await api.call(familyPath(family.familyId), {
+      key: reader.key
+    })
+
+    expect(familySettingsSchema.parse(await response.json())).toEqual({
+      hidesLivingFromReaders: false,
+      name: 'Famille Morel'
+    })
+    const readerView = familyResponseSchema.parse(await seen.json())
+    expect(readerView.settings.hidesLivingFromReaders).toBe(false)
+    expect(readerView.family.persons[0]?.notes).toBe('Allergique aux arachides')
+  })
+
+  it('[settings] keeps a contributor key from changing the settings', async () => {
+    const api = openTestApi()
+    const family = await api.createFamily()
+
+    const response = await api.call(familyPath(family.familyId, 'settings'), {
+      body: { name: 'Famille Durand' },
+      key: family.familyKey,
+      method: 'PATCH'
+    })
+
+    expect(response.status).toBe(403)
+    expect(await errorCodeOf(response)).toBe('forbidden')
+  })
+
+  it('[settings] refuses a change that sets nothing, or sets a blank name', async () => {
+    const api = openTestApi()
+    const family = await api.createFamily()
+    const patch = (body: object) =>
+      api.call(familyPath(family.familyId, 'settings'), {
+        body,
+        key: family.keeperKey,
+        method: 'PATCH'
+      })
+
+    const empty = await patch({})
+    const blankName = await patch({ name: '   ' })
+
+    expect(await errorCodeOf(empty)).toBe('invalid_input')
+    expect(await errorCodeOf(blankName)).toBe('invalid_input')
+  })
+
+  it('[settings] tells the keeper how much of the family storage is used', async () => {
+    const api = openTestApi()
+    const family = await api.createFamily()
+
+    const response = await api.call(familyPath(family.familyId, 'usage'), {
+      key: family.keeperKey
+    })
+    const usage = storageUsageSchema.parse(await response.json())
+
+    expect(usage.usedBytes).toBeGreaterThan(0)
+    expect(usage.limitBytes).toBeGreaterThan(usage.usedBytes)
+  })
+
+  it('[settings] keeps a contributor key from reading the storage usage', async () => {
+    const api = openTestApi()
+    const family = await api.createFamily()
+
+    const response = await api.call(familyPath(family.familyId, 'usage'), {
+      key: family.familyKey
+    })
+
+    expect(response.status).toBe(403)
+    expect(await errorCodeOf(response)).toBe('forbidden')
   })
 })

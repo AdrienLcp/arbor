@@ -1,5 +1,6 @@
 import { Result } from '@adrienlcp/result'
 
+import type { FamilySettings } from '@arbor/protocol/family'
 import type { Operation } from '@arbor/protocol/operation'
 import type { OperationRefusal } from '@arbor/protocol/operation-refusal'
 import {
@@ -7,7 +8,8 @@ import {
   type CreateFamilyInput,
   OPERATIONS_PAGE_SIZE,
   type RecordedOperations,
-  type RecordOperationsInput
+  type RecordOperationsInput,
+  type UpdateFamilySettingsInput
 } from '@arbor/protocol/routes'
 
 import { recordOperation } from '@arbor/core/family/record-operation'
@@ -39,6 +41,25 @@ export const openFamily = ({
   issueKey({ at, minted: keeperKey, role: 'keeper', store: access })
   issueKey({ at, minted: familyKey, role: 'contributor', store: access })
   return Result.success()
+}
+
+/**
+ * Applies a keeper's change to the family's settings. They stay out of the
+ * change log, which holds the family's people and what links them: a setting
+ * says who sees what, and changing it back is the keeper's undo.
+ */
+export const updateSettings = ({
+  changes,
+  current,
+  store
+}: {
+  changes: UpdateFamilySettingsInput
+  current: FamilySettings
+  store: FamilyStore
+}): FamilySettings => {
+  const updated = { ...current, ...changes }
+  store.writeSettings(updated)
+  return updated
 }
 
 /** A batch of edits is one entry of the log, so undoing it undoes the whole gesture. */
