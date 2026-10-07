@@ -17,7 +17,7 @@ Steps run in order: each one ends deployed and seen in a browser.
 | 06 | Tree view | Layout of real families, pan/zoom, focus on a person, mobile first | to do |
 | 07 | Person sheet and editing | Add/edit people, unions, filiations, events, photos | to do |
 | 08 | History and undo | Change log screen, undo, bin, restore to a moment | to do |
-| 09 | GEDCOM import and export | Bring in the father's existing tree; export back; full backup zip | to do |
-| 10 | Printable tree | The drawing exported as a print-ready PDF: scope, paper size, tiling, QR code | to do |
-| 11 | How are we related? | Kinship between two people, named in plain French | to do |
+| 09 | Printable tree | The drawing exported as a print-ready PDF: scope, paper size, tiling, QR code | to do |
+| 10 | How are we related? | Kinship between two people, named in plain French | to do |
+| 11 | GEDCOM import and export | Bring in the father's existing tree; export back; full backup zip | to do |
 | 12 | Launch | Public demo family, Lighthouse, README, portfolio project page, the father onboarded | to do |

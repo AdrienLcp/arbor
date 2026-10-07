@@ -1,4 +1,4 @@
-# 11 — How are we related?
+# 10 — How are we related?
 
 Goal: pick two people, read how they are related in plain French (and
 English), and see the path in the tree.

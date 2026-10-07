@@ -14,7 +14,7 @@ Goal: the father uses it for real, and the portfolio shows it.
    existing project pages and `.claude/plan/apps/README.md` there; drawing,
    texts per locale, link to the demo.
 5. Onboarding the father: Adrien creates the family with him, the GEDCOM
-   import (step 09) runs on his real file, he gets the keeper link saved in his
+   import (step 11) runs on his real file, he gets the keeper link saved in his
    browser and on paper, and prints a first tree from it.
 
 ## Done when

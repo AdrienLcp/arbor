@@ -1,4 +1,4 @@
-# 10 — Printable tree
+# 09 — Printable tree
 
 Goal: the father keeps printing — the drawn tree exported as a print-ready
 PDF that looks made for paper, not a screenshot of the screen.
