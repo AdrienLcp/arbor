@@ -1,3 +1,8 @@
+import { mkdirSync } from 'node:fs'
+import { resolve } from 'node:path'
+
+import { createTestHarness } from 'wrangler'
+
 import type { AccessKey, FamilyId } from '@arbor/protocol/access'
 import {
   API_ROUTES,
@@ -7,27 +12,9 @@ import {
   pathFor
 } from '@arbor/protocol/routes'
 
-import type { FamilyRooms } from '@/infrastructure/durable-objects/family-rooms'
-import { memorySqlDatabase } from '@/infrastructure/durable-objects/memory-sql-database'
-
-import { type FamilyRoomRoutes, familyRoomRoutes } from './family-room-routes'
-import { handleRequest } from './handle-request'
-
-const ORIGIN = 'http://localhost:8790'
-
-/** The families' objects of one test, each on its own in-memory SQLite, as Cloudflare gives each its own storage. */
-const memoryFamilyRooms = (): FamilyRooms => {
-  const rooms = new Map<FamilyId, FamilyRoomRoutes>()
-  const roomOf = (familyId: FamilyId) => {
-    const room = rooms.get(familyId) ?? familyRoomRoutes(memorySqlDatabase())
-    rooms.set(familyId, room)
-    return room
-  }
-  return {
-    create: (familyId, input) => roomOf(familyId).create(input),
-    fetch: (familyId, request) => roomOf(familyId).fetch(request)
-  }
-}
+const WORKER_DIRECTORY = resolve(import.meta.dirname, '../../..')
+/** `wrangler.jsonc` serves the built web app from here, and refuses to start without the folder. */
+const WEB_APP_DIRECTORY = resolve(WORKER_DIRECTORY, '../web/dist')
 
 type Call = {
   body?: BodyInit | object
@@ -35,29 +22,40 @@ type Call = {
   method?: 'DELETE' | 'GET' | 'PATCH' | 'POST'
 }
 
-/** The whole API as the worker serves it, over in-memory families. */
-export const openTestApi = () => {
-  const rooms = memoryFamilyRooms()
-  const assets = { fetch: async () => new Response('<!doctype html>') }
+const isJsonBody = (body: Call['body']): body is object =>
+  body !== undefined &&
+  !(body instanceof FormData) &&
+  !(body instanceof Uint8Array) &&
+  typeof body === 'object'
 
-  const call = (path: string, { body, key, method = 'GET' }: Call = {}) => {
-    const headers = new Headers()
+/**
+ * The Worker as `wrangler.jsonc` builds it: the front door and every family's
+ * Durable Object on the SQLite workerd gives it, one object per family.
+ */
+export const createTestApi = () => {
+  mkdirSync(WEB_APP_DIRECTORY, { recursive: true })
+  const server = createTestHarness({
+    workers: [{ configPath: resolve(WORKER_DIRECTORY, 'wrangler.jsonc') }]
+  })
+
+  const call = async (
+    path: string,
+    { body, key, method = 'GET' }: Call = {}
+  ) => {
+    const encoded = new Request('http://localhost', {
+      body: isJsonBody(body) ? JSON.stringify(body) : body,
+      headers: isJsonBody(body) ? { 'Content-Type': 'application/json' } : {},
+      method
+    })
+    const headers = Object.fromEntries(encoded.headers)
     if (key !== undefined) {
-      headers.set('Authorization', `${AUTHORIZATION_SCHEME} ${key}`)
+      headers.Authorization = `${AUTHORIZATION_SCHEME} ${key}`
     }
-    const isJson =
-      body !== undefined &&
-      !(body instanceof FormData) &&
-      typeof body === 'object'
-    if (isJson) headers.set('Content-Type', 'application/json')
-    return handleRequest(
-      new Request(new URL(path, ORIGIN), {
-        body: isJson ? JSON.stringify(body) : (body ?? null),
-        headers,
-        method
-      }),
-      { assets, rooms }
-    )
+    return server.fetch(path, {
+      body: body === undefined ? undefined : await encoded.arrayBuffer(),
+      headers,
+      method
+    })
   }
 
   const createFamily = async (
@@ -70,7 +68,14 @@ export const openTestApi = () => {
     return createdFamilySchema.parse(await response.json())
   }
 
-  return { call, createFamily }
+  return {
+    call,
+    createFamily,
+    start: async () => {
+      await server.listen()
+    },
+    stop: () => server.close()
+  }
 }
 
 /** The address of one of a family's routes. */

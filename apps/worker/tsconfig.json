@@ -5,8 +5,8 @@
       "@arbor/core/*": ["../../packages/core/src/*"],
       "@arbor/protocol/*": ["../../packages/protocol/src/*"]
     },
-    "types": ["@cloudflare/workers-types"]
+    "types": ["./worker-configuration.d.ts", "node"]
   },
   "extends": "../../tsconfig.json",
-  "include": ["scripts", "src", "vitest.config.ts"]
+  "include": ["scripts", "src", "vitest.config.ts", "worker-configuration.d.ts"]
 }

@@ -6,10 +6,7 @@ import type { SqlDatabase } from './sql-database'
 
 const sizeRowSchema = z.object({ size: z.int() })
 
-/**
- * A family database on Node's SQLite, in memory: what the tests run the
- * object's code on, since Cloudflare's test pool does not support Vitest 5 yet.
- */
+/** A family database on Node's SQLite, in memory: the stores' and rules' tests run the production SQL on it. */
 export const memorySqlDatabase = (): SqlDatabase => {
   const sqlite = new DatabaseSync(':memory:')
   return {

@@ -3,31 +3,30 @@ import type { Result } from '@adrienlcp/result'
 
 import type { CreateFamilyInput } from '@arbor/protocol/routes'
 
-import type { Env } from '@/env'
 import {
   type FamilyKeys,
-  type FamilyRoomRoutes,
-  familyRoomRoutes
-} from '@/infrastructure/http/family-room-routes'
+  type FamilyRoomApp,
+  familyRoomApp
+} from '@/infrastructure/http/family-room-app'
 
 import { sqlDatabaseOf } from './sql-database'
 
 /** One family: its tree, its change log, its photos and its access keys, in the object's own SQLite. */
 export class FamilyRoom extends DurableObject<Env> {
-  private readonly routes: FamilyRoomRoutes
+  private readonly app: FamilyRoomApp
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env)
-    this.routes = familyRoomRoutes(sqlDatabaseOf(ctx.storage))
+    this.app = familyRoomApp(sqlDatabaseOf(ctx.storage))
   }
 
   create(
     input: CreateFamilyInput
   ): Promise<Result<FamilyKeys, 'family_exists'>> {
-    return this.routes.create(input)
+    return this.app.create(input)
   }
 
   override fetch(request: Request): Promise<Response> {
-    return this.routes.fetch(request)
+    return this.app.fetch(request)
   }
 }

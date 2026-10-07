@@ -1,3 +1,6 @@
+import type { ErrorHandler } from 'hono'
+import { HTTPException } from 'hono/http-exception'
+
 import {
   OPERATION_REFUSALS,
   type OperationRefusal
@@ -42,3 +45,20 @@ export const apiError = (code: ApiErrorCode, message: string): Response =>
 
 export const apiJson = (body: unknown, status = 200): Response =>
   Response.json(body, { headers: NOT_STORED, status })
+
+/**
+ * The one answer to what no route handled: a body the framework could not
+ * read is the client's input; anything else is a bug, logged once.
+ */
+export const answerUnexpected: ErrorHandler = (error) => {
+  if (error instanceof HTTPException) {
+    const body: ApiErrorResponse = {
+      code: 'invalid_input',
+      message: error.message
+    }
+    return apiJson(body, error.status)
+  }
+
+  console.error({ error, message: 'Unhandled error' })
+  return apiError('internal_error', 'Something went wrong')
+}

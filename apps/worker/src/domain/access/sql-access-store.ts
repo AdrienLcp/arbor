@@ -2,10 +2,10 @@ import { z } from 'zod'
 
 import { keyIdSchema, ROLES } from '@arbor/protocol/access'
 
-import type { AccessStore } from '@/domain/access/access-store'
 import { parseInstant, toIsoString } from '@/infrastructure/dates'
+import type { SqlDatabase } from '@/infrastructure/durable-objects/sql-database'
 
-import type { SqlDatabase } from './sql-database'
+import type { AccessStore } from './access-store'
 
 const keyRowSchema = z.object({
   created_at: z.string(),

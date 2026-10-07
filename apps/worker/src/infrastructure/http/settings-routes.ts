@@ -1,3 +1,5 @@
+import { zValidator } from '@hono/zod-validator'
+
 import {
   API_ROUTES,
   updateFamilySettingsInputSchema
@@ -6,37 +8,32 @@ import {
 import { updateSettings } from '@/domain/family/family-service'
 import { storageUsageOf } from '@/domain/family/storage-usage'
 
-import { apiError, apiJson } from './api-response'
-import { readJsonBody } from './request-body'
-import { admittedSettingsOf, type RoomRoute } from './room-request'
+import { admitted } from './admission'
+import { apiJson } from './api-response'
+import { invalidInput } from './invalid-input'
+import { admittedSettingsOf, type RoomApp } from './room-context'
 
 /** What the keeper's settings screen reads and changes. */
-export const SETTINGS_ROUTES: readonly RoomRoute[] = [
-  {
-    handle: async (roomRequest) => {
-      const input = updateFamilySettingsInputSchema.safeParse(
-        await readJsonBody(roomRequest.request)
-      )
-      if (!input.success) return apiError('invalid_input', input.error.message)
-
-      const { stores } = roomRequest
+export const registerSettingsRoutes = (app: RoomApp) => {
+  app.patch(
+    API_ROUTES.settings,
+    admitted('keeper'),
+    zValidator('json', updateFamilySettingsInputSchema, invalidInput),
+    (context) => {
+      const { stores } = context.var
+      const changes = context.req.valid('json')
       const updated = stores.transaction(() =>
         updateSettings({
-          changes: input.data,
-          current: admittedSettingsOf(roomRequest),
+          changes,
+          current: admittedSettingsOf(stores),
           store: stores.family
         })
       )
       return apiJson(updated)
-    },
-    method: 'PATCH',
-    needs: 'keeper',
-    pattern: API_ROUTES.settings
-  },
-  {
-    handle: ({ stores }) => apiJson(storageUsageOf(stores.databaseSize())),
-    method: 'GET',
-    needs: 'keeper',
-    pattern: API_ROUTES.usage
-  }
-]
+    }
+  )
+
+  app.get(API_ROUTES.usage, admitted('keeper'), (context) =>
+    apiJson(storageUsageOf(context.var.stores.databaseSize()))
+  )
+}

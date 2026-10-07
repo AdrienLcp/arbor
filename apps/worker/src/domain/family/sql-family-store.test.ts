@@ -7,11 +7,11 @@ import { DEMO_FAMILY_OPERATIONS } from '@arbor/core/family/demo-family'
 import type { FamilyState } from '@arbor/core/family/family-state'
 import { replayOperations } from '@arbor/core/family/replay-operations'
 
-import { recordOperations } from '@/domain/family/family-service'
-import type { FamilyStore } from '@/domain/family/family-store'
+import { migrateFamilySchema } from '@/infrastructure/durable-objects/family-schema'
+import { memorySqlDatabase } from '@/infrastructure/durable-objects/memory-sql-database'
 
-import { migrateFamilySchema } from './family-schema'
-import { memorySqlDatabase } from './memory-sql-database'
+import { recordOperations } from './family-service'
+import type { FamilyStore } from './family-store'
 import { createSqlFamilyStore } from './sql-family-store'
 
 const AT = '2026-10-07T18:00:00.000Z'

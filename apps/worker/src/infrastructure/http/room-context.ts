@@ -1,4 +1,5 @@
-import type { Role } from '@arbor/protocol/access'
+import type { Hono } from 'hono'
+
 import type { FamilySettings } from '@arbor/protocol/family'
 
 import type { Admission } from '@/domain/access/access-service'
@@ -19,24 +20,17 @@ export type RoomStores = {
   transaction: <T>(run: () => T) => T
 }
 
-/** A request to a family, once its key has been checked. */
-export type RoomRequest = {
+/** What a request to a family carries once the object has admitted its key. */
+export type RoomVariables = {
   admission: Admission
-  parameters: Readonly<Record<string, string | undefined>>
-  request: Request
   stores: RoomStores
 }
 
-/** One API route a family's object answers, and the least role allowed on it. */
-export type RoomRoute = {
-  handle: (roomRequest: RoomRequest) => Response | Promise<Response>
-  method: 'DELETE' | 'GET' | 'PATCH' | 'POST'
-  needs: Role
-  pattern: string
-}
+/** The API one family's object answers. */
+export type RoomApp = Hono<{ Variables: RoomVariables }>
 
 /** The settings of the family a key was admitted to, which it has from its creation on. */
-export const admittedSettingsOf = ({ stores }: RoomRequest): FamilySettings => {
+export const admittedSettingsOf = (stores: RoomStores): FamilySettings => {
   const settings = stores.family.readSettings()
   if (settings === null) {
     throw new Error('An admitted request reached a family with no settings')
@@ -45,8 +39,8 @@ export const admittedSettingsOf = ({ stores }: RoomRequest): FamilySettings => {
 }
 
 /** The family as it stands, seen by the role of the key that asked. */
-export const viewerOf = (roomRequest: RoomRequest): Viewer => ({
-  role: roomRequest.admission.role,
-  settings: admittedSettingsOf(roomRequest),
+export const viewerOf = ({ admission, stores }: RoomVariables): Viewer => ({
+  role: admission.role,
+  settings: admittedSettingsOf(stores),
   today: utcDayOf(now())
 })

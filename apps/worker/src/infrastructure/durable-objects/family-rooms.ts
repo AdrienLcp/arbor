@@ -3,7 +3,7 @@ import type { Result } from '@adrienlcp/result'
 import type { FamilyId } from '@arbor/protocol/access'
 import type { CreateFamilyInput } from '@arbor/protocol/routes'
 
-import type { FamilyKeys } from '@/infrastructure/http/family-room-routes'
+import type { FamilyKeys } from '@/infrastructure/http/family-room-app'
 
 import type { FamilyRoom } from './family-room'
 

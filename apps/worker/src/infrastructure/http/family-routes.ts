@@ -1,3 +1,4 @@
+import { zValidator } from '@hono/zod-validator'
 import { z } from 'zod'
 
 import {
@@ -11,58 +12,55 @@ import { toFamilyResponse } from '@/domain/family/family-view'
 import { now } from '@/infrastructure/clock'
 import { toIsoString } from '@/infrastructure/dates'
 
+import { admitted } from './admission'
 import { apiError, apiJson } from './api-response'
-import { readJsonBody } from './request-body'
-import { type RoomRoute, viewerOf } from './room-request'
+import { invalidInput } from './invalid-input'
+import { type RoomApp, viewerOf } from './room-context'
 
-const afterRevisionSchema = z.coerce.number().pipe(z.int().min(0)).default(0)
+const logPageQuerySchema = z.object({
+  [AFTER_REVISION_QUERY]: z.coerce.number().pipe(z.int().min(0)).default(0)
+})
 
 /** The family's tree and its change log. */
-export const FAMILY_ROUTES: readonly RoomRoute[] = [
-  {
-    handle: (roomRequest) => {
-      const { family } = roomRequest.stores
-      return apiJson(
-        toFamilyResponse({
-          family: family.readFamily(),
-          revision: family.readRevision(),
-          viewer: viewerOf(roomRequest)
-        })
-      )
-    },
-    method: 'GET',
-    needs: 'reader',
-    pattern: API_ROUTES.family
-  },
-  {
-    handle: async ({ request, stores }) => {
-      const input = recordOperationsInputSchema.safeParse(
-        await readJsonBody(request)
-      )
-      if (!input.success) return apiError('invalid_input', input.error.message)
+export const registerFamilyRoutes = (app: RoomApp) => {
+  app.get(API_ROUTES.family, admitted('reader'), (context) => {
+    const { family } = context.var.stores
+    return apiJson(
+      toFamilyResponse({
+        family: family.readFamily(),
+        revision: family.readRevision(),
+        viewer: viewerOf(context.var)
+      })
+    )
+  })
 
+  app.post(
+    API_ROUTES.operations,
+    admitted('contributor'),
+    zValidator('json', recordOperationsInputSchema, invalidInput),
+    (context) => {
+      const { stores } = context.var
+      const input = context.req.valid('json')
       const at = toIsoString(now())
       const recorded = stores.transaction(() =>
-        recordOperations({ at, input: input.data, store: stores.family })
+        recordOperations({ at, input, store: stores.family })
       )
       return recorded.status === 'failure'
         ? apiError(recorded.error, 'The family refused the operations')
         : apiJson(recorded.data, 201)
-    },
-    method: 'POST',
-    needs: 'contributor',
-    pattern: API_ROUTES.operations
-  },
-  {
-    handle: ({ request, stores }) => {
-      const after = afterRevisionSchema.safeParse(
-        new URL(request.url).searchParams.get(AFTER_REVISION_QUERY) ?? undefined
+    }
+  )
+
+  app.get(
+    API_ROUTES.operations,
+    admitted('contributor'),
+    zValidator('query', logPageQuerySchema, invalidInput),
+    (context) =>
+      apiJson(
+        readLogPage({
+          after: context.req.valid('query')[AFTER_REVISION_QUERY],
+          store: context.var.stores.family
+        })
       )
-      if (!after.success) return apiError('invalid_input', after.error.message)
-      return apiJson(readLogPage({ after: after.data, store: stores.family }))
-    },
-    method: 'GET',
-    needs: 'contributor',
-    pattern: API_ROUTES.operations
-  }
-]
+  )
+}

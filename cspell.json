@@ -1,6 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
-  "ignorePaths": ["dist", "node_modules", "pnpm-lock.yaml", ".wrangler"],
+  "ignorePaths": [
+    "dist",
+    "node_modules",
+    "pnpm-lock.yaml",
+    ".wrangler",
+    "worker-configuration.d.ts"
+  ],
   "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
   "language": "en,en-GB",
   "overrides": [

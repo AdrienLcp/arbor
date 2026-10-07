@@ -12,9 +12,9 @@ import { unionSchema } from '@arbor/protocol/union'
 
 import type { FamilyState } from '@arbor/core/family/family-state'
 
-import type { FamilyStore } from '@/domain/family/family-store'
+import type { SqlDatabase } from '@/infrastructure/durable-objects/sql-database'
 
-import type { SqlDatabase } from './sql-database'
+import type { FamilyStore } from './family-store'
 
 const SETTINGS_KEY = 'family'
 

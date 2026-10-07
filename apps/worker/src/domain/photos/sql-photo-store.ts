@@ -2,9 +2,9 @@ import { z } from 'zod'
 
 import { PHOTO_CONTENT_TYPES, PHOTO_VARIANTS } from '@arbor/protocol/photo-file'
 
-import type { PhotoStore } from '@/domain/photos/photo-store'
+import type { SqlDatabase } from '@/infrastructure/durable-objects/sql-database'
 
-import type { SqlDatabase } from './sql-database'
+import type { PhotoStore } from './photo-store'
 
 const fileRowSchema = z.object({
   bytes: z.instanceof(Uint8Array),
