@@ -4,6 +4,7 @@ export const PAGE_ROUTES = {
   family: '/f/:familyId',
   familySettings: '/f/:familyId/settings',
   familyShare: '/f/:familyId/share',
+  familyTree: '/f/:familyId/tree',
   home: '/',
   openLink: '/link',
   whoAmI: '/f/:familyId/me'

@@ -14,6 +14,8 @@ type GhostSlotProps = {
   hint: string
   /** The number printed above the slot. */
   slotNumber: number
+  /** Hands the slot its size, `--slot-width` and `--slot-height`. */
+  style?: React.CSSProperties
   /** The word printed in the empty outline: "Stick here". */
   title: string
 }
@@ -24,15 +26,19 @@ export const GhostSlot: React.FC<GhostSlotProps> = ({
   generation,
   hint,
   slotNumber,
+  style,
   title
 }) => (
-  <div className={classNames('slot', generationClass(generation), className)}>
+  <span
+    className={classNames('slot', generationClass(generation), className)}
+    style={style}
+  >
     <span className='slot-number'>{slotNumberText(slotNumber)}</span>
-    <div className='slot-bed'>
-      <div className='ghost-slot'>
+    <span className='slot-bed'>
+      <span className='ghost-slot'>
         <span className='ghost-slot-title'>{title}</span>
         <span className='ghost-slot-hint'>{hint}</span>
-      </div>
-    </div>
-  </div>
+      </span>
+    </span>
+  </span>
 )

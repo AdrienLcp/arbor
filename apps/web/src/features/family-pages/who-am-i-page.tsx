@@ -9,6 +9,7 @@ import {
   rememberedMe,
   rememberMe
 } from '@/features/family-access/remembered-families'
+import { personName } from '@/features/people/person-name'
 import { today } from '@/infrastructure/clock'
 import {
   familyPathFor,
@@ -29,7 +30,6 @@ import { useTranslate } from '@/presentation/i18n/i18n-context'
 import { useOpenFamily } from './family-loader'
 import { listedPeople } from './family-people'
 import { PersonLine } from './person-line'
-import { personName } from './person-name'
 
 import './who-am-i-page.sass'
 

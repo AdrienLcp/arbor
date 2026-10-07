@@ -1,0 +1,44 @@
+@use '../styles/focus'
+@use '../styles/typography'
+
+@layer components
+  .segmented-control
+    display: grid
+    gap: var(--space-xs)
+
+    .segmented-label
+      @include typography.label
+      color: var(--ink-soft)
+
+    .segmented-options
+      border: var(--stroke-thin) solid var(--ghost)
+      border-radius: var(--radius-frame)
+      display: inline-flex
+      gap: var(--space-xs)
+      padding: var(--space-xs)
+      width: fit-content
+
+    .segmented-option
+      @include focus.ring
+      @include typography.label-strong
+      align-items: center
+      border-radius: var(--radius-control)
+      color: var(--ink-soft)
+      cursor: pointer
+      display: inline-flex
+      justify-content: center
+      min-height: var(--target)
+      min-width: var(--target)
+      padding-inline: var(--space-m)
+      transition: background-color var(--transition-fast, 0s) var(--ease-out), color var(--transition-fast, 0s) var(--ease-out)
+
+      &[data-hovered]:not([data-selected])
+        background: var(--paper-2)
+        color: var(--ink)
+
+      &[data-pressed]:not([data-selected])
+        background: var(--paper-deep)
+
+      &[data-selected]
+        background: var(--g3)
+        color: var(--on-g3)

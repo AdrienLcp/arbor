@@ -1,0 +1,22 @@
+@use '../styles/focus'
+
+@layer components
+  .slot-button
+    @include focus.ring
+    background: none
+    border: 0
+    border-radius: var(--radius-frame)
+    color: inherit
+    cursor: pointer
+    display: block
+    padding: 0
+    text-align: inherit
+
+    .sticker
+      transition: translate var(--transition-fast, 0s) var(--ease-out), box-shadow var(--transition-fast, 0s) var(--ease-out)
+
+    &[data-hovered] .sticker
+      translate: 0 -2px
+
+    &[data-pressed] .sticker
+      translate: 0 1px

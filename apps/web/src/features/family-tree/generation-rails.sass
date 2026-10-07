@@ -1,0 +1,38 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .generation-rails
+    inset: 0
+    overflow: hidden
+    pointer-events: none
+    position: absolute
+
+  // Level with its band whatever the pan and the zoom: `--band-top` and `--band-height` are plane units.
+  .generation-rail
+    background: linear-gradient(90deg, color-mix(in oklab, var(--gc) 9%, var(--paper)) 78%, transparent)
+    display: flex
+    flex-direction: column
+    gap: var(--space-xs)
+    height: calc(var(--band-height) * var(--zoom, 1) * 1px)
+    justify-content: center
+    left: 0
+    min-height: min-content
+    padding: 0 var(--space-2xl) 0 var(--space-l)
+    position: absolute
+    top: calc(var(--pan-y, 0px) + var(--band-top) * var(--zoom, 1) * 1px)
+
+  .generation-rail-head
+    @include typography.title
+    align-self: flex-start
+    background: var(--gc)
+    clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%)
+    color: var(--on-gc)
+    padding: var(--space-s) var(--space-xl) var(--space-s) var(--space-s)
+
+  .generation-rail-years
+    @include typography.numeral
+    color: var(--ink)
+
+  .generation-rail-count
+    @include typography.label
+    color: var(--gc-ink)

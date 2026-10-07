@@ -66,6 +66,7 @@ export const FR_DICTIONARY = defineDictionary({
   familyHome: {
     empty: 'Personne dans l’arbre pour l’instant.',
     generation: 'Génération {number:number}',
+    openTree: 'Voir l’arbre',
     people: defineTranslation('{count:plural}', {
       plural: { count: { one: '{?} personne', other: '{?} personnes' } }
     }),
@@ -222,6 +223,62 @@ export const FR_DICTIONARY = defineDictionary({
     label: 'Apparence',
     light: 'Clair',
     system: 'Comme le téléphone'
+  },
+  tree: {
+    dated: '{word} {year}',
+    depth: {
+      label: 'Générations de chaque côté',
+      option: '{count:number}'
+    },
+    descent: {
+      adoption: 'adoption',
+      foster: 'famille d’accueil',
+      step: 'enfant du conjoint'
+    },
+    empty: 'Personne dans l’arbre pour l’instant.',
+    generation: 'Génération {number:number}',
+    instructions:
+      'Les flèches passent d’une personne à sa voisine. Entrée centre l’arbre sur elle.',
+    missing: defineTranslation('{count:plural}', {
+      plural: { count: { one: '{?} à compléter', other: '{?} à compléter' } }
+    }),
+    people: defineTranslation('{count:plural}', {
+      plural: { count: { one: '{?} personne', other: '{?} personnes' } }
+    }),
+    scope: {
+      around: 'Autour d’une personne',
+      label: 'Afficher',
+      whole: 'Toute la famille'
+    },
+    search: {
+      empty: 'Personne de ce nom dans l’arbre.',
+      label: 'Chercher quelqu’un',
+      placeholder: 'Un prénom, un nom'
+    },
+    titleAround: 'L’arbre, autour de {name}',
+    titleWhole: 'L’arbre de toute la famille',
+    union: {
+      marriage: 'mariés',
+      pacs: 'pacsés',
+      partnership: 'union libre',
+      unknown: 'en couple'
+    },
+    unionEnd: {
+      divorce: 'divorcés',
+      separation: 'séparés'
+    },
+    unknownParent: {
+      hint: 'parent inconnu',
+      title: 'Inconnu'
+    },
+    years: '{first} – {last}',
+    zoom: {
+      fit: 'Voir tout l’arbre',
+      in: 'Agrandir',
+      label: 'Zoom',
+      out: 'Réduire',
+      recentre: 'Revenir sur la personne au centre'
+    }
   },
   whoAmI: {
     intro:

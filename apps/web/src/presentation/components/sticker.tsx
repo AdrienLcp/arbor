@@ -11,34 +11,49 @@ type StickerProps = {
   /** Counted from the oldest generation, 1 first: it picks the sticker's ink. */
   generation: number
   givenNames: string
+  /** A deceased person's sticker is matte, its art dulled, a rule over its caption (The Matte Means Gone Rule). */
+  isDeceased?: boolean
+  /** The years printed under the name: "1932 – † 2019"; left out when none is known. */
+  lifeYears?: string
   /** The initials drawn on the art. */
   monogram: string
   /** The number printed above the slot. */
   slotNumber: number
+  /** Hands the slot its size, `--slot-width` and `--slot-height`. */
+  style?: React.CSSProperties
   surname: string
 }
 
-/** A person pressed into their numbered slot: the album's sticker, at full size. */
+/** A person pressed into their numbered slot: the album's sticker, at full size. Phrasing content only, so a button may hold it. */
 export const Sticker: React.FC<StickerProps> = ({
   className,
   generation,
   givenNames,
+  isDeceased = false,
+  lifeYears,
   monogram,
   slotNumber,
+  style,
   surname
 }) => (
-  <div className={classNames('slot', generationClass(generation), className)}>
+  <span
+    className={classNames('slot', generationClass(generation), className)}
+    style={style}
+  >
     <span className='slot-number'>{slotNumberText(slotNumber)}</span>
-    <div className='slot-bed'>
-      <div className='sticker'>
+    <span className='slot-bed'>
+      <span className={classNames('sticker', isDeceased && 'deceased')}>
         <span aria-hidden='true' className='sticker-art'>
           {monogram}
         </span>
         <span className='sticker-caption'>
           <span className='sticker-given-names'>{givenNames}</span>
           <span className='sticker-surname'>{surname}</span>
+          {lifeYears ? (
+            <span className='sticker-years'>{lifeYears}</span>
+          ) : null}
         </span>
-      </div>
-    </div>
-  </div>
+      </span>
+    </span>
+  </span>
 )

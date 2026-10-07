@@ -1,0 +1,15 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .person-search-text
+    display: grid
+    gap: var(--space-xs)
+    min-width: 0
+
+  .person-search-name
+    @include typography.name
+    overflow-wrap: anywhere
+
+  .person-search-years
+    @include typography.numeral
+    color: var(--ink-soft)

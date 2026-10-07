@@ -1,0 +1,44 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .family-tree-screen
+    display: grid
+    grid-template-rows: auto minmax(0, 1fr)
+    height: 100dvh
+
+  .family-tree-page
+    display: grid
+    grid-template-rows: auto minmax(0, 1fr)
+    min-height: 0
+
+    .family-tree-head
+      align-items: end
+      border-bottom: var(--hairline)
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-l) var(--space-2xl)
+      justify-content: space-between
+      padding: var(--space-l) var(--space-gutter)
+
+    .family-tree-title
+      @include typography.headline
+      flex: 1 1 20rem
+      overflow-wrap: anywhere
+      text-wrap: balance
+
+    .family-tree-controls
+      align-items: end
+      display: flex
+      flex-wrap: wrap
+      justify-content: end
+      gap: var(--space-l) var(--space-xl)
+
+    .person-search
+      max-width: 100%
+      width: 22rem
+
+  .family-tree-empty
+    @include layout.column(var(--page-width))
+    color: var(--ink-soft)
+    padding-block: var(--space-2xl)

@@ -1,15 +1,8 @@
-import type { FuzzyDate } from '@arbor/protocol/fuzzy-date'
 import type { Person } from '@arbor/protocol/person'
 
+import { yearOf } from './fuzzy-year'
+
 const DEATH_MARK = '†'
-
-const yearOf = (date: FuzzyDate | null | undefined): number | null => {
-  if (date === null || date === undefined) {
-    return null
-  }
-
-  return date.qualifier === 'between' ? date.from.year : date.point.year
-}
 
 /**
  * A person's years as a list prints them: "1932 – † 2019", "1990", "† 1918".

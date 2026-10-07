@@ -1,12 +1,12 @@
 import type React from 'react'
 
+import { lifeYears } from '@/features/people/life-years'
+import { personName } from '@/features/people/person-name'
 import { MiniSticker } from '@/presentation/components/mini-sticker'
 import { monogramOf } from '@/presentation/components/monogram'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import type { ListedPerson } from './family-people'
-import { lifeYears } from './life-years'
-import { personName } from './person-name'
 
 import './person-line.sass'
 

@@ -2,13 +2,13 @@ import type React from 'react'
 
 import { ONLOOKER } from '@/features/family-access/family-access'
 import { rememberedMe } from '@/features/family-access/remembered-families'
+import { personName } from '@/features/people/person-name'
 import { whoAmIPathFor } from '@/infrastructure/router/navigation'
 import { PersonIcon } from '@/presentation/components/icons'
 import { TextLink } from '@/presentation/components/text-link'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { type OpenFamily, useOpenFamily } from './family-loader'
-import { personName } from './person-name'
 
 import './me-summary.sass'
 

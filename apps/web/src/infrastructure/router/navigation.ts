@@ -38,6 +38,9 @@ export const whoAmIPathFor = (familyId: FamilyId): string =>
 export const familySharePathFor = (familyId: FamilyId): string =>
   pathFor(paths.familyShare, { familyId })
 
+export const familyTreePathFor = (familyId: FamilyId): string =>
+  pathFor(paths.familyTree, { familyId })
+
 export const familySettingsPathFor = (familyId: FamilyId): string =>
   pathFor(paths.familySettings, { familyId })
 

@@ -1,0 +1,37 @@
+@use '@adrienlcp/styles/accessibility'
+
+@layer components
+  .tree-canvas
+    background: var(--paper)
+    min-height: 0
+    overflow: hidden
+    position: relative
+    touch-action: none
+
+    .tree-instructions
+      @include accessibility.visually-hidden
+
+    .tree-zoom
+      background: var(--paper)
+      border: var(--stroke-thin) solid var(--ghost-soft)
+      border-radius: var(--radius-frame)
+      bottom: var(--space-l)
+      display: grid
+      gap: var(--space-xs)
+      padding: var(--space-xs)
+      position: absolute
+      right: var(--space-l)
+
+      .button
+        min-height: var(--target)
+        padding: 0
+        width: var(--target)
+
+// Outside the layers: react-zoom-pan-pinch injects its `fit-content` size outside any layer, and that beats every layered rule.
+.tree-canvas .tree-viewport
+  cursor: grab
+  height: 100%
+  width: 100%
+
+  &:active
+    cursor: grabbing

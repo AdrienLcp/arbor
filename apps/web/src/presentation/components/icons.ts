@@ -7,10 +7,13 @@ export {
   ChevronRight as ChevronIcon,
   ClipboardPaste as PasteIcon,
   Copy as CopyIcon,
+  Expand as FitIcon,
   Eye as LookIcon,
   House as HomeIcon,
   KeyRound as KeyIcon,
   Link2Off as BrokenLinkIcon,
+  LocateFixed as RecenterIcon,
+  Network as TreeIcon,
   Plus as AddIcon,
   QrCode as QrCodeIcon,
   RefreshCw as ReplaceIcon,
@@ -22,5 +25,7 @@ export {
   UserPlus as AddKeeperIcon,
   UserRound as PersonIcon,
   WifiOff as OfflineIcon,
-  X as ClearIcon
+  X as ClearIcon,
+  ZoomIn as ZoomInIcon,
+  ZoomOut as ZoomOutIcon
 } from 'lucide-react'

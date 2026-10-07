@@ -5,6 +5,7 @@
   .slot
     --slot-height: 150px
     --slot-width: 112px
+    display: block
     flex: none
     width: var(--slot-width)
 
@@ -15,6 +16,7 @@
       height: 18px
 
     .slot-bed
+      display: block
       height: var(--slot-height)
       position: relative
       width: var(--slot-width)
@@ -90,6 +92,25 @@
       max-width: 100%
       overflow-wrap: anywhere
 
+    .sticker-years
+      @include typography.numeral
+      margin-top: var(--space-xs)
+
+    // A deceased person's sticker: no varnish, the art dulled toward matte, a rule over the caption.
+    .sticker.deceased
+      box-shadow: 0 0 0 1px var(--sticker-edge), 0 1px 2px color-mix(in oklch, var(--shadow) 26%, transparent)
+
+      &::after
+        display: none
+
+      .sticker-art
+        background-color: color-mix(in oklab, var(--gc) 42%, var(--matte))
+        background-image: none
+
+      .sticker-caption
+        border-top: var(--stroke-thin) solid var(--ink)
+        margin: var(--space-xs) var(--space-s) 0
+
     .ghost-slot
       align-items: center
       background: color-mix(in oklab, var(--paper-2) 60%, transparent)
@@ -111,6 +132,26 @@
     .ghost-slot-hint
       @include typography.body-small
       text-wrap: balance
+
+  // The focus person: the album's one foil sticker, ringed, its printed frame hidden.
+  .slot.focus
+    .slot-bed::before
+      display: none
+
+    .sticker
+      background: linear-gradient(128deg, var(--foil-a), var(--foil-b) 30%, var(--foil-c) 55%, var(--foil-d) 80%, var(--foil-a))
+      box-shadow: 0 0 0 1px var(--sticker-edge), 0 0 0 4px var(--paper), 0 0 0 7px var(--ink), 0 14px 22px -10px color-mix(in oklch, var(--shadow) 70%, transparent)
+
+  // A person drawn a second time: flattened back into the page, in a dashed frame.
+  .slot.repeated
+    .slot-bed::before
+      border-style: dashed
+
+    .sticker
+      box-shadow: 0 0 0 1px var(--sticker-edge)
+
+      &::after
+        display: none
 
   .slot.pressing .sticker
     animation: sticker-press var(--transition-press) var(--ease-out) both

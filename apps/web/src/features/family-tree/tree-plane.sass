@@ -1,0 +1,101 @@
+// A style system: the bands, lines, words and stickers of the tree canvas are only ever restyled together.
+@use '../../presentation/styles/typography'
+
+@layer components
+  .tree-plane
+    height: var(--plane-height)
+    position: relative
+    width: var(--plane-width)
+
+    // A generation's strip: its ink at 9% into the paper, a firmer rule on top.
+    .generation-strip
+      background: color-mix(in oklab, var(--gc) 9%, var(--paper))
+      border-top: var(--stroke-bold) solid color-mix(in oklab, var(--gc) 55%, var(--paper))
+      height: var(--band-height)
+      // Past both ends of the plane, so a band still crosses the screen when the tree is zoomed out.
+      inset-inline: -400vw
+      position: absolute
+      top: var(--y)
+
+    .tree-lines
+      inset: 0
+      overflow: visible
+      pointer-events: none
+      position: absolute
+
+    .tree-line
+      fill: none
+      stroke: var(--line)
+      stroke-linecap: round
+      stroke-linejoin: round
+      stroke-width: var(--line-plain)
+
+      &.marriage
+        stroke-width: var(--line-heavy)
+
+      &.free-union
+        stroke-dasharray: 7 5
+        stroke-linecap: butt
+        stroke-width: var(--line-heavy)
+
+      &.step
+        stroke-dasharray: 0.1 6
+        stroke-width: var(--line-step)
+
+      &.unknown
+        stroke: var(--ghost)
+        stroke-dasharray: 3 4
+
+      &.adoption
+        stroke-width: var(--line-adoption)
+
+      &.adoption-core
+        stroke: var(--paper)
+        stroke-width: var(--line-adoption-core)
+
+      // The two slashes of an ended union, over a paper gap so they read on the heavy line.
+      &.cut-gap
+        stroke: var(--paper)
+        stroke-width: 7px
+
+      &.cut
+        stroke-width: var(--line-step)
+
+    .tree-card
+      left: var(--x)
+      position: absolute
+      top: var(--y)
+
+      // The slot's number prints above the slot, outside the layout's card box.
+      .slot-number
+        bottom: 100%
+        position: absolute
+
+      // Smaller than the phone floor: only the zoomable canvas prints them (The 16px Floor Rule).
+      .sticker-surname
+        font-size: var(--text-2xs)
+
+      .sticker-years
+        font-size: var(--text-xs)
+
+      .sticker-given-names
+        font-size: var(--text-s)
+
+    .relation-words
+      @include typography.relation-word
+      background: var(--paper)
+      border: var(--stroke-thin) solid var(--line)
+      border-radius: var(--radius-pill)
+      color: var(--ink)
+      display: grid
+      left: var(--x)
+      padding: var(--space-xs) var(--space-s)
+      pointer-events: none
+      position: absolute
+      text-align: center
+      top: var(--y)
+      translate: -50% -50%
+      white-space: nowrap
+
+      &.dashed
+        border-style: dashed

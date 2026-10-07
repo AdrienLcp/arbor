@@ -26,6 +26,10 @@ const pageFor = {
     Component: (await import('@/features/family-pages/family-share-page'))
       .FamilySharePage
   }),
+  [paths.familyTree]: async () => ({
+    Component: (await import('@/features/family-pages/family-tree-page'))
+      .FamilyTreePage
+  }),
   [paths.home]: async () => ({
     Component: (await import('@/features/home/home-page')).HomePage
   }),
@@ -42,6 +46,7 @@ const pageFor = {
 /** The pages shown inside a family, once its layout has opened it. */
 const FAMILY_PAGES = [
   paths.whoAmI,
+  paths.familyTree,
   paths.familyShare,
   paths.familySettings
 ] as const satisfies readonly RoutedPath[]

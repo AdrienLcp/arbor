@@ -65,6 +65,7 @@ export const EN_DICTIONARY = defineDictionary({
   familyHome: {
     empty: 'Nobody in the tree yet.',
     generation: 'Generation {number:number}',
+    openTree: 'See the tree',
     people: defineTranslation('{count:plural}', {
       plural: { count: { one: '{?} person', other: '{?} people' } }
     }),
@@ -220,6 +221,62 @@ export const EN_DICTIONARY = defineDictionary({
     label: 'Appearance',
     light: 'Light',
     system: 'Same as the device'
+  },
+  tree: {
+    dated: '{word} {year}',
+    depth: {
+      label: 'Generations each way',
+      option: '{count:number}'
+    },
+    descent: {
+      adoption: 'adoption',
+      foster: 'foster family',
+      step: 'stepchild'
+    },
+    empty: 'Nobody in the tree yet.',
+    generation: 'Generation {number:number}',
+    instructions:
+      'The arrow keys move from one person to the next. Enter centres the tree on them.',
+    missing: defineTranslation('{count:plural}', {
+      plural: { count: { one: '{?} to complete', other: '{?} to complete' } }
+    }),
+    people: defineTranslation('{count:plural}', {
+      plural: { count: { one: '{?} person', other: '{?} people' } }
+    }),
+    scope: {
+      around: 'Around one person',
+      label: 'Show',
+      whole: 'The whole family'
+    },
+    search: {
+      empty: 'Nobody by that name in the tree.',
+      label: 'Find someone',
+      placeholder: 'A first name, a surname'
+    },
+    titleAround: 'The tree, around {name}',
+    titleWhole: 'The whole family’s tree',
+    union: {
+      marriage: 'married',
+      pacs: 'civil union',
+      partnership: 'partners',
+      unknown: 'a couple'
+    },
+    unionEnd: {
+      divorce: 'divorced',
+      separation: 'separated'
+    },
+    unknownParent: {
+      hint: 'unknown parent',
+      title: 'Unknown'
+    },
+    years: '{first} – {last}',
+    zoom: {
+      fit: 'See the whole tree',
+      in: 'Zoom in',
+      label: 'Zoom',
+      out: 'Zoom out',
+      recentre: 'Back to the person in the centre'
+    }
   },
   whoAmI: {
     intro:
