@@ -63,6 +63,14 @@ creation while nothing links to the person yet.
   write wins, and the history shows both values. Structural conflicts (a person
   deleted while someone edits them) are rejected with a typed error and the
   client refetches.
+- The server records what it holds, not what the client says: before applying
+  an edit it rewrites the edit's `before` and a removal's entity from its own
+  state (`recordOperation` in `packages/core`). A batch posted together is one
+  log entry (a `group` when it has several parts), so one undo takes back the
+  whole gesture.
+- A refused edit made against the latest revision answers the refusal (422,
+  the client's to fix); one made against an older revision answers
+  `revision_conflict` (409): the family moved, reload and retry.
 
 ## Rules core must enforce
 

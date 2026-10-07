@@ -7,6 +7,9 @@
     {
       "filename": [
         "**/i18n/dictionary-fr.ts",
+        "apps/worker/scripts/seed.ts",
+        "apps/worker/src/**/*.test.ts",
+        "apps/worker/src/infrastructure/http/api-test-harness.ts",
         "docs/**/*.md",
         "packages/core/src/family/demo-family.ts",
         "packages/core/src/**/*.test.ts",
@@ -42,6 +45,7 @@
     "michel",
     "misreadable",
     "noah",
+    "nosniff",
     "odile",
     "oklch",
     "OKLCH",

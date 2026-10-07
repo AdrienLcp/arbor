@@ -84,12 +84,35 @@ fuzzy-date schema checks a day exists in its month). Node 26 has it; the Worker
 and Safari do not, so each entry — the Worker's `index.ts`, the web app's
 `main.tsx` — loads `temporal-polyfill` first.
 
+## Inside a family's object
+
+- `apps/worker/src/domain/` holds `access` (keys, roles, the wrong-key limit),
+  `family` (settings, the log, the role-filtered view) and `photos`; the SQL is
+  in `infrastructure/durable-objects/sql-*-store.ts`, the routes in
+  `infrastructure/http/`. The `FamilyRoom` class only wires them.
+- The schema is a list of versioned migrations (`family-schema.ts`), run when
+  the object starts. An object that holds no family writes nothing: a request
+  for an unknown id answers 404 and leaves no storage behind.
+- The current state is loaded once per object and kept in memory; each edit
+  rewrites only the rows it changed.
+- Tests run the object's code on Node's `node:sqlite`
+  (`memory-sql-database.ts`): `@cloudflare/vitest-pool-workers` needs Vitest 4
+  (checked 2026-10-07). `pnpm seed` against `wrangler dev` covers the real
+  runtime.
+- Two `wrangler dev` on port 8790 make workerd crash and restart in a loop with
+  no message: stop the leftover `workerd.exe` before blaming the code.
+
 ## Security notes
 
 - Keys: 128-bit random, base64url, sent in an `Authorization` header; only
   their SHA-256 is stored. Compare in constant time.
 - Rate-limit failed key checks per family id (Durable Object state) to make
-  guessing pointless; family ids are random too (no enumeration).
+  guessing pointless; family ids are random too (no enumeration). After 20
+  wrong keys in 15 minutes the family answers 429 to every key until the
+  window ends; a revoked key is refused without counting.
+- The read-only link, while the keeper setting is on (the default), sees a
+  living person's birth and event dates as a year only, no notes, no portrait
+  and none of their photos.
 - Photos are served by the Worker after the same key check, with
   `Cache-Control: private`.
 - `Referrer-Policy: no-referrer`, `X-Robots-Tag: noindex` on everything under

@@ -4,12 +4,16 @@ import { handleRequest } from './handle-request'
 
 const APP_DOCUMENT = '<!doctype html><div id="root"></div>'
 
-const env = {
-  ASSETS: { fetch: async () => new Response(APP_DOCUMENT) }
+const targets = {
+  assets: { fetch: async () => new Response(APP_DOCUMENT) },
+  rooms: {
+    create: () => Promise.reject(new Error('No family is created here')),
+    fetch: () => Promise.reject(new Error('No family is reached here'))
+  }
 }
 
 const request = (path: string, origin = 'https://arbor.adrienlcp.com') =>
-  handleRequest(new Request(new URL(path, origin)), env)
+  handleRequest(new Request(new URL(path, origin)), targets)
 
 describe('handleRequest', () => {
   it('answers the health check', async () => {
