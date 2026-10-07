@@ -16,5 +16,11 @@ export const EN_DICTIONARY = defineDictionary({
   notFound: {
     home: 'Back to the home page',
     title: 'This page does not exist'
+  },
+  theme: {
+    dark: 'Dark',
+    label: 'Appearance',
+    light: 'Light',
+    system: 'Same as the device'
   }
 })

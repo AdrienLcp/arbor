@@ -3,7 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <!-- The --paper token in each palette: if it moves, these move with it. -->
+    <meta content="#f1f5f8" data-scheme="light" media="(prefers-color-scheme: light)" name="theme-color" />
+    <meta content="#101724" data-scheme="dark" media="(prefers-color-scheme: dark)" name="theme-color" />
+    <link as="font" crossorigin href="/fonts/atkinson-latin.woff2" rel="preload" type="font/woff2" />
+    <link as="font" crossorigin href="/fonts/barlow-condensed-extrabold-latin.woff2" rel="preload" type="font/woff2" />
     <title>Arbor</title>
+    <!--
+      A layer's position is fixed where its name first appears, and Vite injects
+      stylesheets in module-graph order: declared here, the order cannot depend
+      on which component happened to be imported first.
+    -->
+    <style>
+      @layer reset, tokens, base, components;
+    </style>
   </head>
   <body>
     <div id="root"></div>

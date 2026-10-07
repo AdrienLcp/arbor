@@ -1,2 +1,15 @@
 @use '@adrienlcp/styles/reset.css'
 @use '@adrienlcp/styles/reduced-motion.css'
+@use '@adrienlcp/theme-preference/color-scheme.css'
+@use 'tokens'
+@use 'fonts'
+@use 'layout'
+@use 'typography'
+
+@layer base
+  body
+    @include layout.container
+    @include typography.body
+    background: var(--paper)
+    color: var(--ink)
+    min-height: 100dvh

@@ -14,7 +14,7 @@ export type FuzzyDateParseFailure =
   | 'reversed_range'
   | 'unreadable'
 
-const GEDCOM_MONTHS = [
+const GEDCOM_MONTHS: readonly string[] = [
   'JAN',
   'FEB',
   'MAR',
@@ -27,7 +27,7 @@ const GEDCOM_MONTHS = [
   'OCT',
   'NOV',
   'DEC'
-] as const
+]
 
 const QUALIFIER_BY_GEDCOM_KEYWORD = {
   ABT: 'about',
@@ -75,7 +75,8 @@ const readPointNumbers = (text: string) => {
   }
   const gedcom = GEDCOM_POINT_PATTERN.exec(text)
   if (!gedcom) return null
-  const monthIndex = GEDCOM_MONTHS.findIndex((month) => month === gedcom[2])
+  const monthIndex =
+    gedcom[2] === undefined ? -1 : GEDCOM_MONTHS.indexOf(gedcom[2])
   if (gedcom[2] !== undefined && monthIndex === -1) return null
   return {
     day: optionalNumber(gedcom[1]),

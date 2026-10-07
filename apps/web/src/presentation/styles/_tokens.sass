@@ -1,0 +1,104 @@
+// Side-effect module: emits the `:root` tokens. Loaded once, from globals.sass.
+// The values are DESIGN.md's; every colour is `light-dark(<light>, <dark>)`.
+
+@use '@adrienlcp/styles/tokens'
+
+@layer tokens
+  :root
+    @include tokens.defaults
+
+    // Paper and ink
+    --paper: light-dark(oklch(0.968 0.006 235), oklch(0.205 0.028 262))
+    --paper-2: light-dark(oklch(0.938 0.01 235), oklch(0.24 0.032 262))
+    --paper-deep: light-dark(oklch(0.905 0.012 235), oklch(0.17 0.026 262))
+    --ink: light-dark(oklch(0.24 0.035 262), oklch(0.945 0.008 240))
+    --ink-soft: light-dark(oklch(0.42 0.03 262), oklch(0.8 0.018 240))
+    --line: light-dark(oklch(0.32 0.035 262), oklch(0.82 0.02 240))
+    --ghost: light-dark(oklch(0.6 0.025 250), oklch(0.6 0.03 250))
+    --ghost-soft: light-dark(oklch(0.84 0.014 245), oklch(0.34 0.03 255))
+
+    // Stickers
+    --sticker: light-dark(oklch(0.995 0.002 95), oklch(0.3 0.03 262))
+    --sticker-edge: light-dark(oklch(0.88 0.008 245), oklch(0.38 0.03 262))
+    --shadow: light-dark(oklch(0.22 0.04 262), oklch(0.08 0.02 262))
+    --matte: light-dark(oklch(0.55 0.005 260), oklch(0.62 0.005 260))
+    --foil-a: light-dark(oklch(0.95 0.03 200), oklch(0.36 0.05 200))
+    --foil-b: light-dark(oklch(0.96 0.045 95), oklch(0.38 0.06 95))
+    --foil-c: light-dark(oklch(0.94 0.04 330), oklch(0.35 0.06 330))
+    --foil-d: light-dark(oklch(0.95 0.035 160), oklch(0.37 0.05 160))
+
+    // Status and actions
+    --focus: light-dark(oklch(0.48 0.17 262), oklch(0.82 0.14 82))
+    --warn: light-dark(oklch(0.47 0.11 65), oklch(0.84 0.12 80))
+    --warn-bg: light-dark(oklch(0.95 0.05 85), oklch(0.32 0.05 75))
+    --action: light-dark(oklch(0.24 0.035 262), oklch(0.82 0.14 82))
+    --on-action: light-dark(oklch(0.985 0.004 235), oklch(0.2 0.03 262))
+    --cover: light-dark(oklch(0.53 0.19 32), oklch(0.47 0.16 32))
+    --on-cover: oklch(0.99 0.004 80)
+
+    // Generation inks, oldest first: the band, the text on it, the ink on paper
+    --g1: oklch(0.8 0.14 82)
+    --on-g1: light-dark(oklch(0.26 0.05 70), oklch(0.2 0.04 70))
+    --g1-ink: light-dark(oklch(0.47 0.1 70), oklch(0.84 0.12 82))
+    --g2: light-dark(oklch(0.53 0.19 32), oklch(0.71 0.15 36))
+    --on-g2: light-dark(oklch(0.99 0.004 80), oklch(0.18 0.03 262))
+    --g2-ink: light-dark(oklch(0.49 0.18 32), oklch(0.78 0.13 36))
+    --g3: light-dark(oklch(0.49 0.1 165), oklch(0.73 0.11 165))
+    --on-g3: light-dark(oklch(0.99 0.004 80), oklch(0.18 0.03 262))
+    --g3-ink: light-dark(oklch(0.44 0.09 165), oklch(0.8 0.1 165))
+    --g4: light-dark(oklch(0.47 0.15 262), oklch(0.73 0.11 262))
+    --on-g4: light-dark(oklch(0.99 0.004 80), oklch(0.18 0.03 262))
+    --g4-ink: light-dark(oklch(0.45 0.15 262), oklch(0.8 0.1 262))
+    --g5: light-dark(oklch(0.47 0.16 350), oklch(0.73 0.12 350))
+    --on-g5: light-dark(oklch(0.99 0.004 80), oklch(0.18 0.03 262))
+    --g5-ink: light-dark(oklch(0.45 0.16 350), oklch(0.8 0.11 350))
+
+    // Lines and the ring, as the shared tokens name them
+    --rule: var(--ghost-soft)
+    --rule-strong: var(--line)
+    --outline-thick: 3px
+
+    // Type. Each `fallback` face is fontaine's metric-matched Arial: it only
+    // reaches `font-family` declarations, not custom properties, so it is named here.
+    --font-display: 'Barlow Condensed', 'Barlow Condensed fallback', sans-serif
+    --font-text: 'Atkinson Hyperlegible', 'Atkinson Hyperlegible fallback', sans-serif
+    --text-s: 1rem
+    --text-m: 1.125rem
+    --text-l: 1.375rem
+    --text-xl: clamp(1.75rem, 4vw, 2.5rem)
+    --text-2xl: clamp(2.875rem, 6vw, 5rem)
+
+    // Space
+    --space-xs: 0.25rem
+    --space-s: 0.5rem
+    --space-m: 0.75rem
+    --space-l: 1rem
+    --space-xl: 1.5rem
+    --space-2xl: 2rem
+    --space-3xl: 3rem
+    --space-section: 4rem
+    --space-gutter: 1rem
+    --page-width: 82.5rem
+
+    // Shape
+    --radius-art: 4px
+    --radius-sticker: 7px
+    --radius-control: 8px
+    --radius-frame: 10px
+    --radius-pill: 999px
+    --control-height: 52px
+
+    // Motion
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1)
+    --transition-fast: 160ms
+    --transition-base: 200ms
+    --transition-press: 560ms
+
+    @media (width >= 640px)
+      --space-section: 5.5rem
+      --space-gutter: 1.5rem
+
+    @media (prefers-reduced-motion: reduce)
+      --transition-fast: 0ms
+      --transition-base: 0ms
+      --transition-press: 0ms

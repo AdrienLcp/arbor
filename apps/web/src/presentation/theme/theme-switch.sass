@@ -1,0 +1,66 @@
+@use '../styles/layout'
+@use '../styles/typography'
+
+@layer components
+  .theme-switch
+    @include layout.container
+    border: 0
+    display: grid
+    gap: var(--space-s)
+    margin: 0
+    padding: 0
+
+    .theme-switch-legend
+      @include typography.label
+      color: var(--ink-soft)
+      margin-bottom: var(--space-s)
+      padding: 0
+
+    .choices
+      border: var(--stroke-thin) solid var(--ghost)
+      border-radius: var(--radius-frame)
+      display: grid
+      gap: var(--space-xs)
+      padding: var(--space-xs)
+
+      @include layout.container-wide(28rem)
+        grid-auto-columns: 1fr
+        grid-auto-flow: column
+
+    .choice
+      cursor: pointer
+      position: relative
+
+      input
+        appearance: none
+        inset: 0
+        margin: 0
+        position: absolute
+
+      .choice-label
+        @include typography.label
+        align-items: center
+        border-radius: var(--radius-control)
+        color: var(--ink-soft)
+        display: flex
+        font-weight: 700
+        justify-content: center
+        min-height: var(--target)
+        padding: 0 var(--space-l)
+        transition: background var(--transition-fast) var(--ease-out), color var(--transition-fast) var(--ease-out)
+
+      @media (hover: hover)
+        &:hover .choice-label
+          background: var(--paper-2)
+          color: var(--ink)
+
+      &:active .choice-label
+        background: var(--paper-deep)
+
+      input:checked + .choice-label
+        background: var(--action)
+        color: var(--on-action)
+
+      input:focus-visible + .choice-label
+        outline: var(--ring)
+        outline-offset: var(--ring-offset)

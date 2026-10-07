@@ -31,6 +31,7 @@
   "files": {
     "includes": [
       "!.claude/skills",
+      "!**/.impeccable",
       "!**/.wrangler",
       "!**/worker-configuration.d.ts"
     ]

@@ -17,5 +17,11 @@ export const FR_DICTIONARY = defineDictionary({
   notFound: {
     home: 'Revenir à l’accueil',
     title: 'Cette page n’existe pas'
+  },
+  theme: {
+    dark: 'Sombre',
+    label: 'Apparence',
+    light: 'Clair',
+    system: 'Comme le téléphone'
   }
 })

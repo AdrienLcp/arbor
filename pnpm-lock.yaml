@@ -209,8 +209,11 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1
       '@adrienlcp/styles':
-        specifier: ^0.7.0
-        version: 0.7.0(sass@1.105.1)
+        specifier: ^0.8.0
+        version: 0.8.0(sass@1.105.1)
+      '@adrienlcp/theme-preference':
+        specifier: ^0.3.1
+        version: 0.3.1(react@19.3.0)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
       '@arbor/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -238,7 +241,10 @@ importers:
         version: 19.3.0(@types/react@19.3.0)
       '@vitejs/plugin-react':
         specifier: ^6.1.1
-        version: 6.1.2(oxc-transform-react@0.145.0)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(yaml@2.9.1))
+        version: 6.1.2(oxc-transform-react@0.145.0)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
+      fontaine:
+        specifier: ^1.0.0
+        version: 1.0.0(esbuild@0.28.1)(postcss@8.5.29)(rolldown@1.2.12)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
       oxc-transform-react:
         specifier: ^0.145.0
         version: 0.145.0
@@ -247,10 +253,10 @@ importers:
         version: 1.105.1
       vite:
         specifier: ~8.3.1
-        version: 8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(yaml@2.9.1)
+        version: 8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
       vitest:
         specifier: ^5.0.2
-        version: 5.0.3(@types/node@26.6.4)(@vitest/coverage-v8@5.0.3)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(yaml@2.9.1))
+        version: 5.0.3(@types/node@26.6.4)(@vitest/coverage-v8@5.0.3)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
 
   apps/worker:
     dependencies:
@@ -327,12 +333,26 @@ packages:
   '@adrienlcp/result@0.1.1':
     resolution: {integrity: sha512-9eQiQGvWhr6BQ8InzgmCriQgkf3dj1mFmHxEA2Yxa0NqYRWbaUMTVWKshff3JRDr6TukRGWeZFI/pJHnbQVpXw==}
 
-  '@adrienlcp/styles@0.7.0':
-    resolution: {integrity: sha512-FEFZ5R40qDlzx9eLvMerglzZ6f5wRnNiwrJxTxRFIao9gA5+Ac9y04maM3sOR55GJtMl2ZnDgZJVsuDY/NA8Jw==}
+  '@adrienlcp/safe-storage@0.1.1':
+    resolution: {integrity: sha512-zDhZcQi2OVy3EijNi0hvZG0tnM2zRAP3oZpqy7RbAqn4dozFfltzImN8CN/Ntjkhx02QgO+PJ6m3abrSGG4qxQ==}
+
+  '@adrienlcp/styles@0.8.0':
+    resolution: {integrity: sha512-bC6DhW9WMxOXJ8+ocWm+fWfHloBL2/You9tx9I9ch0EAYPucKAz20sr/03sZcZVBmscq7LF64ETQZfgqf/h3fg==}
     peerDependencies:
       sass: '>=1.80.0'
     peerDependenciesMeta:
       sass:
+        optional: true
+
+  '@adrienlcp/theme-preference@0.3.1':
+    resolution: {integrity: sha512-mdYaXb88KWmErg0EHs8ttqW6bIFH9aS0H5QSDAHNm4dnWExK1DBjuveWmrt+i5T241pYTaX3iZ751VLn+BO4Ig==}
+    peerDependencies:
+      react: '>=18'
+      vite: '>=7'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      vite:
         optional: true
 
   '@adrienlcp/tsconfig@0.1.1':
@@ -415,6 +435,10 @@ packages:
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [win32]
+
+  '@capsizecss/unpack@4.0.1':
+    resolution: {integrity: sha512-CuNiSqg7+e1cO/GjffyMOm5Tt2jUF9CWHHnvQ/UkqvtkGfHdgwEC0wpmq7fkN3gxwpRnrAN0WzO3vREKmNolMQ==}
+    engines: {node: '>=18'}
 
   '@cloudflare/kv-asset-handler@0.5.0':
     resolution: {integrity: sha512-jxQYkj8dSIzc0cD6cMMNdOc1UVjqSqu8BZdor5s8cGjW2I8BjODt/kWPVdY+u9zj3ms75Q5qaZgnxUad83+eAg==}
@@ -1023,6 +1047,12 @@ packages:
     engines: {node: '>=20.9.0'}
     cpu: [x64]
     os: [win32]
+
+  '@jridgewell/gen-mapping@0.3.13':
+    resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
+
+  '@jridgewell/remapping@2.3.5':
+    resolution: {integrity: sha512-LI9u/+laYG4Ds1TDKSJW2YPrIlcVYOwi2fUC6xB43lueCjgxV4lffOCZCtYFiH6TNOX+tQKXx97T4IKHbhyHEQ==}
 
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
@@ -1655,6 +1685,10 @@ packages:
     engines: {node: '>=22.18.0'}
     hasBin: true
 
+  css-tree@3.2.1:
+    resolution: {integrity: sha512-X7sjQzceUhu1u7Y/ylrRZFU2FS6LRiFVp6rKLPg23y3x3c3DOKAwuXGDp+PAGjh6CSnCjYeAul8pcT8bAl+lSA==}
+    engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
+
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
@@ -1715,6 +1749,19 @@ packages:
 
   flatted@3.4.4:
     resolution: {integrity: sha512-5+ybhBZANEJxaH3X5evAFatUxLfEHSr7n6kYJ+1Qd0mUqr4eu9gIf6GDbWHf8RJijHrjjO8G+la14SlL2SeS1Q==}
+
+  fontaine@1.0.0:
+    resolution: {integrity: sha512-bFJk8HxdHxTh8vzVyF2pTO0CnqaI/ToMqP0GvU5RifLehv19zYyQVDc6JAxq1aWZyPcLPROvu4rIUEKDDJeyDQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    peerDependencies:
+      postcss: ^8.4.31
+    peerDependenciesMeta:
+      postcss:
+        optional: true
+
+  fontkitten@1.0.3:
+    resolution: {integrity: sha512-Wp1zXWPVUPBmfoa3Cqc9ctaKuzKAV6uLstRqlR56kSjplf5uAce+qeyYym7F+PHbGTk+tCEdkCW6RD7DX/gBZw==}
+    engines: {node: '>=20'}
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -1849,6 +1896,9 @@ packages:
 
   magicast@0.5.5:
     resolution: {integrity: sha512-UicdXN8zQ3JHlxVq+28afMXPr1z7WNY6+7EJnzTdQWkTAlMLF5fNCCKxJHBQwGaNGR11581EiQmQzx73+MvszA==}
+
+  mdn-data@2.27.1:
+    resolution: {integrity: sha512-9Yubnt3e8A0OKwxYSXyhLymGW4sCufcLG6VdiDdUGVkPhpqLxlvP5vl1983gQjJl3tqbrM731mjaZaP68AgosQ==}
 
   miniflare@5.20261001.0-alpha:
     resolution: {integrity: sha512-GaimS5mSIOMyvd16ga+e1/QkI8cmp3z35QPHFex0DktqNQf2RVZQwMPQXdyoUreUiFP/0Gpe2MoQInTyMAD5xA==}
@@ -1985,6 +2035,9 @@ packages:
   temporal-utils@1.0.3:
     resolution: {integrity: sha512-9jbTSX3HvkOWvDpNpFzwX/d1mkCrgQgwLmVTOEiuocZGKHsrQJtttGZFmybJ2zYP5zCSZuU5ZyeS8+eOEPABiQ==}
 
+  tiny-inflate@1.0.3:
+    resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
+
   tinybench@6.2.0:
     resolution: {integrity: sha512-78U2TlB2CnVenajOFzf3BKSm0J6oz5L0NV7g32LCPccvYc0lbWvys4d3uUUCS2B1N8PAf2+aekR8i1KbC3HO7Q==}
     engines: {node: '>=20.0.0'}
@@ -2027,6 +2080,42 @@ packages:
 
   unenv@2.0.0-rc.24:
     resolution: {integrity: sha512-i7qRCmY42zmCwnYlh9H2SvLEypEFGye5iRmEMKjcGi7zk9UquigRjFtTLz0TYqr0ZGLZhaMHl/foy1bZR+Cwlw==}
+
+  unplugin@3.4.0:
+    resolution: {integrity: sha512-9skdIFlCsPdFV7wUfZxNsFInlW+7nJmGu2gkTu0OUhF56aXGsHab9x52/QhdJ4lC7ZDPWTxbiC4ANqVlsuaW3w==}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    peerDependencies:
+      '@farmfe/core': '*'
+      '@rsbuild/core': '*'
+      '@rspack/core': '*'
+      bun-types-no-globals: '*'
+      esbuild: '*'
+      rolldown: '*'
+      rollup: '*'
+      unloader: '*'
+      vite: '*'
+      webpack: '*'
+    peerDependenciesMeta:
+      '@farmfe/core':
+        optional: true
+      '@rsbuild/core':
+        optional: true
+      '@rspack/core':
+        optional: true
+      bun-types-no-globals:
+        optional: true
+      esbuild:
+        optional: true
+      rolldown:
+        optional: true
+      rollup:
+        optional: true
+      unloader:
+        optional: true
+      vite:
+        optional: true
+      webpack:
+        optional: true
 
   vite@8.3.3:
     resolution: {integrity: sha512-cTAldKPImjg6c+gk48U19POPn3GCBzZwpdsN8ZMEEcbpes+6/wvfqUd0C2y3qYY4wsj8PwgFwrZ/1jBPVttMSg==}
@@ -2118,6 +2207,9 @@ packages:
   vscode-uri@3.2.0:
     resolution: {integrity: sha512-m2gXo3bn0G1kT9InzMf07fTbqMbGtyckj3bH5ktLO+1Ssv+yiATZ4dhwaQv9UZWxJh6E9IFGnQyjgWVDWVBDrg==}
 
+  webpack-virtual-modules@0.6.2:
+    resolution: {integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==}
+
   why-is-node-running@3.2.1:
     resolution: {integrity: sha512-Tb2FUhB4vUsGQlfSquQLYkApkuPAFQXGFzxWKHHumVz2dK+X1RUm/HnID4+TfIGYJ1kTcwOaCk/buYCEJr6YjQ==}
     engines: {node: '>=20.11'}
@@ -2198,12 +2290,23 @@ snapshots:
 
   '@adrienlcp/result@0.1.1': {}
 
-  '@adrienlcp/styles@0.7.0(sass@1.105.1)':
+  '@adrienlcp/safe-storage@0.1.1':
+    dependencies:
+      '@adrienlcp/result': 0.1.1
+
+  '@adrienlcp/styles@0.8.0(sass@1.105.1)':
     dependencies:
       '@adrienlcp/result': 0.1.1
       culori: 4.0.2
     optionalDependencies:
       sass: 1.105.1
+
+  '@adrienlcp/theme-preference@0.3.1(react@19.3.0)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))':
+    dependencies:
+      '@adrienlcp/safe-storage': 0.1.1
+    optionalDependencies:
+      react: 19.3.0
+      vite: 8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
 
   '@adrienlcp/tsconfig@0.1.1': {}
 
@@ -2256,6 +2359,10 @@ snapshots:
 
   '@biomejs/cli-win32-x64@2.5.14':
     optional: true
+
+  '@capsizecss/unpack@4.0.1':
+    dependencies:
+      fontkitten: 1.0.3
 
   '@cloudflare/kv-asset-handler@0.5.0': {}
 
@@ -2699,6 +2806,16 @@ snapshots:
   '@img/sharp-win32-x64@0.35.4':
     optional: true
 
+  '@jridgewell/gen-mapping@0.3.13':
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.6.0
+      '@jridgewell/trace-mapping': 0.3.31
+
+  '@jridgewell/remapping@2.3.5':
+    dependencies:
+      '@jridgewell/gen-mapping': 0.3.13
+      '@jridgewell/trace-mapping': 0.3.31
+
   '@jridgewell/resolve-uri@3.1.2': {}
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
@@ -2975,10 +3092,10 @@ snapshots:
   '@typescript/typescript-win32-x64@7.0.2':
     optional: true
 
-  '@vitejs/plugin-react@6.1.2(oxc-transform-react@0.145.0)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(yaml@2.9.1))':
+  '@vitejs/plugin-react@6.1.2(oxc-transform-react@0.145.0)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(yaml@2.9.1)
+      vite: 8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
     optionalDependencies:
       oxc-transform-react: 0.145.0
 
@@ -3165,6 +3282,11 @@ snapshots:
       semver: 7.8.5
       tinyglobby: 0.2.17
 
+  css-tree@3.2.1:
+    dependencies:
+      mdn-data: 2.27.1
+      source-map-js: 1.2.2
+
   csstype@3.2.3: {}
 
   culori@4.0.2: {}
@@ -3227,6 +3349,30 @@ snapshots:
       picomatch: 4.0.7
 
   flatted@3.4.4: {}
+
+  fontaine@1.0.0(esbuild@0.28.1)(postcss@8.5.29)(rolldown@1.2.12)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)):
+    dependencies:
+      '@capsizecss/unpack': 4.0.1
+      css-tree: 3.2.1
+      magic-string: 1.4.3
+      unplugin: 3.4.0(esbuild@0.28.1)(rolldown@1.2.12)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
+    optionalDependencies:
+      postcss: 8.5.29
+    transitivePeerDependencies:
+      - '@farmfe/core'
+      - '@rsbuild/core'
+      - '@rspack/core'
+      - bun-types-no-globals
+      - esbuild
+      - rolldown
+      - rollup
+      - unloader
+      - vite
+      - webpack
+
+  fontkitten@1.0.3:
+    dependencies:
+      tiny-inflate: 1.0.3
 
   fsevents@2.3.3:
     optional: true
@@ -3321,6 +3467,8 @@ snapshots:
       '@babel/parser': 7.29.9
       '@babel/types': 7.29.8
       source-map-js: 1.2.2
+
+  mdn-data@2.27.1: {}
 
   miniflare@5.20261001.0-alpha(@types/node@26.6.4):
     dependencies:
@@ -3498,6 +3646,8 @@ snapshots:
 
   temporal-utils@1.0.3: {}
 
+  tiny-inflate@1.0.3: {}
+
   tinybench@6.2.0: {}
 
   tinyexec@1.3.1: {}
@@ -3549,6 +3699,16 @@ snapshots:
   unenv@2.0.0-rc.24:
     dependencies:
       pathe: 2.0.3
+
+  unplugin@3.4.0(esbuild@0.28.1)(rolldown@1.2.12)(vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)):
+    dependencies:
+      '@jridgewell/remapping': 2.3.5
+      picomatch: 4.0.7
+      webpack-virtual-modules: 0.6.2
+    optionalDependencies:
+      esbuild: 0.28.1
+      rolldown: 1.2.12
+      vite: 8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
 
   vite@8.3.3(@types/node@26.6.4)(esbuild@0.28.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1):
     dependencies:
@@ -3626,6 +3786,8 @@ snapshots:
   vscode-languageserver-textdocument@1.0.15: {}
 
   vscode-uri@3.2.0: {}
+
+  webpack-virtual-modules@0.6.2: {}
 
   why-is-node-running@3.2.1: {}
 

@@ -1,0 +1,12 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .home-page
+    display: grid
+    gap: var(--space-xl)
+    margin-inline: auto
+    max-width: var(--measure)
+    padding: var(--space-section) var(--space-gutter)
+
+    .app-name
+      @include typography.display

@@ -7,6 +7,7 @@
     {
       "filename": [
         "**/i18n/dictionary-fr.ts",
+        "apps/web/DESIGN.md",
         "apps/worker/scripts/seed.ts",
         "apps/worker/src/**/*.test.ts",
         "apps/worker/src/infrastructure/http/api-test-harness.ts",
@@ -24,6 +25,7 @@
     "anne",
     "ANSEL",
     "bertin",
+    "bezier",
     "biomejs",
     "cloudflare",
     "dubois",
@@ -37,14 +39,17 @@
     "guerin",
     "guérin",
     "helene",
+    "Hyperlegible",
     "ines",
     "jeanne",
     "karim",
     "Lacourpaille",
+    "lnum",
     "lucie",
     "michel",
     "misreadable",
     "noah",
+    "nums",
     "nosniff",
     "odile",
     "oklch",
@@ -58,7 +63,9 @@
     "sophie",
     "Supabase",
     "thomas",
+    "tnum",
     "workerd",
-    "yvonne"
+    "yvonne",
+    "zoomable"
   ]
 }

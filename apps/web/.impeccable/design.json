@@ -1,0 +1,858 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-07T19:11:49.095Z",
+  "title": "Design System: Arbor",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Matte Paper",
+        "canonical": "oklch(0.968 0.006 235)",
+        "dark": "oklch(0.205 0.028 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.006 235)",
+          "oklch(0.264 0.006 235)",
+          "oklch(0.379 0.006 235)",
+          "oklch(0.493 0.006 235)",
+          "oklch(0.607 0.006 235)",
+          "oklch(0.721 0.006 235)",
+          "oklch(0.836 0.006 235)",
+          "oklch(0.950 0.006 235)"
+        ]
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "Shaded Paper",
+        "canonical": "oklch(0.938 0.010 235)",
+        "dark": "oklch(0.240 0.032 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.010 235)",
+          "oklch(0.264 0.010 235)",
+          "oklch(0.379 0.010 235)",
+          "oklch(0.493 0.010 235)",
+          "oklch(0.607 0.010 235)",
+          "oklch(0.721 0.010 235)",
+          "oklch(0.836 0.010 235)",
+          "oklch(0.950 0.010 235)"
+        ]
+      },
+      "paper-deep": {
+        "role": "neutral",
+        "displayName": "Spine Paper",
+        "canonical": "oklch(0.905 0.012 235)",
+        "dark": "oklch(0.170 0.026 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.012 235)",
+          "oklch(0.264 0.012 235)",
+          "oklch(0.379 0.012 235)",
+          "oklch(0.493 0.012 235)",
+          "oklch(0.607 0.012 235)",
+          "oklch(0.721 0.012 235)",
+          "oklch(0.836 0.012 235)",
+          "oklch(0.950 0.012 235)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Navy Ink",
+        "canonical": "oklch(0.24 0.035 262)",
+        "dark": "oklch(0.945 0.008 240)",
+        "tonalRamp": [
+          "oklch(0.150 0.035 262)",
+          "oklch(0.264 0.035 262)",
+          "oklch(0.379 0.035 262)",
+          "oklch(0.493 0.035 262)",
+          "oklch(0.607 0.035 262)",
+          "oklch(0.721 0.035 262)",
+          "oklch(0.836 0.035 262)",
+          "oklch(0.950 0.035 262)"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Faded Ink",
+        "canonical": "oklch(0.42 0.030 262)",
+        "dark": "oklch(0.80 0.018 240)",
+        "tonalRamp": [
+          "oklch(0.150 0.030 262)",
+          "oklch(0.264 0.030 262)",
+          "oklch(0.379 0.030 262)",
+          "oklch(0.493 0.030 262)",
+          "oklch(0.607 0.030 262)",
+          "oklch(0.721 0.030 262)",
+          "oklch(0.836 0.030 262)",
+          "oklch(0.950 0.030 262)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line Ink",
+        "canonical": "oklch(0.32 0.035 262)",
+        "dark": "oklch(0.82 0.02 240)",
+        "tonalRamp": [
+          "oklch(0.150 0.035 262)",
+          "oklch(0.264 0.035 262)",
+          "oklch(0.379 0.035 262)",
+          "oklch(0.493 0.035 262)",
+          "oklch(0.607 0.035 262)",
+          "oklch(0.721 0.035 262)",
+          "oklch(0.836 0.035 262)",
+          "oklch(0.950 0.035 262)"
+        ]
+      },
+      "ghost": {
+        "role": "neutral",
+        "displayName": "Printed Outline",
+        "canonical": "oklch(0.60 0.025 250)",
+        "dark": "oklch(0.60 0.03 250)",
+        "tonalRamp": [
+          "oklch(0.150 0.025 250)",
+          "oklch(0.264 0.025 250)",
+          "oklch(0.379 0.025 250)",
+          "oklch(0.493 0.025 250)",
+          "oklch(0.607 0.025 250)",
+          "oklch(0.721 0.025 250)",
+          "oklch(0.836 0.025 250)",
+          "oklch(0.950 0.025 250)"
+        ]
+      },
+      "ghost-soft": {
+        "role": "neutral",
+        "displayName": "Faint Outline",
+        "canonical": "oklch(0.84 0.014 245)",
+        "dark": "oklch(0.34 0.03 255)",
+        "tonalRamp": [
+          "oklch(0.150 0.014 245)",
+          "oklch(0.264 0.014 245)",
+          "oklch(0.379 0.014 245)",
+          "oklch(0.493 0.014 245)",
+          "oklch(0.607 0.014 245)",
+          "oklch(0.721 0.014 245)",
+          "oklch(0.836 0.014 245)",
+          "oklch(0.950 0.014 245)"
+        ]
+      },
+      "sticker": {
+        "role": "neutral",
+        "displayName": "Sticker White",
+        "canonical": "oklch(0.995 0.002 95)",
+        "dark": "oklch(0.300 0.030 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.002 95)",
+          "oklch(0.264 0.002 95)",
+          "oklch(0.379 0.002 95)",
+          "oklch(0.493 0.002 95)",
+          "oklch(0.607 0.002 95)",
+          "oklch(0.721 0.002 95)",
+          "oklch(0.836 0.002 95)",
+          "oklch(0.950 0.002 95)"
+        ]
+      },
+      "sticker-edge": {
+        "role": "neutral",
+        "displayName": "Sticker Edge",
+        "canonical": "oklch(0.88 0.008 245)",
+        "dark": "oklch(0.38 0.03 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.008 245)",
+          "oklch(0.264 0.008 245)",
+          "oklch(0.379 0.008 245)",
+          "oklch(0.493 0.008 245)",
+          "oklch(0.607 0.008 245)",
+          "oklch(0.721 0.008 245)",
+          "oklch(0.836 0.008 245)",
+          "oklch(0.950 0.008 245)"
+        ]
+      },
+      "shadow": {
+        "role": "neutral",
+        "displayName": "Shadow",
+        "canonical": "oklch(0.22 0.04 262)",
+        "dark": "oklch(0.08 0.02 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.04 262)",
+          "oklch(0.264 0.04 262)",
+          "oklch(0.379 0.04 262)",
+          "oklch(0.493 0.04 262)",
+          "oklch(0.607 0.04 262)",
+          "oklch(0.721 0.04 262)",
+          "oklch(0.836 0.04 262)",
+          "oklch(0.950 0.04 262)"
+        ]
+      },
+      "matte": {
+        "role": "neutral",
+        "displayName": "Matte Grey",
+        "canonical": "oklch(0.55 0.005 260)",
+        "dark": "oklch(0.62 0.005 260)",
+        "tonalRamp": [
+          "oklch(0.150 0.005 260)",
+          "oklch(0.264 0.005 260)",
+          "oklch(0.379 0.005 260)",
+          "oklch(0.493 0.005 260)",
+          "oklch(0.607 0.005 260)",
+          "oklch(0.721 0.005 260)",
+          "oklch(0.836 0.005 260)",
+          "oklch(0.950 0.005 260)"
+        ]
+      },
+      "focus": {
+        "role": "neutral",
+        "displayName": "Focus Blue",
+        "canonical": "oklch(0.48 0.17 262)",
+        "dark": "oklch(0.82 0.14 82)",
+        "tonalRamp": [
+          "oklch(0.150 0.17 262)",
+          "oklch(0.264 0.17 262)",
+          "oklch(0.379 0.17 262)",
+          "oklch(0.493 0.17 262)",
+          "oklch(0.607 0.17 262)",
+          "oklch(0.721 0.17 262)",
+          "oklch(0.836 0.17 262)",
+          "oklch(0.950 0.17 262)"
+        ]
+      },
+      "warn": {
+        "role": "tertiary",
+        "displayName": "Check Amber",
+        "canonical": "oklch(0.47 0.11 65)",
+        "dark": "oklch(0.84 0.12 80)",
+        "tonalRamp": [
+          "oklch(0.150 0.11 65)",
+          "oklch(0.264 0.11 65)",
+          "oklch(0.379 0.11 65)",
+          "oklch(0.493 0.11 65)",
+          "oklch(0.607 0.11 65)",
+          "oklch(0.721 0.11 65)",
+          "oklch(0.836 0.11 65)",
+          "oklch(0.950 0.11 65)"
+        ]
+      },
+      "warn-bg": {
+        "role": "tertiary",
+        "displayName": "Check Amber Wash",
+        "canonical": "oklch(0.95 0.05 85)",
+        "dark": "oklch(0.32 0.05 75)",
+        "tonalRamp": [
+          "oklch(0.150 0.05 85)",
+          "oklch(0.264 0.05 85)",
+          "oklch(0.379 0.05 85)",
+          "oklch(0.493 0.05 85)",
+          "oklch(0.607 0.05 85)",
+          "oklch(0.721 0.05 85)",
+          "oklch(0.836 0.05 85)",
+          "oklch(0.950 0.05 85)"
+        ]
+      },
+      "action": {
+        "role": "primary",
+        "displayName": "Navy Ink (action)",
+        "canonical": "oklch(0.24 0.035 262)",
+        "dark": "oklch(0.82 0.14 82)",
+        "tonalRamp": [
+          "oklch(0.150 0.035 262)",
+          "oklch(0.264 0.035 262)",
+          "oklch(0.379 0.035 262)",
+          "oklch(0.493 0.035 262)",
+          "oklch(0.607 0.035 262)",
+          "oklch(0.721 0.035 262)",
+          "oklch(0.836 0.035 262)",
+          "oklch(0.950 0.035 262)"
+        ]
+      },
+      "on-action": {
+        "role": "primary",
+        "displayName": "On Action",
+        "canonical": "oklch(0.985 0.004 235)",
+        "dark": "oklch(0.20 0.03 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.004 235)",
+          "oklch(0.264 0.004 235)",
+          "oklch(0.379 0.004 235)",
+          "oklch(0.493 0.004 235)",
+          "oklch(0.607 0.004 235)",
+          "oklch(0.721 0.004 235)",
+          "oklch(0.836 0.004 235)",
+          "oklch(0.950 0.004 235)"
+        ]
+      },
+      "cover": {
+        "role": "primary",
+        "displayName": "Album Vermilion",
+        "canonical": "oklch(0.53 0.19 32)",
+        "dark": "oklch(0.47 0.16 32)",
+        "tonalRamp": [
+          "oklch(0.150 0.19 32)",
+          "oklch(0.264 0.19 32)",
+          "oklch(0.379 0.19 32)",
+          "oklch(0.493 0.19 32)",
+          "oklch(0.607 0.19 32)",
+          "oklch(0.721 0.19 32)",
+          "oklch(0.836 0.19 32)",
+          "oklch(0.950 0.19 32)"
+        ]
+      },
+      "on-cover": {
+        "role": "primary",
+        "displayName": "On Cover",
+        "canonical": "oklch(0.99 0.004 80)",
+        "tonalRamp": [
+          "oklch(0.150 0.004 80)",
+          "oklch(0.264 0.004 80)",
+          "oklch(0.379 0.004 80)",
+          "oklch(0.493 0.004 80)",
+          "oklch(0.607 0.004 80)",
+          "oklch(0.721 0.004 80)",
+          "oklch(0.836 0.004 80)",
+          "oklch(0.950 0.004 80)"
+        ]
+      },
+      "g1": {
+        "role": "secondary",
+        "displayName": "Generation Ochre",
+        "canonical": "oklch(0.80 0.14 82)",
+        "tonalRamp": [
+          "oklch(0.150 0.14 82)",
+          "oklch(0.264 0.14 82)",
+          "oklch(0.379 0.14 82)",
+          "oklch(0.493 0.14 82)",
+          "oklch(0.607 0.14 82)",
+          "oklch(0.721 0.14 82)",
+          "oklch(0.836 0.14 82)",
+          "oklch(0.950 0.14 82)"
+        ]
+      },
+      "on-g1": {
+        "role": "secondary",
+        "displayName": "On Generation Ochre",
+        "canonical": "oklch(0.26 0.05 70)",
+        "dark": "oklch(0.20 0.04 70)",
+        "tonalRamp": [
+          "oklch(0.150 0.05 70)",
+          "oklch(0.264 0.05 70)",
+          "oklch(0.379 0.05 70)",
+          "oklch(0.493 0.05 70)",
+          "oklch(0.607 0.05 70)",
+          "oklch(0.721 0.05 70)",
+          "oklch(0.836 0.05 70)",
+          "oklch(0.950 0.05 70)"
+        ]
+      },
+      "g1-ink": {
+        "role": "secondary",
+        "displayName": "Generation Ochre Ink",
+        "canonical": "oklch(0.47 0.10 70)",
+        "dark": "oklch(0.84 0.12 82)",
+        "tonalRamp": [
+          "oklch(0.150 0.10 70)",
+          "oklch(0.264 0.10 70)",
+          "oklch(0.379 0.10 70)",
+          "oklch(0.493 0.10 70)",
+          "oklch(0.607 0.10 70)",
+          "oklch(0.721 0.10 70)",
+          "oklch(0.836 0.10 70)",
+          "oklch(0.950 0.10 70)"
+        ]
+      },
+      "g2": {
+        "role": "secondary",
+        "displayName": "Generation Vermilion",
+        "canonical": "oklch(0.53 0.19 32)",
+        "dark": "oklch(0.71 0.15 36)",
+        "tonalRamp": [
+          "oklch(0.150 0.19 32)",
+          "oklch(0.264 0.19 32)",
+          "oklch(0.379 0.19 32)",
+          "oklch(0.493 0.19 32)",
+          "oklch(0.607 0.19 32)",
+          "oklch(0.721 0.19 32)",
+          "oklch(0.836 0.19 32)",
+          "oklch(0.950 0.19 32)"
+        ]
+      },
+      "on-g2": {
+        "role": "secondary",
+        "displayName": "On Generation Vermilion",
+        "canonical": "oklch(0.99 0.004 80)",
+        "dark": "oklch(0.18 0.03 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.004 80)",
+          "oklch(0.264 0.004 80)",
+          "oklch(0.379 0.004 80)",
+          "oklch(0.493 0.004 80)",
+          "oklch(0.607 0.004 80)",
+          "oklch(0.721 0.004 80)",
+          "oklch(0.836 0.004 80)",
+          "oklch(0.950 0.004 80)"
+        ]
+      },
+      "g2-ink": {
+        "role": "secondary",
+        "displayName": "Generation Vermilion Ink",
+        "canonical": "oklch(0.49 0.18 32)",
+        "dark": "oklch(0.78 0.13 36)",
+        "tonalRamp": [
+          "oklch(0.150 0.18 32)",
+          "oklch(0.264 0.18 32)",
+          "oklch(0.379 0.18 32)",
+          "oklch(0.493 0.18 32)",
+          "oklch(0.607 0.18 32)",
+          "oklch(0.721 0.18 32)",
+          "oklch(0.836 0.18 32)",
+          "oklch(0.950 0.18 32)"
+        ]
+      },
+      "g3": {
+        "role": "secondary",
+        "displayName": "Generation Pine",
+        "canonical": "oklch(0.49 0.10 165)",
+        "dark": "oklch(0.73 0.11 165)",
+        "tonalRamp": [
+          "oklch(0.150 0.10 165)",
+          "oklch(0.264 0.10 165)",
+          "oklch(0.379 0.10 165)",
+          "oklch(0.493 0.10 165)",
+          "oklch(0.607 0.10 165)",
+          "oklch(0.721 0.10 165)",
+          "oklch(0.836 0.10 165)",
+          "oklch(0.950 0.10 165)"
+        ]
+      },
+      "on-g3": {
+        "role": "secondary",
+        "displayName": "On Generation Pine",
+        "canonical": "oklch(0.99 0.004 80)",
+        "dark": "oklch(0.18 0.03 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.004 80)",
+          "oklch(0.264 0.004 80)",
+          "oklch(0.379 0.004 80)",
+          "oklch(0.493 0.004 80)",
+          "oklch(0.607 0.004 80)",
+          "oklch(0.721 0.004 80)",
+          "oklch(0.836 0.004 80)",
+          "oklch(0.950 0.004 80)"
+        ]
+      },
+      "g3-ink": {
+        "role": "secondary",
+        "displayName": "Generation Pine Ink",
+        "canonical": "oklch(0.44 0.09 165)",
+        "dark": "oklch(0.80 0.10 165)",
+        "tonalRamp": [
+          "oklch(0.150 0.09 165)",
+          "oklch(0.264 0.09 165)",
+          "oklch(0.379 0.09 165)",
+          "oklch(0.493 0.09 165)",
+          "oklch(0.607 0.09 165)",
+          "oklch(0.721 0.09 165)",
+          "oklch(0.836 0.09 165)",
+          "oklch(0.950 0.09 165)"
+        ]
+      },
+      "g4": {
+        "role": "secondary",
+        "displayName": "Generation Ultramarine",
+        "canonical": "oklch(0.47 0.15 262)",
+        "dark": "oklch(0.73 0.11 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.15 262)",
+          "oklch(0.264 0.15 262)",
+          "oklch(0.379 0.15 262)",
+          "oklch(0.493 0.15 262)",
+          "oklch(0.607 0.15 262)",
+          "oklch(0.721 0.15 262)",
+          "oklch(0.836 0.15 262)",
+          "oklch(0.950 0.15 262)"
+        ]
+      },
+      "on-g4": {
+        "role": "secondary",
+        "displayName": "On Generation Ultramarine",
+        "canonical": "oklch(0.99 0.004 80)",
+        "dark": "oklch(0.18 0.03 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.004 80)",
+          "oklch(0.264 0.004 80)",
+          "oklch(0.379 0.004 80)",
+          "oklch(0.493 0.004 80)",
+          "oklch(0.607 0.004 80)",
+          "oklch(0.721 0.004 80)",
+          "oklch(0.836 0.004 80)",
+          "oklch(0.950 0.004 80)"
+        ]
+      },
+      "g4-ink": {
+        "role": "secondary",
+        "displayName": "Generation Ultramarine Ink",
+        "canonical": "oklch(0.45 0.15 262)",
+        "dark": "oklch(0.80 0.10 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.15 262)",
+          "oklch(0.264 0.15 262)",
+          "oklch(0.379 0.15 262)",
+          "oklch(0.493 0.15 262)",
+          "oklch(0.607 0.15 262)",
+          "oklch(0.721 0.15 262)",
+          "oklch(0.836 0.15 262)",
+          "oklch(0.950 0.15 262)"
+        ]
+      },
+      "g5": {
+        "role": "secondary",
+        "displayName": "Generation Magenta",
+        "canonical": "oklch(0.47 0.16 350)",
+        "dark": "oklch(0.73 0.12 350)",
+        "tonalRamp": [
+          "oklch(0.150 0.16 350)",
+          "oklch(0.264 0.16 350)",
+          "oklch(0.379 0.16 350)",
+          "oklch(0.493 0.16 350)",
+          "oklch(0.607 0.16 350)",
+          "oklch(0.721 0.16 350)",
+          "oklch(0.836 0.16 350)",
+          "oklch(0.950 0.16 350)"
+        ]
+      },
+      "on-g5": {
+        "role": "secondary",
+        "displayName": "On Generation Magenta",
+        "canonical": "oklch(0.99 0.004 80)",
+        "dark": "oklch(0.18 0.03 262)",
+        "tonalRamp": [
+          "oklch(0.150 0.004 80)",
+          "oklch(0.264 0.004 80)",
+          "oklch(0.379 0.004 80)",
+          "oklch(0.493 0.004 80)",
+          "oklch(0.607 0.004 80)",
+          "oklch(0.721 0.004 80)",
+          "oklch(0.836 0.004 80)",
+          "oklch(0.950 0.004 80)"
+        ]
+      },
+      "g5-ink": {
+        "role": "secondary",
+        "displayName": "Generation Magenta Ink",
+        "canonical": "oklch(0.45 0.16 350)",
+        "dark": "oklch(0.80 0.11 350)",
+        "tonalRamp": [
+          "oklch(0.150 0.16 350)",
+          "oklch(0.264 0.16 350)",
+          "oklch(0.379 0.16 350)",
+          "oklch(0.493 0.16 350)",
+          "oklch(0.607 0.16 350)",
+          "oklch(0.721 0.16 350)",
+          "oklch(0.836 0.16 350)",
+          "oklch(0.950 0.16 350)"
+        ]
+      },
+      "foil-a": {
+        "role": "tertiary",
+        "displayName": "Foil Cyan",
+        "canonical": "oklch(0.95 0.03 200)",
+        "dark": "oklch(0.36 0.05 200)",
+        "tonalRamp": [
+          "oklch(0.150 0.03 200)",
+          "oklch(0.264 0.03 200)",
+          "oklch(0.379 0.03 200)",
+          "oklch(0.493 0.03 200)",
+          "oklch(0.607 0.03 200)",
+          "oklch(0.721 0.03 200)",
+          "oklch(0.836 0.03 200)",
+          "oklch(0.950 0.03 200)"
+        ]
+      },
+      "foil-b": {
+        "role": "tertiary",
+        "displayName": "Foil Straw",
+        "canonical": "oklch(0.96 0.045 95)",
+        "dark": "oklch(0.38 0.06 95)",
+        "tonalRamp": [
+          "oklch(0.150 0.045 95)",
+          "oklch(0.264 0.045 95)",
+          "oklch(0.379 0.045 95)",
+          "oklch(0.493 0.045 95)",
+          "oklch(0.607 0.045 95)",
+          "oklch(0.721 0.045 95)",
+          "oklch(0.836 0.045 95)",
+          "oklch(0.950 0.045 95)"
+        ]
+      },
+      "foil-c": {
+        "role": "tertiary",
+        "displayName": "Foil Pink",
+        "canonical": "oklch(0.94 0.04 330)",
+        "dark": "oklch(0.35 0.06 330)",
+        "tonalRamp": [
+          "oklch(0.150 0.04 330)",
+          "oklch(0.264 0.04 330)",
+          "oklch(0.379 0.04 330)",
+          "oklch(0.493 0.04 330)",
+          "oklch(0.607 0.04 330)",
+          "oklch(0.721 0.04 330)",
+          "oklch(0.836 0.04 330)",
+          "oklch(0.950 0.04 330)"
+        ]
+      },
+      "foil-d": {
+        "role": "tertiary",
+        "displayName": "Foil Mint",
+        "canonical": "oklch(0.95 0.035 160)",
+        "dark": "oklch(0.37 0.05 160)",
+        "tonalRamp": [
+          "oklch(0.150 0.035 160)",
+          "oklch(0.264 0.035 160)",
+          "oklch(0.379 0.035 160)",
+          "oklch(0.493 0.035 160)",
+          "oklch(0.607 0.035 160)",
+          "oklch(0.721 0.035 160)",
+          "oklch(0.836 0.035 160)",
+          "oklch(0.950 0.035 160)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The cover headline only (the A3 print title uses the same voice at 104px)."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Band ribbons, the person name on their sheet, welcome and first-visit titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Generation band heads, sheet group headings, the app bar family name."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase tracked labels: nav tabs, fact labels, surnames, the Compléter action."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Slot numbers, dates and ranges, always tabular lining figures."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text, 66 to 72ch."
+      },
+      "body-small": {
+        "displayName": "Body small",
+        "purpose": "Secondary lines and hints; the phone floor."
+      },
+      "name": {
+        "displayName": "Name",
+        "purpose": "Given names on stickers and rows; button labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sticker",
+        "value": "0 0 0 1px var(--sticker-edge), 0 1px 1.5px color-mix(in oklch, var(--shadow) 30%, transparent), 0 6px 12px -6px color-mix(in oklch, var(--shadow) 55%, transparent)",
+        "purpose": "Every living person sticker, with the varnish gloss overlay."
+      },
+      {
+        "name": "sticker-gloss",
+        "value": "linear-gradient(118deg, oklch(1 0 0 / 0.42) 0%, oklch(1 0 0 / 0.08) 22%, transparent 38%, transparent 78%, oklch(1 0 0 / 0.14) 100%)",
+        "purpose": "Varnish overlay on glossy stickers; absent on the deceased."
+      },
+      {
+        "name": "sticker-matte",
+        "value": "0 0 0 1px var(--sticker-edge), 0 1px 2px color-mix(in oklch, var(--shadow) 26%, transparent)",
+        "purpose": "Deceased people."
+      },
+      {
+        "name": "sticker-foil",
+        "value": "0 0 0 1px var(--sticker-edge), 0 0 0 4px var(--paper), 0 0 0 7px var(--ink), 0 14px 22px -10px color-mix(in oklch, var(--shadow) 70%, transparent)",
+        "purpose": "The focus person, over the foil gradient (rings 5px / 8.5px on phone)."
+      },
+      {
+        "name": "sticker-far",
+        "value": "0 0 0 1px var(--sticker-edge)",
+        "purpose": "Distant relatives flattened into the page."
+      },
+      {
+        "name": "mini-sticker",
+        "value": "0 0 0 1px var(--sticker-edge), 0 3px 6px -3px color-mix(in oklch, var(--shadow) 60%, transparent)",
+        "purpose": "Mini stickers in relation rows and pickers."
+      },
+      {
+        "name": "button-primary",
+        "value": "0 6px 14px -8px var(--shadow)",
+        "purpose": "Primary button drop; deepens to 0 10px 18px -8px on hover."
+      },
+      {
+        "name": "side-sheet",
+        "value": "-24px 0 40px -30px var(--shadow)",
+        "purpose": "Desktop person sheet over the tree canvas."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The only easing curve."
+      },
+      {
+        "name": "state",
+        "value": "160ms",
+        "purpose": "Hover, press and colour transitions."
+      },
+      {
+        "name": "switch",
+        "value": "200ms",
+        "purpose": "Switch knob travel."
+      },
+      {
+        "name": "sticker-press",
+        "value": "560ms ease-out; from translate(-3px, -16px) rotate(-3.5deg) scale(1.07), through scale(0.985) at 62%, to rest",
+        "purpose": "The one motion: a new sticker pressing into its slot. Off under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "640px"
+      },
+      {
+        "name": "tablet",
+        "value": "1100px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one main action per view.",
+      "html": "<button class=\"ds-btn-primary\">Créer l’arbre de votre famille</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px; border-radius: 8px; border: 2px solid transparent; background: oklch(0.24 0.035 262); color: oklch(0.985 0.004 235); font: 700 18px/1.15 \"Atkinson Hyperlegible\", system-ui, sans-serif; cursor: pointer; box-shadow: 0 6px 14px -8px oklch(0.22 0.04 262); transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 18px -8px oklch(0.22 0.04 262); } .ds-btn-primary:active { transform: translateY(1px); box-shadow: 0 1px 2px -1px oklch(0.22 0.04 262); } .ds-btn-primary:focus-visible { outline: 3px solid oklch(0.48 0.17 262); outline-offset: 3px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action next to a primary.",
+      "html": "<button class=\"ds-btn-ghost\">Partager</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px; border-radius: 8px; border: 2px solid currentColor; background: transparent; color: oklch(0.24 0.035 262); font: 700 18px/1.15 \"Atkinson Hyperlegible\", system-ui, sans-serif; cursor: pointer; transition: background-color 160ms; } .ds-btn-ghost:hover { background: color-mix(in oklch, currentColor 8%, transparent); } .ds-btn-ghost:focus-visible { outline: 3px solid oklch(0.48 0.17 262); outline-offset: 3px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Large bordered field, as in \"Who are you in this tree?\".",
+      "html": "<label class=\"ds-field\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><circle cx=\"11\" cy=\"11\" r=\"6.5\"/><path d=\"m16 16 4.5 4.5\"/></svg><input placeholder=\"Votre prénom\"></label>",
+      "css": ".ds-field { display: flex; align-items: center; gap: 10px; border: 2px solid oklch(0.24 0.035 262); border-radius: 10px; padding: 0 12px; min-height: 56px; background: oklch(0.968 0.006 235); color: oklch(0.24 0.035 262); } .ds-field input { flex: 1; min-width: 0; border: 0; background: transparent; font: 400 18px \"Atkinson Hyperlegible\", system-ui, sans-serif; color: inherit; outline: none; height: 52px; } .ds-field input::placeholder { color: oklch(0.42 0.03 262); opacity: 1; } .ds-field:focus-within { outline: 3px solid oklch(0.48 0.17 262); outline-offset: 2px; }"
+    },
+    {
+      "name": "Person Sticker",
+      "kind": "card",
+      "refersTo": "sticker",
+      "description": "A living person in a numbered slot (generation 3).",
+      "html": "<div class=\"ds-slot\"><span class=\"ds-slot-num\">12</span><a class=\"ds-sticker\" href=\"#\"><span class=\"ds-art\"><span class=\"ds-mono\">CM</span></span><span class=\"ds-cap\"><span class=\"ds-given\">Claire</span><span class=\"ds-sur\">Morel</span><span class=\"ds-dates\">1961</span></span></a></div>",
+      "css": ".ds-slot { --gc: oklch(0.49 0.10 165); --on-gc: oklch(0.99 0.004 80); --gc-ink: oklch(0.44 0.09 165); width: 112px; } .ds-slot-num { display: block; height: 18px; font: 700 16px/1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; color: var(--gc-ink); font-variant-numeric: tabular-nums; } .ds-sticker { position: relative; display: flex; flex-direction: column; width: 112px; height: 150px; padding: 5px; border-radius: 7px; background: oklch(0.995 0.002 95); color: oklch(0.24 0.035 262); text-decoration: none; box-shadow: 0 0 0 1px oklch(0.88 0.008 245), 0 1px 1.5px color-mix(in oklch, oklch(0.22 0.04 262) 30%, transparent), 0 6px 12px -6px color-mix(in oklch, oklch(0.22 0.04 262) 55%, transparent); } .ds-sticker::after { content: \"\"; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(118deg, oklch(1 0 0 / 0.42) 0%, oklch(1 0 0 / 0.08) 22%, transparent 38%, transparent 78%, oklch(1 0 0 / 0.14) 100%); } .ds-sticker:focus-visible { outline: 3px solid oklch(0.48 0.17 262); outline-offset: 3px; } .ds-art { flex: 0 0 47%; border-radius: 4px; display: grid; place-items: center; background-color: var(--gc); background-image: radial-gradient(circle, oklch(1 0 0 / 0.16) 0.9px, transparent 1.5px); background-size: 5px 5px; } .ds-mono { font: 800 40px/1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; color: var(--on-gc); } .ds-cap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1px; } .ds-given { font: 700 16px/1.1 \"Atkinson Hyperlegible\", system-ui, sans-serif; } .ds-sur { font: 600 13px/1.1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; color: oklch(0.42 0.03 262); } .ds-dates { font: 600 14px/1.15 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; font-variant-numeric: tabular-nums lining-nums; margin-top: 3px; }"
+    },
+    {
+      "name": "Deceased Sticker",
+      "kind": "card",
+      "refersTo": "sticker",
+      "description": "Matte sticker: no gloss, dulled art, a rule over the caption, a dagger in the dates.",
+      "html": "<div class=\"ds-dead\"><span class=\"ds-dead-art\">LM</span><span class=\"ds-dead-cap\"><b>Louis</b><span class=\"ds-dead-sur\">Morel</span><span class=\"ds-dead-dates\">1905 – † 1978</span></span></div>",
+      "css": ".ds-dead { display: flex; flex-direction: column; width: 112px; height: 150px; padding: 5px; border-radius: 7px; background: oklch(0.995 0.002 95); color: oklch(0.24 0.035 262); box-shadow: 0 0 0 1px oklch(0.88 0.008 245), 0 1px 2px color-mix(in oklch, oklch(0.22 0.04 262) 26%, transparent); } .ds-dead-art { flex: 0 0 47%; border-radius: 4px; display: grid; place-items: center; background: color-mix(in oklab, oklch(0.53 0.19 32) 42%, oklch(0.55 0.005 260)); font: 800 40px/1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; color: oklch(0.99 0.004 80); } .ds-dead-cap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-top: 1.5px solid oklch(0.24 0.035 262); margin: 4px 10px 0; padding-top: 4px; font: 700 16px/1.1 \"Atkinson Hyperlegible\", system-ui, sans-serif; } .ds-dead-sur { font: 600 13px/1.1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.08em; color: oklch(0.42 0.03 262); } .ds-dead-dates { font: 600 14px/1.15 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; font-variant-numeric: tabular-nums lining-nums; }"
+    },
+    {
+      "name": "Ghost Slot",
+      "kind": "custom",
+      "refersTo": "ghost-slot",
+      "description": "An unknown person: a printed dashed outline with an invitation to complete it.",
+      "html": "<button class=\"ds-ghost\"><span class=\"ds-ghost-t\">Inconnu</span><span class=\"ds-ghost-s\">le père de Louis</span><span class=\"ds-ghost-add\">+ Compléter</span></button>",
+      "css": ".ds-ghost { width: 112px; height: 150px; border-radius: 7px; border: 2px dashed oklch(0.60 0.025 250); background: color-mix(in oklch, oklch(0.938 0.01 235) 60%, transparent); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 8px; color: oklch(0.42 0.03 262); cursor: pointer; font: 400 16px \"Atkinson Hyperlegible\", system-ui, sans-serif; transition: background-color 160ms, border-color 160ms; } .ds-ghost:hover { border-color: oklch(0.24 0.035 262); background: oklch(0.938 0.01 235); } .ds-ghost:focus-visible { outline: 3px solid oklch(0.48 0.17 262); outline-offset: 3px; } .ds-ghost-t { font: 800 22px/1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.04em; } .ds-ghost-s { font-size: 13px; line-height: 1.2; } .ds-ghost-add { margin-top: 4px; font: 700 13px/1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.06em; color: oklch(0.24 0.035 262); border: 1.5px solid currentColor; border-radius: 999px; padding: 5px 9px; background: oklch(0.968 0.006 235); }"
+    },
+    {
+      "name": "Generation Band Head",
+      "kind": "custom",
+      "refersTo": "generation-band-head",
+      "description": "Slanted generation-ink block heading a band, with its year range and count.",
+      "html": "<div class=\"ds-band\"><span class=\"ds-band-head\">Génération 3</span><span class=\"ds-band-range\">1932 – 1961</span><span class=\"ds-band-count\">7 personnes</span></div>",
+      "css": ".ds-band { display: flex; flex-direction: column; gap: 4px; padding: 14px 12px; background: color-mix(in oklch, oklch(0.49 0.10 165) 9%, oklch(0.968 0.006 235)); border-top: 2px solid color-mix(in oklch, oklch(0.49 0.10 165) 55%, oklch(0.968 0.006 235)); } .ds-band-head { align-self: flex-start; background: oklch(0.49 0.10 165); color: oklch(0.99 0.004 80); font: 800 19px/1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.02em; padding: 7px 22px 7px 10px; clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%); } .ds-band-range { font: 600 16px/1.2 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; font-variant-numeric: tabular-nums; color: oklch(0.24 0.035 262); } .ds-band-count { font: 600 14px/1.2 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.05em; color: oklch(0.44 0.09 165); }"
+    },
+    {
+      "name": "Relation Pill",
+      "kind": "chip",
+      "refersTo": "relation-pill",
+      "description": "Word label on a union line; dashed border for a free union.",
+      "html": "<span class=\"ds-pill\">mariés 1957</span> <span class=\"ds-pill ds-pill--soft\">union libre</span>",
+      "css": ".ds-pill { display: inline-block; background: oklch(0.968 0.006 235); color: oklch(0.24 0.035 262); border: 1.5px solid oklch(0.32 0.035 262); border-radius: 999px; padding: 3px 9px; font: 600 13.5px/1.12 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; letter-spacing: 0.01em; font-variant-numeric: tabular-nums; white-space: nowrap; } .ds-pill--soft { border-style: dashed; }"
+    },
+    {
+      "name": "View Switcher",
+      "kind": "nav",
+      "description": "Segmented tree navigation; the current tab is filled with Generation Pine.",
+      "html": "<div class=\"ds-nav\"><button aria-current=\"true\">Arbre</button><button>Liste</button><button>Affiche</button></div>",
+      "css": ".ds-nav { display: inline-flex; gap: 6px; background: oklch(0.968 0.006 235); border: 1.5px solid oklch(0.60 0.025 250); border-radius: 10px; padding: 4px; } .ds-nav button { min-height: 44px; border: 0; background: transparent; padding: 0 12px; border-radius: 7px; font: 700 16px/1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.04em; color: oklch(0.42 0.03 262); cursor: pointer; } .ds-nav button:hover { color: oklch(0.24 0.035 262); background: oklch(0.938 0.01 235); } .ds-nav button[aria-current=\"true\"] { background: oklch(0.49 0.10 165); color: oklch(0.99 0.004 80); } .ds-nav button:focus-visible { outline: 3px solid oklch(0.48 0.17 262); outline-offset: 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Family Sticker Album",
+    "overview": "Genealogy is collecting. The family is a French collector sticker album that every relative helps complete: each generation is a spread under its own coloured band, each person is a glossy sticker pressed into a numbered slot printed on matte paper, and a missing ancestor is a printed outline with its number, waiting, never a hole. The whole system is built from the materials of that object: cool matte paper, varnished stickers that stand proud of the page, bold clipped section bands, condensed numbers, and a vermilion cover.\n\nThe audience is a retiree on an old phone, and relatives who visit a few times a year. Density is low and targets are large: nothing interactive is smaller than 44px, the main action is 52px tall (60px on the cover), reading text is 18px, and phone views never go under 16px. Everything that carries meaning (death, relation kind, uncertainty, absence) is carried by shape and words as well as colour, because the printed sheet is often black and white and the eyes reading it are not always young.\n\nThe world is playful in its materials and sober in its behaviour: one foil sticker per view, one motion, flat paper everywhere except the stickers themselves.",
+    "keyCharacteristics": [
+      "Matte cool paper with glossy stickers as the only raised objects.",
+      "Five generation inks (ochre, vermilion, green, blue, magenta) used as identity, never as decoration or status.",
+      "Numbered slots, including empty ones: absence is shown as a dashed outline with an invitation.",
+      "Two voices: condensed uppercase Barlow for structure and numbers, Atkinson Hyperlegible for anything read.",
+      "Relation kinds told by line style plus a word, never by colour.",
+      "One signature motion: a sticker pressing into its slot."
+    ],
+    "rules": [
+      {
+        "name": "The Generation Ink Rule",
+        "body": "A generation hue means \"this generation\" and nothing else: its band, its slot numbers, its sticker art, its tinted band (ink at 9% into paper, top border at 55%). Never use a generation ink for status, emphasis or decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Matte Means Gone Rule",
+        "body": "A deceased person's sticker loses its varnish and its halftone, its art is dulled toward `matte`, a thin ink rule sits over the caption, and the dates carry a \"†\". Death is never told by colour alone and never by removing the person from view.",
+        "section": "colors"
+      },
+      {
+        "name": "The Line Speaks Rule",
+        "body": "Relation kinds are told by stroke, not hue: plain 2px for birth, heavy 3.2px for marriage, heavy dashed 7/5 for a free union, cut with two slashes for divorce, a hollow double line for adoption, dotted for a step-child, faint short dashes in `ghost` for an unknown link. Every line kind appears with its French word in the legend, and union lines carry a word pill on the canvas.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Anything read as a sentence, a button label or a given name is Atkinson Hyperlegible; anything that is a heading, a number, a date or a printed label is Barlow Condensed uppercase. Surnames are labels (uppercase, tracked); given names are names.",
+        "section": "typography"
+      },
+      {
+        "name": "The 16px Floor Rule",
+        "body": "On phone views nothing is smaller than 16px, including slot numbers, surnames, dates, the verify tag and the ghost-slot text. Smaller sizes (12 to 15px) exist only inside the zoomable desktop tree canvas and the print sheet, where stickers are scaled as a whole.",
+        "section": "typography"
+      },
+      {
+        "name": "The Stickers Stand Proud Rule",
+        "body": "Only stickers carry a gloss and a drop shadow. Bands, cards, lists, fields and panels are paper: flat, separated by rules and tints. If a new surface wants a shadow, it should either be a sticker or a floating panel.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do give every person a numbered slot, including unknown ones; show absence as a dashed `ghost` outline with \"Inconnu\" and a \"Compléter\" action.",
+      "Do colour a person only by their generation (`.g1` to `.g5`, cycling), through `--gc`, `--on-gc`, `--gc-ink`.",
+      "Do mark the deceased with all four signs: matte sticker, dulled art, ink rule over the caption, \"†\" in the dates.",
+      "Do tell relation kinds by stroke style and a French word, and keep the legend on every printed sheet.",
+      "Do keep one foil sticker per view: the focus person.",
+      "Do use tabular lining figures for every number and date.",
+      "Do keep targets at 44px minimum, primary actions at 52px, and phone text at 16px minimum.",
+      "Do render the print sheet on the forced light palette, and check it in greyscale: every meaning must survive black and white."
+    ],
+    "donts": [
+      "Don't use a generation ink for status, warnings or emphasis; amber `warn` is the only status colour.",
+      "Don't put a gloss or drop shadow on anything that is not a sticker, the primary button or a floating panel.",
+      "Don't tell a relation kind, a death or an absence by colour alone.",
+      "Don't set sentences, buttons or given names in Barlow Condensed, or headings and numbers in Atkinson.",
+      "Don't add motion beyond the sticker press and short state transitions.",
+      "Don't use pure white for the page; pure white is reserved for the printed sheet and the sticker stock."
+    ]
+  }
+}

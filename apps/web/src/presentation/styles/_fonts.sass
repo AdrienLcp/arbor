@@ -1,0 +1,21 @@
+// Side-effect module: emits top-level CSS. Loaded once, from globals.sass.
+//
+// Two faces, SIL Open Font License 1.1, self-hosted. Barlow Condensed sets the
+// generation bands, slot numbers and headings; Atkinson Hyperlegible, drawn for
+// low vision, sets everything read.
+
+@use '@adrienlcp/styles/fonts'
+
+@layer base
+  @include fonts.font-face('Atkinson Hyperlegible', '/fonts/atkinson-latin.woff2', fonts.$latin)
+  @include fonts.font-face('Atkinson Hyperlegible', '/fonts/atkinson-latin-ext.woff2', fonts.$latin-ext)
+  @include fonts.font-face('Atkinson Hyperlegible', '/fonts/atkinson-bold-latin.woff2', fonts.$latin, $weight: 700)
+  @include fonts.font-face('Atkinson Hyperlegible', '/fonts/atkinson-bold-latin-ext.woff2', fonts.$latin-ext, $weight: 700)
+  @include fonts.font-face('Atkinson Hyperlegible', '/fonts/atkinson-italic-latin.woff2', fonts.$latin, $style: italic)
+  @include fonts.font-face('Atkinson Hyperlegible', '/fonts/atkinson-italic-latin-ext.woff2', fonts.$latin-ext, $style: italic)
+  @include fonts.font-face('Barlow Condensed', '/fonts/barlow-condensed-semibold-latin.woff2', fonts.$latin, $weight: 600)
+  @include fonts.font-face('Barlow Condensed', '/fonts/barlow-condensed-semibold-latin-ext.woff2', fonts.$latin-ext, $weight: 600)
+  @include fonts.font-face('Barlow Condensed', '/fonts/barlow-condensed-bold-latin.woff2', fonts.$latin, $weight: 700)
+  @include fonts.font-face('Barlow Condensed', '/fonts/barlow-condensed-bold-latin-ext.woff2', fonts.$latin-ext, $weight: 700)
+  @include fonts.font-face('Barlow Condensed', '/fonts/barlow-condensed-extrabold-latin.woff2', fonts.$latin, $weight: 800)
+  @include fonts.font-face('Barlow Condensed', '/fonts/barlow-condensed-extrabold-latin-ext.woff2', fonts.$latin-ext, $weight: 800)

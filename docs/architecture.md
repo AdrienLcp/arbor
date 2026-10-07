@@ -102,6 +102,24 @@ and Safari do not, so each entry — the Worker's `index.ts`, the web app's
 - Two `wrangler dev` on port 8790 make workerd crash and restart in a loop with
   no message: stop the leftover `workerd.exe` before blaming the code.
 
+## The look
+
+The direction is the collector sticker album, written down in
+`apps/web/DESIGN.md` (sidecar `apps/web/.impeccable/design.json`). Its reference
+page, `.impeccable/directions/album/index.html`, shows the five screens steps
+05 to 10 build: landing, tree on phone and desktop, person sheet, "Qui êtes-vous ?",
+the A3 print.
+
+- Tokens live in `apps/web/src/presentation/styles/_tokens.sass`, every colour as
+  `light-dark()`; `contrast.test.ts` beside them holds every pair a screen puts
+  together at WCAG AA in both themes.
+- Fonts are self-hosted in `apps/web/public/fonts` (Latin and Latin Extended
+  subsets). fontaine writes metric-matched Arial fallbacks, but only into
+  `font-family` declarations: the `--font-*` tokens name the `… fallback` face
+  themselves.
+- The theme choice is stored under `arbor:theme`; the Vite plugin of
+  `@adrienlcp/theme-preference` stamps it before the first paint.
+
 ## Security notes
 
 - Keys: 128-bit random, base64url, sent in an `Authorization` header; only
