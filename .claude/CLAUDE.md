@@ -17,7 +17,8 @@ and English.
 ## Where things are
 
 - `docs/plans/README.md` — the build plan index. Read it first, then open only
-  the step being worked on.
+  the step being worked on. A delivered step ends with `/handoff` for the
+  next one, so a fresh session starts from "on reprend".
 - `docs/product.md` — who it is for, the access model, privacy. Any screen that
   shares, deletes or shows a living person's data must respect it.
 - `docs/data-model.md` — people, unions, filiations, events, the change log.
