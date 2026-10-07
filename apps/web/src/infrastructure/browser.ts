@@ -1,4 +1,30 @@
-export { copyText } from '@adrienlcp/browser'
+import { Result } from '@adrienlcp/result'
+
+export { copyText, selectContents } from '@adrienlcp/browser'
+
+/** Whether the device has a share sheet — WhatsApp, SMS, mail — a link can be handed to. */
+export const canShareLinks = (): boolean =>
+  typeof navigator.share === 'function'
+
+/** Opens the device's share sheet on a link; fails where there is none, or when the person closes it. */
+export const shareLink = async (link: {
+  title: string
+  url: string
+}): Promise<Result<void, 'closed' | 'unavailable'>> => {
+  if (!canShareLinks()) {
+    return Result.failure('unavailable')
+  }
+
+  try {
+    await navigator.share(link)
+    return Result.success()
+  } catch {
+    return Result.failure('closed')
+  }
+}
+
+/** Where the app is served from, the start of every link it hands out. */
+export const pageOrigin = (): string => window.location.origin
 
 /** The reader's languages in order of preference: the interface language and the shape of numbers and dates. */
 export const preferredLanguages = (): readonly string[] => navigator.languages

@@ -80,3 +80,16 @@
 
       &[data-pressed]:not([data-disabled])
         opacity: 0.7
+
+    &.quiet
+      background: transparent
+      color: inherit
+      gap: var(--space-s)
+      min-height: var(--target)
+      padding: 0 var(--space-m)
+
+      &[data-hovered]:not([data-disabled])
+        background: var(--paper-2)
+
+      &[data-pressed]:not([data-disabled])
+        background: var(--paper-deep)

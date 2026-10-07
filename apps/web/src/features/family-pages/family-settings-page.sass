@@ -1,0 +1,15 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .family-settings-page
+    @include layout.column(40rem)
+    display: grid
+    gap: var(--space-3xl)
+    padding-block: var(--space-2xl) var(--space-section)
+
+    .family-settings-title
+      @include typography.headline
+
+    .theme-switch
+      width: 100%

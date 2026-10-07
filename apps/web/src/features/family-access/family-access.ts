@@ -49,6 +49,10 @@ export const keysToTry = (access: FamilyAccess): AccessKey[] => {
   return [...new Set(candidates)]
 }
 
+/** The most this device can do in the family, `null` while it holds no key the family accepted. */
+export const strongestRole = (access: FamilyAccess): Role | null =>
+  ROLES_BY_REACH.find((role) => access.keys[role] !== undefined) ?? null
+
 /** A link just opened: its key is tried first, unless the device already holds it. */
 export const withReceivedKey = (
   access: FamilyAccess,

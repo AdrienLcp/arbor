@@ -1,0 +1,17 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .founder-preview
+    align-items: center
+    display: flex
+    flex-direction: column
+    gap: var(--space-m)
+    margin: 0
+
+    .slot
+      --slot-height: 164px
+      --slot-width: 124px
+
+    .founder-preview-label
+      @include typography.label
+      color: var(--ink-soft)

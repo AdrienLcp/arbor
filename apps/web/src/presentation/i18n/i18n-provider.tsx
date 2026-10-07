@@ -23,7 +23,9 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
   }, [locale])
 
   return (
-    <I18nContext value={{ translate: i18n.translator(locale, languages) }}>
+    <I18nContext
+      value={{ locale, translate: i18n.translator(locale, languages) }}
+    >
       {children}
     </I18nContext>
   )

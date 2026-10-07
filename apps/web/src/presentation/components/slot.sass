@@ -1,0 +1,127 @@
+// A style system: a numbered slot holds either a sticker or a ghost outline.
+@use '../styles/typography'
+
+@layer components
+  .slot
+    --slot-height: 150px
+    --slot-width: 112px
+    flex: none
+    width: var(--slot-width)
+
+    .slot-number
+      @include typography.numeral
+      color: var(--gc-ink, var(--ink-soft))
+      display: block
+      height: 18px
+
+    .slot-bed
+      height: var(--slot-height)
+      position: relative
+      width: var(--slot-width)
+
+      &::before
+        border: var(--stroke-thin) solid var(--ghost-soft)
+        border-radius: var(--radius-frame)
+        content: ''
+        inset: calc(-1 * var(--space-xs))
+        position: absolute
+
+    .sticker
+      background: var(--sticker)
+      border-radius: var(--radius-sticker)
+      box-shadow: 0 0 0 1px var(--sticker-edge), 0 1px 1.5px color-mix(in oklch, var(--shadow) 30%, transparent), 0 6px 12px -6px color-mix(in oklch, var(--shadow) 55%, transparent)
+      display: flex
+      flex-direction: column
+      inset: 0
+      padding: 5px
+      position: absolute
+
+      &::after
+        background: linear-gradient(118deg, oklch(1 0 0 / 0.42) 0%, oklch(1 0 0 / 0.08) 22%, transparent 38%, transparent 78%, oklch(1 0 0 / 0.14) 100%)
+        border-radius: inherit
+        content: ''
+        inset: 0
+        pointer-events: none
+        position: absolute
+
+    .sticker-art
+      background-color: var(--gc)
+      background-image: radial-gradient(circle at 50% 50%, oklch(1 0 0 / 0.16) 0.9px, transparent 1.5px)
+      background-size: 5px 5px
+      border-radius: var(--radius-art)
+      color: var(--on-gc)
+      display: grid
+      flex: 0 0 47%
+      font-family: var(--font-display)
+      font-size: calc(var(--slot-width) * 0.36)
+      font-weight: 800
+      letter-spacing: 0.02em
+      place-items: center
+      position: relative
+
+      &::after
+        border: 1px solid color-mix(in oklch, var(--on-gc) 45%, transparent)
+        border-radius: 2px
+        content: ''
+        inset: 3px
+        pointer-events: none
+        position: absolute
+
+    .sticker-caption
+      align-items: center
+      display: flex
+      flex: 1
+      flex-direction: column
+      gap: 1px
+      justify-content: center
+      min-width: 0
+      padding: var(--space-xs) 2px 1px
+      text-align: center
+
+    .sticker-given-names
+      @include typography.name
+      max-width: 100%
+      overflow-wrap: anywhere
+
+    .sticker-surname
+      @include typography.label
+      color: var(--ink-soft)
+      letter-spacing: 0.08em
+      max-width: 100%
+      overflow-wrap: anywhere
+
+    .ghost-slot
+      align-items: center
+      background: color-mix(in oklab, var(--paper-2) 60%, transparent)
+      border: var(--stroke-bold) dashed var(--ghost)
+      border-radius: var(--radius-sticker)
+      color: var(--ink-soft)
+      display: flex
+      flex-direction: column
+      gap: var(--space-xs)
+      inset: 0
+      justify-content: center
+      padding: var(--space-s)
+      position: absolute
+      text-align: center
+
+    .ghost-slot-title
+      @include typography.title
+
+    .ghost-slot-hint
+      @include typography.body-small
+      text-wrap: balance
+
+  .slot.pressing .sticker
+    animation: sticker-press var(--transition-press) var(--ease-out) both
+
+  @keyframes sticker-press
+    0%
+      box-shadow: 0 0 0 1px var(--sticker-edge), 0 26px 30px -14px color-mix(in oklch, var(--shadow) 70%, transparent)
+      transform: translate(-3px, -16px) rotate(-3.5deg) scale(1.07)
+
+    62%
+      transform: translate(0, 1px) rotate(0) scale(0.985)
+
+    100%
+      transform: none

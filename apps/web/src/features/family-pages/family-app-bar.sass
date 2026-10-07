@@ -1,0 +1,39 @@
+@use '@adrienlcp/styles/accessibility'
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .family-app-bar
+    @include layout.container
+    align-items: center
+    border-bottom: var(--hairline)
+    display: flex
+    gap: var(--space-xs)
+    padding: var(--space-s) var(--space-s) var(--space-s) var(--space-gutter)
+
+    .button.family-bar-name
+      @include typography.bar-name
+      flex: 1
+      gap: var(--space-m)
+      justify-content: start
+      margin-inline-start: calc(-1 * var(--space-m))
+      min-width: 0
+      text-align: start
+
+      @include layout.container-wide(40rem)
+        font-size: 1.75rem
+
+    .family-bar-name-text
+      min-width: 0
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+
+    .family-bar-actions
+      display: flex
+      flex: none
+      gap: var(--space-xs)
+
+    .family-bar-action-label
+      @include layout.container-narrow(30rem)
+        @include accessibility.visually-hidden

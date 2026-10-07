@@ -1,19 +1,26 @@
 export {
+  ArrowRight as NextIcon,
+  Ban as RevokeIcon,
   BookOpen as BookIcon,
+  Camera as CameraIcon,
   Check as CheckIcon,
   ChevronRight as ChevronIcon,
   ClipboardPaste as PasteIcon,
   Copy as CopyIcon,
   Eye as LookIcon,
+  House as HomeIcon,
   KeyRound as KeyIcon,
   Link2Off as BrokenLinkIcon,
   Plus as AddIcon,
   QrCode as QrCodeIcon,
+  RefreshCw as ReplaceIcon,
   RotateCw as RetryIcon,
   Search as SearchIcon,
   Settings as SettingsIcon,
   Share2 as ShareIcon,
   TriangleAlert as WarningIcon,
+  UserPlus as AddKeeperIcon,
   UserRound as PersonIcon,
-  WifiOff as OfflineIcon
+  WifiOff as OfflineIcon,
+  X as ClearIcon
 } from 'lucide-react'

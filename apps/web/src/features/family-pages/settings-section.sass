@@ -1,0 +1,40 @@
+// A style system: the groups and items of the settings page, shared by its sections.
+@use '../../presentation/styles/typography'
+
+@layer components
+  .settings-group
+    border-top: var(--stroke-bold) solid var(--ink)
+    display: grid
+    gap: var(--space-2xl)
+    padding-top: var(--space-l)
+
+    .settings-group-title
+      @include typography.title
+
+  .settings-item
+    display: grid
+    gap: var(--space-m)
+    justify-items: start
+
+    & + .settings-item
+      border-top: var(--hairline)
+      padding-top: var(--space-2xl)
+
+    .settings-item-title
+      @include typography.label
+      font-size: var(--text-m)
+      font-weight: 700
+
+    .settings-item-body
+      color: var(--ink-soft)
+      max-width: var(--measure)
+      text-wrap: pretty
+
+    .settings-item-actions
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-m)
+
+    .shared-link,
+    .meter
+      width: 100%

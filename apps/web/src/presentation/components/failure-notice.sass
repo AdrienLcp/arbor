@@ -1,0 +1,19 @@
+@use '../styles/typography'
+
+@layer components
+  .failure-notice
+    @include typography.body-small
+    align-items: start
+    background: var(--warn-bg)
+    border-radius: var(--radius-frame)
+    color: var(--ink)
+    display: flex
+    gap: var(--space-m)
+    padding: var(--space-m) var(--space-l)
+    text-wrap: pretty
+
+    .failure-notice-icon
+      color: var(--warn)
+      flex: none
+      height: 1.5rem
+      width: 1.5rem

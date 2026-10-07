@@ -1,0 +1,42 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .create-family-page
+    @include layout.column(46rem)
+    @include layout.container
+    display: grid
+    gap: var(--space-xl)
+    grid-template-areas: 'head' 'preview' 'form'
+    padding-block: var(--space-2xl) var(--space-section)
+
+    @include layout.container-wide(40rem)
+      align-items: start
+      column-gap: var(--space-3xl)
+      grid-template-areas: 'head head' 'form preview'
+      grid-template-columns: minmax(0, 1fr) auto
+
+    .create-family-head
+      display: grid
+      gap: var(--space-m)
+      grid-area: head
+
+    .create-family-title
+      @include typography.headline
+      text-wrap: balance
+
+    .create-family-intro
+      color: var(--ink-soft)
+      max-width: var(--measure)
+      text-wrap: pretty
+
+    .founder-preview
+      grid-area: preview
+
+    .create-family-form
+      display: grid
+      gap: var(--space-xl)
+      grid-area: form
+
+      .button
+        margin-top: var(--space-s)

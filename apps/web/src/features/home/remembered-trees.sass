@@ -1,0 +1,45 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .remembered-trees
+    display: grid
+    gap: var(--space-s)
+    max-width: 40rem
+    padding-top: var(--space-l)
+
+    .trees-title
+      @include typography.title
+
+    .tree-list
+      list-style: none
+      margin: 0
+      padding: 0
+
+      li + li
+        border-top: var(--hairline)
+
+    .button.tree-row
+      font-size: var(--text-l)
+      gap: var(--space-m)
+      justify-content: start
+      min-height: 4.5rem
+      padding-inline: var(--space-s)
+      text-align: start
+      width: 100%
+
+    .tree-text
+      display: grid
+      flex: 1
+      gap: var(--space-xs)
+      min-width: 0
+
+    .tree-name
+      overflow-wrap: anywhere
+
+    .tree-role
+      @include typography.body-small
+      color: var(--ink-soft)
+      font-weight: 400
+
+    .tree-chevron
+      color: var(--ink-soft)

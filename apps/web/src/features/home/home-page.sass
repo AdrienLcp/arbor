@@ -1,12 +1,114 @@
+@use '../../presentation/styles/layout'
 @use '../../presentation/styles/typography'
 
 @layer components
   .home-page
+    @include layout.column(var(--page-width))
+    @include layout.container
     display: grid
-    gap: var(--space-xl)
-    margin-inline: auto
-    max-width: var(--measure)
-    padding: var(--space-section) var(--space-gutter)
+    gap: var(--space-2xl)
+    padding-block: var(--space-l) var(--space-section)
 
-    .app-name
+    .album-cover
+      --focus: var(--on-cover)
+      background: var(--cover)
+      border-radius: 4px 10px 10px 4px
+      box-shadow: inset 14px 0 0 -6px oklch(0 0 0 / 0.16), 0 30px 50px -36px color-mix(in oklab, var(--shadow) 80%, transparent)
+      color: var(--on-cover)
+      display: grid
+      gap: var(--space-2xl)
+      overflow: hidden
+      padding: var(--space-l) var(--space-l) var(--space-xl) calc(var(--space-2xl) - var(--space-xs))
+      position: relative
+
+      // The album's binding, down its left edge.
+      &::before
+        background: linear-gradient(90deg, oklch(0 0 0 / 0.22), oklch(0 0 0 / 0.05) 70%, oklch(1 0 0 / 0.08))
+        content: ''
+        inset-block: 0
+        inset-inline-start: 0
+        position: absolute
+        width: 22px
+
+      @include layout.container-wide(46rem)
+        border-radius: 6px 14px 14px 6px
+        padding: var(--space-xl) var(--space-2xl) var(--space-3xl) var(--space-3xl)
+
+      @include layout.container-wide(68rem)
+        align-items: start
+        gap: var(--space-2xl) var(--space-3xl)
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr)
+        padding: var(--space-xl) var(--space-3xl) var(--space-3xl) calc(var(--space-3xl) + var(--space-l))
+
+    .cover-brand
+      @include typography.title
+      align-items: center
+      border-bottom: var(--stroke-bold) solid color-mix(in oklab, var(--on-cover) 45%, transparent)
+      display: flex
+      font-size: 1.875rem
+      gap: var(--space-m)
+      grid-column: 1 / -1
+      letter-spacing: 0.1em
+      padding-bottom: var(--space-m)
+
+    .cover-title
       @include typography.display
+      margin-top: var(--space-s)
+      text-wrap: balance
+
+    .cover-blank
+      display: block
+      font-size: 0.42em
+      letter-spacing: 0.02em
+      margin-top: var(--space-l)
+      text-decoration: underline dotted 3px
+      text-underline-offset: 0.3em
+
+    .cover-lead
+      font-size: var(--text-l)
+      line-height: 1.45
+      margin-top: var(--space-xl)
+      max-width: 30em
+      text-wrap: pretty
+
+    .cover-actions
+      align-items: center
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-m) var(--space-xl)
+      margin-top: var(--space-2xl)
+
+      .button.link
+        font-size: var(--text-m)
+
+    .cover-fine
+      margin-top: var(--space-xl)
+      max-width: 32em
+      text-wrap: pretty
+
+    .cover-steps
+      border-top: var(--stroke-bold) solid color-mix(in oklab, var(--on-cover) 50%, transparent)
+      display: grid
+      gap: var(--space-m)
+      list-style: none
+      margin: var(--space-2xl) 0 0
+      padding: var(--space-l) 0 0
+
+      @include layout.container-wide(46rem)
+        gap: var(--space-l)
+        grid-template-columns: repeat(3, minmax(0, 1fr))
+
+    .cover-step
+      @include typography.body-small
+
+    .cover-step-number
+      @include typography.numeral
+      display: block
+      font-size: 2.125rem
+      font-weight: 800
+
+    .cover-step-title
+      @include typography.label
+      display: block
+      font-weight: 700
+      margin-block: var(--space-xs)

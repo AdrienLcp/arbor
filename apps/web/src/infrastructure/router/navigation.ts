@@ -1,8 +1,10 @@
 import { ignoreSupersededNavigation } from '@adrienlcp/react-router'
 import type React from 'react'
+import { createElement } from 'react'
 import {
   generatePath,
   matchPath,
+  Navigate,
   type PathParam,
   useLoaderData,
   useNavigate,
@@ -103,3 +105,7 @@ export const familyIdParam = (
 
 /** The page a layout route renders below itself, `null` when the layout is the page. */
 export const useChildPage = (): React.ReactNode => useOutlet()
+
+/** Sends the visitor on to another page as soon as this one renders, in place of it in the history. */
+export const Redirect: React.FC<{ to: string }> = ({ to }) =>
+  createElement(Navigate, { replace: true, to })

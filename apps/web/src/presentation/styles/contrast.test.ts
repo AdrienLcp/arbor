@@ -36,7 +36,13 @@ const PAIRS: ContrastPair[] = [
   { background: '--paper', foreground: '--matte', minimum: WCAG_AA.nonText },
   { background: '--action', foreground: '--on-action', minimum: WCAG_AA.text },
   { background: '--cover', foreground: '--on-cover', minimum: WCAG_AA.text },
-  { background: '--warn-bg', foreground: '--warn', minimum: WCAG_AA.text }
+  { background: '--warn-bg', foreground: '--warn', minimum: WCAG_AA.text },
+  { background: '--warn-bg', foreground: '--ink', minimum: WCAG_AA.text },
+  {
+    background: '--print-paper',
+    foreground: '--print-ink',
+    minimum: WCAG_AA.text
+  }
 ]
 
 it('[contrast] every ink reads on every paper, in both themes', () => {

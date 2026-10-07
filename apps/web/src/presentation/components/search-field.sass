@@ -1,0 +1,75 @@
+@use '../styles/focus'
+@use '../styles/typography'
+
+@layer components
+  .search-field
+    display: grid
+    gap: var(--space-s)
+
+    .search-label
+      @include typography.name
+
+    .search-box
+      align-items: center
+      background: var(--paper)
+      border: var(--stroke-bold) solid var(--ink)
+      border-radius: var(--radius-frame)
+      display: flex
+      gap: var(--space-s)
+      min-height: calc(var(--control-height) + var(--space-xs))
+      padding-inline: var(--space-m) var(--space-xs)
+
+    &[data-focus-within] .search-box
+      outline: var(--ring)
+      outline-offset: calc(var(--space-xs) / 2)
+
+    .search-icon
+      color: var(--ink-soft)
+      flex: none
+      height: 1.5rem
+      width: 1.5rem
+
+    .search-input
+      @include typography.body
+      background: transparent
+      border: 0
+      color: var(--ink)
+      flex: 1
+      min-height: var(--control-height)
+      min-width: 0
+      outline: none
+
+      &::placeholder
+        color: var(--ink-soft)
+        opacity: 1
+
+      &::-webkit-search-cancel-button
+        appearance: none
+
+    .search-clear
+      @include focus.ring
+      align-items: center
+      background: transparent
+      border: 0
+      border-radius: var(--radius-control)
+      color: var(--ink-soft)
+      cursor: pointer
+      display: inline-flex
+      flex: none
+      height: var(--target)
+      justify-content: center
+      width: var(--target)
+
+      svg
+        height: 1.375rem
+        width: 1.375rem
+
+      &[data-hovered]
+        background: var(--paper-2)
+        color: var(--ink)
+
+      &[data-pressed]
+        background: var(--paper-deep)
+
+    &[data-empty] .search-clear
+      visibility: hidden

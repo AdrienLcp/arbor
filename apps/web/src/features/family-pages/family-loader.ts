@@ -4,7 +4,6 @@ import type { FamilyResponse } from '@arbor/protocol/family'
 import {
   afterAccepted,
   afterRefused,
-  type FamilyAccess,
   keysToTry
 } from '@/features/family-access/family-access'
 import {
@@ -19,7 +18,6 @@ export type OpenFamily = {
   family: FamilyResponse
   familyId: FamilyId
   key: AccessKey
-  me: FamilyAccess['me']
 }
 
 /**
@@ -40,13 +38,7 @@ const opened = (
     name: family.settings.name
   }))
 
-  return {
-    family,
-    familyId,
-    key,
-    me: rememberedFamily(familyId).me,
-    status: 'open'
-  }
+  return { family, familyId, key, status: 'open' }
 }
 
 /** Presents the device's keys one by one, forgetting each the family no longer knows. */

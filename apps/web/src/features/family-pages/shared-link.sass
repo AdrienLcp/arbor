@@ -1,0 +1,61 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .shared-link
+    display: grid
+    gap: var(--space-m)
+    justify-items: start
+
+    .shared-link-title
+      @include typography.title
+      align-items: center
+      display: flex
+      gap: var(--space-s)
+
+      svg
+        flex: none
+        height: 1.375rem
+        width: 1.375rem
+
+    .shared-link-description
+      max-width: var(--measure)
+      text-wrap: pretty
+
+    .shared-link-address
+      @include typography.body-small
+      background: var(--paper-2)
+      border: var(--stroke-thin) dashed var(--ghost)
+      border-radius: var(--radius-frame)
+      color: var(--ink-soft)
+      max-width: 100%
+      overflow-wrap: anywhere
+      padding: var(--space-s) var(--space-m)
+      user-select: all
+
+    .shared-link-actions
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-m)
+
+    .shared-link-status
+      @include typography.body-small
+      font-weight: 700
+
+      &:empty
+        display: none
+
+    .qr-code
+      margin-top: var(--space-s)
+      width: min(100%, 15rem)
+
+    // The keeper link: a warning pinned to the page, amber like every other warning.
+    &.private
+      background: var(--warn-bg)
+      border-radius: var(--radius-frame)
+      padding: var(--space-l)
+
+      .shared-link-title svg
+        color: var(--warn)
+
+      .shared-link-address
+        background: var(--paper)

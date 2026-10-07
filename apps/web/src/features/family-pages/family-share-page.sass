@@ -1,0 +1,27 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .family-share-page
+    @include layout.column(40rem)
+    display: grid
+    gap: var(--space-3xl)
+    justify-items: start
+    padding-block: var(--space-2xl) var(--space-section)
+
+    .family-share-head
+      display: grid
+      gap: var(--space-m)
+
+    .family-share-title
+      @include typography.headline
+      text-wrap: balance
+
+    .family-share-intro,
+    .family-share-unknown
+      color: var(--ink-soft)
+      max-width: var(--measure)
+      text-wrap: pretty
+
+    .shared-link
+      width: 100%

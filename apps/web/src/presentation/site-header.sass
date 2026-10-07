@@ -1,0 +1,11 @@
+@use 'styles/typography'
+
+@layer components
+  .site-header
+    border-bottom: var(--hairline)
+    padding: var(--space-s) var(--space-gutter)
+
+    .button.site-brand
+      @include typography.bar-name
+      gap: var(--space-m)
+      margin-inline-start: calc(-1 * var(--space-m))

@@ -1,0 +1,64 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .who-am-i-page
+    @include layout.column(36rem)
+    display: grid
+    gap: var(--space-l)
+    padding-top: var(--space-xl)
+
+    .who-am-i-head
+      display: grid
+      gap: var(--space-m)
+
+    .who-am-i-family
+      align-items: center
+      color: var(--ink-soft)
+      display: flex
+      gap: var(--space-s)
+
+    .who-am-i-title
+      @include typography.headline
+      font-size: 2.5rem
+      line-height: 0.98
+      text-wrap: balance
+
+    .who-am-i-intro
+      color: var(--ink-soft)
+      text-wrap: pretty
+
+    .who-am-i-no-match
+      color: var(--ink-soft)
+      padding-block: var(--space-xl)
+
+    .who-am-i-choices
+      list-style: none
+      margin: 0
+      padding: 0
+
+      li + li
+        border-top: var(--hairline)
+
+    .button.who-am-i-choice
+      justify-content: start
+      min-height: 4.75rem
+      padding-inline: var(--space-s)
+      width: 100%
+
+    // Stays in reach at the bottom of a long list.
+    .who-am-i-others
+      background: var(--paper)
+      border-top: var(--hairline)
+      bottom: 0
+      display: grid
+      gap: var(--space-s)
+      justify-items: center
+      margin-inline: calc(-1 * var(--space-gutter))
+      padding: var(--space-l) var(--space-gutter) var(--space-xl)
+      position: sticky
+
+    .who-am-i-own-name
+      display: grid
+      gap: var(--space-l)
+      width: 100%

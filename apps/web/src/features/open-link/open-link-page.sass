@@ -1,0 +1,45 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .open-link-page
+    @include layout.column(34rem)
+    display: grid
+    gap: var(--space-l)
+    padding-block: var(--space-2xl) var(--space-section)
+
+    .open-link-title
+      @include typography.headline
+      text-wrap: balance
+
+    .open-link-intro
+      color: var(--ink-soft)
+      text-wrap: pretty
+
+    .open-link-form
+      display: grid
+      gap: var(--space-xl)
+      margin-top: var(--space-s)
+
+    .open-link-qr
+      border-top: var(--hairline)
+      column-gap: var(--space-l)
+      display: grid
+      grid-template-columns: auto 1fr
+      margin-top: var(--space-2xl)
+      padding-top: var(--space-xl)
+      row-gap: var(--space-xs)
+
+    .open-link-qr-icon
+      color: var(--ink-soft)
+      grid-row: span 2
+      height: var(--space-2xl)
+      stroke-width: 1.75
+      width: var(--space-2xl)
+
+    .open-link-qr-title
+      @include typography.title
+
+    .open-link-qr-body
+      color: var(--ink-soft)
+      text-wrap: pretty

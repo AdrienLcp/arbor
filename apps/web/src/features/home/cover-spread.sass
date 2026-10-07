@@ -1,0 +1,62 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .cover-spread
+    @include layout.container
+    align-self: center
+    background: var(--paper)
+    border-radius: 6px
+    box-shadow: 0 2px 3px oklch(0 0 0 / 0.2), 0 30px 40px -24px oklch(0 0 0 / 0.5)
+    color: var(--ink)
+    margin: 0
+    position: relative
+
+    @include layout.container-wide(68rem)
+      rotate: -1.2deg
+
+    .spread-pages
+      display: grid
+
+      @include layout.container-wide(34rem)
+        grid-template-columns: 1fr 1fr
+
+        // The fold between the two pages.
+        &::after
+          background: linear-gradient(90deg, transparent, oklch(0 0 0 / 0.1) 45%, oklch(0 0 0 / 0.16) 50%, oklch(0 0 0 / 0.1) 55%, transparent)
+          content: ''
+          inset-block: 0
+          inset-inline-start: 50%
+          pointer-events: none
+          position: absolute
+          translate: -50% 0
+          width: 40px
+
+    .spread-page
+      padding: var(--space-l) var(--space-m) var(--space-s)
+
+      @include layout.container-wide(34rem)
+        padding: var(--space-xl) var(--space-xl) var(--space-xl)
+
+    .spread-head
+      @include typography.title
+      background: var(--gc)
+      clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%)
+      color: var(--on-gc)
+      padding: var(--space-s) var(--space-xl) var(--space-s) var(--space-m)
+
+    .spread-slots
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-l)
+      margin-top: var(--space-l)
+
+      .slot
+        --slot-height: 140px
+        --slot-width: 104px
+
+    .spread-hint
+      @include typography.body-small
+      color: var(--ink-soft)
+      padding: 0 var(--space-xl) var(--space-l)
+      text-wrap: pretty

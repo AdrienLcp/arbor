@@ -1,0 +1,35 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .person-line
+    align-items: center
+    display: flex
+    gap: var(--space-l)
+    min-width: 0
+
+    .person-line-text
+      display: grid
+      gap: var(--space-xs)
+      min-width: 0
+      text-align: start
+
+    .person-line-name
+      @include typography.name
+      align-items: baseline
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-xs) var(--space-s)
+      overflow-wrap: anywhere
+
+    .person-line-me
+      @include typography.label
+      background: var(--paper-2)
+      border: var(--stroke-thin) solid var(--ghost)
+      border-radius: var(--radius-pill)
+      color: var(--ink)
+      font-weight: 700
+      padding: 0 var(--space-s)
+
+    .person-line-years
+      @include typography.numeral
+      color: var(--ink-soft)
