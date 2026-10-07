@@ -120,6 +120,38 @@ the A3 print.
 - The theme choice is stored under `arbor:theme`; the Vite plugin of
   `@adrienlcp/theme-preference` stamps it before the first paint.
 
+## The tree layout
+
+Decided 2026-10-07, against the fixture family and a generated 300-person one
+(remarriages, half-siblings, adoptions, step-children, unknown parents,
+married-in spouses with their own parents). No genealogy layout library
+survives the fixture:
+
+| Library | Fails on |
+|---|---|
+| `relatives-tree` 3.2 | Anne + Sophie: crashes on a same-sex couple; Thomas: no step filiation, he and Emma vanish |
+| `family-chart` 0.9 | Louis's and Pierre's unions: partners drawn as a chain, Odile reads as married to Claire; half-siblings under one bracket |
+| `elkjs` 0.12 (union nodes, generation partitions) | Simone placed between Claire and Pierre, René between Michel and Françoise; 440 kB gzip and seconds of layout for 300 people |
+
+So the genealogy part is ours and the tree geometry is not: `packages/core`
+builds **blocks** — a blood relative with their successive partners, first
+partner on the left, later ones on the right, an unknown other parent as a
+ghost slot — with each child under the union it came from (a step-child under
+the union with their parent), and `d3-hierarchy`'s `tree()` (tidy tree,
+1.8 kB gzip, ISC) places the blocks, its `separation` sized to each block's
+width. Rows are `generationNumbers`; connectors are orthogonal and computed
+beside the layout. The prototype passed every fixture case and the 300-person
+family with no overlap and no line under a card, in 3 ms.
+
+- **Whole family** is a descendancy, like the keeper's paper tree: from the
+  founder with the most descendants. The parents of someone who married in are
+  not drawn there; their card offers to refocus on them.
+- **Around a person** is an hourglass: ancestors above (each parent's own
+  parents, depth adjustable), descendants below, both laid out by the same
+  tidy tree from the focus block.
+- On a phone the tree is not this canvas but one spread around the focus
+  person (`DESIGN.md`, Layout), which needs no layout at all.
+
 ## Security notes
 
 - Keys: 128-bit random, base64url, sent in an `Authorization` header; only

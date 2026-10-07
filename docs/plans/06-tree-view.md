@@ -8,21 +8,10 @@ Goal: the fixture family drawn correctly and beautifully, navigable on a phone.
 established layout library before a hand-written one); `DESIGN.md`. Load
 `impeccable` before the markup.
 
-## Decide first (write the result in `docs/architecture.md`)
+## Decided
 
-Genealogy layout is the hard part: multiple unions side by side, children
-under the right union, half-siblings, ancestors above and descendants below a
-focus person. Evaluate against the fixture family, in a throwaway page:
-
-- `relatives-tree` (layout only, handles spouses and half-siblings),
-- `family-chart` (d3, full widget — likely too opinionated for the design),
-- `elkjs` layered layout with union nodes (general, heavier),
-- a hand-written layout only if all three fail a fixture case, with the
-  failing case named.
-
-Criteria: every fixture case drawn without crossing lines that a person would
-misread; output is coordinates we render ourselves in SVG (the design and the
-print step need full control); bundle size; licence.
+The layout is ours on `d3-hierarchy`'s tidy tree: `docs/architecture.md`,
+"The tree layout". The throwaway bench lives outside the repo.
 
 ## Do
 
