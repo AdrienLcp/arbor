@@ -13,7 +13,7 @@ Steps run in order: each one ends deployed and seen in a browser.
 | 02 | Genealogy core | Schemas, operations, log projection, fuzzy dates, rules, fixture family | done 2026-10-07 |
 | 03 | Family storage | FamilyRoom Durable Object: SQLite schema, keys, change log, API | done 2026-10-07 |
 | 04 | Design direction | `impeccable`: full example pages per direction, Adrien picks, DESIGN.md + tokens | done 2026-10-07 |
-| 05 | Create and join | Landing, create a family, links + QR, "Who are you?", keeper settings | to do |
+| 05 | Create and join | Landing, create a family, links + QR, "Who are you?", keeper settings | done 2026-10-07 |
 | 06 | Tree view | Layout of real families, pan/zoom, focus on a person, mobile first | to do |
 | 07 | Person sheet and editing | Add/edit people, unions, filiations, events, photos | to do |
 | 08 | History and undo | Change log screen, undo, bin, restore to a moment | to do |

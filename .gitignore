@@ -17,3 +17,6 @@
 # Real family exports used to test the GEDCOM import: personal data.
 *.ged
 !**/fixtures/**/*.ged
+
+# Playwright output: traces and screenshots of the last run.
+e2e/test-results/
