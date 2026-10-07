@@ -1,7 +1,7 @@
 # 01 — Bootstrap
 
 Goal: a workspace where `pnpm validate` passes, CI is green, and an empty page
-is served from `https://ramure.adrienlcp.com` by the Worker. No product code.
+is served from `https://arbor.adrienlcp.com` by the Worker. No product code.
 
 ## Read first
 
@@ -13,9 +13,9 @@ the web dev proxy in `apps/web/vite.config.ts`.
 
 ## Do
 
-1. Root from `templates/base/`: `package.json` (name `ramure`),
+1. Root from `templates/base/`: `package.json` (name `arbor`),
    `pnpm-workspace.yaml` (`apps/*`, `packages/*`), `biome.json` with one import
-   group per workspace package (`@ramure/protocol/**`, `@ramure/core/**`),
+   group per workspace package (`@arbor/protocol/**`, `@arbor/core/**`),
    `tsconfig.json`, `cspell.json` (+ French genealogy words as they come),
    `.githooks/`, `.nvmrc`, `.editorconfig`. Root scripts fan out with `pnpm -r`.
 2. `apps/web` from `templates/web-app/`: port **5520**, `strictPort`, `/api`
@@ -23,7 +23,7 @@ the web dev proxy in `apps/web/vite.config.ts`.
 3. `apps/worker`: wrangler config copied from Scoreboard's shape — assets
    binding on `../web/dist`, `FamilyRoom` SQLite Durable Object
    (`new_sqlite_classes`), `observability`, custom domain
-   `ramure.adrienlcp.com`, `workers_dev: false`, dev port **8790**.
+   `arbor.adrienlcp.com`, `workers_dev: false`, dev port **8790**.
    `pnpm dev` starts both, as in Scoreboard.
 4. `packages/protocol` and `packages/core`: source-only, empty but wired.
 5. CI: validate on every push; deploy job on `main` with
@@ -39,4 +39,4 @@ the web dev proxy in `apps/web/vite.config.ts`.
 - `pnpm install && pnpm validate` passes locally and in CI.
 - `pnpm dev` serves the empty page on `http://localhost:5520`, seen in a
   browser, and `/api/health` answers through the proxy.
-- `https://ramure.adrienlcp.com` serves the same page after a push to `main`.
+- `https://arbor.adrienlcp.com` serves the same page after a push to `main`.

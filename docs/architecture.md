@@ -33,7 +33,7 @@ Checked 2026-10-07 on developers.cloudflare.com; re-check in step 01.
 | Durable Objects requests | 100,000 / day (HTTP, RPC, WebSocket messages, alarms) | same order |
 | Durable Objects storage | **1 GB per object, 5 GB per account**, SQLite only | one family's text is a few MB; photos dominate |
 | Static assets | free, unlimited requests | the whole web app |
-| Custom domain | `ramure.adrienlcp.com`, zone already on Cloudflare | free |
+| Custom domain | `arbor.adrienlcp.com`, zone already on Cloudflare | free |
 
 **Photos drive the storage budget.** The browser resizes before upload (long
 side 1600 px, WebP ~0.8 → ~150–250 kB, plus a 320 px thumbnail ~20 kB), and the

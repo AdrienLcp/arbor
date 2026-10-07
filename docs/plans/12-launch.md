@@ -10,7 +10,7 @@ Goal: the father uses it for real, and the portfolio shows it.
    sheet; fix what it finds. Same gate shape as the portfolio's.
 3. README: what it is, screenshots, the free-tier architecture in five lines,
    develop/deploy.
-4. Portfolio (`C:/git/portfolio`): a project page for Ramure, following the
+4. Portfolio (`C:/git/portfolio`): a project page for Arbor, following the
    existing project pages and `.claude/plan/apps/README.md` there; drawing,
    texts per locale, link to the demo.
 5. Onboarding the father: Adrien creates the family with him, the GEDCOM

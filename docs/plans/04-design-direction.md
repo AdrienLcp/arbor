@@ -10,7 +10,7 @@ and compares. A board of cards or a prose summary does not let him choose.
 
 ## The brief to give impeccable
 
-> Ramure is a shared family tree for a French family. The keeper is a retired
+> Arbor is a shared family tree for a French family. The keeper is a retired
 > man who has kept the family's genealogy for years in an old desktop program
 > and prints it on paper for everyone; his relatives will open the tree from a
 > WhatsApp link on their phones a few times a year, from teenagers to

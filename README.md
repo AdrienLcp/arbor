@@ -1,4 +1,4 @@
-# Ramure
+# Arbor
 
 A family tree the whole family keeps up to date together. Someone creates the
 family, shares the link, and every relative can add people, fix a date, attach

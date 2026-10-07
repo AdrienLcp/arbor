@@ -12,7 +12,7 @@ step 04. Load `impeccable` before the markup.
 ## Do
 
 1. Router (data mode), dictionaries fr (reference) + en, theme, layout.
-2. Landing: what Ramure is in one screen, "Créer l'arbre de ma famille", and
+2. Landing: what Arbor is in one screen, "Créer l'arbre de ma famille", and
    "J'ai reçu un lien" (paste a link or scan a QR code).
 3. Create: family name, the creator's own first person (themselves), then the
    two links shown with copy / share sheet / QR code, and a plain warning

@@ -1,10 +1,10 @@
-# Ramure
+# Arbor
 
 A shared, living family tree. One person creates the family, passes a link
 around, and every relative can add people, fix dates, attach photos and print
 the tree. First user: Adrien's father, who keeps the family tree in an old
 desktop program and reprints it on paper after every birth or separation.
-Personal project (`github.com/AdrienLcp/ramure`).
+Personal project (`github.com/AdrienLcp/arbor`).
 
 ## Conventions
 
