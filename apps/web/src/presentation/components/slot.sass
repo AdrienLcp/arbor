@@ -3,8 +3,8 @@
 
 @layer components
   .slot
-    --slot-height: 150px
-    --slot-width: 112px
+    --slot-height: 9.375rem
+    --slot-width: 7rem
     display: block
     flex: none
     width: var(--slot-width)
@@ -13,7 +13,7 @@
       @include typography.numeral
       color: var(--gc-ink, var(--ink-soft))
       display: block
-      height: 18px
+      height: 1.125rem
 
     .slot-bed
       display: block
@@ -35,7 +35,7 @@
       display: flex
       flex-direction: column
       inset: 0
-      padding: 5px
+      padding: 0.3125rem
       position: absolute
 
       &::after
@@ -54,10 +54,8 @@
       color: var(--on-gc)
       display: grid
       flex: 0 0 47%
-      font-family: var(--font-display)
+      @include typography.monogram
       font-size: calc(var(--slot-width) * 0.36)
-      font-weight: 800
-      letter-spacing: 0.02em
       place-items: center
       position: relative
 
@@ -74,10 +72,10 @@
       display: flex
       flex: 1
       flex-direction: column
-      gap: 1px
+      gap: 0.0625rem
       justify-content: center
       min-width: 0
-      padding: var(--space-xs) 2px 1px
+      padding: var(--space-xs) 0.125rem 0.0625rem
       text-align: center
 
     .sticker-given-names
@@ -86,9 +84,8 @@
       overflow-wrap: anywhere
 
     .sticker-surname
-      @include typography.label
+      @include typography.surname
       color: var(--ink-soft)
-      letter-spacing: 0.08em
       max-width: 100%
       overflow-wrap: anywhere
 

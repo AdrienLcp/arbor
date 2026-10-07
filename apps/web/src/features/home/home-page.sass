@@ -41,14 +41,12 @@
         padding: var(--space-xl) var(--space-3xl) var(--space-3xl) calc(var(--space-3xl) + var(--space-l))
 
     .cover-brand
-      @include typography.title
+      @include typography.cover-brand
       align-items: center
       border-bottom: var(--stroke-bold) solid color-mix(in oklab, var(--on-cover) 45%, transparent)
       display: flex
-      font-size: 1.875rem
       gap: var(--space-m)
       grid-column: 1 / -1
-      letter-spacing: 0.1em
       padding-bottom: var(--space-m)
 
     .cover-title
@@ -57,16 +55,14 @@
       text-wrap: balance
 
     .cover-blank
+      @include typography.display-aside
       display: block
-      font-size: 0.42em
-      letter-spacing: 0.02em
       margin-top: var(--space-l)
       text-decoration: underline dotted 3px
       text-underline-offset: 0.3em
 
     .cover-lead
-      font-size: var(--text-l)
-      line-height: 1.45
+      @include typography.lead
       margin-top: var(--space-xl)
       max-width: 30em
       text-wrap: pretty
@@ -102,13 +98,11 @@
       @include typography.body-small
 
     .cover-step-number
-      @include typography.numeral
+      @include typography.figure
       display: block
-      font-size: 2.125rem
-      font-weight: 800
 
     .cover-step-title
       @include typography.label
+      @include typography.strong
       display: block
-      font-weight: 700
       margin-block: var(--space-xs)

@@ -3,15 +3,20 @@
 
 @mixin display
   font-family: var(--font-display)
-  font-size: var(--text-2xl)
+  font-size: var(--text-display)
   font-weight: 800
   letter-spacing: -0.01em
   line-height: 0.92
   text-transform: uppercase
 
+/// The small line set inside the display headline, at a fraction of its size.
+@mixin display-aside
+  font-size: 0.42em
+  letter-spacing: 0.02em
+
 @mixin headline
   font-family: var(--font-display)
-  font-size: var(--text-xl)
+  font-size: var(--text-headline)
   font-weight: 800
   letter-spacing: 0.01em
   line-height: 1
@@ -28,7 +33,19 @@
 /// The name at the left of an app bar: the family's, or Arbor's on a page outside a family.
 @mixin bar-name
   @include title
-  font-size: 1.5rem
+  font-size: var(--text-xl)
+
+/// The welcome and first-visit titles: the headline voice at its largest, set tighter.
+@mixin welcome
+  @include headline
+  font-size: var(--text-welcome)
+  line-height: 0.98
+
+/// Arbor's name across the top of the album cover.
+@mixin cover-brand
+  @include title
+  font-size: var(--text-cover-brand)
+  letter-spacing: 0.1em
 
 @mixin label
   font-family: var(--font-display)
@@ -60,11 +77,35 @@
   letter-spacing: 0.02em
   line-height: 1
 
+/// A large number standing for a step, on the cover.
+@mixin figure
+  @include numeral
+  font-size: var(--text-figure)
+  font-weight: 800
+
+/// The initials on a sticker's art; the sticker sizes them.
+@mixin monogram
+  font-family: var(--font-display)
+  font-weight: 800
+  letter-spacing: 0.02em
+
+/// A surname on a sticker: a label, tracked wider.
+@mixin surname
+  @include label
+  letter-spacing: 0.08em
+
 @mixin body
   font-family: var(--font-text)
   font-size: var(--text-m)
   font-weight: 400
   line-height: 1.5
+
+/// The cover's opening paragraph.
+@mixin lead
+  font-family: var(--font-text)
+  font-size: var(--text-l)
+  font-weight: 400
+  line-height: 1.45
 
 @mixin body-small
   font-family: var(--font-text)
@@ -77,3 +118,7 @@
   font-size: var(--text-m)
   font-weight: 700
   line-height: 1.1
+
+/// Bold in whatever voice the text already has: a link, an error, a status.
+@mixin strong
+  font-weight: 700

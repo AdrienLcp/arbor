@@ -43,13 +43,13 @@ colors:
 typography:
   display:
     fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
-    fontSize: "clamp(46px, 6vw, 80px)"
+    fontSize: "clamp(2.875rem, 0.875rem + 5vw, 5rem)"
     fontWeight: 800
     lineHeight: 0.92
     letterSpacing: "-0.01em"
   headline:
     fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
-    fontSize: "clamp(28px, 4vw, 40px)"
+    fontSize: "clamp(1.75rem, 1.0441rem + 1.7647vw, 2.5rem)"
     fontWeight: 800
     lineHeight: 1
     letterSpacing: "0.01em"
@@ -235,8 +235,8 @@ Dark theme (`prefers-color-scheme: dark` unless `data-theme="light"`, or `data-t
 **Character:** the condensed uppercase is the printed furniture of a sticker album: band titles, slot numbers, dates and labels, packed tight and loud. Atkinson Hyperlegible is the voice that talks to the reader, chosen for low-vision legibility; it carries sentences, buttons and given names.
 
 ### Hierarchy
-- **Display** (800, clamp(46px, 6vw, 80px), 0.92, uppercase): the cover headline only. The A3 print title uses the same voice at 104px.
-- **Headline** (800, clamp(28px, 4vw, 40px), 1, uppercase): band ribbons, a person's name at the top of their sheet (44px, 0.95), welcome and first-visit titles (40px).
+- **Display** (800, clamp(2.875rem, 0.875rem + 5vw, 5rem), 0.92, uppercase): the cover headline only. The A3 print title uses the same voice at 104px.
+- **Headline** (800, clamp(1.75rem, 1.0441rem + 1.7647vw, 2.5rem), 1, uppercase): band ribbons, a person's name at the top of their sheet (44px, 0.95), welcome and first-visit titles (40px).
 - **Title** (800, 18 to 22px, 1, uppercase, 0.04em): generation band heads, group headings in the person sheet, the app bar family name (24px, 28px on desktop).
 - **Label** (600 to 700, 16px, 1.2, uppercase, 0.04 to 0.08em): navigation tabs, fact labels, surnames on stickers, the "Compléter" action, phone frame captions.
 - **Numeral** (700, 15 to 18px, tabular lining figures): slot numbers ("09"), dates, generation ranges. Every number in the album uses tabular figures.

@@ -42,17 +42,17 @@
       @include typography.title
       align-items: baseline
       background: var(--gc)
-      clip-path: polygon(0 0, 100% 0, calc(100% - 22px) 100%, 0 100%)
+      clip-path: polygon(0 0, 100% 0, calc(100% - var(--band-cut)) 100%, 0 100%)
       color: var(--on-gc)
       display: flex
       flex-wrap: wrap
       gap: var(--space-xs) var(--space-l)
-      padding: var(--space-s) calc(var(--space-xl) + 22px) var(--space-s) var(--space-gutter)
+      padding: var(--space-s) calc(var(--space-xl) + var(--band-cut)) var(--space-s) var(--space-gutter)
       width: fit-content
 
     .generation-band-count
       @include typography.label
-      font-weight: 700
+      @include typography.strong
 
     .generation-band-people
       @include layout.column(var(--page-width))

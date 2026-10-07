@@ -15,7 +15,7 @@
       border: var(--stroke-bold) solid var(--ink)
       border-radius: var(--radius-frame)
       color: var(--ink)
-      min-height: calc(var(--control-height) + var(--space-xs))
+      min-height: calc(var(--action-height) + var(--space-xs))
       padding: 0 var(--space-m)
       width: 100%
 
@@ -41,5 +41,5 @@
 
     .field-error
       @include typography.body-small
+      @include typography.strong
       color: var(--warn)
-      font-weight: 700

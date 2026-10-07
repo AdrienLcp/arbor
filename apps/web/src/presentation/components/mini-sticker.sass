@@ -1,3 +1,5 @@
+@use '../styles/typography'
+
 @layer components
   .mini-sticker
     background: var(--sticker)
@@ -5,10 +7,10 @@
     box-shadow: 0 0 0 1px var(--sticker-edge), 0 3px 6px -3px color-mix(in oklch, var(--shadow) 60%, transparent)
     display: flex
     flex: none
-    height: 64px
-    padding: 3px
+    height: 4rem
+    padding: 0.1875rem
     position: relative
-    width: 52px
+    width: 3.25rem
 
     &::after
       background: linear-gradient(118deg, oklch(1 0 0 / 0.42) 0%, oklch(1 0 0 / 0.08) 22%, transparent 38%, transparent 78%, oklch(1 0 0 / 0.14) 100%)
@@ -26,10 +28,8 @@
       color: var(--on-gc)
       display: grid
       flex: 1
-      font-family: var(--font-display)
+      @include typography.monogram
       font-size: var(--text-l)
-      font-weight: 800
-      letter-spacing: 0.02em
       place-items: center
 
     &.deceased

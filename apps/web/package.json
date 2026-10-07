@@ -7,7 +7,7 @@
     "@adrienlcp/react-router": "^0.1.2",
     "@adrienlcp/result": "^0.1.1",
     "@adrienlcp/safe-storage": "^0.1.1",
-    "@adrienlcp/styles": "^0.8.0",
+    "@adrienlcp/styles": "^0.9.0",
     "@adrienlcp/theme-preference": "^0.3.1",
     "@arbor/core": "workspace:*",
     "@arbor/protocol": "workspace:*",
