@@ -25,14 +25,16 @@ seed script loads the fictional fixture family into a local family.
 
 ## What is free, and its limits
 
-Checked 2026-10-07 on developers.cloudflare.com; re-check in step 01.
+Checked 2026-10-07 on developers.cloudflare.com. Past any daily allowance, further operations of that kind fail with an error until 00:00 UTC.
 
 | Piece | Free allowance | This project's use |
 |---|---|---|
 | Workers requests | 100,000 / day | a family visit is a few dozen requests |
 | Durable Objects requests | 100,000 / day (HTTP, RPC, WebSocket messages, alarms) | same order |
-| Durable Objects storage | **1 GB per object, 5 GB per account**, SQLite only | one family's text is a few MB; photos dominate |
-| Static assets | free, unlimited requests | the whole web app |
+| Durable Objects storage | **10 GB per object, 5 GB per account**, SQLite only | one family's text is a few MB; photos dominate |
+| Durable Objects SQLite rows | 5 million read / **100,000 written** per day; 13,000 GB-s duration / day | every edit writes change-log rows: the limit to watch |
+| Workers CPU | 10 ms per request | |
+| Static assets | free, unlimited requests; 20,000 files per version, 25 MiB per file | the whole web app |
 | Custom domain | `arbor.adrienlcp.com`, zone already on Cloudflare | free |
 
 **Photos drive the storage budget.** The browser resizes before upload (long
