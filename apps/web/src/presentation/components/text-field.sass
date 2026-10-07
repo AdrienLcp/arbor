@@ -1,0 +1,40 @@
+@use '../styles/focus'
+@use '../styles/typography'
+
+@layer components
+  .text-field
+    display: grid
+    gap: var(--space-s)
+
+    .field-label
+      @include typography.name
+
+    .field-input
+      @include typography.body
+      background: var(--paper)
+      border: var(--stroke-bold) solid var(--ink)
+      border-radius: var(--radius-frame)
+      color: var(--ink)
+      min-height: calc(var(--control-height) + var(--space-xs))
+      padding: 0 var(--space-m)
+      width: 100%
+
+      &::placeholder
+        color: var(--ink-soft)
+        opacity: 1
+
+      &[data-focused]
+        outline: var(--ring)
+        outline-offset: calc(var(--space-xs) / 2)
+
+      &[data-invalid]
+        border-color: var(--warn)
+
+    .field-description
+      @include typography.body-small
+      color: var(--ink-soft)
+
+    .field-error
+      @include typography.body-small
+      color: var(--warn)
+      font-weight: 700

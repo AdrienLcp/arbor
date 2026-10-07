@@ -1,0 +1,35 @@
+// A style system: the screens shown in place of a family that did not open.
+@use '../../presentation/styles/typography'
+
+@layer components
+  .family-notice
+    align-content: center
+    display: grid
+    gap: var(--space-l)
+    justify-items: start
+    margin-inline: auto
+    max-width: 34rem
+    min-height: 100dvh
+    padding: var(--space-section) var(--space-gutter)
+
+    .notice-icon
+      color: var(--ink-soft)
+      height: var(--space-3xl)
+      stroke-width: 1.75
+      width: var(--space-3xl)
+
+    .notice-title
+      @include typography.headline
+      text-wrap: balance
+
+    .notice-body
+      color: var(--ink-soft)
+      max-width: var(--measure)
+      text-wrap: pretty
+
+    .notice-actions
+      display: grid
+      gap: var(--space-m)
+      justify-items: center
+      margin-top: var(--space-l)
+      width: 100%

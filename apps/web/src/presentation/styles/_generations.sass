@@ -1,0 +1,9 @@
+// Side-effect module: a `.g1`–`.g5` class hands a generation's three inks to
+// whatever it wraps, as `--gc`, `--on-gc` and `--gc-ink` (The Generation Ink Rule).
+
+@layer base
+  @for $generation from 1 through 5
+    .g#{$generation}
+      --gc: var(--g#{$generation})
+      --gc-ink: var(--g#{$generation}-ink)
+      --on-gc: var(--on-g#{$generation})

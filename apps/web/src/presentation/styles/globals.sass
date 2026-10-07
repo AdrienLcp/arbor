@@ -3,6 +3,7 @@
 @use '@adrienlcp/theme-preference/color-scheme.css'
 @use 'tokens'
 @use 'fonts'
+@use 'generations'
 @use 'layout'
 @use 'typography'
 
@@ -13,3 +14,12 @@
     background: var(--paper)
     color: var(--ink)
     min-height: 100dvh
+
+  ::selection
+    background: var(--g1)
+    color: var(--on-g1)
+
+  html
+    accent-color: var(--action)
+    caret-color: var(--focus)
+    scrollbar-color: var(--ghost) var(--paper-2)

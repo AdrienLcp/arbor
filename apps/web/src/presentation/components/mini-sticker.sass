@@ -1,0 +1,44 @@
+@layer components
+  .mini-sticker
+    background: var(--sticker)
+    border-radius: var(--radius-sticker)
+    box-shadow: 0 0 0 1px var(--sticker-edge), 0 3px 6px -3px color-mix(in oklch, var(--shadow) 60%, transparent)
+    display: flex
+    flex: none
+    height: 64px
+    padding: 3px
+    position: relative
+    width: 52px
+
+    &::after
+      background: linear-gradient(118deg, oklch(1 0 0 / 0.42) 0%, oklch(1 0 0 / 0.08) 22%, transparent 38%, transparent 78%, oklch(1 0 0 / 0.14) 100%)
+      border-radius: inherit
+      content: ''
+      inset: 0
+      pointer-events: none
+      position: absolute
+
+    .mini-sticker-art
+      background-color: var(--gc)
+      background-image: radial-gradient(circle at 50% 50%, oklch(1 0 0 / 0.16) 0.9px, transparent 1.5px)
+      background-size: 5px 5px
+      border-radius: var(--radius-art)
+      color: var(--on-gc)
+      display: grid
+      flex: 1
+      font-family: var(--font-display)
+      font-size: var(--text-l)
+      font-weight: 800
+      letter-spacing: 0.02em
+      place-items: center
+
+    &.deceased
+      border-bottom: var(--stroke-bold) solid var(--ink)
+      box-shadow: 0 0 0 1px var(--sticker-edge), 0 1px 2px color-mix(in oklch, var(--shadow) 26%, transparent)
+
+      &::after
+        display: none
+
+      .mini-sticker-art
+        background-color: color-mix(in oklab, var(--gc) 42%, var(--matte))
+        background-image: none

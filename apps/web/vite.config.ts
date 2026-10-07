@@ -1,11 +1,13 @@
 import { resolve } from 'node:path'
 
 import { themePreferencePlugin } from '@adrienlcp/theme-preference/vite'
+import optimizeLocales from '@react-aria/optimize-locales-plugin'
 import react from '@vitejs/plugin-react'
 import fontaine from 'fontaine/postcss'
 import { defineConfig } from 'vite'
 
 import { API_PREFIX } from '../../packages/protocol/src/routes.ts'
+import { REGIONAL_LOCALES } from './src/presentation/i18n/regional-locales.ts'
 import { themeStore } from './src/presentation/theme/theme-store.ts'
 
 const WORKER_ORIGIN = 'http://127.0.0.1:8790'
@@ -22,6 +24,11 @@ export default defineConfig({
     }
   },
   plugins: [
+    {
+      ...optimizeLocales.vite({ locales: Object.values(REGIONAL_LOCALES) }),
+      // Swaps a dropped locale's module in resolveId, which only works ahead of Vite's resolver.
+      enforce: 'pre'
+    },
     react({ compiler: { logDiagnostics: true } }),
     themePreferencePlugin(themeStore)
   ],

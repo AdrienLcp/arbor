@@ -1,0 +1,57 @@
+@use '../styles/layout'
+@use '../styles/typography'
+
+@layer components
+  .confirm-dialog-overlay
+    align-items: end
+    background: color-mix(in oklch, var(--shadow) 45%, transparent)
+    display: grid
+    inset: 0
+    justify-items: center
+    padding: var(--space-gutter)
+    position: fixed
+    transition: opacity var(--transition-base) var(--ease-out)
+    z-index: 10
+
+    @include layout.wide
+      align-items: center
+
+    &[data-entering],
+    &[data-exiting]
+      opacity: 0
+
+  .confirm-dialog-modal
+    background: var(--paper)
+    border-radius: var(--radius-frame)
+    box-shadow: 0 2px 4px color-mix(in oklch, var(--shadow) 30%, transparent), 0 30px 50px -30px var(--shadow)
+    max-width: 32rem
+    transition: translate var(--transition-base) var(--ease-out)
+    width: 100%
+
+    &[data-entering],
+    &[data-exiting]
+      translate: 0 var(--space-xl)
+
+  .confirm-dialog
+    display: grid
+    gap: var(--space-l)
+    outline: none
+    padding: var(--space-xl)
+
+    .confirm-dialog-title
+      @include typography.headline
+
+    .confirm-dialog-body
+      color: var(--ink-soft)
+      display: grid
+      gap: var(--space-m)
+
+    .confirm-dialog-actions
+      display: flex
+      flex-wrap: wrap-reverse
+      gap: var(--space-m)
+      justify-content: end
+      margin-top: var(--space-s)
+
+      > *
+        flex: 1 1 auto
