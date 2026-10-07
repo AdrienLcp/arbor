@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "ignorePaths": ["dist", "node_modules", "pnpm-lock.yaml", ".wrangler"],
+  "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
+  "language": "en,en-GB",
+  "overrides": [
+    {
+      "filename": ["**/i18n/dictionary-fr.ts", "docs/**/*.md"],
+      "language": "en,en-GB,fr"
+    }
+  ],
+  "version": "0.2",
+  "words": [
+    "adrienlcp",
+    "ANSEL",
+    "biomejs",
+    "cloudflare",
+    "elkjs",
+    "esbuild",
+    "GEDCOM",
+    "Lacourpaille",
+    "misreadable",
+    "oklch",
+    "OKLCH",
+    "Referer",
+    "refetches",
+    "rhysd",
+    "Supabase",
+    "workerd"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "dependencies": {
+    "@adrienlcp/i18n": "^0.5.1",
+    "@adrienlcp/react": "^0.4.0",
+    "@adrienlcp/result": "^0.1.1",
+    "@adrienlcp/styles": "^0.7.0",
+    "@arbor/core": "workspace:*",
+    "@arbor/protocol": "workspace:*",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-router": "^8.4.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxc-transform-react": "^0.145.0",
+    "sass": "^1.105.0",
+    "vite": "~8.3.1",
+    "vitest": "^5.0.2"
+  },
+  "name": "@arbor/web",
+  "private": true,
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "type": "module",
+  "version": "0.1.0"
+}

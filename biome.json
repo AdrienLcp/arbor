@@ -1,0 +1,64 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              ":URL:",
+              ":BLANK_LINE:",
+              [":BUN:", ":NODE:"],
+              ":BLANK_LINE:",
+              [":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:", "!@/**", "!@arbor/**"],
+              ":BLANK_LINE:",
+              "@arbor/protocol/**",
+              ":BLANK_LINE:",
+              "@arbor/core/**",
+              ":BLANK_LINE:",
+              [":ALIAS:", "@/**", "!@arbor/**"],
+              ":BLANK_LINE:",
+              [":PATH:", "@/**", "!@arbor/**"]
+            ],
+            "identifierOrder": "natural"
+          }
+        }
+      }
+    }
+  },
+  "extends": ["@adrienlcp/biome-config", "@adrienlcp/biome-config/react"],
+  "files": {
+    "includes": [
+      "!.claude/skills",
+      "!**/.wrangler",
+      "!**/worker-configuration.d.ts"
+    ]
+  },
+  "linter": {
+    "rules": {
+      "style": {
+        "noRestrictedGlobals": {
+          "level": "error",
+          "options": {
+            "deniedGlobals": {
+              "Date": "Read the time through infrastructure/clock.ts, parse or build a Date through infrastructure/dates.ts."
+            }
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/infrastructure/clock.ts", "**/infrastructure/dates.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedGlobals": "off"
+          }
+        }
+      }
+    }
+  ]
+}

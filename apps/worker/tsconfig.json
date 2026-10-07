@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@arbor/core/*": ["../../packages/core/src/*"],
+      "@arbor/protocol/*": ["../../packages/protocol/src/*"]
+    },
+    "types": ["@cloudflare/workers-types"]
+  },
+  "extends": "../../tsconfig.json",
+  "include": ["src", "vitest.config.ts"]
+}
