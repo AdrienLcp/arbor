@@ -38,6 +38,13 @@ describe('handleRequest', () => {
     expect(mirror.headers.get('X-Robots-Tag')).toBe('noindex')
   })
 
+  it('serves a family page, whatever the family, with a 200 kept out of search results', async () => {
+    const response = await request('/f/abcdefghijklmnopqrstuv/share/')
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('X-Robots-Tag')).toBe('noindex')
+  })
+
   it('serves the web app with a 404 for an address that names no page', async () => {
     const response = await request('/nowhere')
 

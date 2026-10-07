@@ -1,4 +1,6 @@
 import type { AccessKey, FamilyId } from './access'
+import { PAGE_ROUTES } from './page-routes'
+import { pathFor } from './routes'
 
 /**
  * The link a relative opens. The key rides in the fragment, which browsers
@@ -12,4 +14,9 @@ export const familyLinkFor = ({
   familyId: FamilyId
   key: AccessKey
   origin: string
-}): string => `${origin}/f/${familyId}#${key}`
+}): string => {
+  const link = new URL(pathFor(PAGE_ROUTES.family, { familyId }), origin)
+  link.hash = key
+
+  return link.href
+}

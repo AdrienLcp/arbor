@@ -3,7 +3,9 @@ import { SITE_ORIGIN } from '@arbor/protocol/site'
 
 export type AssetFetcher = Pick<Fetcher, 'fetch'>
 
-const PAGE_PATHS: readonly string[] = Object.values(PAGE_ROUTES)
+const PAGE_PATTERNS = Object.values(PAGE_ROUTES).map(
+  (pathname) => new URLPattern({ pathname })
+)
 
 const withoutTrailingSlash = (pathname: string): string =>
   pathname.length > 1 && pathname.endsWith('/')
@@ -11,7 +13,9 @@ const withoutTrailingSlash = (pathname: string): string =>
     : pathname
 
 const isPagePath = (pathname: string): boolean =>
-  PAGE_PATHS.includes(withoutTrailingSlash(pathname))
+  PAGE_PATTERNS.some((page) =>
+    page.test({ pathname: withoutTrailingSlash(pathname) })
+  )
 
 /**
  * Only the landing page on the published host belongs in search results: a
