@@ -1,0 +1,49 @@
+@use '../styles/focus'
+@use '../styles/layout'
+@use '../styles/typography'
+
+@layer components
+  .radio-group
+    @include layout.container
+    display: grid
+    gap: var(--space-s)
+
+    .radio-group-label
+      @include typography.label
+      color: var(--ink-soft)
+
+    .radio-group-choices
+      border: var(--stroke-thin) solid var(--ghost)
+      border-radius: var(--radius-frame)
+      display: grid
+      gap: var(--space-xs)
+      padding: var(--space-xs)
+
+      @include layout.container-wide(28rem)
+        grid-auto-columns: 1fr
+        grid-auto-flow: column
+
+    .radio
+      @include focus.ring
+      @include typography.label
+      @include typography.strong
+      align-items: center
+      border-radius: var(--radius-control)
+      color: var(--ink-soft)
+      cursor: pointer
+      display: flex
+      justify-content: center
+      min-height: var(--target)
+      padding: 0 var(--space-l)
+      transition: background var(--transition-fast) var(--ease-out), color var(--transition-fast) var(--ease-out)
+
+      &[data-hovered]:not([data-selected])
+        background: var(--paper-2)
+        color: var(--ink)
+
+      &[data-pressed]:not([data-selected])
+        background: var(--paper-deep)
+
+      &[data-selected]
+        background: var(--action)
+        color: var(--on-action)
