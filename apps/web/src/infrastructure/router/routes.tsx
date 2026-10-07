@@ -1,11 +1,10 @@
 import type { RouteObject } from 'react-router'
 
 import { familyLoader } from '@/features/family-pages/family-loader'
-import { NotFoundPage } from '@/features/not-found/not-found-page'
 
 import { familyIdParam, paths, ROUTE_IDS } from './navigation'
 import { RootRoute } from './root-route'
-import { ErrorScreen } from './route-error'
+import { ErrorScreen, NotFoundPage } from './route-error'
 
 type RoutedPath = (typeof paths)[keyof typeof paths]
 
