@@ -15,6 +15,8 @@ import {
 const WORKER_DIRECTORY = resolve(import.meta.dirname, '../../..')
 /** `wrangler.jsonc` serves the built web app from here, and refuses to start without the folder. */
 const WEB_APP_DIRECTORY = resolve(WORKER_DIRECTORY, '../web/dist')
+/** `name` in `wrangler.jsonc`. */
+const WORKER_NAME = 'arbor'
 
 type Call = {
   body?: BodyInit | object
@@ -37,7 +39,18 @@ export const createTestApi = () => {
   const server = createTestHarness({
     workers: [{ configPath: resolve(WORKER_DIRECTORY, 'wrangler.jsonc') }]
   })
+  /**
+   * Straight to the Worker's runtime. `server.fetch` goes through wrangler's
+   * dev proxy, which on a loaded machine drops its connection to the Worker
+   * and answers with the error text or a body it has already read.
+   */
+  const worker = server.getWorker(WORKER_NAME)
 
+  /**
+   * Answers with the body already buffered. Miniflare rewraps undici's
+   * response and drops the original, whose stream undici cancels once it is
+   * garbage collected: a body a test reads after its next call could be gone.
+   */
   const call = async (
     path: string,
     { body, key, method = 'GET' }: Call = {}
@@ -51,10 +64,15 @@ export const createTestApi = () => {
     if (key !== undefined) {
       headers.Authorization = `${AUTHORIZATION_SCHEME} ${key}`
     }
-    return server.fetch(path, {
+    const response = await worker.fetch(path, {
       body: body === undefined ? undefined : await encoded.arrayBuffer(),
       headers,
       method
+    })
+    return new Response(await response.arrayBuffer(), {
+      headers: response.headers,
+      status: response.status,
+      statusText: response.statusText
     })
   }
 
@@ -71,8 +89,10 @@ export const createTestApi = () => {
   return {
     call,
     createFamily,
+    /** Resolves once the Worker answers, so no test pays for its boot. */
     start: async () => {
       await server.listen()
+      await call(API_ROUTES.health)
     },
     stop: () => server.close()
   }
