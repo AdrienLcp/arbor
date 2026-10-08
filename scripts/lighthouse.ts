@@ -29,7 +29,9 @@ const WORKER_PORT = 8792
 const PLAYWRIGHT_CHROMIUM_DEBUGGING_PORT = 9223
 
 const SITE_ORIGIN = 'https://arbor.adrienlcp.com'
-const DEMO_FAMILY_PATH = '/f/demo-famille-morel-001'
+const DEMO_FAMILY_ID = 'demo-famille-morel-001'
+const DEMO_FAMILY_KEY = 'public-demo-key-morel1'
+const DEMO_FAMILY_PATH = `/f/${DEMO_FAMILY_ID}`
 const HOME_PATH = '/'
 const AUDITED_PATHS = [
   HOME_PATH,
@@ -57,6 +59,22 @@ const BLINK_PREFERRED_COLOR_SCHEME: Record<Scheme, number> = {
 const configFor: Record<FormFactor, Config | undefined> = {
   desktop: desktopConfig,
   mobile: undefined
+}
+
+/**
+ * A fresh state directory has no demo yet: the first request to it builds the
+ * family, photos included. Built under a Lighthouse trace, that first visit
+ * leaves Chrome tracing, and the next audit fails with TRACING_ALREADY_STARTED
+ * or never returns.
+ */
+const openDemoFamily = async (origin: string): Promise<void> => {
+  const response = await fetch(`${origin}/api/families/${DEMO_FAMILY_ID}`, {
+    headers: { Authorization: `Bearer ${DEMO_FAMILY_KEY}` }
+  })
+
+  if (!response.ok) {
+    throw new Error(`The demo family answered ${response.status}`)
+  }
 }
 
 const startLocalWorker = async (): Promise<{
@@ -89,6 +107,7 @@ const startLocalWorker = async (): Promise<{
   for (let attempt = 0; attempt < 120; attempt++) {
     try {
       await fetch(origin)
+      await openDemoFamily(origin)
       return { origin, server }
     } catch {
       await new Promise((resolve) => setTimeout(resolve, 1000))
