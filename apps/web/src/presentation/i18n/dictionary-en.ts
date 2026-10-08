@@ -606,18 +606,13 @@ export const EN_DICTIONARY = defineDictionary({
     fileName: '{name} — tree.pdf',
     fontsFailed:
       'The preview could not load. Check the connection, then open the page again.',
-    format: {
-      a3: 'One A3 sheet',
-      label: 'Format',
-      poster: 'A poster of 6 A4 sheets'
-    },
     generations: defineTranslation('{count:plural}', {
       plural: {
         count: { one: '{?} generation', other: '{?} generations' }
       }
     }),
     intro:
-      'The whole family on one sheet, with the legend, and a code to find the up-to-date tree.',
+      'Choose who goes on the sheet and on which paper. Every sheet carries the legend and a code to find the up-to-date tree.',
     legend: {
       adoption: 'Adopted child: double line',
       child: 'Child',
@@ -636,11 +631,36 @@ export const EN_DICTIONARY = defineDictionary({
     },
     loading: 'The preview is coming…',
     making: 'Making the PDF…',
+    orientation: {
+      label: 'Sheet direction',
+      landscape: 'Wide',
+      portrait: 'Tall'
+    },
+    paper: {
+      a1: 'A large A1 sheet, at a print shop',
+      a2: 'An A2 sheet, at a print shop',
+      a3: 'One A3 sheet',
+      a4: 'One A4 sheet',
+      label: 'Which paper',
+      poster: 'A poster of 6 A4 sheets, to glue'
+    },
     posterHint:
       'Six sheets to print at home. Cut each sheet along the solid mark, then glue it onto its neighbour up to the dotted mark.',
     printedOn: defineTranslation('Printed on {day:date} · Arbor', {
       date: { day: { day: 'numeric', month: 'long', year: 'numeric' } }
     }),
+    scope: {
+      allGenerations: 'All',
+      ancestors: 'Someone’s ancestors',
+      ancestorsOf: 'The ancestors of {name}',
+      depth: 'How many generations',
+      descendants: 'Someone’s descendants',
+      descendantsOf: 'The descendants of {name}',
+      label: 'Who goes on the sheet',
+      other: 'Choose someone else',
+      whole: 'The whole family'
+    },
+    shopHint: 'A print shop prints this PDF large. A home printer cannot.',
     tile: 'Sheet {number:number} of {count:number} · row {row:number}, column {column:number}',
     title: 'Print the tree'
   },

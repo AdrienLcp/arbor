@@ -18,23 +18,38 @@
       text-wrap: balance
 
     .print-tree-intro,
-    .print-tree-hint,
     .print-tree-loading
       color: var(--ink-soft)
       max-width: var(--measure)
       text-wrap: pretty
 
-    .print-tree-controls
+    // Options above the sheet on a phone; beside it once there is room, the sheet kept in view while the options change.
+    .print-tree-body
+      align-items: start
       display: grid
-      gap: var(--space-m)
+      gap: var(--space-2xl)
+      width: 100%
+
+      @media (width >= 60rem)
+        grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr)
+
+    .print-tree-result
+      display: grid
+      gap: var(--space-l)
       justify-items: start
+      min-width: 0
+
+      @media (width >= 60rem)
+        inset-block-start: var(--space-l)
+        position: sticky
 
     // The sheet lies on the page as paper does: pure white whatever the theme, with the drop of a sheet on a table.
     .print-tree-preview
       background: var(--print-paper)
       box-shadow: 0 1px 2px color-mix(in oklch, var(--shadow) 25%, transparent), 0 18px 32px -20px color-mix(in oklch, var(--shadow) 60%, transparent)
       display: grid
-      width: 100%
+      // A tall sheet is not allowed to run off the screen: its width follows the height left to it.
+      width: min(100%, 80svh * var(--sheet-ratio))
 
     .print-tree-sheet,
     .print-tree-tiles

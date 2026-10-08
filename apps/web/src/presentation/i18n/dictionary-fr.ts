@@ -610,18 +610,13 @@ export const FR_DICTIONARY = defineDictionary({
     fileName: '{name} — arbre.pdf',
     fontsFailed:
       'L’aperçu n’a pas pu se charger. Vérifiez la connexion, puis rouvrez la page.',
-    format: {
-      a3: 'Une feuille A3',
-      label: 'Format',
-      poster: 'Une affiche de 6 feuilles A4'
-    },
     generations: defineTranslation('{count:plural}', {
       plural: {
         count: { one: '{?} génération', other: '{?} générations' }
       }
     }),
     intro:
-      'Toute la famille sur une feuille, avec la légende, et un code pour retrouver l’arbre à jour.',
+      'Choisissez qui mettre sur la feuille et sur quel papier. Chaque feuille porte la légende et un code pour retrouver l’arbre à jour.',
     legend: {
       adoption: 'Enfant adopté : trait double',
       child: 'Enfant',
@@ -640,11 +635,37 @@ export const FR_DICTIONARY = defineDictionary({
     },
     loading: 'L’aperçu arrive…',
     making: 'Préparation du PDF…',
+    orientation: {
+      label: 'Sens de la feuille',
+      landscape: 'En largeur',
+      portrait: 'En hauteur'
+    },
+    paper: {
+      a1: 'Une grande feuille A1, chez l’imprimeur',
+      a2: 'Une feuille A2, chez l’imprimeur',
+      a3: 'Une feuille A3',
+      a4: 'Une feuille A4',
+      label: 'Sur quel papier',
+      poster: 'Une affiche de 6 feuilles A4, à coller'
+    },
     posterHint:
       'Six feuilles à imprimer chez vous. Coupez chaque feuille au trait plein, puis collez-la sur sa voisine jusqu’aux pointillés.',
     printedOn: defineTranslation('Imprimé le {day:date} · Arbor', {
       date: { day: { day: 'numeric', month: 'long', year: 'numeric' } }
     }),
+    scope: {
+      allGenerations: 'Toutes',
+      ancestors: 'Les ancêtres de quelqu’un',
+      ancestorsOf: 'Les ancêtres de {name}',
+      depth: 'Sur combien de générations',
+      descendants: 'Les descendants de quelqu’un',
+      descendantsOf: 'Les descendants de {name}',
+      label: 'Qui mettre sur la feuille',
+      other: 'Choisir quelqu’un d’autre',
+      whole: 'Toute la famille'
+    },
+    shopHint:
+      'Un imprimeur ou une boutique de reprographie imprime ce PDF en grand. Une imprimante de maison ne le peut pas.',
     tile: 'Feuille {number:number} sur {count:number} · rangée {row:number}, colonne {column:number}',
     title: 'Imprimer l’arbre'
   },

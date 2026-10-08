@@ -4,14 +4,18 @@ import { useEffect, useRef, useState } from 'react'
 import { familyLinkFor } from '@arbor/protocol/family-link'
 
 import { familyStateOfSnapshot } from '@arbor/core/family/family-state-of-snapshot'
-import { layoutWholeFamily } from '@arbor/core/tree-layout/layout-whole-family'
 
-import { rememberedFamily } from '@/features/family-access/remembered-families'
+import { ONLOOKER } from '@/features/family-access/family-access'
+import {
+  rememberedFamily,
+  rememberedMe
+} from '@/features/family-access/remembered-families'
 import { FamilyAppBar } from '@/features/family-pages/family-app-bar'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
 import { usePersonFaces } from '@/features/family-pages/use-person-faces'
 import { slotNumbersOf } from '@/features/family-tree/slot-numbers'
 import { treeScene } from '@/features/family-tree/tree-scene'
+import { firstFocusId } from '@/features/family-tree/tree-view'
 import { pageOrigin, saveFile } from '@/infrastructure/browser'
 import { today } from '@/infrastructure/clock'
 import { pdfOfDrawing } from '@/infrastructure/pdf-file'
@@ -23,23 +27,31 @@ import { Button } from '@/presentation/components/button'
 import { FailureNotice } from '@/presentation/components/failure-notice'
 import { DownloadIcon } from '@/presentation/components/icons'
 import { Main } from '@/presentation/components/main'
-import { SegmentedControl } from '@/presentation/components/segmented-control'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
-import { type PrintFormat, type PrintPage, printPlan } from './print-pages'
+import { printFormatOf } from './paper-choice'
+import { type PrintChoices, PrintOptions } from './print-options'
+import { type PrintPage, printPlan } from './print-pages'
 import { PRINT_PALETTE } from './print-palette'
+import {
+  DEFAULT_PRINT_DEPTH,
+  layoutOfPrintScope,
+  type PrintScope
+} from './print-scope'
 import { PrintSheet } from './print-sheet'
 import { PRINT_VOICES } from './print-voices'
 
 import './print-tree-page.sass'
 
-/** The formats offered for now: the keeper's usual A3, and a poster for a home printer. */
-const FORMATS = {
-  a3: { kind: 'sheet', orientation: 'landscape', paper: 'a3' },
-  poster: { columns: 3, kind: 'poster', orientation: 'landscape', rows: 2 }
-} as const satisfies Record<string, PrintFormat>
-type FormatChoice = keyof typeof FORMATS
+const scopeOf = (choices: PrintChoices): PrintScope =>
+  choices.scopeKind === 'whole'
+    ? { kind: 'whole' }
+    : {
+        depth: choices.depth,
+        kind: choices.scopeKind,
+        personId: choices.personId
+      }
 
 type Fonts =
   | { kind: 'failed' }
@@ -83,22 +95,36 @@ const TileOutlines: React.FC<{ pages: readonly PrintPage[] }> = ({ pages }) =>
     )
   )
 
-/** The whole family on paper: a preview of the sheet and the PDF to print. */
+/** The family on paper, whole or one person's line: the options, a preview of the sheet and the PDF to print. */
 export const PrintTreePage: React.FC = () => {
   const translate = useTranslate()
   const { family: response, familyId } = useOpenFamily()
   const fonts = usePrintFonts()
   const faces = usePersonFaces()
-  const [choice, setChoice] = useState<FormatChoice>('a3')
+  const family = familyStateOfSnapshot(response.family)
+  const me = rememberedMe(familyId)
+  const [choices, setChoices] = useState<PrintChoices>(() => ({
+    depth: DEFAULT_PRINT_DEPTH,
+    orientation: 'landscape',
+    paper: 'a3',
+    personId:
+      firstFocusId({
+        family,
+        me:
+          me !== null && me !== ONLOOKER && me.kind === 'person'
+            ? me.personId
+            : null
+      }) ?? '',
+    scopeKind: 'whole'
+  }))
   const [making, setMaking] = useState<'failed' | 'idle' | 'making'>('idle')
   const sheet = useRef<SVGSVGElement>(null)
   const familyName = response.settings.name
-  const family = familyStateOfSnapshot(response.family)
   const scene = treeScene({
-    layout: layoutWholeFamily(family),
+    layout: layoutOfPrintScope(family, scopeOf(choices)),
     persons: family.persons
   })
-  const plan = printPlan(FORMATS[choice])
+  const plan = printPlan(printFormatOf(choices.paper, choices.orientation))
   const readerKey = rememberedFamily(familyId).keys.reader
   const liveLink =
     readerKey === undefined
@@ -107,9 +133,25 @@ export const PrintTreePage: React.FC = () => {
   const missingCount = scene.layout.cards.filter(
     (card) => card.kind === 'unknown-parent'
   ).length
+  const personCount = new Set(
+    scene.layout.cards.flatMap((card) =>
+      card.kind === 'person' ? card.personId : []
+    )
+  ).size
+  const scopePerson = faces.get(choices.personId)?.name ?? ''
   const summary = [
+    ...(choices.scopeKind === 'whole'
+      ? []
+      : [
+          translate(
+            choices.scopeKind === 'ancestors'
+              ? 'print.scope.ancestorsOf'
+              : 'print.scope.descendantsOf',
+            { name: scopePerson }
+          )
+        ]),
     translate('print.generations', { count: scene.bands.length }),
-    translate('tree.people', { count: faces.size }),
+    translate('tree.people', { count: personCount }),
     ...(missingCount === 0
       ? []
       : [translate('tree.missing', { count: missingCount })])
@@ -154,66 +196,62 @@ export const PrintTreePage: React.FC = () => {
           <h1 className='print-tree-title'>{translate('print.title')}</h1>
           <p className='print-tree-intro'>{translate('print.intro')}</p>
         </div>
-        <div className='print-tree-controls'>
-          <SegmentedControl<FormatChoice>
-            label={translate('print.format.label')}
-            onChange={setChoice}
-            options={[
-              { label: translate('print.format.a3'), value: 'a3' },
-              { label: translate('print.format.poster'), value: 'poster' }
-            ]}
-            value={choice}
-          />
-          {choice === 'poster' ? (
-            <p className='print-tree-hint'>{translate('print.posterHint')}</p>
-          ) : null}
-        </div>
-        {fonts.kind === 'failed' ? (
-          <FailureNotice>{translate('print.fontsFailed')}</FailureNotice>
-        ) : null}
-        {fonts.kind === 'loading' ? (
-          <p className='print-tree-loading'>{translate('print.loading')}</p>
-        ) : null}
-        {fonts.kind === 'ready' ? (
-          <>
-            <div className='print-tree-preview'>
-              <PrintSheet
-                className='print-tree-sheet'
-                drawing={plan.drawing}
-                faces={faces}
-                familyName={familyName}
-                liveLink={liveLink}
-                printedOn={today()}
-                ref={sheet}
-                scene={scene}
-                slotNumbers={slotNumbersOf({
-                  layout: scene.layout,
-                  personIds: [...family.persons.keys()]
-                })}
-                summary={summary}
-              />
-              <svg
-                aria-hidden='true'
-                className='print-tree-tiles'
-                viewBox={`0 0 ${plan.drawing.width} ${plan.drawing.height}`}
-              >
-                <TileOutlines pages={plan.pages} />
-              </svg>
-            </div>
-            <Button
-              isPending={making === 'making'}
-              onPress={() => void downloadPdf(fonts.fonts)}
-            >
-              <DownloadIcon aria-hidden='true' />
-              {making === 'making'
-                ? translate('print.making')
-                : translate('print.download')}
-            </Button>
-            {making === 'failed' ? (
-              <FailureNotice>{translate('print.failed')}</FailureNotice>
+        <div className='print-tree-body'>
+          <PrintOptions choices={choices} faces={faces} onChange={setChoices} />
+          <div className='print-tree-result'>
+            {fonts.kind === 'failed' ? (
+              <FailureNotice>{translate('print.fontsFailed')}</FailureNotice>
             ) : null}
-          </>
-        ) : null}
+            {fonts.kind === 'loading' ? (
+              <p className='print-tree-loading'>{translate('print.loading')}</p>
+            ) : null}
+            {fonts.kind === 'ready' ? (
+              <>
+                <div
+                  className='print-tree-preview'
+                  style={{
+                    '--sheet-ratio': plan.drawing.width / plan.drawing.height
+                  }}
+                >
+                  <PrintSheet
+                    className='print-tree-sheet'
+                    drawing={plan.drawing}
+                    faces={faces}
+                    familyName={familyName}
+                    liveLink={liveLink}
+                    printedOn={today()}
+                    ref={sheet}
+                    scene={scene}
+                    slotNumbers={slotNumbersOf({
+                      layout: scene.layout,
+                      personIds: [...family.persons.keys()]
+                    })}
+                    summary={summary}
+                  />
+                  <svg
+                    aria-hidden='true'
+                    className='print-tree-tiles'
+                    viewBox={`0 0 ${plan.drawing.width} ${plan.drawing.height}`}
+                  >
+                    <TileOutlines pages={plan.pages} />
+                  </svg>
+                </div>
+                <Button
+                  isPending={making === 'making'}
+                  onPress={() => void downloadPdf(fonts.fonts)}
+                >
+                  <DownloadIcon aria-hidden='true' />
+                  {making === 'making'
+                    ? translate('print.making')
+                    : translate('print.download')}
+                </Button>
+                {making === 'failed' ? (
+                  <FailureNotice>{translate('print.failed')}</FailureNotice>
+                ) : null}
+              </>
+            ) : null}
+          </div>
+        </div>
       </Main>
     </>
   )
