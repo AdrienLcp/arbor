@@ -218,6 +218,45 @@ export const FR_DICTIONARY = defineDictionary({
     submit: 'Ouvrir l’arbre',
     title: 'J’ai reçu un lien'
   },
+  sheet: {
+    atPlace: 'à {place}',
+    back: 'L’arbre',
+    birth: 'Naissance',
+    birthSurname: 'Nom de naissance',
+    death: 'Décès',
+    deathUnknown: 'Date et lieu inconnus',
+    generation: 'génération {number:number}',
+    inPeriod: 'en {date}',
+    missing: {
+      body: 'Elle a peut-être été mise à la corbeille. Rien n’est perdu : on peut l’en sortir.',
+      title: 'Cette personne n’est plus dans l’arbre'
+    },
+    notes: 'Notes',
+    onDay: 'le {date}',
+    open: 'Ouvrir la fiche de {name}',
+    openShort: 'Sa fiche',
+    slot: 'n° {number}',
+    title: 'Fiche de {name}',
+    union: {
+      start: {
+        marriage: 'Mariés',
+        pacs: 'Pacsés',
+        partnership: 'En union libre',
+        unknown: 'En couple'
+      },
+      told: '{word} {when}'
+    },
+    unions: 'Ses unions',
+    unknownPartner: 'Avec une personne inconnue',
+    warning: {
+      bornAfterChild:
+        '{name}, son enfant, a une naissance datée avant la sienne.',
+      bornBeforeParent:
+        'sa naissance est datée avant celle de {name}, son parent.',
+      deathBeforeBirth: 'le décès est daté avant la naissance.',
+      title: 'Date à vérifier :'
+    }
+  },
   theme: {
     dark: 'Sombre',
     label: 'Apparence',

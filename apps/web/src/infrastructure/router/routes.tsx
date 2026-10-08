@@ -37,6 +37,10 @@ const pageFor = {
     Component: (await import('@/features/open-link/open-link-page'))
       .OpenLinkPage
   }),
+  [paths.personSheet]: async () => ({
+    Component: (await import('@/features/person-sheet/person-sheet-page'))
+      .PersonSheetPage
+  }),
   [paths.whoAmI]: async () => ({
     Component: (await import('@/features/family-pages/who-am-i-page'))
       .WhoAmIPage
@@ -51,10 +55,22 @@ const FAMILY_PAGES = [
   paths.familySettings
 ] as const satisfies readonly RoutedPath[]
 
+/** Pages drawn over another one, which stays on screen beside them: a person's sheet over the tree. */
+const PAGES_OVER: Partial<Record<RoutedPath, readonly RoutedPath[]>> = {
+  [paths.familyTree]: [paths.personSheet]
+}
+
 const familyRoute: RouteObject = {
   children: [
     { index: true, lazy: pageFor[paths.family] },
-    ...FAMILY_PAGES.map((path) => ({ lazy: pageFor[path], path }))
+    ...FAMILY_PAGES.map((path) => ({
+      children: PAGES_OVER[path]?.map((over) => ({
+        lazy: pageFor[over],
+        path: over
+      })),
+      lazy: pageFor[path],
+      path
+    }))
   ],
   id: ROUTE_IDS.family,
   lazy: async () => ({

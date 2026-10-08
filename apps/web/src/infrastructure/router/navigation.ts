@@ -7,6 +7,7 @@ import {
   Navigate,
   type PathParam,
   useLoaderData,
+  useLocation,
   useNavigate,
   useOutlet,
   useRevalidator,
@@ -14,6 +15,7 @@ import {
 } from 'react-router'
 
 import { type FamilyId, familyIdSchema } from '@arbor/protocol/access'
+import { type EntityId, entityIdSchema } from '@arbor/protocol/entity-id'
 import { PAGE_ROUTES } from '@arbor/protocol/page-routes'
 
 export const paths = PAGE_ROUTES
@@ -40,6 +42,14 @@ export const familySharePathFor = (familyId: FamilyId): string =>
 
 export const familyTreePathFor = (familyId: FamilyId): string =>
   pathFor(paths.familyTree, { familyId })
+
+export const personSheetPathFor = ({
+  familyId,
+  personId
+}: {
+  familyId: FamilyId
+  personId: EntityId
+}): string => pathFor(paths.personSheet, { familyId, personId })
 
 export const familySettingsPathFor = (familyId: FamilyId): string =>
   pathFor(paths.familySettings, { familyId })
@@ -73,6 +83,36 @@ export const useRefreshRouteData = (): (() => void) => {
 type NavigateToOptions = {
   /** Replaces the current history entry, so Back skips the page left behind. */
   replace?: boolean
+}
+
+/** The person whose sheet the address opens, `null` on any other page. Read from the address, so the tree page above the sheet's route sees it too. */
+export const useSheetPersonId = (): EntityId | null => {
+  const { pathname } = useLocation()
+  const sheetPage = matchPath(paths.personSheet, pathname)
+  const personId = entityIdSchema.safeParse(sheetPage?.params.personId)
+
+  return personId.success ? personId.data : null
+}
+
+/** The page an address shows underneath: a sheet over the tree is still the tree page, which stays mounted while sheets open and close. */
+export const pageUnderneath = (pathname: string): string => {
+  const familyId = familyIdSchema.safeParse(
+    matchPath(paths.personSheet, pathname)?.params.familyId
+  )
+
+  return familyId.success ? familyTreePathFor(familyId.data) : pathname
+}
+
+/** An on-screen Back that does what the device's Back does, or opens `fallback` when the page was opened from its address. */
+export const useGoBack = (fallback: string): (() => void) => {
+  const navigate = useNavigate()
+
+  return () => {
+    const hasPageBehind = Number(window.history.state?.idx ?? 0) > 0
+    void Promise.resolve(
+      hasPageBehind ? navigate(-1) : navigate(fallback, { replace: true })
+    ).catch(ignoreSupersededNavigation)
+  }
 }
 
 /** Moves to a page after an action — a family just created — rather than from a link. */

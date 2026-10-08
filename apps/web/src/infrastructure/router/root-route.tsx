@@ -6,6 +6,8 @@ import { Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { markAppHydrated } from '@/infrastructure/browser'
 import { focusMain } from '@/presentation/components/main'
 
+import { pageUnderneath } from './navigation'
+
 /** A full load starts at the top on its own; a client-side navigation leaves focus on the link that started it. */
 const useFocusMainOnNavigation = (pathname: string): void => {
   const previousPathname = useRef(pathname)
@@ -31,7 +33,12 @@ export const RootRoute: React.FC = () => {
 
   return (
     <AriaRouterProvider>
-      <ViewTransition default='none' enter='auto' exit='auto' key={pathname}>
+      <ViewTransition
+        default='none'
+        enter='auto'
+        exit='auto'
+        key={pageUnderneath(pathname)}
+      >
         <Outlet />
       </ViewTransition>
       <ScrollRestoration />

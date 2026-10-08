@@ -216,6 +216,44 @@ export const EN_DICTIONARY = defineDictionary({
     submit: 'Open the tree',
     title: 'I received a link'
   },
+  sheet: {
+    atPlace: 'in {place}',
+    back: 'The tree',
+    birth: 'Birth',
+    birthSurname: 'Birth name',
+    death: 'Death',
+    deathUnknown: 'Date and place unknown',
+    generation: 'generation {number:number}',
+    inPeriod: 'in {date}',
+    missing: {
+      body: 'They may have been moved to the bin. Nothing is lost: they can be brought back.',
+      title: 'This person is no longer in the tree'
+    },
+    notes: 'Notes',
+    onDay: 'on {date}',
+    open: 'Open {name}’s sheet',
+    openShort: 'Their sheet',
+    slot: 'No. {number}',
+    title: '{name}’s sheet',
+    union: {
+      start: {
+        marriage: 'Married',
+        pacs: 'Civil partners',
+        partnership: 'Living together',
+        unknown: 'Together'
+      },
+      told: '{word} {when}'
+    },
+    unions: 'Unions',
+    unknownPartner: 'With an unknown person',
+    warning: {
+      bornAfterChild: '{name}, their child, is dated as born before them.',
+      bornBeforeParent:
+        'their birth is dated before that of {name}, their parent.',
+      deathBeforeBirth: 'the death is dated before the birth.',
+      title: 'Date to check:'
+    }
+  },
   theme: {
     dark: 'Dark',
     label: 'Appearance',

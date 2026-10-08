@@ -6,7 +6,9 @@ import type { EntityId } from '@arbor/protocol/entity-id'
 import { closeFamilyOf } from '@arbor/core/relatives/close-family'
 import type { FamilyLineage } from '@arbor/core/tree-layout/family-lineage'
 
+import { ButtonLink } from '@/presentation/components/button-link'
 import { generationClass } from '@/presentation/components/generation-class'
+import { SheetIcon } from '@/presentation/components/icons'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { FocusCouples } from './focus-couples'
@@ -24,6 +26,8 @@ type TreeSpreadProps = {
   focusId: EntityId
   lineage: FamilyLineage
   onPressPerson: (personId: EntityId) => void
+  /** Where the focus person's sheet opens. */
+  sheetPath: string
 }
 
 const birthsOf = (
@@ -66,7 +70,8 @@ export const TreeSpread: React.FC<TreeSpreadProps> = ({
   faces,
   focusId,
   lineage,
-  onPressPerson
+  onPressPerson,
+  sheetPath
 }) => {
   const translate = useTranslate()
   const kin = useKinWords()
@@ -163,6 +168,14 @@ export const TreeSpread: React.FC<TreeSpreadProps> = ({
           focus={focus}
           onPressPerson={onPressPerson}
         />
+        <ButtonLink
+          className='spread-sheet-link'
+          href={sheetPath}
+          variant='ghost'
+        >
+          <SheetIcon aria-hidden='true' />
+          {translate('sheet.open', { name: focus.givenNames || focus.name })}
+        </ButtonLink>
       </Band>
       <Band
         generation={children[0]?.face.generation ?? focus.generation + 1}

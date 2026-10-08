@@ -1,0 +1,31 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .focus-card
+    align-items: center
+    background: var(--paper)
+    border: var(--stroke-thin) solid var(--ghost-soft)
+    border-radius: var(--radius-frame)
+    bottom: var(--space-l)
+    box-shadow: 0 1px 2px color-mix(in oklch, var(--shadow) 20%, transparent), 0 14px 24px -18px var(--shadow)
+    display: flex
+    gap: var(--space-l)
+    left: var(--space-l)
+    max-width: calc(100% - 2 * var(--space-l) - 4rem)
+    padding: var(--space-s) var(--space-s) var(--space-s) var(--space-l)
+    position: absolute
+
+    .focus-card-text
+      display: grid
+      gap: 2px
+      min-width: 0
+
+    .focus-card-name
+      @include typography.name
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+
+    .focus-card-facts
+      @include typography.numeral
+      color: var(--ink-soft)

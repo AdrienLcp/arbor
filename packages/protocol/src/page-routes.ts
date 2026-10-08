@@ -7,5 +7,6 @@ export const PAGE_ROUTES = {
   familyTree: '/f/:familyId/tree',
   home: '/',
   openLink: '/link',
+  personSheet: '/f/:familyId/tree/:personId',
   whoAmI: '/f/:familyId/me'
 } as const

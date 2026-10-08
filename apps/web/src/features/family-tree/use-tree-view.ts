@@ -17,17 +17,28 @@ export type TreeViewControls = {
 /** What the tree shows, and the controls that change it. */
 export const useTreeView = ({
   initialFocusId,
-  isFocusMe
+  isFocusMe,
+  shownPersonId
 }: {
   initialFocusId: EntityId
   /** On arrival, a visitor who is in the tree sees it around themselves; anyone else sees the whole family. */
   isFocusMe: boolean
+  /** The person whose sheet is open over the tree: the tree turns to them, so closing the sheet lands on their page. */
+  shownPersonId: EntityId | null
 }): TreeViewControls => {
   const [view, setView] = useState<TreeView>({
     depth: DEFAULT_TREE_DEPTH,
     focusId: initialFocusId,
     scope: isFocusMe ? 'around' : 'whole'
   })
+  const [followedPersonId, setFollowedPersonId] = useState(shownPersonId)
+
+  if (shownPersonId !== followedPersonId) {
+    setFollowedPersonId(shownPersonId)
+    if (shownPersonId !== null) {
+      setView((current) => ({ ...current, focusId: shownPersonId }))
+    }
+  }
 
   const changeView = (change: Partial<TreeView>) => {
     startTransition(() => {

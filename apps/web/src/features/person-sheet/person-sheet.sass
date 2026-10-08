@@ -1,0 +1,131 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .person-sheet
+    // The person's generation band: their ink at 9% into the paper, a firmer rule under it.
+    .sheet-hero
+      align-items: flex-end
+      background: color-mix(in oklab, var(--gc) 9%, var(--paper))
+      border-bottom: var(--stroke-bold) solid color-mix(in oklab, var(--gc) 55%, var(--paper))
+      display: flex
+      gap: var(--space-l)
+      padding: var(--space-l) var(--space-l) var(--space-m)
+
+      .slot
+        --slot-height: 158px
+        --slot-width: 124px
+
+    .sheet-identity
+      min-width: 0
+      padding-bottom: var(--space-xs)
+
+    .sheet-name
+      display: grid
+      overflow-wrap: anywhere
+
+    .sheet-given-names
+      @include typography.headline
+      font-size: 44px
+      line-height: 0.95
+
+    .sheet-surname
+      @include typography.headline
+      color: var(--ink-soft)
+      font-size: 26px
+
+    .sheet-life
+      display: grid
+      gap: var(--space-xs)
+      margin-top: var(--space-s)
+
+    .sheet-years
+      @include typography.numeral
+      font-size: 20px
+
+    .sheet-generation
+      @include typography.label
+      color: var(--gc-ink)
+
+    .sheet-warnings
+      display: grid
+      gap: var(--space-s)
+      list-style: none
+      margin: var(--space-l) var(--space-l) 0
+      padding: 0
+
+    .sheet-warning
+      @include typography.body-small
+      background: var(--warn-bg)
+      border-radius: var(--radius-control)
+      color: var(--warn)
+      display: flex
+      gap: var(--space-s)
+      padding: var(--space-s) var(--space-m)
+
+    .sheet-warning-icon
+      flex: none
+      height: 20px
+      margin-top: 1px
+      width: 20px
+
+    .sheet-facts
+      display: grid
+      gap: var(--space-m)
+      margin: 0
+      padding: var(--space-l) var(--space-l) 0
+
+      > div
+        display: grid
+        gap: var(--space-s)
+        grid-template-columns: 7.5em 1fr
+
+      dt
+        @include typography.label-strong
+        color: var(--ink-soft)
+        padding-top: 2px
+
+      dd
+        @include typography.body
+        margin: 0
+
+    .sheet-group
+      padding: var(--space-xl) var(--space-l) 0
+
+    .sheet-group-title
+      @include typography.title
+      align-items: center
+      display: flex
+      font-size: 19px
+      gap: var(--space-m)
+      margin-bottom: var(--space-s)
+
+      &::after
+        background: var(--ghost-soft)
+        content: ''
+        flex: 1
+        height: var(--stroke-thin)
+
+    .sheet-notes
+      @include typography.body
+      white-space: pre-line
+
+    .sheet-union
+      border: var(--stroke-thin) solid var(--ghost-soft)
+      border-radius: var(--radius-frame)
+      margin-top: var(--space-s)
+      padding: var(--space-xs) var(--space-s) var(--space-m)
+
+    .sheet-union-unknown
+      @include typography.body
+      color: var(--ink-soft)
+      padding: var(--space-m) var(--space-xs)
+
+    .sheet-union-story
+      @include typography.body-small
+      align-items: center
+      display: flex
+      gap: var(--space-m)
+      padding-inline: var(--space-xs)
+
+      .line-swatch
+        flex: none

@@ -8,12 +8,9 @@ import { familyLineage } from '@arbor/core/tree-layout/family-lineage'
 
 import { ONLOOKER } from '@/features/family-access/family-access'
 import { rememberedMe } from '@/features/family-access/remembered-families'
-import type { PersonFace } from '@/features/family-tree/person-face'
+import { FocusCard } from '@/features/family-tree/focus-card'
 import { PersonSearch } from '@/features/family-tree/person-search'
-import {
-  personSlotNumbers,
-  slotNumbersOf
-} from '@/features/family-tree/slot-numbers'
+import { slotNumbersOf } from '@/features/family-tree/slot-numbers'
 import { TreeCanvas } from '@/features/family-tree/tree-canvas'
 import { TreeOutline } from '@/features/family-tree/tree-outline'
 import { treeScene } from '@/features/family-tree/tree-scene'
@@ -25,12 +22,14 @@ import {
   type TreeScope
 } from '@/features/family-tree/tree-view'
 import { useTreeView } from '@/features/family-tree/use-tree-view'
-import { yearOf } from '@/features/people/fuzzy-year'
-import { lifeYears } from '@/features/people/life-years'
-import { personName } from '@/features/people/person-name'
 import { today } from '@/infrastructure/clock'
+import {
+  personSheetPathFor,
+  useChildPage,
+  useNavigateTo,
+  useSheetPersonId
+} from '@/infrastructure/router/navigation'
 import { Main } from '@/presentation/components/main'
-import { monogramOf } from '@/presentation/components/monogram'
 import { SegmentedControl } from '@/presentation/components/segmented-control'
 import { useMediaQuery } from '@/presentation/components/use-media-query'
 import { DocumentTitle } from '@/presentation/head/document-title'
@@ -38,7 +37,7 @@ import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { FamilyAppBar } from './family-app-bar'
 import { useOpenFamily } from './family-loader'
-import { listedPeople } from './family-people'
+import { usePersonFaces } from './use-person-faces'
 
 import './family-tree-page.sass'
 
@@ -57,35 +56,31 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   isFocusMe
 }) => {
   const translate = useTranslate()
-  const { family: response } = useOpenFamily()
+  const navigateTo = useNavigateTo()
+  const { family: response, familyId } = useOpenFamily()
   const day = today()
   const isPhone = useMediaQuery(PHONE_SCREEN)
+  const sheet = useChildPage()
+  const sheetPersonId = useSheetPersonId()
   const { setDepth, setFocus, setScope, showAround, view } = useTreeView({
     initialFocusId,
-    isFocusMe
+    isFocusMe,
+    shownPersonId: sheetPersonId
   })
   const personIds = [...family.persons.keys()]
-  const slotNumbers = personSlotNumbers(personIds)
-  const faces = new Map<EntityId, PersonFace>(
-    listedPeople(response.family, day).map(
-      ({ generation, isLiving, person }) => [
-        person.id,
-        {
-          birthYear: yearOf(person.birth?.date),
-          generation,
-          givenNames: person.givenNames,
-          id: person.id,
-          isDeceased: !isLiving,
-          monogram: monogramOf(person),
-          name: personName(person) ?? translate('common.unnamedPerson'),
-          sex: person.sex,
-          slotNumber: slotNumbers.get(person.id) ?? 0,
-          surname: person.surname,
-          years: lifeYears(person, isLiving)
-        }
-      ]
-    )
-  )
+  const faces = usePersonFaces()
+  const focusSheetPath = personSheetPathFor({
+    familyId,
+    personId: view.focusId
+  })
+  /** Touching the person already in the middle opens their sheet; anyone else comes to the middle. */
+  const pressPerson = (personId: EntityId) => {
+    if (personId === view.focusId) {
+      navigateTo(focusSheetPath)
+      return
+    }
+    setFocus(personId)
+  }
   const focusName =
     faces.get(view.focusId)?.name ?? translate('common.unnamedPerson')
   const shownScope: TreeScope =
@@ -124,7 +119,8 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
           // A new page opens at its top, its parents in sight.
           key={view.focusId}
           lineage={familyLineage(family)}
-          onPressPerson={setFocus}
+          onPressPerson={pressPerson}
+          sheetPath={focusSheetPath}
         />
       )
     }
@@ -132,22 +128,33 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
       layout: layoutOfView(family, view),
       persons: family.persons
     })
+    const focus = faces.get(view.focusId)
     return (
-      <TreeCanvas
-        focusId={view.focusId}
-        label={title}
-        onPressPerson={setFocus}
-        persons={family.persons}
-        scene={scene}
-        slotNumbers={slotNumbersOf({ layout: scene.layout, personIds })}
-        today={day}
-      />
+      <>
+        <TreeCanvas
+          focusId={view.focusId}
+          label={title}
+          onPressPerson={pressPerson}
+          persons={family.persons}
+          scene={scene}
+          slotNumbers={slotNumbersOf({ layout: scene.layout, personIds })}
+          today={day}
+        />
+        {focus === undefined || sheet !== null ? null : (
+          <FocusCard face={focus} sheetPath={focusSheetPath} />
+        )}
+      </>
     )
   }
 
   return (
-    <Main className='family-tree-page'>
-      <DocumentTitle>{`${title} — ${response.settings.name}`}</DocumentTitle>
+    <Main
+      className='family-tree-page'
+      data-sheet-open={sheet === null ? undefined : true}
+    >
+      {sheet === null ? (
+        <DocumentTitle>{`${title} — ${response.settings.name}`}</DocumentTitle>
+      ) : null}
       <div className='family-tree-head'>
         <h1 className='family-tree-title'>{title}</h1>
         <div className='family-tree-controls'>
@@ -171,7 +178,10 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
           <PersonSearch onPick={showAround} people={[...faces.values()]} />
         </div>
       </div>
-      {drawing()}
+      <div className='family-tree-stage'>
+        <div className='family-tree-drawing'>{drawing()}</div>
+        {sheet}
+      </div>
     </Main>
   )
 }
@@ -184,7 +194,11 @@ export const FamilyTreePage: React.FC = () => {
   const myPersonId =
     me !== null && me !== ONLOOKER && me.kind === 'person' ? me.personId : null
   const family = familyStateOfSnapshot(response.family)
-  const focusId = firstFocusId({ family, me: myPersonId })
+  const sheetPersonId = useSheetPersonId()
+  const focusId =
+    sheetPersonId !== null && family.persons.has(sheetPersonId)
+      ? sheetPersonId
+      : firstFocusId({ family, me: myPersonId })
 
   return (
     <div className='family-tree-screen'>
