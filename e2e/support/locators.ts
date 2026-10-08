@@ -112,3 +112,24 @@ export const addPhotoDialog = (page: Page) => {
     save: dialog.getByRole('button', { name: 'Add the photo' })
   }
 }
+
+export const historyPage = (page: Page) => ({
+  /** The family comes back to right after the entry that says this. */
+  goBackAfter: (sentence: string) =>
+    page
+      .locator('.history-entry')
+      .filter({ hasText: sentence })
+      .getByRole('button', { name: /^Put the tree back as it was at/ }),
+  line: (sentence: string) =>
+    page.getByRole('listitem').filter({ hasText: sentence }).first(),
+  undoneBy: (name: string) => page.getByText(`Undone by ${name} on`)
+})
+
+export const restoreDialog = (page: Page) => {
+  const dialog = page.getByRole('alertdialog')
+  return {
+    confirm: dialog.getByRole('button', { name: 'Go back to this moment' }),
+    dialog,
+    group: (title: string) => dialog.getByRole('region', { name: title })
+  }
+}

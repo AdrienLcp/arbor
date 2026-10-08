@@ -102,15 +102,20 @@ $time-column: 3.5rem
       grid-template-columns: $time-column minmax(0, 1fr)
       padding-block: var(--space-m)
 
-      .history-entry-undo
-        grid-column: 2
-        justify-self: start
+      .history-entry-actions
+        column-gap: var(--space-l)
+        display: flex
+        flex-wrap: wrap
+        // Full width on a phone: both buttons fit on one line beside each other.
+        grid-column: 1 / -1
 
       @include layout.container-wide(34rem)
         grid-template-columns: $time-column minmax(0, 1fr) auto
 
-        .history-entry-undo
+        .history-entry-actions
+          align-items: end
           align-self: start
+          flex-direction: column
           grid-column: 3
 
     .history-entry-time

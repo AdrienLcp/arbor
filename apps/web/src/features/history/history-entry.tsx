@@ -5,7 +5,11 @@ import { useState } from 'react'
 import type { ChangeLogEntry } from '@arbor/protocol/change-log'
 
 import { Button } from '@/presentation/components/button'
-import { RedoIcon, UndoIcon } from '@/presentation/components/icons'
+import {
+  HistoryIcon,
+  RedoIcon,
+  UndoIcon
+} from '@/presentation/components/icons'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import type { StoryLine } from './entry-story'
@@ -32,6 +36,8 @@ const sentencesOf = (
 type HistoryEntryProps = {
   entry: ChangeLogEntry
   lines: readonly StoryLine[]
+  /** Offered to the keeper on every entry but the last: the family comes back to right after it. `null` hides the button. */
+  onRestore: (() => void) | null
   /** Offered when the visitor may take the entry back; `null` hides the button. */
   onUndo: (() => void) | null
   takenBackBy: TakenBackBy | null
@@ -39,10 +45,11 @@ type HistoryEntryProps = {
   wordLine: (line: StoryLine) => string
 }
 
-/** One change: its time, what it did in plain sentences, who took it back, and the button to take it back. */
+/** One change: its time, what it did in plain sentences, who took it back, and the buttons to take it back or come back to it. */
 export const HistoryEntry: React.FC<HistoryEntryProps> = ({
   entry,
   lines,
+  onRestore,
   onUndo,
   takenBackBy,
   time,
@@ -97,23 +104,40 @@ export const HistoryEntry: React.FC<HistoryEntryProps> = ({
           </p>
         )}
       </div>
-      {onUndo === null ? null : (
-        <Button
-          aria-label={translate(
-            isTakingBack ? 'history.undo.redoLabel' : 'history.undo.entryLabel',
-            { time }
+      {onUndo === null && onRestore === null ? null : (
+        <div className='history-entry-actions'>
+          {onUndo === null ? null : (
+            <Button
+              aria-label={translate(
+                isTakingBack
+                  ? 'history.undo.redoLabel'
+                  : 'history.undo.entryLabel',
+                { time }
+              )}
+              onPress={onUndo}
+              variant='link'
+            >
+              {isTakingBack ? (
+                <RedoIcon aria-hidden='true' />
+              ) : (
+                <UndoIcon aria-hidden='true' />
+              )}
+              {translate(
+                isTakingBack ? 'history.undo.redo' : 'history.undo.entry'
+              )}
+            </Button>
           )}
-          className='history-entry-undo'
-          onPress={onUndo}
-          variant='link'
-        >
-          {isTakingBack ? (
-            <RedoIcon aria-hidden='true' />
-          ) : (
-            <UndoIcon aria-hidden='true' />
+          {onRestore === null ? null : (
+            <Button
+              aria-label={translate('history.restore.actionLabel', { time })}
+              onPress={onRestore}
+              variant='link'
+            >
+              <HistoryIcon aria-hidden='true' />
+              {translate('history.restore.action')}
+            </Button>
           )}
-          {translate(isTakingBack ? 'history.undo.redo' : 'history.undo.entry')}
-        </Button>
+        </div>
       )}
     </li>
   )

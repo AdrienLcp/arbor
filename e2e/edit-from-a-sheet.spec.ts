@@ -1,8 +1,8 @@
-import { expect, type Page, test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
+import { addRelative, openHydrated, waitForHydration } from './support/journeys'
 import {
   addPhotoDialog,
-  addRelativeDialog,
   createFamilyPage,
   editPersonDialog,
   familyHomePage,
@@ -33,28 +33,6 @@ const ONE_PIXEL_PNG = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
   'base64'
 )
-
-const waitForHydration = (page: Page) =>
-  page.locator('html[data-hydrated]').waitFor()
-
-const openHydrated = async (page: Page, url: string): Promise<void> => {
-  await page.goto(url)
-  await waitForHydration(page)
-}
-
-const addRelative = async (
-  page: Page,
-  relation: string,
-  person: { givenNames: string; surname?: string }
-): Promise<void> => {
-  await personSheet(page).addRelative.click()
-  const dialog = addRelativeDialog(page)
-  await dialog.choice(relation).click()
-  await dialog.givenNames.fill(person.givenNames)
-  if (person.surname !== undefined) await dialog.surname.fill(person.surname)
-  await dialog.save.click()
-  await expect(formDialog(page)).toBeHidden()
-}
 
 /**
  * Two phones again: the founder edits from Jeanne's sheet while a relative,

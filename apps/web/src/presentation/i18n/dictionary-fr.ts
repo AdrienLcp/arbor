@@ -429,6 +429,38 @@ export const FR_DICTIONARY = defineDictionary({
     personTitle: 'Historique de la fiche {ofName}',
     reader:
       'L’historique s’ouvre avec le lien de la famille. Le lien que vous avez reçu permet de regarder l’arbre, pas de le modifier.',
+    restore: {
+      action: 'Revenir ici',
+      actionLabel:
+        'Remettre l’arbre comme il était à {time}, juste après ce changement',
+      back: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'Revient dans l’arbre',
+            other: 'Reviennent dans l’arbre'
+          }
+        }
+      }),
+      body: 'Tout ce qui a été fait ensuite sera défait d’un coup.',
+      changed: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'Retrouve ses anciennes informations',
+            other: 'Retrouvent leurs anciennes informations'
+          }
+        }
+      }),
+      confirm: 'Revenir à ce moment',
+      gone: defineTranslation('{count:plural}', {
+        plural: { count: { one: 'Quitte l’arbre', other: 'Quittent l’arbre' } }
+      }),
+      others:
+        'Les liens, les dates et les photos redeviennent aussi comme ce jour-là.',
+      quiet: 'L’arbre est déjà comme ce jour-là : rien ne changera à l’écran.',
+      renamed: '{now} redevient {past}',
+      safe: 'Rien n’est perdu : ce retour sera noté dans l’historique, et vous pourrez le défaire.',
+      title: 'Remettre l’arbre comme le {moment} ?'
+    },
     retry: 'Réessayer',
     takenBack: 'Annulé par {name}, le {moment}',
     time: defineTranslation('{at:date}', {
@@ -465,6 +497,8 @@ export const FR_DICTIONARY = defineDictionary({
         not_sent:
           'Ça n’a pas marché. Vérifiez que le téléphone est connecté à Internet, puis réessayez.',
         nothing_to_restore: 'L’arbre est déjà dans cet état.',
+        revision_conflict:
+          'Quelqu’un vient de modifier l’arbre. L’aperçu est à jour : regardez, puis réessayez.',
         revision_not_found:
           'Ce moment n’est plus dans l’historique. L’historique est à jour : réessayez.'
       },

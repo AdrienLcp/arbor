@@ -426,6 +426,38 @@ export const EN_DICTIONARY = defineDictionary({
     personTitle: 'History of the sheet {ofName}',
     reader:
       'The history opens with the family link. The link you received lets you look at the tree, not change it.',
+    restore: {
+      action: 'Go back here',
+      actionLabel:
+        'Put the tree back as it was at {time}, right after this change',
+      back: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'Comes back into the tree',
+            other: 'Come back into the tree'
+          }
+        }
+      }),
+      body: 'Everything done since will be undone at once.',
+      changed: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'Gets their earlier details back',
+            other: 'Get their earlier details back'
+          }
+        }
+      }),
+      confirm: 'Go back to this moment',
+      gone: defineTranslation('{count:plural}', {
+        plural: { count: { one: 'Leaves the tree', other: 'Leave the tree' } }
+      }),
+      others: 'Links, dates and photos go back to how they were that day too.',
+      quiet:
+        'The tree is already as it was that day: nothing will change on screen.',
+      renamed: '{now} becomes {past} again',
+      safe: 'Nothing is lost: this return is noted in the history, and you can undo it.',
+      title: 'Put the tree back as it was on {moment}?'
+    },
     retry: 'Try again',
     takenBack: 'Undone by {name} on {moment}',
     time: defineTranslation('{at:date}', {
@@ -462,6 +494,8 @@ export const EN_DICTIONARY = defineDictionary({
         not_sent:
           'That did not work. Check that the phone is connected to the Internet, then try again.',
         nothing_to_restore: 'The tree is already in that state.',
+        revision_conflict:
+          'Someone has just changed the tree. The preview is up to date: have a look, then try again.',
         revision_not_found:
           'That moment is no longer in the history. The history is up to date: try again.'
       },

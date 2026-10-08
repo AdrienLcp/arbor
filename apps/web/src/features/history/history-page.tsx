@@ -30,6 +30,7 @@ import { historyDays } from './history-days'
 import { HistoryEntry, type TakenBackBy } from './history-entry'
 import { HistoryRun } from './history-run'
 import { ofName } from './of-name'
+import { RestoreDialog } from './restore-dialog'
 import { UndoDialog } from './undo-dialog'
 import { useChangeLog } from './use-change-log'
 import { useEntryClock } from './use-entry-clock'
@@ -63,6 +64,7 @@ export const HistoryPage: React.FC = () => {
   const faces = usePersonFaces()
   const undo = useUndo()
   const [choosing, setChoosing] = useState<readonly number[] | null>(null)
+  const [restoringTo, setRestoringTo] = useState<number | null>(null)
 
   if (isReader) return <Redirect to={familyPathFor(familyId)} />
 
@@ -90,6 +92,11 @@ export const HistoryPage: React.FC = () => {
     undo.author !== null &&
     !takenBack.has(entry.revision) &&
     (entry.cause?.kind !== 'restore' || family.role === 'keeper')
+  const lastRevision = entries.at(-1)?.revision ?? 0
+  const canRestore = (entry: ChangeLogEntry): boolean =>
+    undo.author !== null &&
+    family.role === 'keeper' &&
+    entry.revision < lastRevision
   const takenBackBy = (entry: ChangeLogEntry): TakenBackBy | null => {
     const by = byRevision.get(takenBack.get(entry.revision) ?? -1)
     return by === undefined
@@ -179,6 +186,11 @@ export const HistoryPage: React.FC = () => {
                         entry={entry}
                         key={entry.revision}
                         lines={stories.get(entry.revision)?.lines ?? []}
+                        onRestore={
+                          canRestore(entry)
+                            ? () => setRestoringTo(entry.revision)
+                            : null
+                        }
                         onUndo={
                           canUndo(entry)
                             ? () => setChoosing([entry.revision])
@@ -203,6 +215,13 @@ export const HistoryPage: React.FC = () => {
           stories={stories}
           undo={undo}
           wordLine={wordLine}
+        />
+        <RestoreDialog
+          clock={clock}
+          entries={entries}
+          onClose={() => setRestoringTo(null)}
+          revision={restoringTo}
+          undo={undo}
         />
       </Main>
     </>
