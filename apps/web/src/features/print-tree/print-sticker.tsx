@@ -8,16 +8,22 @@ import { slotNumberText } from '@/presentation/components/slot-number'
 import { generationInks, mixColors, PRINT_PALETTE } from './print-palette'
 import { fittedSize } from './print-text'
 import { PRINT_VOICES } from './print-voices'
+import { STICKER_ART, STICKER_PADDING } from './sticker-art'
 
 /** The sticker's insides, in screen pixels as the layout counts them; the sheet scales them all at once. */
-const PADDING = 5
-const ART_HEIGHT = 66
+const PADDING = STICKER_PADDING
+const ART_HEIGHT = STICKER_ART.height
 const CAPTION_WIDTH = CARD_WIDTH - 2 * PADDING - 2
 const CENTRE = CARD_WIDTH / 2
 /** A deceased person's art, dulled toward grey (The Matte Means Gone Rule). */
 const MATTE_SHARE = 0.58
 /** The slot number, just above the slot. */
 const NUMBER_ABOVE = 8
+/** The caption's baselines from the sticker's top: three lines spread out, four drawn closer so the place fits. */
+const CAPTION_BASELINES = {
+  four: [94, 109, 125, 141],
+  three: [98, 114, 133]
+} as const
 
 /** The halftone pattern of a generation's art, declared once per sheet. */
 export const halftoneId = (prefix: string, generation: number): string =>
@@ -99,20 +105,43 @@ const CaptionLine: React.FC<CentredLine & { x: number }> = ({
   </text>
 )
 
-/** A person's sticker on paper: flat, with the screen's art, monogram and caption; matte with a rule when they have died. */
+/** A person's sticker on paper: flat, with the screen's art, monogram or photo, and caption; matte with a rule when they have died. */
 export const PrintSticker: React.FC<
   Spot & {
     face: PersonFace
+    hasDates: boolean
     /** Prefix of the sheet's pattern ids. */
     idPrefix: string
     /** Drawn a second time elsewhere in the tree: its edge is dashed. */
     isRepeated: boolean
+    /** Where they were born and died, empty to print none. */
+    place: string
+    /** Their photo as a data URL cropped to the art, `null` for the monogram. */
+    portrait: string | null
   }
-> = ({ face, generation, idPrefix, isRepeated, slotNumber, x, y }) => {
+> = ({
+  face,
+  generation,
+  hasDates,
+  idPrefix,
+  isRepeated,
+  place,
+  portrait,
+  slotNumber,
+  x,
+  y
+}) => {
   const inks = generationInks(generation)
   const art = face.isDeceased
     ? mixColors(inks.fill, PRINT_PALETTE.matte, MATTE_SHARE)
     : inks.fill
+  const years = hasDates ? face.years : ''
+  const baselines =
+    years !== '' && place !== ''
+      ? CAPTION_BASELINES.four
+      : CAPTION_BASELINES.three
+  const [givenY, surnameY, yearsY, placeY] = baselines
+  const artClipId = `${idPrefix}-art-${Math.round(x)}-${Math.round(y)}`
 
   return (
     <g>
@@ -136,26 +165,61 @@ export const PrintSticker: React.FC<
         x={x + PADDING}
         y={y + PADDING}
       />
-      {face.isDeceased ? null : (
-        <rect
-          fill={`url(#${halftoneId(idPrefix, generation)})`}
-          height={ART_HEIGHT}
-          rx='4'
-          width={CARD_WIDTH - 2 * PADDING}
-          x={x + PADDING}
-          y={y + PADDING}
-        />
+      {portrait === null ? (
+        <>
+          {face.isDeceased ? null : (
+            <rect
+              fill={`url(#${halftoneId(idPrefix, generation)})`}
+              height={ART_HEIGHT}
+              rx='4'
+              width={CARD_WIDTH - 2 * PADDING}
+              x={x + PADDING}
+              y={y + PADDING}
+            />
+          )}
+          <text
+            fill={inks.on}
+            fontFamily={PRINT_VOICES.heading.family}
+            fontSize='32'
+            textAnchor='middle'
+            x={x + CENTRE}
+            y={y + PADDING + ART_HEIGHT / 2 + 11}
+          >
+            {face.monogram}
+          </text>
+        </>
+      ) : (
+        <>
+          <clipPath id={artClipId}>
+            <rect
+              height={ART_HEIGHT}
+              rx='4'
+              width={STICKER_ART.width}
+              x={x + PADDING}
+              y={y + PADDING}
+            />
+          </clipPath>
+          <image
+            clipPath={`url(#${artClipId})`}
+            height={ART_HEIGHT}
+            href={portrait}
+            width={STICKER_ART.width}
+            x={x + PADDING}
+            y={y + PADDING}
+          />
+          {face.isDeceased ? (
+            <rect
+              fill={PRINT_PALETTE.matte}
+              fillOpacity={MATTE_SHARE}
+              height={ART_HEIGHT}
+              rx='4'
+              width={STICKER_ART.width}
+              x={x + PADDING}
+              y={y + PADDING}
+            />
+          ) : null}
+        </>
       )}
-      <text
-        fill={inks.on}
-        fontFamily={PRINT_VOICES.heading.family}
-        fontSize='32'
-        textAnchor='middle'
-        x={x + CENTRE}
-        y={y + PADDING + ART_HEIGHT / 2 + 11}
-      >
-        {face.monogram}
-      </text>
       {face.isDeceased ? (
         <path
           d={`M${x + 16} ${y + 80}H${x + CARD_WIDTH - 16}`}
@@ -170,7 +234,7 @@ export const PrintSticker: React.FC<
         text={face.givenNames}
         voice='name'
         x={x}
-        y={y + 98}
+        y={y + givenY}
       />
       <CaptionLine
         fill={PRINT_PALETTE.inkSoft}
@@ -180,17 +244,28 @@ export const PrintSticker: React.FC<
         tracking={0.9}
         voice='label'
         x={x}
-        y={y + 114}
+        y={y + surnameY}
       />
-      {face.years === '' ? null : (
+      {years === '' ? null : (
         <CaptionLine
           fill={PRINT_PALETTE.ink}
           size={13}
           smallest={8.5}
-          text={face.years}
+          text={years}
           voice='label'
           x={x}
-          y={y + 133}
+          y={y + yearsY}
+        />
+      )}
+      {place === '' ? null : (
+        <CaptionLine
+          fill={PRINT_PALETTE.inkSoft}
+          size={10.5}
+          smallest={7}
+          text={place}
+          voice='text'
+          x={x}
+          y={y + (years === '' ? yearsY : (placeY ?? yearsY))}
         />
       )}
     </g>

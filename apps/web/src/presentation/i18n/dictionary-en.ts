@@ -601,6 +601,12 @@ export const EN_DICTIONARY = defineDictionary({
     untitled: 'Photo of {name}'
   },
   print: {
+    content: {
+      hasDates: 'Dates',
+      hasPhotos: 'Photos',
+      hasPlaces: 'Places of birth and death',
+      label: 'On each sticker'
+    },
     download: 'Download the PDF',
     failed: 'The PDF could not be made. Try again in a moment.',
     fileName: '{name} — tree.pdf',

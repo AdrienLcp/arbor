@@ -2,7 +2,7 @@ import type { Person } from '@arbor/protocol/person'
 
 import { yearOf } from './fuzzy-year'
 
-const DEATH_MARK = '†'
+export const DEATH_MARK = '†'
 
 /**
  * A person's years as a list prints them: "1932 – † 2019", "1990", "† 1918".

@@ -30,7 +30,9 @@ import { Main } from '@/presentation/components/main'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
+import { lifePlaces } from './life-places'
 import { printFormatOf } from './paper-choice'
+import { DEFAULT_PRINT_CONTENT } from './print-content'
 import { type PrintChoices, PrintOptions } from './print-options'
 import { type PrintPage, printPlan } from './print-pages'
 import { PRINT_PALETTE } from './print-palette'
@@ -41,6 +43,7 @@ import {
 } from './print-scope'
 import { PrintSheet } from './print-sheet'
 import { PRINT_VOICES } from './print-voices'
+import { usePrintPortraits } from './use-print-portraits'
 
 import './print-tree-page.sass'
 
@@ -104,6 +107,7 @@ export const PrintTreePage: React.FC = () => {
   const family = familyStateOfSnapshot(response.family)
   const me = rememberedMe(familyId)
   const [choices, setChoices] = useState<PrintChoices>(() => ({
+    content: DEFAULT_PRINT_CONTENT,
     depth: DEFAULT_PRINT_DEPTH,
     orientation: 'landscape',
     paper: 'a3',
@@ -124,6 +128,21 @@ export const PrintTreePage: React.FC = () => {
     layout: layoutOfPrintScope(family, scopeOf(choices)),
     persons: family.persons
   })
+  const portraits = usePrintPortraits(
+    choices.content.hasPhotos
+      ? scene.layout.cards.flatMap((card) => {
+          if (card.kind !== 'person') return []
+          const photoId = faces.get(card.personId)?.portraitPhotoId ?? null
+          return photoId === null ? [] : [photoId]
+        })
+      : []
+  )
+  const places = new Map(
+    [...family.persons.values()].map((person) => [
+      person.id,
+      lifePlaces(person)
+    ])
+  )
   const plan = printPlan(printFormatOf(choices.paper, choices.orientation))
   const readerKey = rememberedFamily(familyId).keys.reader
   const liveLink =
@@ -215,10 +234,13 @@ export const PrintTreePage: React.FC = () => {
                 >
                   <PrintSheet
                     className='print-tree-sheet'
+                    content={choices.content}
                     drawing={plan.drawing}
                     faces={faces}
                     familyName={familyName}
                     liveLink={liveLink}
+                    places={places}
+                    portraits={portraits}
                     printedOn={today()}
                     ref={sheet}
                     scene={scene}

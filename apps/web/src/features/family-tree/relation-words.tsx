@@ -23,10 +23,14 @@ export type PlacedWords = {
   lines: readonly string[]
 }
 
-/** The words a relation line carries and where they sit, `null` for a line that carries none. */
-export const useRelationWords = () => {
+/** The words a relation line carries and where they sit, `null` for a line that carries none. `isDated: false` leaves the unions' years out. */
+export const useRelationWords = ({
+  isDated = true
+}: {
+  isDated?: boolean
+} = {}) => {
   const translate = useTranslate()
-  const unionWords = useUnionWords()
+  const unionWords = useUnionWords({ isDated })
 
   return (connector: TreeConnector): PlacedWords | null => {
     switch (connector.kind) {

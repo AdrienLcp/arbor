@@ -605,6 +605,12 @@ export const FR_DICTIONARY = defineDictionary({
     untitled: 'Photo de {name}'
   },
   print: {
+    content: {
+      hasDates: 'Les dates',
+      hasPhotos: 'Les photos',
+      hasPlaces: 'Les lieux de naissance et de décès',
+      label: 'Sur chaque vignette'
+    },
     download: 'Télécharger le PDF',
     failed: 'Le PDF n’a pas pu être préparé. Réessayez dans un instant.',
     fileName: '{name} — arbre.pdf',

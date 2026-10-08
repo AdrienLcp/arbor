@@ -21,6 +21,7 @@ import {
 } from '@/features/family-tree/union-marks'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
+import type { PrintContent } from './print-content'
 import { PrintLine } from './print-line'
 import { generationInks, PRINT_PALETTE } from './print-palette'
 import { Halftone, PrintGhostSlot, PrintSticker } from './print-sticker'
@@ -69,16 +70,17 @@ const BandStrip: React.FC<{ band: GenerationBand; scene: TreeScene }> = ({
   )
 }
 
-const BandRail: React.FC<{ band: GenerationBand; scene: TreeScene }> = ({
-  band,
-  scene
-}) => {
+const BandRail: React.FC<{
+  band: GenerationBand
+  hasDates: boolean
+  scene: TreeScene
+}> = ({ band, hasDates, scene }) => {
   const translate = useTranslate()
   const inks = generationInks(band.generation)
   const x = scene.origin.x + RAIL_INSET
   const y = band.top + RAIL_INSET
   const years =
-    band.births === null
+    band.births === null || !hasDates
       ? null
       : band.births.first === band.births.last
         ? String(band.births.first)
@@ -205,9 +207,14 @@ const WordsPill: React.FC<{ words: PlacedWords }> = ({ words }) => {
 }
 
 type PrintTreeDrawingProps = {
+  content: PrintContent
   faces: ReadonlyMap<EntityId, PersonFace>
   /** Prefix of the drawing's pattern ids, unique on the page. */
   idPrefix: string
+  /** Where each person was born and died, as their sticker prints it. */
+  places: ReadonlyMap<EntityId, string>
+  /** The photos ready to embed, by photo id. */
+  portraits: ReadonlyMap<EntityId, string>
   scene: TreeScene
   /** The number printed above each card's slot. */
   slotNumbers: ReadonlyMap<string, number>
@@ -215,13 +222,16 @@ type PrintTreeDrawingProps = {
 
 /** The tree as it prints, in the layout's own coordinates: bands and their rails, the lines, the stickers, the words on the lines. */
 export const PrintTreeDrawing: React.FC<PrintTreeDrawingProps> = ({
+  content,
   faces,
   idPrefix,
+  places,
+  portraits,
   scene,
   slotNumbers
 }) => {
   const translate = useTranslate()
-  const wordsOf = useRelationWords()
+  const wordsOf = useRelationWords({ isDated: content.hasDates })
 
   return (
     <g>
@@ -238,7 +248,12 @@ export const PrintTreeDrawing: React.FC<PrintTreeDrawingProps> = ({
         <BandStrip band={band} key={band.generation} scene={scene} />
       ))}
       {scene.bands.map((band) => (
-        <BandRail band={band} key={band.generation} scene={scene} />
+        <BandRail
+          band={band}
+          hasDates={content.hasDates}
+          key={band.generation}
+          scene={scene}
+        />
       ))}
       {scene.layout.connectors.map((connector) => (
         <ConnectorLine
@@ -266,9 +281,16 @@ export const PrintTreeDrawing: React.FC<PrintTreeDrawingProps> = ({
           <PrintSticker
             face={face}
             generation={card.generation}
+            hasDates={content.hasDates}
             idPrefix={idPrefix}
             isRepeated={card.isRepeated}
             key={card.key}
+            place={content.hasPlaces ? (places.get(face.id) ?? '') : ''}
+            portrait={
+              content.hasPhotos && face.portraitPhotoId !== null
+                ? (portraits.get(face.portraitPhotoId) ?? null)
+                : null
+            }
             slotNumber={slotNumber}
             x={card.x}
             y={card.y}

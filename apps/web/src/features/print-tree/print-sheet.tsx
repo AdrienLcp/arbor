@@ -10,6 +10,7 @@ import { useTranslate } from '@/presentation/i18n/i18n-context'
 import { bandPanelPlan } from './band-panel-plan'
 import { columnPanelPlan } from './column-panel-plan'
 import type { PanelWords } from './panel-plan'
+import type { PrintContent } from './print-content'
 import { usePrintLegendEntries } from './print-legend-entries'
 import type { Size } from './print-pages'
 import { PRINT_PALETTE } from './print-palette'
@@ -19,12 +20,15 @@ import { isTallSheet, sheetLayout } from './sheet-layout'
 
 export type PrintSheetProps = {
   className?: string
+  content: PrintContent
   /** The drawing's size on paper, in millimetres: the SVG's own units. */
   drawing: Size
   faces: ReadonlyMap<EntityId, PersonFace>
   familyName: string
   /** The link the QR code opens; `null` prints no code. */
   liveLink: string | null
+  places: ReadonlyMap<EntityId, string>
+  portraits: ReadonlyMap<EntityId, string>
   printedOn: Temporal.PlainDate
   /** Receives the SVG element, which the PDF is made from. */
   ref?: React.Ref<SVGSVGElement>
@@ -40,10 +44,13 @@ export type PrintSheetProps = {
  */
 export const PrintSheet: React.FC<PrintSheetProps> = ({
   className,
+  content,
   drawing,
   faces,
   familyName,
   liveLink,
+  places,
+  portraits,
   printedOn,
   ref,
   scene,
@@ -89,8 +96,11 @@ export const PrintSheet: React.FC<PrintSheetProps> = ({
         transform={`translate(${tree.x} ${tree.y}) scale(${tree.scale}) translate(${-scene.origin.x} ${-scene.origin.y})`}
       >
         <PrintTreeDrawing
+          content={content}
           faces={faces}
           idPrefix={idPrefix}
+          places={places}
+          portraits={portraits}
           scene={scene}
           slotNumbers={slotNumbers}
         />

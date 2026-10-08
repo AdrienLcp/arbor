@@ -7,9 +7,11 @@ import { PersonSearch } from '@/features/family-tree/person-search'
 import { ChoiceList } from '@/presentation/components/choice-list'
 import { MiniSticker } from '@/presentation/components/mini-sticker'
 import { SegmentedControl } from '@/presentation/components/segmented-control'
+import { Switch } from '@/presentation/components/switch'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { isShopPaper, PAPER_CHOICES, type PaperChoice } from './paper-choice'
+import type { PrintContent } from './print-content'
 import type { Orientation } from './print-pages'
 import { PRINT_DEPTHS, type PrintDepth } from './print-scope'
 
@@ -19,6 +21,7 @@ export type ScopeKind = 'ancestors' | 'descendants' | 'whole'
 
 /** Everything the print is made of, as the options set it. */
 export type PrintChoices = {
+  content: PrintContent
   depth: PrintDepth
   orientation: Orientation
   paper: PaperChoice
@@ -31,6 +34,8 @@ type PrintOptionsProps = {
   faces: ReadonlyMap<EntityId, PersonFace>
   onChange: (choices: PrintChoices) => void
 }
+
+const CONTENT_SWITCHES = ['hasPhotos', 'hasDates', 'hasPlaces'] as const
 
 const depthValue = (depth: PrintDepth): string => String(depth)
 const depthOf = (value: string): PrintDepth =>
@@ -132,6 +137,22 @@ export const PrintOptions: React.FC<PrintOptionsProps> = ({
           <p className='print-option-hint'>{translate('print.shopHint')}</p>
         ) : null}
       </div>
+      <fieldset className='print-option-group print-content-switches'>
+        <legend className='print-option-label'>
+          {translate('print.content.label')}
+        </legend>
+        {CONTENT_SWITCHES.map((name) => (
+          <Switch
+            isSelected={choices.content[name]}
+            key={name}
+            onChange={(isOn) =>
+              change({ content: { ...choices.content, [name]: isOn } })
+            }
+          >
+            {translate(`print.content.${name}`)}
+          </Switch>
+        ))}
+      </fieldset>
     </div>
   )
 }
