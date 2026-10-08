@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Arbor — share card</title>
+    <!--
+      The link-preview card, printed into public/og-image.png by
+      scripts/share-images.ts. The brand alone, no words in a language: the
+      words live in og:title and og:description.
+    -->
+    <style>
+      @font-face {
+        font-family: 'Barlow Condensed';
+        font-weight: 700;
+        src: url(/fonts/barlow-condensed-bold-latin.woff2) format('woff2');
+      }
+      @font-face {
+        font-family: 'Barlow Condensed';
+        font-weight: 800;
+        src: url(/fonts/barlow-condensed-extrabold-latin.woff2) format('woff2');
+      }
+      :root {
+        --paper: oklch(0.968 0.006 235);
+        --paper-2: oklch(0.938 0.01 235);
+        --ink: oklch(0.24 0.035 262);
+        --line: oklch(0.32 0.035 262);
+        --ghost: oklch(0.6 0.025 250);
+        --ghost-soft: oklch(0.84 0.014 245);
+        --sticker: oklch(0.995 0.002 95);
+        --sticker-edge: oklch(0.88 0.008 245);
+        --shadow: oklch(0.22 0.04 262);
+        --matte: oklch(0.55 0.005 260);
+        --cover: oklch(0.53 0.19 32);
+        --g1: oklch(0.8 0.14 82);
+        --g2: oklch(0.53 0.19 32);
+        --g3: oklch(0.49 0.1 165);
+      }
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+        color: var(--ink);
+        background: var(--paper);
+      }
+      .g1 { --gc: var(--g1); }
+      .g2 { --gc: var(--g2); }
+      .g3 { --gc: var(--g3); }
+
+      .brand {
+        position: absolute;
+        top: 96px;
+        left: 72px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+      .glyph {
+        width: 1em;
+        height: 1.375em;
+        font-size: 72px;
+        background: var(--cover);
+        border-radius: 0.19em;
+        box-shadow: 0.19em 0 0 -0.06em var(--g1);
+      }
+      .wordmark {
+        font-size: 184px;
+        font-weight: 800;
+        line-height: 0.82;
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+      }
+      .rule {
+        width: 340px;
+        height: 10px;
+        background: var(--cover);
+        clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+      }
+
+      .tree {
+        position: absolute;
+        top: 40px;
+        right: 48px;
+        width: 640px;
+        height: 550px;
+      }
+      .tree svg {
+        position: absolute;
+        inset: 0;
+      }
+      .slot {
+        position: absolute;
+        width: 96px;
+        height: 128px;
+      }
+      .slot.framed::before {
+        position: absolute;
+        inset: -4px;
+        content: '';
+        border: 1px solid var(--ghost-soft);
+        border-radius: 10px;
+      }
+      .number {
+        position: absolute;
+        top: -26px;
+        left: 0;
+        font-size: 18px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+        color: color-mix(in oklab, var(--gc) 80%, var(--ink));
+      }
+
+      .sticker {
+        position: relative;
+        height: 100%;
+        padding: 5px;
+        background: var(--sticker);
+        border-radius: 7px;
+        box-shadow:
+          0 0 0 1px var(--sticker-edge),
+          0 1px 1.5px color-mix(in oklch, var(--shadow) 30%, transparent),
+          0 6px 12px -6px color-mix(in oklch, var(--shadow) 55%, transparent);
+      }
+      .sticker::after {
+        position: absolute;
+        inset: 0;
+        content: '';
+        background: linear-gradient(118deg, oklch(1 0 0 / 0.42) 0%, oklch(1 0 0 / 0.08) 22%, transparent 38%, transparent 78%, oklch(1 0 0 / 0.14) 100%);
+        border-radius: inherit;
+      }
+      .art {
+        height: 47%;
+        background-color: var(--gc);
+        background-image: radial-gradient(circle, oklch(1 0 0 / 0.16) 1.1px, transparent 1.4px);
+        background-size: 5px 5px;
+        border-radius: 4px;
+        box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.35);
+      }
+      .caption {
+        display: grid;
+        gap: 6px;
+        justify-items: center;
+        padding: 9px 8px 0;
+      }
+      .caption i {
+        display: block;
+        background: var(--ink);
+        border-radius: 4px;
+      }
+      .caption i:nth-child(1) { width: 66%; height: 7px; opacity: 0.85; }
+      .caption i:nth-child(2) { width: 44%; height: 5px; opacity: 0.35; }
+      .caption i:nth-child(3) { width: 54%; height: 6px; opacity: 0.6; }
+
+      .sticker.deceased {
+        box-shadow:
+          0 0 0 1px var(--sticker-edge),
+          0 1px 2px color-mix(in oklch, var(--shadow) 26%, transparent);
+      }
+      .sticker.deceased::after {
+        display: none;
+      }
+      .sticker.deceased .art {
+        background-color: color-mix(in oklab, var(--gc) 42%, var(--matte));
+        background-image: none;
+      }
+      .sticker.focus {
+        background: linear-gradient(128deg, oklch(0.95 0.03 200), oklch(0.96 0.045 95), oklch(0.94 0.04 330), oklch(0.95 0.035 160));
+        box-shadow:
+          0 0 0 1px var(--sticker-edge),
+          0 0 0 4px var(--paper),
+          0 0 0 7px var(--ink),
+          0 14px 22px -10px color-mix(in oklch, var(--shadow) 70%, transparent);
+      }
+
+      .empty {
+        display: grid;
+        place-items: center;
+        height: 100%;
+        background: var(--paper-2);
+        border: 2px dashed var(--ghost);
+        border-radius: 10px;
+      }
+      .empty b {
+        position: relative;
+        width: 30px;
+        height: 30px;
+        border: 2px solid var(--ghost);
+        border-radius: 50%;
+      }
+      .empty b::before,
+      .empty b::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 12px;
+        height: 2px;
+        content: '';
+        background: var(--ghost);
+        translate: -50% -50%;
+      }
+      .empty b::after {
+        rotate: 90deg;
+      }
+
+      .union {
+        position: absolute;
+        width: 44px;
+        height: 18px;
+        background: var(--paper);
+        border: 1.5px solid var(--line);
+        border-radius: 9px;
+        translate: -50% -50%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="brand">
+      <span class="glyph"></span>
+      <span class="wordmark">Arbor</span>
+      <span class="rule"></span>
+    </div>
+    <div class="tree">
+      <svg aria-hidden="true" fill="none" height="550" stroke="var(--line)" stroke-linecap="round" viewBox="0 0 640 550" width="640">
+        <path d="M318 92H386" stroke-width="3.2" />
+        <path d="M352 92V200M172 200H532M172 200V238M332 200V238M532 200V238" stroke-width="2" />
+        <path d="M220 302H284" stroke-width="3.2" />
+        <path d="M252 302V420" stroke-width="2" />
+        <path d="M580 302V360H458V420" stroke-dasharray="2 6" stroke-width="2" />
+      </svg>
+      <div class="slot framed g1" style="left: 222px; top: 28px">
+        <span class="number">01</span>
+        <div class="sticker deceased"><div class="art"></div><div class="caption"><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="slot framed g1" style="left: 386px; top: 28px">
+        <span class="number">02</span>
+        <div class="sticker deceased"><div class="art"></div><div class="caption"><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="slot framed g2" style="left: 124px; top: 238px">
+        <span class="number">03</span>
+        <div class="sticker"><div class="art"></div><div class="caption"><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="slot framed g2" style="left: 284px; top: 238px">
+        <span class="number">04</span>
+        <div class="sticker"><div class="art"></div><div class="caption"><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="slot g2" style="left: 484px; top: 238px">
+        <span class="number">05</span>
+        <div class="sticker focus"><div class="art"></div><div class="caption"><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="slot framed g3" style="left: 204px; top: 420px">
+        <span class="number">06</span>
+        <div class="sticker"><div class="art"></div><div class="caption"><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="slot g3" style="left: 410px; top: 420px">
+        <span class="number">07</span>
+        <div class="empty"><b></b></div>
+      </div>
+      <span class="union" style="left: 352px; top: 92px"></span>
+      <span class="union" style="left: 252px; top: 302px"></span>
+    </div>
+  </body>
+</html>

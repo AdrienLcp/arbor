@@ -41,6 +41,7 @@
     "build": "tsc --noEmit && vite build",
     "dev": "vite",
     "preview": "vite preview",
+    "share-images": "node scripts/share-images.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
