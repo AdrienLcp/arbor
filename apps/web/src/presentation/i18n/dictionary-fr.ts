@@ -394,6 +394,10 @@ export const FR_DICTIONARY = defineDictionary({
     generation: 'génération {number:number}',
     inPeriod: 'en {date}',
     missing: {
+      binnedBy:
+        '{name} vient de mettre cette fiche à la corbeille : votre modification n’a pas été enregistrée.',
+      binnedBySomeone:
+        'Quelqu’un vient de mettre cette fiche à la corbeille : votre modification n’a pas été enregistrée.',
       body: 'Elle a peut-être été mise à la corbeille. Rien n’est perdu : on peut l’en sortir.',
       title: 'Cette personne n’est plus dans l’arbre'
     },

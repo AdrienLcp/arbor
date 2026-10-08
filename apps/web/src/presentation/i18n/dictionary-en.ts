@@ -388,6 +388,10 @@ export const EN_DICTIONARY = defineDictionary({
     generation: 'generation {number:number}',
     inPeriod: 'in {date}',
     missing: {
+      binnedBy:
+        '{name} just put this sheet in the bin: your change was not saved.',
+      binnedBySomeone:
+        'Someone just put this sheet in the bin: your change was not saved.',
       body: 'They may have been moved to the bin. Nothing is lost: they can be brought back.',
       title: 'This person is no longer in the tree'
     },

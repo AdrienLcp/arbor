@@ -17,6 +17,8 @@ const PHONE = { height: 844, width: 390 }
 
 const FOUNDER = { givenNames: 'Jeanne', surname: 'Delorme' }
 const FOUNDER_NAME = `${FOUNDER.givenNames} ${FOUNDER.surname}`
+const RENAMED_GIVEN_NAMES = 'Jeanne Marie'
+const RENAMED_FOUNDER_NAME = `${RENAMED_GIVEN_NAMES} ${FOUNDER.surname}`
 const FIRST_SPOUSE = { givenNames: 'Louis', surname: 'Martin' }
 const FIRST_SPOUSE_NAME = `${FIRST_SPOUSE.givenNames} ${FIRST_SPOUSE.surname}`
 const SECOND_SPOUSE = { givenNames: 'Paul', surname: 'Garnier' }
@@ -157,13 +159,13 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   await relativeEdit.birthYear.fill('1947')
   await treePage(founder).openSheet(FOUNDER.givenNames).click()
   await sheet.editPerson.click()
-  await edit.givenNames.fill('Jeanne Marie')
+  await edit.givenNames.fill(RENAMED_GIVEN_NAMES)
   await edit.save.click()
   await expect(founder.getByRole('dialog')).toBeHidden()
   await relativeEdit.save.click()
   await expect(relative.getByRole('dialog')).toBeHidden()
   await expect(
-    relative.getByRole('heading', { name: `Jeanne Marie ${FOUNDER.surname}` }),
+    relative.getByRole('heading', { name: RENAMED_FOUNDER_NAME }),
     'a change made over an older sheet keeps what someone else changed meanwhile'
   ).toBeVisible()
   await expect(relative.getByText(/about 1947/i).first()).toBeVisible()
@@ -177,9 +179,9 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   await relativeEdit.givenNames.fill('Paul Henri')
   await relativeEdit.save.click()
   await expect(
-    relative.getByRole('heading', {
-      name: 'This person is no longer in the tree'
-    }),
-    'a change to someone put in the bin meanwhile is refused, and the sheet says where they went'
+    relative.getByText(
+      `${RENAMED_FOUNDER_NAME} just put this sheet in the bin: your change was not saved.`
+    ),
+    'a change to someone put in the bin meanwhile is refused, saying who binned them, by the name they have now'
   ).toBeVisible()
 })
