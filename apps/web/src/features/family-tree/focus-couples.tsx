@@ -20,8 +20,8 @@ import { useUnionWords } from './union-words'
 
 import './focus-couples.sass'
 
-/** Beyond two partners the row would not fit a phone: the focus stands alone and the partners are listed under it. */
-const MOST_PARTNERS_IN_A_ROW = 2
+/** A second partner would squeeze three stickers into a phone's width, under the 16px floor: the focus then stands alone and the partners are listed under it. */
+const MOST_PARTNERS_IN_A_ROW = 1
 
 export type FocusCouple = {
   partner: PersonFace | null
@@ -151,13 +151,13 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
     )
   }
 
-  const tagOf = (couple: FocusCouple, side: 'end' | 'start') => {
+  const tagOf = (couple: FocusCouple) => {
     const [word, ...when] = wordsOf(couple)
 
     return (
       <span
         aria-hidden='true'
-        className={classNames('focus-couples-tag', side)}
+        className='focus-couples-tag'
         id={tagIdOf(couple)}
       >
         {word}
@@ -170,32 +170,23 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
     )
   }
 
-  const [first, second] = couples
-  const left = second === undefined ? null : (first ?? null)
-  const right = second ?? first ?? null
+  const [couple] = couples
 
   return (
-    <div className={classNames('focus-couples', right === null && 'alone')}>
+    <div
+      className={classNames('focus-couples', couple === undefined && 'alone')}
+    >
       <div className='focus-couples-row'>
-        {left === null ? null : (
-          <>
-            {partnerColumn(left)}
-            <CoupleTie union={left.union} />
-          </>
-        )}
         <FocusSticker focus={focus} key={focus.id} />
-        {right === null ? null : (
+        {couple === undefined ? null : (
           <>
-            <CoupleTie union={right.union} />
-            {partnerColumn(right)}
+            <CoupleTie union={couple.union} />
+            {partnerColumn(couple)}
           </>
         )}
       </div>
-      {right === null ? null : (
-        <div className='focus-couples-tags'>
-          {left === null ? null : tagOf(left, 'start')}
-          {tagOf(right, 'end')}
-        </div>
+      {couple === undefined ? null : (
+        <div className='focus-couples-tags'>{tagOf(couple)}</div>
       )}
     </div>
   )

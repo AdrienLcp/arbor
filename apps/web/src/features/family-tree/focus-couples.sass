@@ -1,10 +1,10 @@
 @use '../../presentation/styles/typography'
 
 @layer components
-  // Phone row of the focus and their partners: the slots shrink with the screen, never under the 16px text floor.
+  // Phone row of the focus and their partner, a pair of equal stickers: they shrink with the screen, never under the 16px text floor.
   .focus-couples
-    --partner-width: min(23vw, 104px)
-    --partner-height: calc(var(--partner-width) * 1.3 + 34px)
+    --partner-width: min(32vw, 132px)
+    --partner-height: calc(var(--partner-width) * 1.25 + 24px)
     margin-top: var(--space-s)
 
     .focus-couples-row
@@ -12,8 +12,9 @@
       display: flex
       justify-content: center
 
+    // Two lines at most: the years only break after their dash.
     .sticker-years
-      white-space: nowrap
+      text-wrap: balance
 
     .focus-couples-self
       --slot-width: min(32vw, 132px)
@@ -39,7 +40,7 @@
       flex: none
       padding-top: calc(18px + var(--partner-height) * 0.24)
 
-    // Under the partners, out to the page's edges: a partner's slot is too narrow for "divorced 1968".
+    // Under the partner, out to the page's edge: a slot is too narrow for "divorced 1968".
     .focus-couples-tags
       display: flex
       gap: var(--space-l)
@@ -49,14 +50,9 @@
     .focus-couples-tag
       @include typography.body-small
       font-weight: 700
+      margin-inline-start: auto
       max-width: 48%
-
-      &.start
-        text-align: start
-
-      &.end
-        margin-inline-start: auto
-        text-align: end
+      text-align: end
 
     .focus-couples-when
       color: var(--ink-soft)

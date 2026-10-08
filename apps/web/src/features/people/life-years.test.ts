@@ -11,14 +11,16 @@ const inYear = (year: number): Occurrence => ({
 
 const UNDATED: Occurrence = { date: null, place: null }
 
+const NO_BREAK_SPACE = ' '
+
 describe('life years', () => {
   it('[life-years] prints the birth year alone for a living person', () => {
     expect(lifeYears({ birth: inYear(1990), death: null }, true)).toBe('1990')
   })
 
-  it('[life-years] marks the death year with a cross', () => {
+  it('[life-years] marks the death year with a cross, breakable only after the dash', () => {
     expect(lifeYears({ birth: inYear(1932), death: inYear(2019) }, false)).toBe(
-      '1932 – † 2019'
+      `1932${NO_BREAK_SPACE}– †${NO_BREAK_SPACE}2019`
     )
   })
 
