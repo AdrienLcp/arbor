@@ -20,5 +20,7 @@
   "name": "arbor",
   "observability": { "enabled": true },
   "routes": [{ "custom_domain": true, "pattern": "arbor.adrienlcp.com" }],
+  // The demo family's photos ride in the bundle as bytes.
+  "rules": [{ "fallthrough": true, "globs": ["**/*.webp"], "type": "Data" }],
   "workers_dev": false
 }

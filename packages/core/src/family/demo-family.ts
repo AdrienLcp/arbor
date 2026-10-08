@@ -1,3 +1,4 @@
+import type { Author } from '@arbor/protocol/change-log'
 import type { EntityId } from '@arbor/protocol/entity-id'
 import type { FiliationKind } from '@arbor/protocol/filiation'
 import type { FuzzyDate } from '@arbor/protocol/fuzzy-date'
@@ -67,6 +68,11 @@ const linkParent = ({
 
 const linkBirthParents = (childId: EntityId, parentIds: EntityId[]) =>
   parentIds.map((parentId) => linkParent({ childId, parentId }))
+
+export const DEMO_FAMILY_NAME = 'Famille Morel'
+
+/** Who the change log says wrote the demo family. */
+export const DEMO_FAMILY_AUTHOR: Author = { kind: 'named', name: 'Arbor' }
 
 /**
  * A fictional family over five generations, written as the change log that

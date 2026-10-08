@@ -1,6 +1,7 @@
 import { classNames } from '@adrienlcp/react'
 import type React from 'react'
 
+import { DemoNotice } from '@/features/demo/demo-notice'
 import { ONLOOKER } from '@/features/family-access/family-access'
 import { rememberedMe } from '@/features/family-access/remembered-families'
 import { today } from '@/infrastructure/clock'
@@ -56,6 +57,7 @@ export const FamilyHomePage: React.FC = () => {
           <p className='family-home-count'>
             {translate('familyHome.people', { count: people.length })}
           </p>
+          <DemoNotice familyId={familyId} />
           <MeSummary />
           <ButtonLink href={familyTreePathFor(familyId)}>
             <TreeIcon aria-hidden='true' />

@@ -3,10 +3,12 @@ import { z } from 'zod'
 import {
   type AccessKey,
   accessKeySchema,
+  type FamilyId,
   ROLES,
   type Role
 } from '@arbor/protocol/access'
 import { authorSchema } from '@arbor/protocol/change-log'
+import { DEMO_FAMILY_ID, DEMO_FAMILY_KEY } from '@arbor/protocol/demo-family'
 
 /** Someone who opened the tree only to look, and said so on "Who are you?". */
 export const ONLOOKER = 'onlooker'
@@ -48,6 +50,17 @@ export const keysToTry = (access: FamilyAccess): AccessKey[] => {
 
   return [...new Set(candidates)]
 }
+
+/** The keys to present to one family: the demo's public key is always among them, so its address alone opens it. */
+export const keysToTryFor = (
+  familyId: FamilyId,
+  access: FamilyAccess
+): AccessKey[] =>
+  keysToTry(
+    familyId === DEMO_FAMILY_ID
+      ? withReceivedKey(access, DEMO_FAMILY_KEY)
+      : access
+  )
 
 /** The most this device can do in the family, `null` while it holds no key the family accepted. */
 export const strongestRole = (access: FamilyAccess): Role | null =>

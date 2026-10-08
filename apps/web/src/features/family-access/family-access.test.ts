@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
+import { DEMO_FAMILY_ID, DEMO_FAMILY_KEY } from '@arbor/protocol/demo-family'
+
 import {
   afterAccepted,
   afterRefused,
   keysToTry,
+  keysToTryFor,
   NO_FAMILY_ACCESS,
   withReceivedKey
 } from './family-access'
@@ -74,5 +77,12 @@ describe('family access', () => {
     const access = withReceivedKey(NO_FAMILY_ACCESS, FAMILY_KEY)
 
     expect(keysToTry(afterRefused(access, FAMILY_KEY))).toEqual([])
+  })
+
+  it('[family-access] opens the demo by its address alone, with its public key', () => {
+    expect(keysToTryFor(DEMO_FAMILY_ID, NO_FAMILY_ACCESS)).toEqual([
+      DEMO_FAMILY_KEY
+    ])
+    expect(keysToTryFor('other-family-aaaaaaaaa', NO_FAMILY_ACCESS)).toEqual([])
   })
 })

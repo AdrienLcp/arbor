@@ -1,4 +1,5 @@
 import type { AccessKey, FamilyId } from '@arbor/protocol/access'
+import { DEMO_FAMILY_ID } from '@arbor/protocol/demo-family'
 import {
   API_ROUTES,
   AUTHORIZATION_SCHEME,
@@ -7,6 +8,7 @@ import {
   pathFor
 } from '@arbor/protocol/routes'
 
+import type { DemoPhotoFiles } from '@/domain/demo/open-demo-family'
 import type { FamilyRooms } from '@/infrastructure/durable-objects/family-rooms'
 import { memorySqlDatabase } from '@/infrastructure/durable-objects/memory-sql-database'
 
@@ -14,6 +16,14 @@ import { type FamilyRoomRoutes, familyRoomRoutes } from './family-room-routes'
 import { handleRequest } from './handle-request'
 
 const ORIGIN = 'http://localhost:8790'
+
+/** The smallest bytes a JPEG sniff accepts, standing in for the demo's real images. */
+export const TEST_JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10])
+
+const TEST_DEMO_PHOTO_FILES: DemoPhotoFiles = {
+  'auguste-marie-wedding': { full: TEST_JPEG, thumbnail: TEST_JPEG },
+  'auguste-portrait': { full: TEST_JPEG, thumbnail: TEST_JPEG }
+}
 
 /** The families' objects of one test, each on its own in-memory SQLite, as Cloudflare gives each its own storage. */
 const memoryFamilyRooms = (): FamilyRooms => {
@@ -25,7 +35,12 @@ const memoryFamilyRooms = (): FamilyRooms => {
   }
   return {
     create: (familyId, input) => roomOf(familyId).create(input),
-    fetch: (familyId, request) => roomOf(familyId).fetch(request)
+    fetch: (familyId, request) => roomOf(familyId).fetch(request),
+    fetchDemo: async (request) => {
+      const demo = roomOf(DEMO_FAMILY_ID)
+      await demo.openDemo(TEST_DEMO_PHOTO_FILES)
+      return demo.fetch(request)
+    }
   }
 }
 

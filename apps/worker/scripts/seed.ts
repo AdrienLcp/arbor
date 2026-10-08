@@ -9,12 +9,15 @@ import {
   recordedOperationsSchema
 } from '@arbor/protocol/routes'
 
-import { DEMO_FAMILY_OPERATIONS } from '@arbor/core/family/demo-family'
+import {
+  DEMO_FAMILY_AUTHOR,
+  DEMO_FAMILY_NAME,
+  DEMO_FAMILY_OPERATIONS
+} from '@arbor/core/family/demo-family'
 
 /** Creates a family from the demo fixture on a running worker and prints its links. Usage: `pnpm seed [origin]`. */
 
 const DEFAULT_ORIGIN = 'http://localhost:8790'
-const DEMO_FAMILY_NAME = 'Famille Morel'
 
 const origin = process.argv[2] ?? DEFAULT_ORIGIN
 
@@ -46,7 +49,7 @@ const family = createdFamilySchema.parse(
 let revision = 0
 for (const operation of DEMO_FAMILY_OPERATIONS) {
   const input: RecordOperationsInput = {
-    author: { kind: 'named', name: 'Seed' },
+    author: DEMO_FAMILY_AUTHOR,
     baseRevision: revision,
     operations: [operation]
   }

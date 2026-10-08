@@ -8,7 +8,8 @@ const targets = {
   assets: { fetch: async () => new Response(APP_DOCUMENT) },
   rooms: {
     create: () => Promise.reject(new Error('No family is created here')),
-    fetch: () => Promise.reject(new Error('No family is reached here'))
+    fetch: () => Promise.reject(new Error('No family is reached here')),
+    fetchDemo: () => Promise.reject(new Error('No demo is reached here'))
   }
 }
 

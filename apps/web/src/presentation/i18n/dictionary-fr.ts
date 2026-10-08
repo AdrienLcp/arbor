@@ -122,6 +122,12 @@ export const FR_DICTIONARY = defineDictionary({
     treeNameMissing: 'Donnez un nom à l’arbre.',
     treeNameSuggestion: 'Famille {surname}'
   },
+  demo: {
+    notice: {
+      body: 'Changez ce que vous voulez : chaque nuit, elle revient comme au premier jour.',
+      title: 'Une famille inventée, pour essayer.'
+    }
+  },
   edit: {
     cancel: 'Annuler',
     date: {
@@ -523,6 +529,7 @@ export const FR_DICTIONARY = defineDictionary({
   },
   home: {
     create: 'Créer l’arbre de votre famille',
+    demo: 'Voir une famille d’exemple',
     fine: 'Gratuit. Pas de compte, pas de mot de passe. Rien ne se perd : chaque modification peut être annulée.',
     lead: 'Votre arbre généalogique, en ligne et à plusieurs. Vous l’envoyez sur WhatsApp, chacun y ajoute les siens, et il s’imprime en grand.',
     openLink: 'J’ai reçu un lien',

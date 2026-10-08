@@ -121,6 +121,12 @@ export const EN_DICTIONARY = defineDictionary({
     treeNameMissing: 'Give the tree a name.',
     treeNameSuggestion: 'The {surname} family'
   },
+  demo: {
+    notice: {
+      body: 'Change anything you like: every night, it goes back to how it started.',
+      title: 'A made-up family, to try things out.'
+    }
+  },
   edit: {
     cancel: 'Cancel',
     date: {
@@ -520,6 +526,7 @@ export const EN_DICTIONARY = defineDictionary({
   },
   home: {
     create: 'Create your family’s tree',
+    demo: 'See an example family',
     fine: 'Free. No account, no password. Nothing is lost: every change can be undone.',
     lead: 'Your family tree, online and shared. Send it on WhatsApp, everyone adds their own, and it prints large.',
     openLink: 'I received a link',

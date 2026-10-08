@@ -1,4 +1,5 @@
 import { familyIdSchema } from '@arbor/protocol/access'
+import { DEMO_FAMILY_ID } from '@arbor/protocol/demo-family'
 import {
   API_PREFIX,
   API_ROUTES,
@@ -48,7 +49,9 @@ const forwardToFamily = (
   if (!familyId.success) {
     return apiError('not_found', 'No family behind this address')
   }
-  return rooms.fetch(familyId.data, request)
+  return familyId.data === DEMO_FAMILY_ID
+    ? rooms.fetchDemo(request)
+    : rooms.fetch(familyId.data, request)
 }
 
 /** The worker's front door: the API; every other address is the web app. */

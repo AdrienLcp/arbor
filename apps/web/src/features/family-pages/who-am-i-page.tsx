@@ -1,6 +1,7 @@
 import type React from 'react'
 import { useId, useState } from 'react'
 
+import { DemoNotice } from '@/features/demo/demo-notice'
 import {
   type FamilyAccess,
   ONLOOKER
@@ -85,6 +86,7 @@ export const WhoAmIPage: React.FC = () => {
           {translate('whoAmI.title')}
         </h1>
         <p className='who-am-i-intro'>{translate('whoAmI.intro')}</p>
+        <DemoNotice familyId={familyId} />
         {candidates.length >= SEARCH_FROM ? (
           <SearchField
             clearLabel={translate('whoAmI.search.clear')}

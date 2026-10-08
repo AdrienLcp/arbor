@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { issuedKeySchema } from '@arbor/protocol/access'
 import type { Author } from '@arbor/protocol/change-log'
+import { DEMO_FAMILY_ID, DEMO_FAMILY_KEY } from '@arbor/protocol/demo-family'
 import {
   familyResponseSchema,
   familySettingsSchema
@@ -19,7 +20,7 @@ import {
 
 import { MAX_FAILED_KEY_CHECKS } from '@/domain/access/key-check-limit'
 
-import { familyPath, openTestApi } from './api-test-harness'
+import { familyPath, openTestApi, TEST_JPEG } from './api-test-harness'
 
 const AUTHOR: Author = { kind: 'named', name: 'Mamie Jeanne' }
 
@@ -457,7 +458,7 @@ describe('[privacy] the read-only link', () => {
 })
 
 describe('[photos] images', () => {
-  const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10])
+  const JPEG = TEST_JPEG
 
   const photoForm = (bytes: Uint8Array) => {
     const form = new FormData()
@@ -617,5 +618,57 @@ describe('[settings] the keeper settings', () => {
 
     expect(response.status).toBe(403)
     expect(await errorCodeOf(response)).toBe('forbidden')
+  })
+})
+
+describe('[demo] the public demo', () => {
+  it('[demo] opens the fixture family with the public key, its photos behind it', async () => {
+    const api = openTestApi()
+
+    const response = await api.call(familyPath(DEMO_FAMILY_ID), {
+      key: DEMO_FAMILY_KEY
+    })
+    const portrait = await api.call(
+      pathFor(API_ROUTES.photoFile, {
+        familyId: DEMO_FAMILY_ID,
+        photoId: 'auguste-portrait',
+        variant: 'thumbnail'
+      }),
+      { key: DEMO_FAMILY_KEY }
+    )
+
+    expect(response.status).toBe(200)
+    const opened = familyResponseSchema.parse(await response.json())
+    expect(opened).toMatchObject({
+      role: 'contributor',
+      settings: { name: 'Famille Morel' }
+    })
+    expect(opened.family.persons.length).toBeGreaterThan(20)
+    expect(portrait.status).toBe(200)
+  })
+
+  it('[demo] lets a visitor edit it, and keeps the keeper routes shut', async () => {
+    const api = openTestApi()
+    const { revision } = familyResponseSchema.parse(
+      await (
+        await api.call(familyPath(DEMO_FAMILY_ID), { key: DEMO_FAMILY_KEY })
+      ).json()
+    )
+
+    const edited = await api.call(familyPath(DEMO_FAMILY_ID, 'operations'), {
+      body: {
+        author: AUTHOR,
+        baseRevision: revision,
+        operations: [{ person: personNamed('visitor'), type: 'person.create' }]
+      },
+      key: DEMO_FAMILY_KEY,
+      method: 'POST'
+    })
+    const keys = await api.call(familyPath(DEMO_FAMILY_ID, 'keys'), {
+      key: DEMO_FAMILY_KEY
+    })
+
+    expect(edited.status).toBe(201)
+    expect(keys.status).toBe(403)
   })
 })
