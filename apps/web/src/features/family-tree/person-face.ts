@@ -10,6 +10,8 @@ export type PersonFace = {
   id: EntityId
   isDeceased: boolean
   monogram: string
+  /** The photo on their sticker, `null` when the family has none. */
+  portraitPhotoId: EntityId | null
   /** The full name, or the word for someone recorded without one. */
   name: string
   sex: Person['sex']

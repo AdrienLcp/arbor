@@ -1,0 +1,76 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .person-photos
+    .person-photos-grid
+      display: grid
+      gap: var(--space-m)
+      grid-template-columns: repeat(auto-fill, minmax(96px, 1fr))
+
+    // A photo sits flat on the page in a white print border: only stickers stand proud.
+    .photo-thumbnail
+      align-content: start
+      color: var(--ink)
+      display: grid
+      gap: var(--space-xs)
+      height: auto
+      justify-items: stretch
+      min-height: var(--target)
+      padding: 0
+      position: relative
+      text-align: start
+
+    .photo-thumbnail-frame
+      aspect-ratio: 1
+      background: var(--paper-2)
+      border: 5px solid var(--sticker)
+      border-radius: var(--radius-sticker)
+      box-shadow: 0 0 0 1px var(--sticker-edge)
+      display: block
+      overflow: hidden
+
+      img
+        display: block
+        height: 100%
+        object-fit: cover
+        width: 100%
+
+    .photo-thumbnail-tag
+      @include typography.label-strong
+      background: var(--action)
+      border-radius: var(--radius-pill)
+      color: var(--on-action)
+      inset: 8px auto auto 8px
+      padding: 2px var(--space-s)
+      position: absolute
+
+    .photo-thumbnail-caption
+      @include typography.body-small
+      -webkit-box-orient: vertical
+      -webkit-line-clamp: 2
+      display: -webkit-box
+      overflow: hidden
+
+    // The photo drop slot: dashed, like every place still to fill.
+    .photo-drop-slot
+      @include typography.label-strong
+      align-content: center
+      aspect-ratio: 1
+      background: var(--paper-2)
+      border: var(--stroke-bold) dashed var(--ghost)
+      border-radius: var(--radius-sticker)
+      color: var(--ink-soft)
+      display: grid
+      gap: var(--space-xs)
+      height: auto
+      justify-items: center
+      padding: var(--space-s)
+      text-align: center
+
+      svg
+        height: 28px
+        width: 28px
+
+      &[data-hovered]
+        border-color: var(--ink)
+        color: var(--ink)

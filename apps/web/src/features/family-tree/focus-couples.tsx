@@ -5,6 +5,7 @@ import { ViewTransition } from 'react'
 import type { EntityId } from '@arbor/protocol/entity-id'
 import type { Union } from '@arbor/protocol/union'
 
+import { PortraitImage } from '@/features/photos/portrait-image'
 import { GhostSlot } from '@/presentation/components/ghost-slot'
 import { SlotButton } from '@/presentation/components/slot-button'
 import { Sticker } from '@/presentation/components/sticker'
@@ -42,6 +43,7 @@ const FocusSticker: React.FC<{ focus: PersonFace }> = ({ focus }) => (
       isDeceased={focus.isDeceased}
       lifeYears={focus.years}
       monogram={focus.monogram}
+      portrait={<PortraitImage photoId={focus.portraitPhotoId} />}
       slotNumber={focus.slotNumber}
       surname={focus.surname}
     />
@@ -128,6 +130,7 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
                 isDeceased={partner.isDeceased}
                 lifeYears={partner.years}
                 monogram={partner.monogram}
+                portrait={<PortraitImage photoId={partner.portraitPhotoId} />}
                 slotNumber={partner.slotNumber}
                 surname={partner.surname}
               />

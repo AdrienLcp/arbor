@@ -342,6 +342,27 @@ export const EN_DICTIONARY = defineDictionary({
     submit: 'Open the tree',
     title: 'I received a link'
   },
+  photos: {
+    add: 'Add a photo',
+    adding: 'Getting the photo ready…',
+    asPortrait: 'Make it {name}’s portrait, on their sticker',
+    caption: 'Caption',
+    captionHint:
+      'Who, where, when: “Louis and Jeanne’s wedding, Quimper, 1931”.',
+    close: 'Close',
+    dialogTitle: 'A photo of {name}',
+    isPortrait: 'This is {name}’s portrait, on their sticker.',
+    makePortrait: 'Make it their portrait',
+    portrait: 'Portrait',
+    problem: {
+      too_large:
+        'This image is still too heavy once reduced. Pick another one.',
+      unreadable: 'This file is not a photo the phone can read. Pick a photo.'
+    },
+    save: 'Add the photo',
+    title: 'Photos',
+    untitled: 'Photo of {name}'
+  },
   sheet: {
     atPlace: 'in {place}',
     back: 'The tree',

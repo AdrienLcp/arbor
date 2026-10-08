@@ -11,6 +11,7 @@ import { CARD_HEIGHT, CARD_WIDTH } from '@arbor/core/tree-layout/tree-metrics'
 
 import { lifeYears } from '@/features/people/life-years'
 import { personName } from '@/features/people/person-name'
+import { PortraitImage } from '@/features/photos/portrait-image'
 import { generationClass } from '@/presentation/components/generation-class'
 import { GhostSlot } from '@/presentation/components/ghost-slot'
 import { monogramOf } from '@/presentation/components/monogram'
@@ -129,6 +130,7 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
           isDeceased={isDeceased}
           lifeYears={years}
           monogram={monogramOf(person)}
+          portrait={<PortraitImage photoId={person.portraitPhotoId} />}
           slotNumber={slotNumber}
           style={SLOT_SIZE}
           surname={person.surname}

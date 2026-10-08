@@ -1,3 +1,4 @@
+import type { Result } from '@adrienlcp/result'
 import { useState, useTransition } from 'react'
 
 import type { Author } from '@arbor/protocol/change-log'
@@ -25,6 +26,11 @@ export type EditFailure =
   | { kind: 'refused'; refusal: OperationRefusal }
   /** The change never arrived: no network, or the server failed. */
   | { kind: 'not_sent' }
+
+/** What a save does once its changes are in the log, before the family reloads: a photo's images go up then. */
+export type AfterRecording = (
+  revision: number
+) => Promise<Result<void, ApiFailure>>
 
 const isRefusal = (failure: ApiFailure): failure is OperationRefusal =>
   OPERATION_REFUSALS.some((refusal) => refusal === failure)
@@ -59,7 +65,20 @@ export const useFamilyEdit = () => {
       : []
   }
 
-  const save = (operations: readonly Operation[], onSaved: () => void) => {
+  const failWith = (error: ApiFailure) =>
+    startTransition(() =>
+      setFailure(
+        isRefusal(error)
+          ? { kind: 'refused', refusal: error }
+          : { kind: 'not_sent' }
+      )
+    )
+
+  const save = (
+    operations: readonly Operation[],
+    onSaved: () => void,
+    afterRecording?: AfterRecording
+  ) => {
     if (author === null || operations.length === 0) return
     const baseRevision = response.revision
     setFailure(null)
@@ -70,7 +89,12 @@ export const useFamilyEdit = () => {
         key
       })
       if (recorded.status === 'success') {
+        const followed = await afterRecording?.(recorded.data.revision)
         await refreshFamily()
+        if (followed?.status === 'failure') {
+          failWith(followed.error)
+          return
+        }
         startTransition(onSaved)
         return
       }
@@ -81,14 +105,7 @@ export const useFamilyEdit = () => {
         startTransition(() => setFailure({ authors, kind: 'family_moved' }))
         return
       }
-      const { error } = recorded
-      startTransition(() =>
-        setFailure(
-          isRefusal(error)
-            ? { kind: 'refused', refusal: error }
-            : { kind: 'not_sent' }
-        )
-      )
+      failWith(recorded.error)
     })
   }
 

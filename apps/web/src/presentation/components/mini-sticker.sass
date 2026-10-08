@@ -1,3 +1,5 @@
+@use '../styles/sticker-photo'
+
 @layer components
   .mini-sticker
     background: var(--sticker)
@@ -30,7 +32,12 @@
       font-size: var(--text-l)
       font-weight: 800
       letter-spacing: 0.02em
+      overflow: hidden
       place-items: center
+      position: relative
+
+      .sticker-portrait
+        @include sticker-photo.art-photo
 
     &.deceased
       border-bottom: var(--stroke-bold) solid var(--ink)

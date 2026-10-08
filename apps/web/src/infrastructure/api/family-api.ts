@@ -10,12 +10,14 @@ import {
   type KeyView,
   type Role
 } from '@arbor/protocol/access'
+import type { EntityId } from '@arbor/protocol/entity-id'
 import {
   type FamilyResponse,
   type FamilySettings,
   familyResponseSchema,
   familySettingsSchema
 } from '@arbor/protocol/family'
+import type { PhotoVariant } from '@arbor/protocol/photo-file'
 import {
   AFTER_REVISION_QUERY,
   API_ROUTES,
@@ -260,3 +262,62 @@ export const readUsage = ({
     schema: storageUsageSchema,
     signal
   })
+
+/** Both images of a photo the log already holds; they can be sent only once. */
+export const uploadPhotoFiles = async ({
+  familyId,
+  files,
+  key,
+  photoId,
+  signal
+}: FamilyAccess & {
+  files: Readonly<Record<PhotoVariant, Blob>>
+  photoId: EntityId
+  signal?: AbortSignal
+}): ApiResult<void> => {
+  const form = new FormData()
+  for (const [variant, file] of Object.entries(files)) {
+    form.set(variant, file, variant)
+  }
+  try {
+    const response = await fetch(
+      pathFor(API_ROUTES.photo, { familyId, photoId }),
+      {
+        body: form,
+        headers: headersFor({ access: key }),
+        method: 'POST',
+        signal
+      }
+    )
+    return response.ok
+      ? Result.success()
+      : Result.failure(await failureOf(response))
+  } catch {
+    return Result.failure(signal?.aborted === true ? 'aborted' : 'network')
+  }
+}
+
+/** One image of a photo: it travels with the key in a header, so the page shows it from a blob rather than a plain address. */
+export const fetchPhotoFile = async ({
+  familyId,
+  key,
+  photoId,
+  signal,
+  variant
+}: FamilyAccess & {
+  photoId: EntityId
+  signal?: AbortSignal
+  variant: PhotoVariant
+}): ApiResult<Blob> => {
+  try {
+    const response = await fetch(
+      pathFor(API_ROUTES.photoFile, { familyId, photoId, variant }),
+      { headers: headersFor({ access: key }), signal }
+    )
+    return response.ok
+      ? Result.success(await response.blob())
+      : Result.failure(await failureOf(response))
+  } catch {
+    return Result.failure(signal?.aborted === true ? 'aborted' : 'network')
+  }
+}

@@ -1,0 +1,26 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .photo-viewer
+    display: grid
+    gap: var(--space-l)
+
+    .photo-viewer-frame
+      background: var(--paper-2)
+      border: 5px solid var(--sticker)
+      border-radius: var(--radius-sticker)
+      box-shadow: 0 0 0 1px var(--sticker-edge)
+      display: grid
+      justify-self: center
+      min-height: 200px
+      min-width: 200px
+      place-items: center
+
+    .photo-viewer-image
+      display: block
+      max-height: 60dvh
+      max-width: 100%
+
+    .photo-viewer-note
+      @include typography.body-small
+      color: var(--ink-soft)

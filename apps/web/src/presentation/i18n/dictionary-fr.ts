@@ -347,6 +347,28 @@ export const FR_DICTIONARY = defineDictionary({
     submit: 'Ouvrir l’arbre',
     title: 'J’ai reçu un lien'
   },
+  photos: {
+    add: 'Ajouter une photo',
+    adding: 'Préparation de la photo…',
+    asPortrait: 'En faire le portrait de {name}, sur sa vignette',
+    caption: 'Légende',
+    captionHint:
+      'Qui, où, quand : « Mariage de Louis et Jeanne, Quimper, 1931 ».',
+    close: 'Fermer',
+    dialogTitle: 'Une photo de {name}',
+    isPortrait: 'C’est le portrait de {name}, sur sa vignette.',
+    makePortrait: 'En faire son portrait',
+    portrait: 'Portrait',
+    problem: {
+      too_large:
+        'Cette image reste trop lourde, même réduite. Choisissez-en une autre.',
+      unreadable:
+        'Ce fichier n’est pas une photo que le téléphone sait lire. Choisissez une photo.'
+    },
+    save: 'Ajouter la photo',
+    title: 'Photos',
+    untitled: 'Photo de {name}'
+  },
   sheet: {
     atPlace: 'à {place}',
     back: 'L’arbre',

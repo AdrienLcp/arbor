@@ -1,0 +1,47 @@
+@use '../styles/typography'
+
+@layer components
+  .checkbox
+    @include typography.body
+    align-items: center
+    cursor: pointer
+    display: flex
+    gap: var(--space-m)
+    min-height: var(--target)
+
+    .checkbox-box
+      align-items: center
+      background: var(--paper)
+      border: var(--stroke-bold) solid var(--ink)
+      border-radius: 6px
+      display: flex
+      flex: none
+      height: 28px
+      justify-content: center
+      transition: background-color var(--transition-fast) var(--ease-out)
+      width: 28px
+
+    .checkbox-mark
+      color: var(--on-action)
+      height: 20px
+      opacity: 0
+      stroke-width: 3
+      transition: opacity var(--transition-fast) var(--ease-out)
+      width: 20px
+
+    &[data-selected] .checkbox-box
+      background: var(--action)
+
+      .checkbox-mark
+        opacity: 1
+
+    &[data-focus-visible] .checkbox-box
+      outline: var(--ring)
+      outline-offset: var(--ring-offset)
+
+    &[data-pressed] .checkbox-box
+      scale: 0.94
+
+    &[data-disabled]
+      cursor: not-allowed
+      opacity: 0.5

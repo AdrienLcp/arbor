@@ -17,6 +17,8 @@ type StickerProps = {
   lifeYears?: string
   /** The initials drawn on the art. */
   monogram: string
+  /** A picture laid over the monogram: the person's portrait, when they have one. */
+  portrait?: React.ReactNode
   /** The number printed above the slot. */
   slotNumber: number
   /** Hands the slot its size, `--slot-width` and `--slot-height`. */
@@ -32,6 +34,7 @@ export const Sticker: React.FC<StickerProps> = ({
   isDeceased = false,
   lifeYears,
   monogram,
+  portrait,
   slotNumber,
   style,
   surname
@@ -45,6 +48,7 @@ export const Sticker: React.FC<StickerProps> = ({
       <span className={classNames('sticker', isDeceased && 'deceased')}>
         <span aria-hidden='true' className='sticker-art'>
           {monogram}
+          {portrait}
         </span>
         <span className='sticker-caption'>
           <span className='sticker-given-names'>{givenNames}</span>
