@@ -23,6 +23,9 @@ import { DEMO_WRITES_PER_NIGHT } from '@/domain/demo/demo-write-limit'
 
 import { familyPath, openTestApi, TEST_JPEG } from './api-test-harness'
 
+/** Every one of the night's edits is a real round trip: seconds of work, longer when the other test projects share the machine. */
+const A_NIGHT_OF_DEMO_EDITS_TIMEOUT_MS = 30_000
+
 const AUTHOR: Author = { kind: 'named', name: 'Mamie Jeanne' }
 
 const personNamed = (id: string, fields: Partial<Person> = {}): Person => ({
@@ -673,26 +676,30 @@ describe('[demo] the public demo', () => {
     expect(keys.status).toBe(403)
   })
 
-  it('[demo] stops taking edits once its night is spent, and still opens', async () => {
-    const api = openTestApi()
-    const operationsPath = familyPath(DEMO_FAMILY_ID, 'operations')
-    const edit = () =>
-      api.call(operationsPath, {
-        body: {},
-        key: DEMO_FAMILY_KEY,
-        method: 'POST'
+  it(
+    '[demo] stops taking edits once its night is spent, and still opens',
+    async () => {
+      const api = openTestApi()
+      const operationsPath = familyPath(DEMO_FAMILY_ID, 'operations')
+      const edit = () =>
+        api.call(operationsPath, {
+          body: {},
+          key: DEMO_FAMILY_KEY,
+          method: 'POST'
+        })
+
+      for (let write = 0; write < DEMO_WRITES_PER_NIGHT; write += 1) {
+        expect((await edit()).status).toBe(400)
+      }
+      const refused = await edit()
+      const opened = await api.call(familyPath(DEMO_FAMILY_ID), {
+        key: DEMO_FAMILY_KEY
       })
 
-    for (let write = 0; write < DEMO_WRITES_PER_NIGHT; write += 1) {
-      expect((await edit()).status).toBe(400)
-    }
-    const refused = await edit()
-    const opened = await api.call(familyPath(DEMO_FAMILY_ID), {
-      key: DEMO_FAMILY_KEY
-    })
-
-    expect(refused.status).toBe(429)
-    expect(await errorCodeOf(refused)).toBe('demo_write_limit')
-    expect(opened.status).toBe(200)
-  })
+      expect(refused.status).toBe(429)
+      expect(await errorCodeOf(refused)).toBe('demo_write_limit')
+      expect(opened.status).toBe(200)
+    },
+    A_NIGHT_OF_DEMO_EDITS_TIMEOUT_MS
+  )
 })
