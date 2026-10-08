@@ -89,10 +89,16 @@ export const createTestApi = () => {
   return {
     call,
     createFamily,
-    /** Resolves once the Worker answers, so no test pays for its boot. */
+    /**
+     * Resolves once the Worker and a family's Durable Object answer, so no
+     * test pays for their boot: the first object of the class loads SQLite
+     * and its schema, over a second on its own and several on a loaded
+     * machine, against a five-second test timeout.
+     */
     start: async () => {
       await server.listen()
       await call(API_ROUTES.health)
+      await createFamily('Famille de mise en route')
     },
     stop: () => server.close()
   }
