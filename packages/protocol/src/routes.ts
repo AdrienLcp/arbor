@@ -136,6 +136,7 @@ export const keyListSchema = z.object({ keys: z.array(keyViewSchema) })
 export type KeyList = z.infer<typeof keyListSchema>
 
 export const apiErrorCodes = [
+  'demo_write_limit',
   'family_exists',
   'forbidden',
   'internal_error',

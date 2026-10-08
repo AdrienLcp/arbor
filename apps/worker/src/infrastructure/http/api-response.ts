@@ -14,6 +14,7 @@ const isOperationRefusal = (code: ApiErrorCode): code is OperationRefusal =>
 
 const API_ERROR_STATUS = {
   already_undone: 409,
+  demo_write_limit: 429,
   family_exists: 409,
   forbidden: 403,
   internal_error: 500,

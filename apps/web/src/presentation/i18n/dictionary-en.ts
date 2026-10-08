@@ -125,7 +125,9 @@ export const EN_DICTIONARY = defineDictionary({
     notice: {
       body: 'Change anything you like: every night, it goes back to how it started.',
       title: 'A made-up family, to try things out.'
-    }
+    },
+    resting:
+      'Many visitors have changed this example family today: it takes no more changes until tonight. You can still look around.'
   },
   edit: {
     cancel: 'Cancel',
@@ -494,6 +496,8 @@ export const EN_DICTIONARY = defineDictionary({
       failure: {
         already_undone:
           'This change has just been undone already. The history is up to date.',
+        demo_write_limit:
+          'Many visitors have changed this example family today: it takes no more changes until tonight. You can still look around.',
         forbidden:
           'Only the keeper of the tree can undo a return to a past date.',
         later_changes_depend:

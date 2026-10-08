@@ -24,6 +24,8 @@ export type EditFailure =
   | { authors: readonly Author[]; kind: 'family_moved' }
   /** The family refuses the change itself: someone cannot be their own ancestor. */
   | { kind: 'refused'; refusal: OperationRefusal }
+  /** The public demo has taken all the edits it can until its nightly reset. */
+  | { kind: 'demo_resting' }
   /** The change never arrived: no network, or the server failed. */
   | { kind: 'not_sent' }
 
@@ -34,6 +36,12 @@ export type AfterRecording = (
 
 const isRefusal = (failure: ApiFailure): failure is OperationRefusal =>
   OPERATION_REFUSALS.some((refusal) => refusal === failure)
+
+const failureOf = (error: ApiFailure): EditFailure => {
+  if (isRefusal(error)) return { kind: 'refused', refusal: error }
+  if (error === 'demo_write_limit') return { kind: 'demo_resting' }
+  return { kind: 'not_sent' }
+}
 
 /** Everyone who signed a change, each once, in the order they wrote. */
 const distinctAuthors = (authors: readonly Author[]): Author[] => [
@@ -66,13 +74,7 @@ export const useFamilyEdit = () => {
   }
 
   const failWith = (error: ApiFailure) =>
-    startTransition(() =>
-      setFailure(
-        isRefusal(error)
-          ? { kind: 'refused', refusal: error }
-          : { kind: 'not_sent' }
-      )
-    )
+    startTransition(() => setFailure(failureOf(error)))
 
   const save = (
     operations: readonly Operation[],

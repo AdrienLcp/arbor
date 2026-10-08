@@ -39,7 +39,7 @@ const memoryFamilyRooms = (): FamilyRooms => {
     fetchDemo: async (request) => {
       const demo = roomOf(DEMO_FAMILY_ID)
       await demo.openDemo(TEST_DEMO_PHOTO_FILES)
-      return demo.fetch(request)
+      return demo.fetchDemo(request)
     }
   }
 }

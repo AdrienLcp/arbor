@@ -19,6 +19,7 @@ import {
 } from '@arbor/protocol/routes'
 
 import { MAX_FAILED_KEY_CHECKS } from '@/domain/access/key-check-limit'
+import { DEMO_WRITES_PER_NIGHT } from '@/domain/demo/demo-write-limit'
 
 import { familyPath, openTestApi, TEST_JPEG } from './api-test-harness'
 
@@ -670,5 +671,28 @@ describe('[demo] the public demo', () => {
 
     expect(edited.status).toBe(201)
     expect(keys.status).toBe(403)
+  })
+
+  it('[demo] stops taking edits once its night is spent, and still opens', async () => {
+    const api = openTestApi()
+    const operationsPath = familyPath(DEMO_FAMILY_ID, 'operations')
+    const edit = () =>
+      api.call(operationsPath, {
+        body: {},
+        key: DEMO_FAMILY_KEY,
+        method: 'POST'
+      })
+
+    for (let write = 0; write < DEMO_WRITES_PER_NIGHT; write += 1) {
+      expect((await edit()).status).toBe(400)
+    }
+    const refused = await edit()
+    const opened = await api.call(familyPath(DEMO_FAMILY_ID), {
+      key: DEMO_FAMILY_KEY
+    })
+
+    expect(refused.status).toBe(429)
+    expect(await errorCodeOf(refused)).toBe('demo_write_limit')
+    expect(opened.status).toBe(200)
   })
 })

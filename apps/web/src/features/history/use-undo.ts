@@ -21,6 +21,7 @@ import { useRefreshRouteData } from '@/infrastructure/router/navigation'
 /** Why entries were not taken back, as the dialog tells it. */
 export type UndoFailure =
   | HistoryRefusal
+  | 'demo_write_limit'
   | 'forbidden'
   | 'not_sent'
   | 'revision_conflict'
@@ -28,6 +29,7 @@ export type UndoFailure =
 const isExplained = (
   error: ApiFailure
 ): error is Exclude<UndoFailure, 'not_sent'> =>
+  error === 'demo_write_limit' ||
   error === 'forbidden' ||
   error === 'revision_conflict' ||
   HISTORY_REFUSALS.some((refusal) => refusal === error)

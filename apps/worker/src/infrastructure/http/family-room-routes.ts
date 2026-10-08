@@ -11,6 +11,10 @@ import {
 import { admit } from '@/domain/access/access-service'
 import { canActAs } from '@/domain/access/role-rank'
 import {
+  DEMO_WRITES_PER_NIGHT,
+  isWriteRequest
+} from '@/domain/demo/demo-write-limit'
+import {
   type DemoPhotoFiles,
   openDemoFamily
 } from '@/domain/demo/open-demo-family'
@@ -24,6 +28,7 @@ import {
 } from '@/infrastructure/durable-objects/family-schema'
 import { createSqlAccessStore } from '@/infrastructure/durable-objects/sql-access-store'
 import type { SqlDatabase } from '@/infrastructure/durable-objects/sql-database'
+import { createSqlDemoWriteCount } from '@/infrastructure/durable-objects/sql-demo-write-count'
 import { createSqlFamilyStore } from '@/infrastructure/durable-objects/sql-family-store'
 import { createSqlPhotoStore } from '@/infrastructure/durable-objects/sql-photo-store'
 import { newKeyId } from '@/infrastructure/ids'
@@ -54,6 +59,8 @@ export type FamilyRoomRoutes = {
     input: CreateFamilyInput
   ) => Promise<Result<FamilyKeys, 'family_exists'>>
   fetch: (request: Request) => Promise<Response>
+  /** The demo's API: as `fetch`, until its edits for the night run out. */
+  fetchDemo: (request: Request) => Promise<Response>
   /** Builds the demo family if the object holds none yet; its family link opens with the public demo key. */
   openDemo: (photoFiles: DemoPhotoFiles) => Promise<void>
 }
@@ -121,6 +128,12 @@ export const familyRoomRoutes = (database: SqlDatabase): FamilyRoomRoutes => {
     photos: createSqlPhotoStore(database),
     transaction: database.transaction
   }
+  const demoWrites = createSqlDemoWriteCount(database)
+
+  const fetch = (request: Request): Promise<Response> =>
+    isOpen
+      ? answer(request, stores)
+      : Promise.resolve(apiError('not_found', 'No family behind this address'))
 
   return {
     create: async (input) => {
@@ -142,12 +155,21 @@ export const familyRoomRoutes = (database: SqlDatabase): FamilyRoomRoutes => {
         ? opened
         : Result.success({ familyKey: familyKey.key, keeperKey: keeperKey.key })
     },
-    fetch: (request) =>
-      isOpen
-        ? answer(request, stores)
-        : Promise.resolve(
-            apiError('not_found', 'No family behind this address')
-          ),
+    fetch,
+    fetchDemo: (request) => {
+      if (isOpen && isWriteRequest(request)) {
+        if (demoWrites.read() >= DEMO_WRITES_PER_NIGHT) {
+          return Promise.resolve(
+            apiError(
+              'demo_write_limit',
+              'The demo takes no more edits until its reset'
+            )
+          )
+        }
+        demoWrites.add()
+      }
+      return fetch(request)
+    },
     openDemo: async (photoFiles) => {
       if (isOpen) return
       const keeperKey = await mintKey()

@@ -30,7 +30,7 @@ export class FamilyRoom extends DurableObject<Env> {
     if ((await this.ctx.storage.getAlarm()) === null) {
       await this.scheduleDemoReset()
     }
-    return this.routes.fetch(request)
+    return this.routes.fetchDemo(request)
   }
 
   /** Only the demo's object ever sets an alarm: it wipes the family and builds it again. */

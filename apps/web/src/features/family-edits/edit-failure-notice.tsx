@@ -41,6 +41,8 @@ export const EditFailureNotice: React.FC<{ failure: EditFailure }> = ({
         return isTold(failure.refusal)
           ? translate(`edit.failure.refused.${failure.refusal}`)
           : translate('edit.failure.refused.other')
+      case 'demo_resting':
+        return translate('demo.resting')
       case 'not_sent':
         return translate('common.failed')
       default:

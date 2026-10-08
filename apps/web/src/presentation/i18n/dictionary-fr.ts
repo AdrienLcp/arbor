@@ -126,7 +126,9 @@ export const FR_DICTIONARY = defineDictionary({
     notice: {
       body: 'Changez ce que vous voulez : chaque nuit, elle revient comme au premier jour.',
       title: 'Une famille inventée, pour essayer.'
-    }
+    },
+    resting:
+      'Beaucoup de visiteurs ont modifié cette famille d’exemple aujourd’hui : elle n’accepte plus de changements jusqu’à cette nuit. Vous pouvez toujours la regarder.'
   },
   edit: {
     cancel: 'Annuler',
@@ -497,6 +499,8 @@ export const FR_DICTIONARY = defineDictionary({
       failure: {
         already_undone:
           'Ce changement vient déjà d’être annulé. L’historique est à jour.',
+        demo_write_limit:
+          'Beaucoup de visiteurs ont modifié cette famille d’exemple aujourd’hui : elle n’accepte plus de changements jusqu’à cette nuit. Vous pouvez toujours la regarder.',
         forbidden:
           'Seul le gardien de l’arbre peut défaire un retour à une date passée.',
         later_changes_depend:
