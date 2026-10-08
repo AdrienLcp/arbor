@@ -6,6 +6,10 @@ Goal: the father uses it for real, and the portfolio shows it.
 
 1. Public demo: the fixture family behind a demo link with contributor rights,
    reset every night by a Durable Object alarm. The landing links to it.
+   The fixture (`packages/core/src/family/demo-family.ts`) records photos
+   (`auguste-portrait`, the wedding) with no file behind them: every view
+   gets a 404 and shows the monogram. Seed real image files with the demo, or
+   drop those records.
 2. Lighthouse (mobile and desktop) on the landing, the demo tree and a person
    sheet; fix what it finds. Same gate shape as the portfolio's.
 3. README: what it is, screenshots, the free-tier architecture in five lines,

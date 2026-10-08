@@ -218,6 +218,26 @@ Built in step 08, closed 2026-10-08. The log rules are in
   On phones an entry's action row spans the whole entry.
 - e2e journeys shared between specs live in `e2e/support/journeys.ts`.
 
+## Printing
+
+Built in step 09, closed 2026-10-08.
+
+- **The PDF is made in the browser** from the sheet's own SVG (`jsPDF` +
+  `svg2pdf.js`, loaded on demand), not by the browser's print dialog: page
+  sizes and a poster's tiling come out the same on every browser. A poster is
+  one drawing clipped page by page through a window, with overlap, cut and glue
+  marks in the margins (`pdf-file.ts`, `print-pages.ts`).
+- **One family name per font weight.** jsPDF reads TrueType only and places
+  centred text by the width the page measured, so the print faces are loaded
+  into the page under the names the drawing uses (`print-fonts.ts`) and the
+  same bytes are embedded in the PDF, and as data URLs in the SVG and PNG
+  downloads (`drawing-files.ts`).
+- **Photos go in as JPEG data URLs** (`use-print-portraits.ts`): the PDF, the
+  standalone SVG and the PNG canvas then never fetch anything.
+- The panel (name, legend, QR, print date) is a side column on wide sheets and
+  a band under the tree on tall ones; a poster carries it once, on its last
+  tile. The QR is the reader link only, absent when the family has none.
+
 ## Security notes
 
 - Keys: 128-bit random, base64url, sent in an `Authorization` header; only
