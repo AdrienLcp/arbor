@@ -7,6 +7,13 @@ const MEGABYTES = {
   unitDisplay: 'short'
 } as const
 
+const UNION_WORDS_EN = {
+  marriage: 'the marriage',
+  pacs: 'the civil partnership',
+  partnership: 'the free union',
+  unknown: 'the couple'
+} as const
+
 export const EN_DICTIONARY = defineDictionary({
   add: {
     alone: 'No other parent known',
@@ -76,6 +83,16 @@ export const EN_DICTIONARY = defineDictionary({
     stays:
       'These people stay in the tree. Nothing is lost: the sheet comes back with its links and photos as soon as someone takes it out of the bin.',
     title: 'Put {name} in the bin?'
+  },
+  binPage: {
+    binnedBy: 'Put in the bin by {name} on {moment}',
+    comesBack: 'Comes back with the sheet:',
+    empty: 'The bin is empty.',
+    intro:
+      'A sheet put in the bin leaves the tree without losing anything. Anyone can take it out: it comes back with its links and photos.',
+    restore: 'Take out of the bin',
+    restored: '{name} is back in the tree.',
+    title: 'The bin'
   },
   common: {
     failed:
@@ -204,8 +221,10 @@ export const EN_DICTIONARY = defineDictionary({
     share: 'Share'
   },
   familyHome: {
+    bin: 'The bin',
     empty: 'Nobody in the tree yet.',
     generation: 'Generation {number:number}',
+    history: 'What changed',
     openTree: 'See the tree',
     people: defineTranslation('{count:plural}', {
       plural: { count: { one: '{?} person', other: '{?} people' } }
@@ -295,6 +314,174 @@ export const EN_DICTIONARY = defineDictionary({
     send: 'Send',
     sendTitle: 'The {name} tree',
     title: 'Share the tree'
+  },
+  history: {
+    allHistory: 'See the whole history',
+    binWith: 'The bin ({count:number})',
+    day: defineTranslation('{day:date}', {
+      date: { day: { day: 'numeric', month: 'long', weekday: 'long' } }
+    }),
+    dayOfYear: defineTranslation('{day:date}', {
+      date: {
+        day: { day: 'numeric', month: 'long', weekday: 'long', year: 'numeric' }
+      }
+    }),
+    event: {
+      baptism: 'a baptism',
+      burial: 'a burial',
+      labelled: '“{label}”',
+      other: 'an event'
+    },
+    failed:
+      'The history could not be loaded. Check that the phone is connected to the Internet.',
+    field: {
+      birth: 'the birth',
+      birthSurname: 'the birth surname',
+      death: 'the death',
+      livingOverride: '“living or deceased”',
+      notes: 'the notes',
+      portraitPhotoId: 'the sticker photo',
+      sex: '“woman or man”'
+    },
+    intro:
+      'Every change is kept here, signed by whoever made it. Nothing is lost: anything can be undone.',
+    line: {
+      added: 'added {name}',
+      binned: 'put {name} in the bin',
+      childOf: 'child {ofNames}',
+      corrected: 'corrected {fields} {ofName}',
+      event: {
+        create: 'added {event} to the sheet {ofName}',
+        remove: 'removed {event} from the sheet {ofName}',
+        update: 'corrected {event} on the sheet {ofName}'
+      },
+      filiation: {
+        create: 'noted {thatChild} is the child {ofParent}',
+        createKind: defineTranslation(
+          'noted {thatChild} is the child {ofParent} ({kind:enum})',
+          {
+            enum: {
+              kind: {
+                adoption: 'adoption',
+                birth: 'birth',
+                foster: 'foster care',
+                step: 'step-parent',
+                unknown: 'uncertain link'
+              }
+            }
+          }
+        ),
+        remove: 'removed the link between {child} and {parent}',
+        update: 'corrected the link between {child} and {parent}'
+      },
+      parentOf: 'parent {ofNames}',
+      partnerOf: 'partner of {names}',
+      photo: {
+        create: 'added a photo {ofName}',
+        createUnlinked: 'added a photo',
+        remove: 'removed a photo {ofName}',
+        removeUnlinked: 'removed a photo',
+        update: 'changed a photo {ofName}',
+        updateUnlinked: 'changed a photo'
+      },
+      removed: 'removed {name} from the tree',
+      renamed: 'renamed {before} to {after}',
+      restore: 'put the tree back as it was on {moment}',
+      restored: 'took {name} out of the bin',
+      restoreStart: 'put the tree back as it was when it was created',
+      undo: defineTranslation('undid {count:plural} {ofNames}', {
+        plural: { count: { one: 'a change', other: '{?} changes' } }
+      }),
+      union: {
+        create: defineTranslation('noted {union:enum} {ofNames}', {
+          enum: { union: UNION_WORDS_EN }
+        }),
+        remove: defineTranslation('removed {union:enum} {ofNames}', {
+          enum: { union: UNION_WORDS_EN }
+        }),
+        update: defineTranslation('corrected {union:enum} {ofNames}', {
+          enum: { union: UNION_WORDS_EN }
+        })
+      },
+      unionEnded: defineTranslation('noted {ending:enum} {ofNames}', {
+        enum: {
+          ending: { divorce: 'the divorce', separation: 'the separation' }
+        }
+      })
+    },
+    loading: 'The history is on its way…',
+    moment: defineTranslation('{at:date}', {
+      date: { at: { dateStyle: 'long', timeStyle: 'short' } }
+    }),
+    more: defineTranslation('{count:plural}', {
+      plural: {
+        count: {
+          one: 'See the other change',
+          other: 'See the {?} other changes'
+        }
+      }
+    }),
+    nothingForPerson: 'Nothing has changed on this sheet yet.',
+    onlyPerson: 'Only what concerns {name}.',
+    personTitle: 'History of the sheet {ofName}',
+    reader:
+      'The history opens with the family link. The link you received lets you look at the tree, not change it.',
+    retry: 'Try again',
+    takenBack: 'Undone by {name} on {moment}',
+    time: defineTranslation('{at:date}', {
+      date: { at: { timeStyle: 'short' } }
+    }),
+    times: '× {count:number}',
+    title: 'History',
+    today: 'Today',
+    undo: {
+      allOfRun: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'Undo this change',
+            other: 'Undo these {?} changes'
+          }
+        }
+      }),
+      body: 'The tree will be as it was before. Nothing is lost: the undo is noted in the history, and can itself be undone.',
+      cancel: 'Change nothing',
+      confirm: 'Yes, undo',
+      confirmAll: 'Undo them all together',
+      dependBody:
+        'Other changes were made afterwards, on the same sheets. To go back, everything must be undone at the same time:',
+      dependTitle: 'Other changes depend on it',
+      entry: 'Undo',
+      entryLabel: 'Undo the change made at {time}',
+      failure: {
+        already_undone:
+          'This change has just been undone already. The history is up to date.',
+        forbidden:
+          'Only the keeper of the tree can undo a return to a past date.',
+        later_changes_depend:
+          'Someone has just made a change that depends on it. The history is up to date: have a look, then try again.',
+        not_sent:
+          'That did not work. Check that the phone is connected to the Internet, then try again.',
+        nothing_to_restore: 'The tree is already in that state.',
+        revision_not_found:
+          'That moment is no longer in the history. The history is up to date: try again.'
+      },
+      redo: 'Bring back',
+      redoBody:
+        'What was undone comes back into the tree. This is noted in the history too.',
+      redoConfirm: 'Yes, bring it back',
+      redoLabel: 'Bring back what was undone at {time}',
+      redoTitle: 'Bring back what was undone?',
+      title: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'Undo this change?',
+            other: 'Undo these {?} changes?'
+          }
+        }
+      })
+    },
+    unknownPerson: 'an unknown person',
+    yesterday: 'Yesterday'
   },
   home: {
     create: 'Create your family’s tree',
@@ -386,8 +573,10 @@ export const EN_DICTIONARY = defineDictionary({
     death: 'Death',
     deathUnknown: 'Date and place unknown',
     generation: 'generation {number:number}',
+    history: 'History of this sheet',
     inPeriod: 'in {date}',
     missing: {
+      binned: '{name} put this sheet in the bin on {moment}.',
       binnedBy:
         '{name} just put this sheet in the bin: your change was not saved.',
       binnedBySomeone:

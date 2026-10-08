@@ -15,6 +15,7 @@ import { PreviousIcon } from '@/presentation/components/icons'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
+import { BinnedSheet } from './binned-sheet'
 import { PersonSheet } from './person-sheet'
 import { useBinnedWhileOpen } from './use-binned-while-open'
 
@@ -31,6 +32,7 @@ export const PersonSheetPage: React.FC = () => {
   const person = personId === null ? undefined : family.persons.get(personId)
   const face = personId === null ? undefined : faces.get(personId)
   const isShown = person !== undefined && face !== undefined
+  const isBinned = personId !== null && family.binnedPersonIds.has(personId)
   const binnedWhileOpen = useBinnedWhileOpen({ isShown, personId })
   const authorName = useAuthorName()
 
@@ -56,9 +58,15 @@ export const PersonSheetPage: React.FC = () => {
           <h2 className='sheet-missing-title'>
             {translate('sheet.missing.title')}
           </h2>
-          <p>{missingBody()}</p>
-          {binnedWhileOpen === null ? null : (
-            <p>{translate('bin.nothingLinked')}</p>
+          {binnedWhileOpen === null && isBinned ? (
+            <BinnedSheet personId={personId} />
+          ) : (
+            <>
+              <p>{missingBody()}</p>
+              {binnedWhileOpen === null ? null : (
+                <p>{translate('bin.nothingLinked')}</p>
+              )}
+            </>
           )}
         </div>
       ) : (

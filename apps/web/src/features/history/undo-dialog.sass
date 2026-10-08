@@ -1,0 +1,20 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .undo-dialog-entries
+    border-block: var(--hairline)
+    display: grid
+    gap: var(--space-m)
+    list-style: none
+    margin-block: var(--space-m)
+    max-height: 40vh
+    overflow-y: auto
+    padding-block: var(--space-m)
+
+  .undo-dialog-entry
+    display: grid
+    gap: var(--space-xs)
+
+  .undo-dialog-when
+    @include typography.numeral
+    color: var(--ink-soft)

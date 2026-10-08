@@ -33,9 +33,11 @@ import {
   pathFor,
   type RecordedOperations,
   type RecordOperationsInput,
+  type RestoreInput,
   recordedOperationsSchema,
   type StorageUsage,
   storageUsageSchema,
+  type UndoInput,
   type UpdateFamilySettingsInput
 } from '@arbor/protocol/routes'
 
@@ -153,6 +155,44 @@ export const recordOperations = ({
     body: input,
     method: 'POST',
     path: pathFor(API_ROUTES.operations, { familyId }),
+    schema: recordedOperationsSchema,
+    signal
+  })
+
+/** Takes earlier entries back as one new entry of the log; the server works out the inverse. */
+export const undoEntries = ({
+  familyId,
+  input,
+  key,
+  signal
+}: FamilyAccess & {
+  input: UndoInput
+  signal?: AbortSignal
+}): ApiResult<RecordedOperations> =>
+  callApi({
+    access: key,
+    body: input,
+    method: 'POST',
+    path: pathFor(API_ROUTES.undo, { familyId }),
+    schema: recordedOperationsSchema,
+    signal
+  })
+
+/** A keeper's restore of the whole family to a past revision, as one new entry of the log. */
+export const restoreFamily = ({
+  familyId,
+  input,
+  key,
+  signal
+}: FamilyAccess & {
+  input: RestoreInput
+  signal?: AbortSignal
+}): ApiResult<RecordedOperations> =>
+  callApi({
+    access: key,
+    body: input,
+    method: 'POST',
+    path: pathFor(API_ROUTES.restore, { familyId }),
     schema: recordedOperationsSchema,
     signal
   })

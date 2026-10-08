@@ -11,7 +11,8 @@ import {
   useNavigate,
   useOutlet,
   useRevalidator,
-  useRouteLoaderData
+  useRouteLoaderData,
+  useSearchParams
 } from 'react-router'
 
 import { type FamilyId, familyIdSchema } from '@arbor/protocol/access'
@@ -53,6 +54,35 @@ export const personSheetPathFor = ({
 
 export const familySettingsPathFor = (familyId: FamilyId): string =>
   pathFor(paths.familySettings, { familyId })
+
+export const familyBinPathFor = (familyId: FamilyId): string =>
+  pathFor(paths.familyBin, { familyId })
+
+/** The query field that narrows the history to one person's sheet. */
+export const HISTORY_PERSON_QUERY = 'person'
+
+/** The family's history, or only what touched one person when one is named. */
+export const familyHistoryPathFor = ({
+  familyId,
+  personId = null
+}: {
+  familyId: FamilyId
+  personId?: EntityId | null
+}): string => {
+  const path = pathFor(paths.familyHistory, { familyId })
+  return personId === null
+    ? path
+    : `${path}?${new URLSearchParams({ [HISTORY_PERSON_QUERY]: personId })}`
+}
+
+/** The person the history's address narrows it to, `null` for the whole family. */
+export const useHistoryPersonId = (): EntityId | null => {
+  const [searchParams] = useSearchParams()
+  const personId = entityIdSchema.safeParse(
+    searchParams.get(HISTORY_PERSON_QUERY)
+  )
+  return personId.success ? personId.data : null
+}
 
 type Loader = (...args: never[]) => unknown
 

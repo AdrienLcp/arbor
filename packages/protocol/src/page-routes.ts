@@ -2,6 +2,8 @@
 export const PAGE_ROUTES = {
   createFamily: '/new',
   family: '/f/:familyId',
+  familyBin: '/f/:familyId/bin',
+  familyHistory: '/f/:familyId/history',
   familySettings: '/f/:familyId/settings',
   familyShare: '/f/:familyId/share',
   familyTree: '/f/:familyId/tree',

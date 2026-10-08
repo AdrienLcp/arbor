@@ -1,0 +1,158 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+$time-column: 3.5rem
+
+@layer components
+  .history-page
+    @include layout.container
+    display: grid
+    gap: var(--space-3xl)
+    grid-template-columns: minmax(0, 1fr)
+    padding-block: var(--space-2xl) var(--space-section)
+
+    .history-head,
+    .history-day,
+    .history-status
+      @include layout.column(46rem)
+
+    .history-head
+      display: grid
+      gap: var(--space-m)
+      justify-items: start
+
+    .history-title
+      @include typography.headline
+      overflow-wrap: anywhere
+      text-wrap: balance
+
+    .history-intro
+      color: var(--ink-soft)
+      max-width: var(--measure)
+      text-wrap: pretty
+
+    .history-links
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-xs) var(--space-xl)
+
+
+    .history-status
+      color: var(--ink-soft)
+      display: grid
+      gap: var(--space-l)
+      justify-items: start
+
+    .history-day
+      border-top: var(--stroke-bold) solid var(--ink)
+      display: grid
+      gap: var(--space-xl)
+      padding-top: var(--space-l)
+
+    .history-day-title
+      @include typography.title
+
+    .history-runs
+      display: grid
+      gap: var(--space-2xl)
+      list-style: none
+
+    .history-run
+      display: grid
+      gap: var(--space-s)
+
+    .history-run-head
+      align-items: center
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-s) var(--space-l)
+
+    .history-run-author
+      @include typography.name
+      flex: 1
+      min-width: 0
+      overflow-wrap: anywhere
+
+    // Someone not in the tree yet signs with an empty printed slot (DESIGN.md: dashed means "to fill").
+    .history-run-ghost
+      align-items: center
+      background: var(--paper-2)
+      border: var(--stroke-bold) dashed var(--ghost)
+      border-radius: var(--radius-sticker)
+      color: var(--ink-soft)
+      display: flex
+      flex: none
+      height: 64px
+      justify-content: center
+      width: 52px
+
+      svg
+        height: 1.5rem
+        width: 1.5rem
+
+    .history-run-entries
+      @include layout.container
+      display: grid
+      list-style: none
+
+    .history-entry
+      border-top: var(--hairline)
+      column-gap: var(--space-l)
+      display: grid
+      grid-template-columns: $time-column minmax(0, 1fr)
+      padding-block: var(--space-m)
+
+      .history-entry-undo
+        grid-column: 2
+        justify-self: start
+
+      @include layout.container-wide(34rem)
+        grid-template-columns: $time-column minmax(0, 1fr) auto
+
+        .history-entry-undo
+          align-self: start
+          grid-column: 3
+
+    .history-entry-time
+      @include typography.numeral
+      color: var(--ink-soft)
+      font-size: var(--text-m)
+      // Sits on the first line of the sentence beside it, whose line box is taller.
+      padding-top: 0.3rem
+
+    .history-entry-story
+      display: grid
+      gap: var(--space-xs)
+      justify-items: start
+
+    .history-entry-lines
+      display: grid
+      gap: var(--space-xs)
+      list-style: none
+      text-wrap: pretty
+
+    .history-entry-glyph
+      color: var(--ink-soft)
+      display: inline-block
+      height: 1.1em
+      margin-inline-end: var(--space-s)
+      vertical-align: -0.15em
+      width: 1.1em
+
+    .history-entry.taken-back
+      .history-entry-lines
+        color: var(--ink-soft)
+
+    .history-entry-undone
+      @include typography.body-small
+      background: var(--paper-2)
+      border: var(--stroke-thin) solid var(--ghost)
+      border-radius: var(--radius-control)
+      color: var(--ink)
+      margin-top: var(--space-xs)
+      padding: var(--space-xs) var(--space-m)
+
+    .history-entry-times
+      @include typography.numeral
+      color: var(--ink-soft)
+      margin-inline-start: var(--space-s)

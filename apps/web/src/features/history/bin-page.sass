@@ -1,0 +1,75 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .bin-page
+    @include layout.container
+    display: grid
+    gap: var(--space-2xl)
+    grid-template-columns: minmax(0, 1fr)
+    padding-block: var(--space-2xl) var(--space-section)
+
+    .bin-head,
+    .bin-news,
+    .bin-empty,
+    .bin-people
+      @include layout.column(46rem)
+
+    .bin-head
+      display: grid
+      gap: var(--space-m)
+      justify-items: start
+
+    .bin-title
+      @include typography.headline
+
+    .bin-intro
+      color: var(--ink-soft)
+      max-width: var(--measure)
+      text-wrap: pretty
+
+    .bin-news
+      display: grid
+      justify-items: start
+
+      &:empty
+        display: none
+
+    .bin-empty
+      border-top: var(--stroke-bold) solid var(--ink)
+      color: var(--ink-soft)
+      padding-top: var(--space-l)
+
+    .bin-people
+      border-top: var(--stroke-bold) solid var(--ink)
+      display: grid
+      list-style: none
+
+    .bin-person
+      display: grid
+      gap: var(--space-m)
+      justify-items: start
+      padding-block: var(--space-xl)
+
+      & + .bin-person
+        border-top: var(--hairline)
+
+      // A binned sticker is peeled off its slot: lifted and askew, as it is the instant before it is pressed back (DESIGN.md, Motion).
+      .mini-sticker
+        box-shadow: 0 0 0 1px var(--sticker-edge), 0 10px 16px -8px color-mix(in oklch, var(--shadow) 65%, transparent)
+        rotate: -3.5deg
+        translate: 0 -2px
+
+    .bin-person-when
+      @include typography.body-small
+      color: var(--ink-soft)
+
+    .bin-person-links
+      @include typography.body-small
+
+      ul
+        display: grid
+        gap: var(--space-xs)
+        list-style: disc
+        margin-top: var(--space-xs)
+        padding-inline-start: var(--space-l)
