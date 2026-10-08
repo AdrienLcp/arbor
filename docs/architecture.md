@@ -157,12 +157,12 @@ The view, built in step 06 and measured 2026-10-08 with the 300-person family
 on Chromium at CPU ×4:
 
 - The desktop canvas pans and zooms with `react-zoom-pan-pinch`. It injects
-  unlayered CSS, so the viewport rules in `tree-canvas.sass` are unlayered too,
-  or they lose to it.
+  CSS outside any cascade layer, so the viewport rules in `tree-canvas.sass`
+  sit outside the layers too, or they lose to it.
 - **Never change an inherited property on the canvas wrapper during a pan.**
   The library set `user-select` inline at every pan start, and a
   `:active { cursor: grabbing }` did the same: both are inherited, so each
-  restyled all 3 000 descendants — 310 ms of style recalc, a 750 ms frame.
+  restyled all 3 000 descendants — 310 ms of style recalculation, a 750 ms frame.
   `user-select: none` is now permanent and there is no grabbing cursor: 14 ms,
   worst frame 50 ms. `will-change: transform` made it worse.
 - The phone page is about 150 DOM nodes; the list, 3 255 nodes and 31 000 px
