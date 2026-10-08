@@ -55,3 +55,13 @@ export const dropFragmentFromAddress = (): void => {
 export const watchAddressFragment = (onChange: () => void): void => {
   window.addEventListener('hashchange', onChange)
 }
+
+/** Hands a file the app made — a PDF, a picture — to the browser to save, under `name`. */
+export const saveFile = (file: Blob, name: string): void => {
+  const url = URL.createObjectURL(file)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = name
+  link.click()
+  setTimeout(() => URL.revokeObjectURL(url), 0)
+}

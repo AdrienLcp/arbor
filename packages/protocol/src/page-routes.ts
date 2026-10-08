@@ -4,6 +4,7 @@ export const PAGE_ROUTES = {
   family: '/f/:familyId',
   familyBin: '/f/:familyId/bin',
   familyHistory: '/f/:familyId/history',
+  familyPrint: '/f/:familyId/print',
   familySettings: '/f/:familyId/settings',
   familyShare: '/f/:familyId/share',
   familyTree: '/f/:familyId/tree',

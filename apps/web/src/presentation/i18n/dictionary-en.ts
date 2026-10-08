@@ -217,6 +217,7 @@ export const EN_DICTIONARY = defineDictionary({
   },
   familyBar: {
     label: 'Tree',
+    print: 'Print',
     settings: 'Settings',
     share: 'Share'
   },
@@ -598,6 +599,50 @@ export const EN_DICTIONARY = defineDictionary({
     save: 'Add the photo',
     title: 'Photos',
     untitled: 'Photo of {name}'
+  },
+  print: {
+    download: 'Download the PDF',
+    failed: 'The PDF could not be made. Try again in a moment.',
+    fileName: '{name} — tree.pdf',
+    fontsFailed:
+      'The preview could not load. Check the connection, then open the page again.',
+    format: {
+      a3: 'One A3 sheet',
+      label: 'Format',
+      poster: 'A poster of 6 A4 sheets'
+    },
+    generations: defineTranslation('{count:plural}', {
+      plural: {
+        count: { one: '{?} generation', other: '{?} generations' }
+      }
+    }),
+    intro:
+      'The whole family on one sheet, with the legend, and a code to find the up-to-date tree.',
+    legend: {
+      adoption: 'Adopted child: double line',
+      child: 'Child',
+      deceased: 'Death: matte sticker',
+      ended: 'Divorce or separation: the line is cut',
+      freeUnion: 'Living together',
+      marriage: 'Marriage or civil partnership',
+      step: 'Partner’s child, foster child: dotted',
+      title: 'Legend',
+      unknownLink: 'Unknown link',
+      unknownPerson: 'Unknown person: a slot to fill'
+    },
+    live: {
+      text: 'Scan with the phone’s camera: the up-to-date tree, to look at.',
+      title: 'The living tree'
+    },
+    loading: 'The preview is coming…',
+    making: 'Making the PDF…',
+    posterHint:
+      'Six sheets to print at home. Cut each sheet along the solid mark, then glue it onto its neighbour up to the dotted mark.',
+    printedOn: defineTranslation('Printed on {day:date} · Arbor', {
+      date: { day: { day: 'numeric', month: 'long', year: 'numeric' } }
+    }),
+    tile: 'Sheet {number:number} of {count:number} · row {row:number}, column {column:number}',
+    title: 'Print the tree'
   },
   sheet: {
     atPlace: 'in {place}',

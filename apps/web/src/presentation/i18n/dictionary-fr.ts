@@ -221,6 +221,7 @@ export const FR_DICTIONARY = defineDictionary({
   },
   familyBar: {
     label: 'Arbre',
+    print: 'Imprimer',
     settings: 'Réglages',
     share: 'Partager'
   },
@@ -602,6 +603,50 @@ export const FR_DICTIONARY = defineDictionary({
     save: 'Ajouter la photo',
     title: 'Photos',
     untitled: 'Photo de {name}'
+  },
+  print: {
+    download: 'Télécharger le PDF',
+    failed: 'Le PDF n’a pas pu être préparé. Réessayez dans un instant.',
+    fileName: '{name} — arbre.pdf',
+    fontsFailed:
+      'L’aperçu n’a pas pu se charger. Vérifiez la connexion, puis rouvrez la page.',
+    format: {
+      a3: 'Une feuille A3',
+      label: 'Format',
+      poster: 'Une affiche de 6 feuilles A4'
+    },
+    generations: defineTranslation('{count:plural}', {
+      plural: {
+        count: { one: '{?} génération', other: '{?} générations' }
+      }
+    }),
+    intro:
+      'Toute la famille sur une feuille, avec la légende, et un code pour retrouver l’arbre à jour.',
+    legend: {
+      adoption: 'Enfant adopté : trait double',
+      child: 'Enfant',
+      deceased: 'Décès : vignette mate',
+      ended: 'Divorce ou séparation : le trait est coupé',
+      freeUnion: 'Union libre',
+      marriage: 'Mariage ou PACS',
+      step: 'Enfant du conjoint, enfant accueilli : pointillés',
+      title: 'Légende',
+      unknownLink: 'Lien inconnu',
+      unknownPerson: 'Personne inconnue : case à compléter'
+    },
+    live: {
+      text: 'Scannez avec l’appareil photo du téléphone : l’arbre à jour, à consulter.',
+      title: 'L’arbre vivant'
+    },
+    loading: 'L’aperçu arrive…',
+    making: 'Préparation du PDF…',
+    posterHint:
+      'Six feuilles à imprimer chez vous. Coupez chaque feuille au trait plein, puis collez-la sur sa voisine jusqu’aux pointillés.',
+    printedOn: defineTranslation('Imprimé le {day:date} · Arbor', {
+      date: { day: { day: 'numeric', month: 'long', year: 'numeric' } }
+    }),
+    tile: 'Feuille {number:number} sur {count:number} · rangée {row:number}, colonne {column:number}',
+    title: 'Imprimer l’arbre'
   },
   sheet: {
     atPlace: 'à {place}',

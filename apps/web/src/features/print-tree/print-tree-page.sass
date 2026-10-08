@@ -1,0 +1,52 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .print-tree-page
+    @include layout.column(72rem)
+    display: grid
+    gap: var(--space-2xl)
+    justify-items: start
+    padding-block: var(--space-2xl) var(--space-section)
+
+    .print-tree-head
+      display: grid
+      gap: var(--space-m)
+
+    .print-tree-title
+      @include typography.headline
+      text-wrap: balance
+
+    .print-tree-intro,
+    .print-tree-hint,
+    .print-tree-loading
+      color: var(--ink-soft)
+      max-width: var(--measure)
+      text-wrap: pretty
+
+    .print-tree-controls
+      display: grid
+      gap: var(--space-m)
+      justify-items: start
+
+    // The sheet lies on the page as paper does: pure white whatever the theme, with the drop of a sheet on a table.
+    .print-tree-preview
+      background: var(--print-paper)
+      box-shadow: 0 1px 2px color-mix(in oklch, var(--shadow) 25%, transparent), 0 18px 32px -20px color-mix(in oklch, var(--shadow) 60%, transparent)
+      display: grid
+      width: 100%
+
+    .print-tree-sheet,
+    .print-tree-tiles
+      grid-area: 1 / 1
+      height: auto
+      width: 100%
+
+    .print-tree-tiles
+      pointer-events: none
+
+    .print-tile
+      fill: none
+      stroke: var(--focus)
+      stroke-dasharray: 3 2
+      stroke-width: 0.6

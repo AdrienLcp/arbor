@@ -55,6 +55,9 @@ export const personSheetPathFor = ({
 export const familySettingsPathFor = (familyId: FamilyId): string =>
   pathFor(paths.familySettings, { familyId })
 
+export const familyPrintPathFor = (familyId: FamilyId): string =>
+  pathFor(paths.familyPrint, { familyId })
+
 export const familyBinPathFor = (familyId: FamilyId): string =>
   pathFor(paths.familyBin, { familyId })
 

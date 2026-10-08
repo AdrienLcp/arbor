@@ -24,6 +24,10 @@ const pageFor = {
   [paths.familyHistory]: async () => ({
     Component: (await import('@/features/history/history-page')).HistoryPage
   }),
+  [paths.familyPrint]: async () => ({
+    Component: (await import('@/features/print-tree/print-tree-page'))
+      .PrintTreePage
+  }),
   [paths.familySettings]: async () => ({
     Component: (await import('@/features/family-pages/family-settings-page'))
       .FamilySettingsPage
@@ -60,7 +64,8 @@ const FAMILY_PAGES = [
   paths.familyShare,
   paths.familySettings,
   paths.familyHistory,
-  paths.familyBin
+  paths.familyBin,
+  paths.familyPrint
 ] as const satisfies readonly RoutedPath[]
 
 /** Pages drawn over another one, which stays on screen beside them: a person's sheet over the tree. */
