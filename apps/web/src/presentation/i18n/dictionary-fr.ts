@@ -57,15 +57,6 @@ export const FR_DICTIONARY = defineDictionary({
     save: 'Ajouter à l’arbre',
     siblingParents: 'Enfant de {names}, comme {name}.',
     title: 'Ajouter un proche de {name}',
-    unionDate: 'Date de l’union',
-    unionKind: {
-      label: 'Leur union',
-      marriage: 'Mariage',
-      pacs: 'PACS',
-      partnership: 'Union libre',
-      unknown: 'Sans précision'
-    },
-    unionPlace: 'Lieu de l’union',
     withPartner: 'Avec {name}',
     withWhom: 'Avec qui ?'
   },
@@ -152,6 +143,15 @@ export const FR_DICTIONARY = defineDictionary({
       deathDate: 'Date du décès',
       deathPlace: 'Lieu du décès',
       givenNames: 'Prénoms',
+      life: 'En vie ou décédé',
+      lives: {
+        alive: 'En vie',
+        deceased: {
+          female: 'Décédée',
+          male: 'Décédé',
+          unknown: 'Décédé(e)'
+        }
+      },
       notesHint: 'Un métier, un souvenir, d’où vient une information.',
       open: 'Corriger une information',
       sex: 'Femme ou homme',
@@ -555,6 +555,28 @@ export const FR_DICTIONARY = defineDictionary({
       out: 'Réduire',
       recentre: 'Revenir sur la personne au centre'
     }
+  },
+  union: {
+    date: 'Date de l’union',
+    edit: {
+      open: 'Corriger l’union',
+      title: 'L’union de {names}'
+    },
+    end: {
+      date: 'Date de la fin',
+      divorce: 'Divorce',
+      label: 'Fin de l’union',
+      none: 'Aucune',
+      separation: 'Séparation'
+    },
+    kind: {
+      label: 'Leur union',
+      marriage: 'Mariage',
+      pacs: 'PACS',
+      partnership: 'Union libre',
+      unknown: 'Sans précision'
+    },
+    place: 'Lieu de l’union'
   },
   whoAmI: {
     intro:

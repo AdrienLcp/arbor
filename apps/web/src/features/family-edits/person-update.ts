@@ -5,7 +5,7 @@ import {
   personFieldsSchema
 } from '@arbor/protocol/person'
 
-type PersonField = keyof PersonFields
+import { fieldChanges } from './field-changes'
 
 /** The fields of a person a sheet's form can change. */
 const EDITABLE_FIELDS = [
@@ -16,34 +16,20 @@ const EDITABLE_FIELDS = [
   'notes',
   'sex',
   'surname'
-] as const satisfies readonly PersonField[]
-
-const fieldsOf = (
-  source: PersonFields,
-  fields: readonly PersonField[]
-): PersonFields =>
-  personFieldsSchema.parse(
-    Object.fromEntries(fields.map((field) => [field, source[field]]))
-  )
+] as const satisfies readonly (keyof PersonFields)[]
 
 /** The change a form makes to a person, its fields before and after; `null` when nothing differs. */
 export const personUpdate = (
   person: Person,
   edited: PersonFields
 ): EntityOperation | null => {
-  const offered = EDITABLE_FIELDS.filter((field) => edited[field] !== undefined)
-  // Both sides go through the same schema, so their keys come out in one order and compare as text.
-  const before = fieldsOf(person, offered)
-  const after = fieldsOf(edited, offered)
-  const changed = offered.filter(
-    (field) => JSON.stringify(before[field]) !== JSON.stringify(after[field])
+  const changes = fieldChanges(
+    personFieldsSchema,
+    EDITABLE_FIELDS,
+    person,
+    edited
   )
-  if (changed.length === 0) return null
-
-  return {
-    after: fieldsOf(edited, changed),
-    before: fieldsOf(person, changed),
-    personId: person.id,
-    type: 'person.update'
-  }
+  return changes === null
+    ? null
+    : { ...changes, personId: person.id, type: 'person.update' }
 }

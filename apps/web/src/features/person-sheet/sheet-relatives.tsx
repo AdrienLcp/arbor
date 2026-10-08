@@ -21,6 +21,7 @@ import {
 } from '@/infrastructure/router/navigation'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
+import { EditUnionAction } from './edit-union-action'
 import { useUnionStory } from './union-story'
 
 type SheetRelativesProps = {
@@ -156,6 +157,13 @@ export const SheetRelatives: React.FC<SheetRelativesProps> = ({
                 />
                 <span>{unionStory(union)}</span>
               </p>
+              <EditUnionAction
+                partnerNames={[
+                  face.name,
+                  ...(partner === null ? [] : [partner.name])
+                ]}
+                union={union}
+              />
             </div>
           ))}
         </SheetGroup>

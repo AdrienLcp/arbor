@@ -23,7 +23,7 @@ import { TextAreaField } from '@/presentation/components/text-area-field'
 import { TextField } from '@/presentation/components/text-field'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
-import './edit-person-form.sass'
+import './sheet-edit-form.sass'
 
 type EditPersonFormProps = {
   edit: FamilyEdit
@@ -31,7 +31,11 @@ type EditPersonFormProps = {
   person: Person
 }
 
-/** Fixes what the family knows of a person: names, sex, birth, death when recorded, notes. */
+/** Whether the family knows the person has died: their death, even with nothing known about it, or none. */
+const LIVES = ['alive', 'deceased'] as const
+type Life = (typeof LIVES)[number]
+
+/** Fixes what the family knows of a person: names, sex, birth, death, notes. */
 export const EditPersonForm: React.FC<EditPersonFormProps> = ({
   edit,
   onDone,
@@ -46,6 +50,9 @@ export const EditPersonForm: React.FC<EditPersonFormProps> = ({
     dateDraftOf(person.birth?.date ?? null)
   )
   const [birthPlace, setBirthPlace] = useState(person.birth?.place ?? '')
+  const [life, setLife] = useState<Life>(
+    person.death === null ? 'alive' : 'deceased'
+  )
   const [deathDate, setDeathDate] = useState<DateDraft>(
     dateDraftOf(person.death?.date ?? null)
   )
@@ -55,18 +62,25 @@ export const EditPersonForm: React.FC<EditPersonFormProps> = ({
 
   const birth = fuzzyDateOf(birthDate)
   const death = fuzzyDateOf(deathDate)
-  const isDeceased = person.death !== null
+  const isDeceased = life === 'deceased'
 
   const saveEdits = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setHasTriedSaving(true)
-    if (birth.status === 'failure' || death.status === 'failure') return
+    if (
+      birth.status === 'failure' ||
+      (isDeceased && death.status === 'failure')
+    )
+      return
     const update = personUpdate(person, {
       birth: occurrenceOf(birth.data, birthPlace),
       birthSurname: textOrNull(birthSurname),
       // A recorded death stays recorded with nothing known about it: "died, details unknown".
       death: isDeceased
-        ? { date: death.data, place: textOrNull(deathPlace) }
+        ? {
+            date: death.status === 'success' ? death.data : null,
+            place: textOrNull(deathPlace)
+          }
         : null,
       givenNames: givenNames.trim(),
       notes: notes.trim(),
@@ -81,7 +95,7 @@ export const EditPersonForm: React.FC<EditPersonFormProps> = ({
   }
 
   return (
-    <Form className='edit-person-form' onSubmit={saveEdits}>
+    <Form className='sheet-edit-form' onSubmit={saveEdits}>
       <TextField
         autoComplete='off'
         label={translate('edit.person.givenNames')}
@@ -110,7 +124,7 @@ export const EditPersonForm: React.FC<EditPersonFormProps> = ({
         }))}
         value={sex}
       />
-      <div className='edit-person-occurrence'>
+      <div className='sheet-edit-occurrence'>
         <FuzzyDateField
           label={translate('edit.person.birthDate')}
           onChange={setBirthDate}
@@ -126,24 +140,40 @@ export const EditPersonForm: React.FC<EditPersonFormProps> = ({
           value={birthPlace}
         />
       </div>
-      {isDeceased ? (
-        <div className='edit-person-occurrence'>
-          <FuzzyDateField
-            label={translate('edit.person.deathDate')}
-            onChange={setDeathDate}
-            problem={
-              hasTriedSaving && death.status === 'failure' ? death.error : null
-            }
-            value={deathDate}
-          />
-          <TextField
-            autoComplete='off'
-            label={translate('edit.person.deathPlace')}
-            onChange={setDeathPlace}
-            value={deathPlace}
-          />
-        </div>
-      ) : null}
+      <div className='sheet-edit-occurrence'>
+        <SegmentedControl
+          label={translate('edit.person.life')}
+          onChange={setLife}
+          options={LIVES.map((value) => ({
+            label:
+              value === 'alive'
+                ? translate('edit.person.lives.alive')
+                : translate(`edit.person.lives.deceased.${sex}`),
+            value
+          }))}
+          value={life}
+        />
+        {isDeceased ? (
+          <>
+            <FuzzyDateField
+              label={translate('edit.person.deathDate')}
+              onChange={setDeathDate}
+              problem={
+                hasTriedSaving && death.status === 'failure'
+                  ? death.error
+                  : null
+              }
+              value={deathDate}
+            />
+            <TextField
+              autoComplete='off'
+              label={translate('edit.person.deathPlace')}
+              onChange={setDeathPlace}
+              value={deathPlace}
+            />
+          </>
+        ) : null}
+      </div>
       <TextAreaField
         description={translate('edit.person.notesHint')}
         label={translate('sheet.notes')}
@@ -153,7 +183,7 @@ export const EditPersonForm: React.FC<EditPersonFormProps> = ({
       {edit.failure === null ? null : (
         <EditFailureNotice failure={edit.failure} />
       )}
-      <div className='edit-person-actions'>
+      <div className='sheet-edit-actions'>
         <Button isBlock isPending={edit.isPending} type='submit'>
           {translate('edit.save')}
         </Button>

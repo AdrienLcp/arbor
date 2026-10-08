@@ -56,15 +56,6 @@ export const EN_DICTIONARY = defineDictionary({
     save: 'Add to the tree',
     siblingParents: 'Child of {names}, like {name}.',
     title: 'Add a relative of {name}',
-    unionDate: 'Date of the union',
-    unionKind: {
-      label: 'Their union',
-      marriage: 'Marriage',
-      pacs: 'Civil partnership',
-      partnership: 'Living together',
-      unknown: 'Not said'
-    },
-    unionPlace: 'Place of the union',
     withPartner: 'With {name}',
     withWhom: 'With whom?'
   },
@@ -148,6 +139,15 @@ export const EN_DICTIONARY = defineDictionary({
       deathDate: 'Date of death',
       deathPlace: 'Place of death',
       givenNames: 'Given names',
+      life: 'Living or deceased',
+      lives: {
+        alive: 'Living',
+        deceased: {
+          female: 'Deceased',
+          male: 'Deceased',
+          unknown: 'Deceased'
+        }
+      },
       notesHint: 'A trade, a memory, where a piece of information comes from.',
       open: 'Fix some information',
       sex: 'Woman or man',
@@ -533,6 +533,28 @@ export const EN_DICTIONARY = defineDictionary({
       out: 'Zoom out',
       recentre: 'Back to the person in the centre'
     }
+  },
+  union: {
+    date: 'Date of the union',
+    edit: {
+      open: 'Fix the union',
+      title: 'The union of {names}'
+    },
+    end: {
+      date: 'Date it ended',
+      divorce: 'Divorce',
+      label: 'End of the union',
+      none: 'None',
+      separation: 'Separation'
+    },
+    kind: {
+      label: 'Their union',
+      marriage: 'Marriage',
+      pacs: 'Civil partnership',
+      partnership: 'Living together',
+      unknown: 'Not said'
+    },
+    place: 'Place of the union'
   },
   whoAmI: {
     intro:

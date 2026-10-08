@@ -4,7 +4,7 @@ import { useState } from 'react'
 import type { EntityId } from '@arbor/protocol/entity-id'
 import type { FiliationKind } from '@arbor/protocol/filiation'
 import { SEXES } from '@arbor/protocol/person'
-import type { Union } from '@arbor/protocol/union'
+import { UNION_KINDS, type Union } from '@arbor/protocol/union'
 
 import type { CloseFamily } from '@arbor/core/relatives/close-family'
 
@@ -54,12 +54,6 @@ const LINK_KINDS = [
   'step',
   'foster'
 ] as const satisfies readonly FiliationKind[]
-const UNION_KINDS = [
-  'marriage',
-  'pacs',
-  'partnership',
-  'unknown'
-] as const satisfies readonly Union['kind'][]
 
 /** "No other parent known": the child of a single parent. */
 const ALONE = 'alone'
@@ -221,16 +215,16 @@ export const AddRelativeForm: React.FC<AddRelativeFormProps> = ({
       {relation === 'partner' ? (
         <div className='add-relative-link'>
           <SegmentedControl
-            label={translate('add.unionKind.label')}
+            label={translate('union.kind.label')}
             onChange={setUnionKind}
             options={UNION_KINDS.map((value) => ({
-              label: translate(`add.unionKind.${value}`),
+              label: translate(`union.kind.${value}`),
               value
             }))}
             value={unionKind}
           />
           <FuzzyDateField
-            label={translate('add.unionDate')}
+            label={translate('union.date')}
             onChange={setUnionDate}
             problem={
               hasTriedSaving && unionStart.status === 'failure'
@@ -241,7 +235,7 @@ export const AddRelativeForm: React.FC<AddRelativeFormProps> = ({
           />
           <TextField
             autoComplete='off'
-            label={translate('add.unionPlace')}
+            label={translate('union.place')}
             onChange={setUnionPlace}
             value={unionPlace}
           />
