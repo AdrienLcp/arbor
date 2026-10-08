@@ -1,4 +1,5 @@
 import type React from 'react'
+import { useState } from 'react'
 
 import type { EntityId } from '@arbor/protocol/entity-id'
 
@@ -8,6 +9,11 @@ import { familyLineage } from '@arbor/core/tree-layout/family-lineage'
 
 import { ONLOOKER } from '@/features/family-access/family-access'
 import { rememberedMe } from '@/features/family-access/remembered-families'
+import {
+  type Adding,
+  AddRelativeDialog
+} from '@/features/family-edits/add-relative-dialog'
+import { useFamilyEdit } from '@/features/family-edits/use-family-edit'
 import { FocusCard } from '@/features/family-tree/focus-card'
 import { PersonSearch } from '@/features/family-tree/person-search'
 import { slotNumbersOf } from '@/features/family-tree/slot-numbers'
@@ -69,6 +75,10 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   })
   const personIds = [...family.persons.keys()]
   const faces = usePersonFaces()
+  const edit = useFamilyEdit()
+  const canAdd = edit.canEdit && edit.author !== null
+  const [adding, setAdding] = useState<Adding | null>(null)
+  const focus = faces.get(view.focusId)
   const focusSheetPath = personSheetPathFor({
     familyId,
     personId: view.focusId
@@ -119,6 +129,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
           // A new page opens at its top, its parents in sight.
           key={view.focusId}
           lineage={familyLineage(family)}
+          onAdd={canAdd ? setAdding : undefined}
           onPressPerson={pressPerson}
           sheetPath={focusSheetPath}
         />
@@ -128,7 +139,6 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
       layout: layoutOfView(family, view),
       persons: family.persons
     })
-    const focus = faces.get(view.focusId)
     return (
       <>
         <TreeCanvas
@@ -182,6 +192,13 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
         <div className='family-tree-drawing'>{drawing()}</div>
         {sheet}
       </div>
+      {focus === undefined ? null : (
+        <AddRelativeDialog
+          adding={adding}
+          anchor={focus}
+          onChange={setAdding}
+        />
+      )}
     </Main>
   )
 }

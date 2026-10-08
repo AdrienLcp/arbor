@@ -9,6 +9,66 @@ const MEGABYTES = {
 
 /** The reference dictionary: its keys are the type every other locale is checked against. */
 export const FR_DICTIONARY = defineDictionary({
+  add: {
+    alone: 'Sans autre parent connu',
+    childKind: {
+      adoption: 'Adoption',
+      birth: 'Naissance',
+      foster: 'Accueil',
+      step: 'Élevé'
+    },
+    linkKind: 'Son lien avec {name}',
+    open: 'Ajouter un enfant, un parent, un conjoint…',
+    otherChoice: 'Choisir un autre lien',
+    parentKind: {
+      adoption: 'Adoption',
+      birth: 'Naissance',
+      foster: 'Accueil',
+      step: 'Beau-parent'
+    },
+    quick: {
+      child: 'Ajouter un enfant',
+      parent: 'Ajouter un parent'
+    },
+    relation: {
+      child: {
+        dialog: 'Ajouter un enfant de {name}',
+        hint: 'né, adopté ou élevé par {name}',
+        title: 'Un enfant'
+      },
+      parent: {
+        dialog: 'Ajouter un parent de {name}',
+        hint: 'la mère ou le père de {name}, ou qui l’a élevé',
+        title: 'Un parent'
+      },
+      partner: {
+        dialog: 'Ajouter un conjoint de {name}',
+        hint: 'mariage, PACS ou union libre avec {name}',
+        title: 'Un conjoint'
+      },
+      sibling: {
+        dialog: 'Ajouter un frère ou une sœur de {name}',
+        hint: 'un autre enfant des parents de {name}',
+        needsParent:
+          'Ajoutez d’abord un de ses parents : le frère ou la sœur sera leur enfant.',
+        title: 'Un frère ou une sœur'
+      }
+    },
+    save: 'Ajouter à l’arbre',
+    siblingParents: 'Enfant de {names}, comme {name}.',
+    title: 'Ajouter un proche de {name}',
+    unionDate: 'Date de l’union',
+    unionKind: {
+      label: 'Leur union',
+      marriage: 'Mariage',
+      pacs: 'PACS',
+      partnership: 'Union libre',
+      unknown: 'Sans précision'
+    },
+    unionPlace: 'Lieu de l’union',
+    withPartner: 'Avec {name}',
+    withWhom: 'Avec qui ?'
+  },
   app: {
     name: 'Arbor'
   },

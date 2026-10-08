@@ -1,0 +1,19 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .add-relative-form
+    display: grid
+    gap: var(--space-xl)
+
+    // How the newcomer is tied to the person, and their birth: each a group under a rule.
+    .add-relative-link
+      border-top: var(--stroke-thin) solid var(--ghost-soft)
+      display: grid
+      gap: var(--space-l)
+      padding-top: var(--space-l)
+
+    .add-relative-note
+      @include typography.body
+      border-top: var(--stroke-thin) solid var(--ghost-soft)
+      color: var(--ink-soft)
+      padding-top: var(--space-l)

@@ -1,0 +1,46 @@
+@use '../styles/focus'
+@use '../styles/typography'
+
+@layer components
+  .choice-list
+    display: grid
+    gap: var(--space-s)
+
+    .field-label
+      @include typography.name
+
+    .choice
+      @include focus.ring
+      @include typography.body
+      align-items: center
+      border: var(--stroke-thin) solid var(--ghost-soft)
+      border-radius: var(--radius-frame)
+      cursor: pointer
+      display: flex
+      gap: var(--space-m)
+      min-height: 56px
+      padding: var(--space-s) var(--space-m)
+      transition: border-color var(--transition-fast) var(--ease-out), background-color var(--transition-fast) var(--ease-out)
+
+      &[data-hovered]
+        background: var(--paper-2)
+
+      &[data-selected]
+        border-color: var(--ink)
+        font-weight: 700
+
+    // The round mark a radio has always had: an empty ring, filled when chosen.
+    .choice-mark
+      border: var(--stroke-bold) solid var(--ink)
+      border-radius: var(--radius-pill)
+      flex: none
+      height: 22px
+      position: relative
+      width: 22px
+
+    .choice[data-selected] .choice-mark::after
+      background: var(--ink)
+      border-radius: inherit
+      content: ''
+      inset: 4px
+      position: absolute

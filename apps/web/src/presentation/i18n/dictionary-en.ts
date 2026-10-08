@@ -8,6 +8,66 @@ const MEGABYTES = {
 } as const
 
 export const EN_DICTIONARY = defineDictionary({
+  add: {
+    alone: 'No other parent known',
+    childKind: {
+      adoption: 'Adoption',
+      birth: 'Birth',
+      foster: 'Fostering',
+      step: 'Raised'
+    },
+    linkKind: 'Their link to {name}',
+    open: 'Add a child, a parent, a partner…',
+    otherChoice: 'Choose another link',
+    parentKind: {
+      adoption: 'Adoption',
+      birth: 'Birth',
+      foster: 'Fostering',
+      step: 'Step-parent'
+    },
+    quick: {
+      child: 'Add a child',
+      parent: 'Add a parent'
+    },
+    relation: {
+      child: {
+        dialog: 'Add a child of {name}',
+        hint: 'born to, adopted or raised by {name}',
+        title: 'A child'
+      },
+      parent: {
+        dialog: 'Add a parent of {name}',
+        hint: 'the mother or father of {name}, or who raised them',
+        title: 'A parent'
+      },
+      partner: {
+        dialog: 'Add a partner of {name}',
+        hint: 'marriage, civil partnership or living together with {name}',
+        title: 'A partner'
+      },
+      sibling: {
+        dialog: 'Add a brother or sister of {name}',
+        hint: 'another child of the parents of {name}',
+        needsParent:
+          'Add one of their parents first: the brother or sister will be their child.',
+        title: 'A brother or a sister'
+      }
+    },
+    save: 'Add to the tree',
+    siblingParents: 'Child of {names}, like {name}.',
+    title: 'Add a relative of {name}',
+    unionDate: 'Date of the union',
+    unionKind: {
+      label: 'Their union',
+      marriage: 'Marriage',
+      pacs: 'Civil partnership',
+      partnership: 'Living together',
+      unknown: 'Not said'
+    },
+    unionPlace: 'Place of the union',
+    withPartner: 'With {name}',
+    withWhom: 'With whom?'
+  },
   app: {
     name: 'Arbor'
   },

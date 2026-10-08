@@ -1,7 +1,6 @@
 import type React from 'react'
 import { useState } from 'react'
 
-import type { Occurrence } from '@arbor/protocol/occurrence'
 import { type Person, SEXES } from '@arbor/protocol/person'
 
 import { EditFailureNotice } from '@/features/family-edits/edit-failure-notice'
@@ -11,6 +10,10 @@ import {
   fuzzyDateOf
 } from '@/features/family-edits/fuzzy-date-draft'
 import { FuzzyDateField } from '@/features/family-edits/fuzzy-date-field'
+import {
+  occurrenceOf,
+  textOrNull
+} from '@/features/family-edits/occurrence-fields'
 import { personUpdate } from '@/features/family-edits/person-update'
 import type { FamilyEdit } from '@/features/family-edits/use-family-edit'
 import { Button } from '@/presentation/components/button'
@@ -27,17 +30,6 @@ type EditPersonFormProps = {
   onDone: () => void
   person: Person
 }
-
-const textOrNull = (typed: string): string | null => typed.trim() || null
-
-/** What the fields say happened: `null` when neither a date nor a place is known. */
-const occurrenceOf = (
-  date: Occurrence['date'],
-  place: string
-): Occurrence | null =>
-  date === null && textOrNull(place) === null
-    ? null
-    : { date, place: textOrNull(place) }
 
 /** Fixes what the family knows of a person: names, sex, birth, death when recorded, notes. */
 export const EditPersonForm: React.FC<EditPersonFormProps> = ({

@@ -6,9 +6,11 @@ import type { EntityId } from '@arbor/protocol/entity-id'
 import { closeFamilyOf } from '@arbor/core/relatives/close-family'
 import type { FamilyLineage } from '@arbor/core/tree-layout/family-lineage'
 
+import type { Relation } from '@/features/family-edits/relation'
+import { Button } from '@/presentation/components/button'
 import { ButtonLink } from '@/presentation/components/button-link'
 import { generationClass } from '@/presentation/components/generation-class'
-import { SheetIcon } from '@/presentation/components/icons'
+import { AddIcon, SheetIcon } from '@/presentation/components/icons'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { FocusCouples } from './focus-couples'
@@ -25,6 +27,8 @@ type TreeSpreadProps = {
   faces: ReadonlyMap<EntityId, PersonFace>
   focusId: EntityId
   lineage: FamilyLineage
+  /** Opens the form adding a relative to the focus person; left out where the visitor cannot change the tree. */
+  onAdd?: (relation: Relation) => void
   onPressPerson: (personId: EntityId) => void
   /** Where the focus person's sheet opens. */
   sheetPath: string
@@ -43,6 +47,16 @@ const birthsOf = (
     ? null
     : { first: Math.min(...years), last: Math.max(...years) }
 }
+
+const AddButton: React.FC<{ label: string; onPress: () => void }> = ({
+  label,
+  onPress
+}) => (
+  <Button className='spread-add' onPress={onPress} variant='quiet'>
+    <AddIcon aria-hidden='true' />
+    {label}
+  </Button>
+)
 
 const Band: React.FC<{
   aside?: string
@@ -70,6 +84,7 @@ export const TreeSpread: React.FC<TreeSpreadProps> = ({
   faces,
   focusId,
   lineage,
+  onAdd,
   onPressPerson,
   sheetPath
 }) => {
@@ -153,6 +168,12 @@ export const TreeSpread: React.FC<TreeSpreadProps> = ({
             ))}
           </ul>
         )}
+        {onAdd === undefined || parents.length >= 2 ? null : (
+          <AddButton
+            label={translate('add.quick.parent')}
+            onPress={() => onAdd('parent')}
+          />
+        )}
       </Band>
       <Band
         aside={translate('tree.generationShort', { number: focus.generation })}
@@ -205,6 +226,12 @@ export const TreeSpread: React.FC<TreeSpreadProps> = ({
               </li>
             ))}
           </ul>
+        )}
+        {onAdd === undefined ? null : (
+          <AddButton
+            label={translate('add.quick.child')}
+            onPress={() => onAdd('child')}
+          />
         )}
       </Band>
       {siblings.length === 0 ? null : (

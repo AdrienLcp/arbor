@@ -3,6 +3,10 @@ import { useState } from 'react'
 
 import type { Person } from '@arbor/protocol/person'
 
+import {
+  type Adding,
+  AddRelativeDialog
+} from '@/features/family-edits/add-relative-dialog'
 import { useFamilyEdit } from '@/features/family-edits/use-family-edit'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
 import type { PersonFace } from '@/features/family-tree/person-face'
@@ -10,7 +14,7 @@ import { whoAmIPathFor } from '@/infrastructure/router/navigation'
 import { Button } from '@/presentation/components/button'
 import { ButtonLink } from '@/presentation/components/button-link'
 import { FormDialog } from '@/presentation/components/form-dialog'
-import { EditIcon, PersonIcon } from '@/presentation/components/icons'
+import { AddIcon, EditIcon, PersonIcon } from '@/presentation/components/icons'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { EditPersonForm } from './edit-person-form'
@@ -28,6 +32,7 @@ export const SheetActions: React.FC<SheetActionsProps> = ({ face, person }) => {
   const { familyId } = useOpenFamily()
   const edit = useFamilyEdit()
   const [isEditing, setIsEditing] = useState(false)
+  const [adding, setAdding] = useState<Adding | null>(null)
 
   if (!edit.canEdit) return null
 
@@ -50,6 +55,10 @@ export const SheetActions: React.FC<SheetActionsProps> = ({ face, person }) => {
 
   return (
     <div className='sheet-actions'>
+      <Button isBlock onPress={() => setAdding('choose')}>
+        <AddIcon aria-hidden='true' />
+        {translate('add.open')}
+      </Button>
       <Button isBlock onPress={() => setIsEditing(true)} variant='ghost'>
         <EditIcon aria-hidden='true' />
         {translate('edit.person.open')}
@@ -63,6 +72,7 @@ export const SheetActions: React.FC<SheetActionsProps> = ({ face, person }) => {
       >
         <EditPersonForm edit={edit} onDone={closeEditing} person={person} />
       </FormDialog>
+      <AddRelativeDialog adding={adding} anchor={face} onChange={setAdding} />
     </div>
   )
 }
