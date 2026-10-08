@@ -10,6 +10,7 @@
     "@vitest/coverage-v8": "~5.0.3",
     "concurrently": "^10.0.5",
     "cspell": "^10.3.6",
+    "lighthouse": "^13.5.0",
     "typescript": "^7.0.2",
     "vitest": "^5.0.2"
   },
@@ -25,6 +26,8 @@
     "build": "pnpm --filter \"./packages/**\" build && pnpm --filter @arbor/web build && pnpm --filter @arbor/worker build",
     "deps:upgrade": "corepack use pnpm@latest && pnpm -r up -L && biome migrate --write",
     "dev": "concurrently --names worker,web --kill-others-on-fail \"pnpm --filter @arbor/worker dev\" \"pnpm --filter @arbor/web dev\"",
+    "lighthouse": "node scripts/lighthouse.ts",
+    "lighthouse:quick": "node scripts/lighthouse.ts --quick",
     "lint": "biome check --write",
     "lint:ci": "biome ci",
     "seed": "pnpm --filter @arbor/worker seed",

@@ -11,7 +11,8 @@ Goal: the father uses it for real, and the portfolio shows it.
    gets a 404 and shows the monogram. Seed real image files with the demo, or
    drop those records.
 2. Lighthouse (mobile and desktop) on the landing, the demo tree and a person
-   sheet; fix what it finds. Same gate shape as the portfolio's.
+   sheet; fix what it finds. Same gate shape as the portfolio’s, minus
+   performance: Arbor gates accessibility, best practices and SEO only.
 3. README: what it is, screenshots, the free-tier architecture in five lines,
    develop/deploy.
 4. Portfolio (`C:/git/portfolio`): a project page for Arbor, following the

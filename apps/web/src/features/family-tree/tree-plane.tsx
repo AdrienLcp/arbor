@@ -109,11 +109,17 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
 
     const isDeceased = !isLiving(person, today)
     const years = lifeYears(person, !isDeceased)
-    const name = personName(person) ?? translate('common.unnamedPerson')
+    const isUnnamed = personName(person) === null
     const sticker = (
       <SlotButton
         aria-describedby={instructionsId}
-        aria-label={years === '' ? name : `${name}, ${years}`}
+        aria-label={
+          isUnnamed
+            ? [translate('common.unnamedPerson'), years]
+                .filter((words) => words !== '')
+                .join(', ')
+            : undefined
+        }
         className={classNames('tree-card', isUnlit(card) && 'unlit')}
         excludeFromTabOrder={card.key !== activeKey}
         key={card.key}

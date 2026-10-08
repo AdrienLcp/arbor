@@ -1,6 +1,6 @@
 import { classNames } from '@adrienlcp/react'
 import type React from 'react'
-import { ViewTransition } from 'react'
+import { useId, ViewTransition } from 'react'
 
 import type { EntityId } from '@arbor/protocol/entity-id'
 import type { Union } from '@arbor/protocol/union'
@@ -68,6 +68,7 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
   onPressPerson
 }) => {
   const translate = useTranslate()
+  const tagIdPrefix = useId()
   const kin = useKinWords()
   const unionWords = useUnionWords()
   const wordsOf = ({ partner, union }: FocusCouple): string[] => [
@@ -76,6 +77,11 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
       : kin.partner(partner, union),
     ...(union === null ? [] : [unionWords(union).join(', ')])
   ]
+
+  const keyOf = ({ partner, union }: FocusCouple): string =>
+    `${union?.id ?? 'no-union'}-${partner?.id ?? 'unknown'}`
+  const tagIdOf = (couple: FocusCouple): string =>
+    `${tagIdPrefix}-${keyOf(couple)}`
 
   if (couples.length > MOST_PARTNERS_IN_A_ROW) {
     return (
@@ -106,10 +112,7 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
     const partner = couple.partner
 
     return (
-      <div
-        className='focus-couples-partner'
-        key={`${couple.union?.id ?? 'no-union'}-${partner?.id ?? 'unknown'}`}
-      >
+      <div className='focus-couples-partner' key={keyOf(couple)}>
         {partner === null ? (
           <GhostSlot
             className='unnumbered'
@@ -120,7 +123,14 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
           />
         ) : (
           <SlotButton
-            aria-label={`${partner.name}, ${wordsOf(couple).join(', ')}`}
+            aria-describedby={tagIdOf(couple)}
+            aria-label={
+              partner.givenNames === '' && partner.surname === ''
+                ? [partner.name, partner.years]
+                    .filter((words) => words !== '')
+                    .join(', ')
+                : undefined
+            }
             onPress={() => onPressPerson(partner.id)}
           >
             <ViewTransition name={`person-${partner.id}`}>
@@ -148,6 +158,7 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
       <span
         aria-hidden='true'
         className={classNames('focus-couples-tag', side)}
+        id={tagIdOf(couple)}
       >
         {word}
         {when.map((line) => (

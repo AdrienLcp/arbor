@@ -36,7 +36,7 @@ const PhotoThumbnail: React.FC<{
   const url = usePhotoUrl(photo.id, 'thumbnail')
   return (
     <Button
-      aria-label={label}
+      aria-label={isPortrait ? `${portraitWord}, ${label}` : label}
       className='photo-thumbnail'
       onPress={onPress}
       variant='quiet'
@@ -45,7 +45,7 @@ const PhotoThumbnail: React.FC<{
         {url === null ? null : <img alt='' src={url} />}
       </span>
       {isPortrait ? (
-        <span className='photo-thumbnail-tag'>{portraitWord}</span>
+        <span className='photo-thumbnail-tag'>{portraitWord} </span>
       ) : null}
       {photo.caption === '' ? null : (
         <span className='photo-thumbnail-caption'>{photo.caption}</span>
