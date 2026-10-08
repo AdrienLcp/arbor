@@ -43,6 +43,10 @@ export const layoutOfView = (
   return around.status === 'success' ? around.data : layoutWholeFamily(family)
 }
 
+/** Whether a person is drawn in the tree: recorded, and not in the bin. */
+export const isInTree = (family: FamilyState, personId: EntityId): boolean =>
+  family.persons.has(personId) && !family.binnedPersonIds.has(personId)
+
 /** Who the tree turns around on arrival: the visitor when they are in it, else the top of the whole family. */
 export const firstFocusId = ({
   family,
@@ -51,13 +55,7 @@ export const firstFocusId = ({
   family: FamilyState
   me: EntityId | null
 }): EntityId | null => {
-  if (
-    me !== null &&
-    family.persons.has(me) &&
-    !family.binnedPersonIds.has(me)
-  ) {
-    return me
-  }
+  if (me !== null && isInTree(family, me)) return me
 
   const root = layoutWholeFamily(family).cards.find(
     (card) => card.kind === 'person'

@@ -16,10 +16,15 @@ export type TreeViewControls = {
 
 /** What the tree shows, and the controls that change it. */
 export const useTreeView = ({
+  fallbackFocusId,
   initialFocusId,
   isFocusMe,
+  isInTree,
   shownPersonId
 }: {
+  /** Where the tree turns when the person in its middle leaves it, put in the bin. */
+  fallbackFocusId: EntityId | null
+  isInTree: (personId: EntityId) => boolean
   initialFocusId: EntityId
   /** On arrival, a visitor who is in the tree sees it around themselves; anyone else sees the whole family. */
   isFocusMe: boolean
@@ -38,6 +43,14 @@ export const useTreeView = ({
     if (shownPersonId !== null) {
       setView((current) => ({ ...current, focusId: shownPersonId }))
     }
+  }
+
+  if (
+    !isInTree(view.focusId) &&
+    fallbackFocusId !== null &&
+    fallbackFocusId !== view.focusId
+  ) {
+    setView((current) => ({ ...current, focusId: fallbackFocusId }))
   }
 
   const changeView = (change: Partial<TreeView>) => {

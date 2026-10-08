@@ -23,6 +23,7 @@ import { treeScene } from '@/features/family-tree/tree-scene'
 import { TreeSpread } from '@/features/family-tree/tree-spread'
 import {
   firstFocusId,
+  isInTree,
   layoutOfView,
   TREE_DEPTHS,
   type TreeScope
@@ -51,12 +52,15 @@ import './family-tree-page.sass'
 const PHONE_SCREEN = '(width < 640px)'
 
 type FamilyTreeProps = {
+  /** Where the tree turns when the person in its middle is put in the bin. */
+  fallbackFocusId: EntityId | null
   family: FamilyState
   initialFocusId: EntityId
   isFocusMe: boolean
 }
 
 const FamilyTree: React.FC<FamilyTreeProps> = ({
+  fallbackFocusId,
   family,
   initialFocusId,
   isFocusMe
@@ -69,8 +73,10 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   const sheet = useChildPage()
   const sheetPersonId = useSheetPersonId()
   const { setDepth, setFocus, setScope, showAround, view } = useTreeView({
+    fallbackFocusId,
     initialFocusId,
     isFocusMe,
+    isInTree: (personId) => isInTree(family, personId),
     shownPersonId: sheetPersonId
   })
   const personIds = [...family.persons.keys()]
@@ -212,10 +218,11 @@ export const FamilyTreePage: React.FC = () => {
     me !== null && me !== ONLOOKER && me.kind === 'person' ? me.personId : null
   const family = familyStateOfSnapshot(response.family)
   const sheetPersonId = useSheetPersonId()
+  const arrivalFocusId = firstFocusId({ family, me: myPersonId })
   const focusId =
-    sheetPersonId !== null && family.persons.has(sheetPersonId)
+    sheetPersonId !== null && isInTree(family, sheetPersonId)
       ? sheetPersonId
-      : firstFocusId({ family, me: myPersonId })
+      : arrivalFocusId
 
   return (
     <div className='family-tree-screen'>
@@ -227,6 +234,7 @@ export const FamilyTreePage: React.FC = () => {
         </Main>
       ) : (
         <FamilyTree
+          fallbackFocusId={arrivalFocusId}
           family={family}
           initialFocusId={focusId}
           isFocusMe={focusId === myPersonId}

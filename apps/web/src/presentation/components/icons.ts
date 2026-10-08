@@ -25,6 +25,7 @@ export {
   Search as SearchIcon,
   Settings as SettingsIcon,
   Share2 as ShareIcon,
+  Trash2 as BinIcon,
   TriangleAlert as WarningIcon,
   UserPlus as AddKeeperIcon,
   UserRound as PersonIcon,

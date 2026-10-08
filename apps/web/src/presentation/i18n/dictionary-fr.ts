@@ -63,6 +63,21 @@ export const FR_DICTIONARY = defineDictionary({
   app: {
     name: 'Arbor'
   },
+  bin: {
+    cancel: 'Garder la fiche',
+    children: 'Lien avec ses enfants : {names}',
+    confirm: 'Mettre à la corbeille',
+    leaving: 'Quittent l’arbre avec sa fiche :',
+    nothingLinked:
+      'Rien n’est perdu : la fiche revient dès qu’on la sort de la corbeille.',
+    open: 'Mettre à la corbeille',
+    parents: 'Lien avec ses parents : {names}',
+    partners: 'Union avec {names}',
+    photos: 'Photos : {count:number}',
+    stays:
+      'Ces personnes restent dans l’arbre. Rien n’est perdu : la fiche revient avec ses liens et ses photos dès qu’on la sort de la corbeille.',
+    title: 'Mettre {name} à la corbeille ?'
+  },
   common: {
     failed:
       'Ça n’a pas marché. Vérifiez que le téléphone est connecté à Internet, puis réessayez.',

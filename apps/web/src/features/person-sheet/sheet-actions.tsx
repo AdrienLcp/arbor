@@ -1,7 +1,10 @@
 import type React from 'react'
 import { useState } from 'react'
 
+import type { EntityId } from '@arbor/protocol/entity-id'
 import type { Person } from '@arbor/protocol/person'
+
+import type { FamilyState } from '@arbor/core/family/family-state'
 
 import {
   type Adding,
@@ -17,17 +20,25 @@ import { FormDialog } from '@/presentation/components/form-dialog'
 import { AddIcon, EditIcon, PersonIcon } from '@/presentation/components/icons'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
+import { BinPersonAction } from './bin-person-action'
 import { EditPersonForm } from './edit-person-form'
 
 import './sheet-actions.sass'
 
 type SheetActionsProps = {
   face: PersonFace
+  faces: ReadonlyMap<EntityId, PersonFace>
+  family: FamilyState
   person: Person
 }
 
 /** What a relative can do from a sheet; nothing on a reader's link, and first "who are you?" for an unsigned visitor. */
-export const SheetActions: React.FC<SheetActionsProps> = ({ face, person }) => {
+export const SheetActions: React.FC<SheetActionsProps> = ({
+  face,
+  faces,
+  family,
+  person
+}) => {
   const translate = useTranslate()
   const { familyId } = useOpenFamily()
   const edit = useFamilyEdit()
@@ -63,6 +74,7 @@ export const SheetActions: React.FC<SheetActionsProps> = ({ face, person }) => {
         <EditIcon aria-hidden='true' />
         {translate('edit.person.open')}
       </Button>
+      <BinPersonAction edit={edit} face={face} faces={faces} family={family} />
       <FormDialog
         closeLabel={translate('edit.cancel')}
         isOpen={isEditing}

@@ -145,7 +145,7 @@ export const PersonSheet: React.FC<PersonSheetProps> = ({
         </div>
       )}
       <PersonPhotos family={family} name={face.name} person={person} />
-      <SheetActions face={face} person={person} />
+      <SheetActions face={face} faces={faces} family={family} person={person} />
       <SheetRelatives face={face} faces={faces} family={family} />
     </section>
   )

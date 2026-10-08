@@ -62,6 +62,21 @@ export const EN_DICTIONARY = defineDictionary({
   app: {
     name: 'Arbor'
   },
+  bin: {
+    cancel: 'Keep the sheet',
+    children: 'Link with their children: {names}',
+    confirm: 'Put in the bin',
+    leaving: 'Leaving the tree with this sheet:',
+    nothingLinked:
+      'Nothing is lost: the sheet comes back as soon as someone takes it out of the bin.',
+    open: 'Put in the bin',
+    parents: 'Link with their parents: {names}',
+    partners: 'Union with {names}',
+    photos: 'Photos: {count:number}',
+    stays:
+      'These people stay in the tree. Nothing is lost: the sheet comes back with its links and photos as soon as someone takes it out of the bin.',
+    title: 'Put {name} in the bin?'
+  },
   common: {
     failed:
       'That did not work. Check that the phone is connected to the Internet, then try again.',

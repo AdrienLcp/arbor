@@ -6,6 +6,17 @@
     gap: var(--space-m)
     padding: var(--space-xl) var(--space-l) 0
 
+    .sheet-bin
+      justify-self: start
+
     .sheet-actions-note
       @include typography.body-small
       color: var(--ink-soft)
+
+  // In the bin's question, which sits over the page rather than inside the sheet.
+  .sheet-bin-list
+    display: grid
+    gap: var(--space-xs)
+    list-style: disc
+    margin: var(--space-s) 0
+    padding-inline-start: var(--space-l)
