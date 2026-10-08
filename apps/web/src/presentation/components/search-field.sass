@@ -10,18 +10,15 @@
       @include typography.name
 
     .search-box
+      @include focus.ring-within
       align-items: center
       background: var(--paper)
       border: var(--stroke-bold) solid var(--ink)
       border-radius: var(--radius-frame)
       display: flex
       gap: var(--space-s)
-      min-height: calc(var(--action-height) + var(--space-xs))
+      min-height: calc(var(--control-height) + var(--space-xs))
       padding-inline: var(--space-m) var(--space-xs)
-
-    &[data-focus-within] .search-box
-      outline: var(--ring)
-      outline-offset: calc(var(--space-xs) / 2)
 
     .search-icon
       color: var(--ink-soft)
@@ -35,7 +32,7 @@
       border: 0
       color: var(--ink)
       flex: 1
-      min-height: var(--action-height)
+      min-height: var(--control-height)
       min-width: 0
       outline: none
 

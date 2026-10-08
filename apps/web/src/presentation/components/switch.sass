@@ -7,38 +7,35 @@
     display: inline-flex
     gap: var(--space-m)
     min-height: var(--target)
+    @include focus.ring('.switch-track')
 
     .switch-track
       background: var(--ghost-soft)
       border: var(--stroke-thin) solid var(--ghost)
       border-radius: var(--radius-pill)
       flex: none
-      height: 30px
+      height: 1.875rem
       position: relative
       transition: background-color var(--transition-fast) var(--ease-out)
-      width: 52px
+      width: 3.25rem
 
       &::after
         background: var(--ink)
         border-radius: 50%
         content: ''
-        height: 21px
-        inset-block-start: 3px
-        inset-inline-start: 3px
+        height: 1.3125rem
+        inset-block-start: 0.1875rem
+        inset-inline-start: 0.1875rem
         position: absolute
         transition: translate var(--transition-base) var(--ease-out)
-        width: 21px
-
-    &[data-focus-visible] .switch-track
-      outline: var(--ring)
-      outline-offset: var(--ring-offset)
+        width: 1.3125rem
 
     &[data-selected] .switch-track
       background: var(--g1)
 
       &::after
         background: var(--on-g1)
-        translate: 22px 0
+        translate: 1.375rem 0
 
     &[data-pressed] .switch-track::after
       scale: 0.9

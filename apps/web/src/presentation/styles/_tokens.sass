@@ -101,7 +101,7 @@
     --radius-control: 8px
     --radius-frame: 10px
     --radius-pill: 999px
-    --action-height: 3.25rem
+    --control-height: max(var(--target), 3.25rem)
     --band-cut: 1.375rem
 
     // The Line Speaks Rule: the strokes that tell a relation's kind.
@@ -117,7 +117,7 @@
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1)
     --transition-fast: 160ms
     --transition-base: 200ms
-    --transition-press: 560ms
+    --transition-press: calc(var(--transition-base) * 2.8)
 
     @include layout.wide
       --space-section: 5.5rem
