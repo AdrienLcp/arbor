@@ -51,6 +51,9 @@ export const linkRefusedScreen = (page: Page) => ({
   title: page.getByRole('heading', { name: 'This link no longer works' })
 })
 
+/** A class, not the `dialog` role: a react-aria `Select`'s popover is a dialog too, still fading out as the form closes. */
+export const formDialog = (page: Page) => page.locator('.form-dialog')
+
 export const treePage = (page: Page) => ({
   openSheet: (givenNames: string) =>
     page.getByRole('link', { name: `Open ${givenNames}’s sheet` }),
@@ -78,7 +81,7 @@ export const personSheet = (page: Page) => ({
 })
 
 export const addRelativeDialog = (page: Page) => {
-  const dialog = page.getByRole('dialog')
+  const dialog = formDialog(page)
   return {
     choice: (title: string) =>
       dialog.getByRole('button', { name: new RegExp(`^${title}`) }),
@@ -89,7 +92,7 @@ export const addRelativeDialog = (page: Page) => {
 }
 
 export const editPersonDialog = (page: Page) => {
-  const dialog = page.getByRole('dialog')
+  const dialog = formDialog(page)
   const birth = dialog.getByRole('group', { name: 'Date of birth' })
   return {
     birthCertainty: birth.getByRole('button', { name: /How sure/ }),
@@ -102,7 +105,7 @@ export const editPersonDialog = (page: Page) => {
 }
 
 export const addPhotoDialog = (page: Page) => {
-  const dialog = page.getByRole('dialog')
+  const dialog = formDialog(page)
   return {
     asPortrait: dialog.getByText(/Make it .*’s portrait/),
     caption: dialog.getByLabel('Caption'),

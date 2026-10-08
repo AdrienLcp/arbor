@@ -6,6 +6,7 @@ import {
   createFamilyPage,
   editPersonDialog,
   familyHomePage,
+  formDialog,
   homePage,
   personSheet,
   sharePage,
@@ -52,7 +53,7 @@ const addRelative = async (
   await dialog.givenNames.fill(person.givenNames)
   if (person.surname !== undefined) await dialog.surname.fill(person.surname)
   await dialog.save.click()
-  await expect(page.getByRole('dialog')).toBeHidden()
+  await expect(formDialog(page)).toBeHidden()
 }
 
 /**
@@ -111,7 +112,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   await edit.certainty('About').click()
   await edit.birthYear.fill('1948')
   await edit.save.click()
-  await expect(founder.getByRole('dialog')).toBeHidden()
+  await expect(formDialog(founder)).toBeHidden()
   await expect(
     founder.getByText(/about 1948/i).first(),
     'the approximate birth date reads as such on the sheet'
@@ -126,7 +127,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   await photo.caption.fill(PHOTO_CAPTION)
   await photo.asPortrait.click()
   await photo.save.click()
-  await expect(founder.getByRole('dialog')).toBeHidden()
+  await expect(formDialog(founder)).toBeHidden()
   await expect(
     sheet.photo(PHOTO_CAPTION),
     'the photo joins the sheet'
@@ -161,9 +162,9 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   await sheet.editPerson.click()
   await edit.givenNames.fill(RENAMED_GIVEN_NAMES)
   await edit.save.click()
-  await expect(founder.getByRole('dialog')).toBeHidden()
+  await expect(formDialog(founder)).toBeHidden()
   await relativeEdit.save.click()
-  await expect(relative.getByRole('dialog')).toBeHidden()
+  await expect(formDialog(relative)).toBeHidden()
   await expect(
     relative.getByRole('heading', { name: RENAMED_FOUNDER_NAME }),
     'a change made over an older sheet keeps what someone else changed meanwhile'
