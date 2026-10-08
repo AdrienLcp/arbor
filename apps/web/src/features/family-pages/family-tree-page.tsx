@@ -47,8 +47,11 @@ import { usePersonFaces } from './use-person-faces'
 
 import './family-tree-page.sass'
 
-/** Under the app's wide-screen breakpoint the canvas gives way to one page at a time. */
-const PHONE_SCREEN = '(width < 640px)'
+/**
+ * Under the app's wide-screen breakpoint, or on a screen as short as a phone
+ * held sideways (`layout.short`), the canvas gives way to one page at a time.
+ */
+const PHONE_SCREEN = '(width < 640px), (height < 480px)'
 
 type FamilyTreeProps = {
   family: FamilyState

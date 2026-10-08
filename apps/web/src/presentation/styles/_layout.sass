@@ -7,3 +7,8 @@
   max-width: calc($width + var(--page-padding-inline-start) + var(--page-padding-inline-end))
   padding-inline: var(--page-padding-inline-start) var(--page-padding-inline-end)
   width: 100%
+
+/// A screen too short for a page's controls and its content side by side in height: a phone held sideways.
+@mixin short
+  @media (height < 30rem)
+    @content

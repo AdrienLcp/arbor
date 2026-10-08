@@ -83,6 +83,33 @@
         .family-tree-drawing
           display: none
 
+    // A phone held sideways: the controls on one row under the bar, the rest of the height for the page.
+    @include layout.short
+      .family-tree-head
+        align-items: center
+        flex-wrap: nowrap
+        padding-block: var(--space-xs)
+
+      .family-tree-title
+        @include accessibility.visually-hidden
+
+      .family-tree-controls
+        align-items: center
+        display: flex
+        flex: 1
+        flex-wrap: nowrap
+        gap: var(--space-l)
+        justify-content: start
+
+      .segmented-label,
+      .combo-box-label
+        @include accessibility.visually-hidden
+
+      .person-search
+        flex: 1
+        min-width: 12rem
+        width: auto
+
   .family-tree-empty
     @include layout.column(var(--page-width))
     color: var(--ink-soft)
