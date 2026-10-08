@@ -150,7 +150,28 @@ family with no overlap and no line under a card, in 3 ms.
   parents, depth adjustable), descendants below, both laid out by the same
   tidy tree from the focus block.
 - On a phone the tree is not this canvas but one spread around the focus
-  person (`DESIGN.md`, Layout), which needs no layout at all.
+  person (`DESIGN.md`, Layout), which needs no layout at all. "Whole family"
+  there is the same page; the other way through is the nested list.
+
+The view, built in step 06 and measured 2026-10-08 with the 300-person family
+on Chromium at CPU ×4:
+
+- The desktop canvas pans and zooms with `react-zoom-pan-pinch`. It injects
+  unlayered CSS, so the viewport rules in `tree-canvas.sass` are unlayered too,
+  or they lose to it.
+- **Never change an inherited property on the canvas wrapper during a pan.**
+  The library set `user-select` inline at every pan start, and a
+  `:active { cursor: grabbing }` did the same: both are inherited, so each
+  restyled all 3 000 descendants — 310 ms of style recalc, a 750 ms frame.
+  `user-select: none` is now permanent and there is no grabbing cursor: 14 ms,
+  worst frame 50 ms. `will-change: transform` made it worse.
+- The phone page is about 150 DOM nodes; the list, 3 255 nodes and 31 000 px
+  tall, scrolls at 60 fps with no long task — no virtualisation needed.
+- A turned page is `<TreeSpread key={focusId}>` so it opens at its top. Every
+  element carrying a `<ViewTransition name="person-…">` is keyed by person:
+  reused in place, it gets renamed and collides with the newly mounted one.
+- Canvas sticker text is below the phone size floor on purpose; it is never
+  reused on phone views.
 
 ## Security notes
 
