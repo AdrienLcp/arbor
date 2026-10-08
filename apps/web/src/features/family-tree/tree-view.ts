@@ -19,6 +19,8 @@ export type TreeView = {
   depth: number
   /** The person the tree turns around: the foil sticker, the one the canvas centres on. */
   focusId: EntityId
+  /** Whether the drawing lays a band under each generation; off by default, as most family trees are drawn. */
+  hasGenerationBands: boolean
   scope: TreeScope
 }
 

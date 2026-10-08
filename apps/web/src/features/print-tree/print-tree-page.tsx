@@ -134,6 +134,7 @@ export const PrintTreePage: React.FC = () => {
   const sheet = useRef<SVGSVGElement>(null)
   const familyName = response.settings.name
   const scene = treeScene({
+    hasGenerationBands: true,
     layout: layoutOfPrintScope(family, scopeOf(choices)),
     persons: family.persons
   })

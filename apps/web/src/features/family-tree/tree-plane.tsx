@@ -56,7 +56,7 @@ export type TreePlaneProps = {
   today: Temporal.PlainDate
 }
 
-/** The drawing at its natural size: generation bands, relation lines, their words and the stickers, placed by the layout. */
+/** The drawing at its natural size: generation bands when shown, relation lines, their words and the stickers, placed by the layout. */
 export const TreePlane: React.FC<TreePlaneProps> = ({
   activeKey,
   focusId,
@@ -164,7 +164,7 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
         '--plane-width': `${scene.width}px`
       }}
     >
-      {scene.bands.map((band) => (
+      {(scene.hasGenerationBands ? scene.bands : []).map((band) => (
         <div
           className={classNames(
             'generation-strip',

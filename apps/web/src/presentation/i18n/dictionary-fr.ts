@@ -870,6 +870,7 @@ export const FR_DICTIONARY = defineDictionary({
       label: 'Chercher quelqu’un',
       placeholder: 'Un prénom, un nom'
     },
+    showGenerations: 'Générations',
     spread: {
       children: 'Ses enfants',
       childrenEmpty: 'Pas encore d’enfant dans l’arbre.',

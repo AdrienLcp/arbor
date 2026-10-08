@@ -47,6 +47,7 @@ import { Button } from '@/presentation/components/button'
 import { Main } from '@/presentation/components/main'
 import { PHONE_SCREEN } from '@/presentation/components/phone-screen'
 import { SegmentedControl } from '@/presentation/components/segmented-control'
+import { Switch } from '@/presentation/components/switch'
 import { useMediaQuery } from '@/presentation/components/use-media-query'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useLocale, useTranslate } from '@/presentation/i18n/i18n-context'
@@ -122,7 +123,14 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   const isPhone = useMediaQuery(PHONE_SCREEN)
   const sheet = useChildPage()
   const sheetPersonId = useSheetPersonId()
-  const { setDepth, setFocus, setScope, showAround, view } = useTreeView({
+  const {
+    setDepth,
+    setFocus,
+    setHasGenerationBands,
+    setScope,
+    showAround,
+    view
+  } = useTreeView({
     fallbackFocusId,
     initialFocusId,
     isFocusMe,
@@ -197,6 +205,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
       )
     }
     const scene = treeScene({
+      hasGenerationBands: view.hasGenerationBands,
       layout: layoutOfView(family, { ...view, focusId, scope: shownScope }),
       persons: family.persons
     })
@@ -259,6 +268,14 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
               value={String(view.depth)}
             />
           ) : null}
+          {shownScope === 'list' || isPhone ? null : (
+            <Switch
+              isSelected={view.hasGenerationBands}
+              onChange={setHasGenerationBands}
+            >
+              {translate('tree.showGenerations')}
+            </Switch>
+          )}
           <PersonSearch onPick={showAround} people={[...faces.values()]} />
         </div>
       </div>

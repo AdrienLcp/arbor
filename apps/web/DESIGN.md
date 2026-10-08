@@ -253,7 +253,7 @@ Dark theme (`prefers-color-scheme: dark` unless `data-theme="light"`, or `data-t
 
 The page is a 1320px max-width column with 24px gutters (16px under 640px); sections are spaced by 88px (64px on phone). Breakpoints are 1100px (two-column layouts stack, the cover spread stops tilting) and 640px (single column everywhere, compact header).
 
-The tree is organised as horizontal generation bands stacked top to bottom, oldest first. On desktop each band is a full-width tinted strip with a rail on the left (band head, year range, count) and stickers positioned absolutely along it, with the SVG relation lines and word pills drawn underneath. On a phone the tree is one spread at a time around a focus person: parents strip above, the focus person large in the middle (160 by 200px) between their unions, children strip below, with a spread bar in Generation Pine for moving between spreads and a sticky bottom dock for the main action.
+The tree is drawn in rows, one per generation, oldest at the top. By default it is drawn as on any family tree: stickers on the paper, the SVG relation lines and word pills underneath, nothing marking the rows. A "Générations" switch in the tree controls lays a full-width tinted band under each row, with a rail on the left (band head, year range, count); it is off by default because most people never read a family tree by generation. On a phone the tree is one spread at a time around a focus person: parents strip above, the focus person large in the middle (160 by 200px) between their unions, children strip below, with a spread bar in Generation Pine for moving between spreads and a sticky bottom dock for the main action.
 
 Slots have a fixed sticker ratio of roughly 3:4: 112 by 150px by default, 104 by 140 on the cover spread, 132 by 164 in phone rows, 124 by 158 in the sheet hero. The slot number sits above the slot, 18px tall.
 
@@ -300,7 +300,7 @@ The person. A `sticker`-white card (7px, 5px padding) inside a numbered slot. To
 An empty numbered slot: 2px dashed `ghost` outline, `paper-2` wash, "INCONNU" in Barlow 800, a one-line hint ("le père de Louis"), and a round "+ Compléter" pill. The whole slot is the button; hover darkens the outline to `ink`.
 
 ### Generation band
-A full-width strip tinted with the generation ink at 9% into paper, a 2px top border at 55%. Its head is the slanted band block ("GÉNÉRATION 3") with the year range and a count in `gc-ink` below it.
+Shown only when the "Générations" switch is on. A full-width strip tinted with the generation ink at 9% into paper, a 2px top border at 55%. Its head is the slanted band block ("GÉNÉRATION 3") with the year range and a count in `gc-ink` below it.
 
 ### Relation lines and pills
 SVG strokes in `line`, round caps (see The Line Speaks Rule). Union lines carry a pill: paper fill, 1.5px `line` border, Barlow 600 13.5px with the kind and year ("mariés 1957"); a dashed pill border for a free union.

@@ -197,7 +197,9 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
                 today={today}
               />
             </TransformComponent>
-            <GenerationRails ref={rails} scene={scene} />
+            {scene.hasGenerationBands ? (
+              <GenerationRails ref={rails} scene={scene} />
+            ) : null}
             <p className='tree-instructions' id={instructionsId}>
               {translate('tree.instructions')}
             </p>

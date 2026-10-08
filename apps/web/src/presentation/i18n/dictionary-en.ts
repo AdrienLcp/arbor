@@ -848,6 +848,7 @@ export const EN_DICTIONARY = defineDictionary({
       label: 'Find someone',
       placeholder: 'A first name, a surname'
     },
+    showGenerations: 'Generations',
     spread: {
       children: 'Children',
       childrenEmpty: 'No children in the tree yet.',

@@ -8,6 +8,7 @@ export type TreeViewControls = {
   setDepth: (depth: number) => void
   /** Turns the tree around another person, as a transition: the stickers slide to their new places. */
   setFocus: (focusId: EntityId) => void
+  setHasGenerationBands: (hasGenerationBands: boolean) => void
   setScope: (scope: TreeScope) => void
   /** Leaves the list for the drawing around a person picked in it. */
   showAround: (focusId: EntityId) => void
@@ -34,6 +35,7 @@ export const useTreeView = ({
   const [view, setView] = useState<TreeView>({
     depth: DEFAULT_TREE_DEPTH,
     focusId: initialFocusId,
+    hasGenerationBands: false,
     scope: isFocusMe ? 'around' : 'whole'
   })
   const [followedPersonId, setFollowedPersonId] = useState(shownPersonId)
@@ -62,6 +64,8 @@ export const useTreeView = ({
   return {
     setDepth: (depth) => changeView({ depth }),
     setFocus: (focusId) => changeView({ focusId }),
+    setHasGenerationBands: (hasGenerationBands) =>
+      changeView({ hasGenerationBands }),
     setScope: (scope) => changeView({ scope }),
     showAround: (focusId) => changeView({ focusId, scope: 'around' }),
     view
