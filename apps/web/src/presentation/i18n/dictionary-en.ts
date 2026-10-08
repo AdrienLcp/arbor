@@ -666,6 +666,14 @@ export const EN_DICTIONARY = defineDictionary({
       other: 'Choose someone else',
       whole: 'The whole family'
     },
+    share: {
+      failed: 'The picture could not be made. Try again in a moment.',
+      label: 'To send it in a message',
+      png: 'A picture (PNG)',
+      pngFileName: '{name} — tree.png',
+      svg: 'A drawing (SVG)',
+      svgFileName: '{name} — tree.svg'
+    },
     shopHint: 'A print shop prints this PDF large. A home printer cannot.',
     tile: 'Sheet {number:number} of {count:number} · row {row:number}, column {column:number}',
     title: 'Print the tree'

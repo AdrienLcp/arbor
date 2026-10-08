@@ -670,6 +670,14 @@ export const FR_DICTIONARY = defineDictionary({
       other: 'Choisir quelqu’un d’autre',
       whole: 'Toute la famille'
     },
+    share: {
+      failed: 'L’image n’a pas pu être préparée. Réessayez dans un instant.',
+      label: 'Pour l’envoyer dans un message',
+      png: 'Une image (PNG)',
+      pngFileName: '{name} — arbre.png',
+      svg: 'Un dessin (SVG)',
+      svgFileName: '{name} — arbre.svg'
+    },
     shopHint:
       'Un imprimeur ou une boutique de reprographie imprime ce PDF en grand. Une imprimante de maison ne le peut pas.',
     tile: 'Feuille {number:number} sur {count:number} · rangée {row:number}, colonne {column:number}',

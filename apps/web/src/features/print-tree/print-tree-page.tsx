@@ -18,6 +18,10 @@ import { treeScene } from '@/features/family-tree/tree-scene'
 import { firstFocusId } from '@/features/family-tree/tree-view'
 import { pageOrigin, saveFile } from '@/infrastructure/browser'
 import { today } from '@/infrastructure/clock'
+import {
+  pngFileOfDrawing,
+  svgFileOfDrawing
+} from '@/infrastructure/drawing-files'
 import { pdfOfDrawing } from '@/infrastructure/pdf-file'
 import {
   type LoadedPrintFont,
@@ -55,6 +59,11 @@ const scopeOf = (choices: PrintChoices): PrintScope =>
         kind: choices.scopeKind,
         personId: choices.personId
       }
+
+type DrawingFormat = 'pdf' | 'png' | 'svg'
+
+/** The file being made, or the one that could not be. */
+type Making = { format: DrawingFormat; status: 'failed' | 'making' } | null
 
 type Fonts =
   | { kind: 'failed' }
@@ -121,7 +130,7 @@ export const PrintTreePage: React.FC = () => {
       }) ?? '',
     scopeKind: 'whole'
   }))
-  const [making, setMaking] = useState<'failed' | 'idle' | 'making'>('idle')
+  const [making, setMaking] = useState<Making>(null)
   const sheet = useRef<SVGSVGElement>(null)
   const familyName = response.settings.name
   const scene = treeScene({
@@ -178,7 +187,7 @@ export const PrintTreePage: React.FC = () => {
 
   const downloadPdf = async (loaded: readonly LoadedPrintFont[]) => {
     if (sheet.current === null) return
-    setMaking('making')
+    setMaking({ format: 'pdf', status: 'making' })
     const pdf = await pdfOfDrawing({
       drawingSize: plan.drawing,
       fonts: loaded,
@@ -199,12 +208,43 @@ export const PrintTreePage: React.FC = () => {
       svg: sheet.current
     })
     if (pdf.status === 'failure') {
-      setMaking('failed')
+      setMaking({ format: 'pdf', status: 'failed' })
       return
     }
     saveFile(pdf.data, translate('print.fileName', { name: familyName }))
-    setMaking('idle')
+    setMaking(null)
   }
+
+  const downloadSvg = (loaded: readonly LoadedPrintFont[]) => {
+    if (sheet.current === null) return
+    saveFile(
+      svgFileOfDrawing({ fonts: loaded, svg: sheet.current }),
+      translate('print.share.svgFileName', { name: familyName })
+    )
+    setMaking(null)
+  }
+
+  const downloadPng = async (loaded: readonly LoadedPrintFont[]) => {
+    if (sheet.current === null) return
+    setMaking({ format: 'png', status: 'making' })
+    const png = await pngFileOfDrawing({
+      drawingSize: plan.drawing,
+      fonts: loaded,
+      svg: sheet.current
+    })
+    if (png.status === 'failure') {
+      setMaking({ format: 'png', status: 'failed' })
+      return
+    }
+    saveFile(
+      png.data,
+      translate('print.share.pngFileName', { name: familyName })
+    )
+    setMaking(null)
+  }
+
+  const isMaking = (format: DrawingFormat) =>
+    making?.format === format && making.status === 'making'
 
   return (
     <>
@@ -259,16 +299,43 @@ export const PrintTreePage: React.FC = () => {
                   </svg>
                 </div>
                 <Button
-                  isPending={making === 'making'}
+                  isPending={isMaking('pdf')}
                   onPress={() => void downloadPdf(fonts.fonts)}
                 >
                   <DownloadIcon aria-hidden='true' />
-                  {making === 'making'
+                  {isMaking('pdf')
                     ? translate('print.making')
                     : translate('print.download')}
                 </Button>
-                {making === 'failed' ? (
+                {making?.format === 'pdf' && making.status === 'failed' ? (
                   <FailureNotice>{translate('print.failed')}</FailureNotice>
+                ) : null}
+                <div className='print-tree-share'>
+                  <p className='print-tree-share-label'>
+                    {translate('print.share.label')}
+                  </p>
+                  <div className='print-tree-share-buttons'>
+                    <Button
+                      isPending={isMaking('png')}
+                      onPress={() => void downloadPng(fonts.fonts)}
+                      variant='ghost'
+                    >
+                      <DownloadIcon aria-hidden='true' />
+                      {translate('print.share.png')}
+                    </Button>
+                    <Button
+                      onPress={() => downloadSvg(fonts.fonts)}
+                      variant='ghost'
+                    >
+                      <DownloadIcon aria-hidden='true' />
+                      {translate('print.share.svg')}
+                    </Button>
+                  </div>
+                </div>
+                {making?.format === 'png' && making.status === 'failed' ? (
+                  <FailureNotice>
+                    {translate('print.share.failed')}
+                  </FailureNotice>
                 ) : null}
               </>
             ) : null}

@@ -51,6 +51,19 @@
       // A tall sheet is not allowed to run off the screen: its width follows the height left to it.
       width: min(100%, 80svh * var(--sheet-ratio))
 
+    // A second, quieter way out under the PDF: a picture for a message rather than paper.
+    .print-tree-share
+      display: grid
+      gap: var(--space-s)
+
+    .print-tree-share-label
+      color: var(--ink-soft)
+
+    .print-tree-share-buttons
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-s)
+
     .print-tree-sheet,
     .print-tree-tiles
       grid-area: 1 / 1
