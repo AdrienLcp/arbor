@@ -98,6 +98,20 @@ creation while nothing links to the person yet.
 Given two people, find the closest common ancestors through `birth` and
 `adoption` filiations, and name the relation in French and English: generation
 distance on each side → parent, grand-parent, oncle/tante, cousin germain,
-cousin issu de germain, petit-cousin… with "par alliance" when the path goes
-through a union, and "demi-" for a single shared parent. Pure function in
-`packages/core`, table-tested.
+cousin issu de germain, petit-cousin… Pure function in `packages/core/kinship`
+(`kinshipBetween`, then `describeKinship` per language), table-tested on the
+fixture family.
+
+- **Partner before blood.** Two people in a union are named as partners first,
+  even when they also share an ancestor.
+- **Half** ("demi-") is read the way the person sheet reads it: the two people
+  do not share the same set of kin parents.
+- **In-law** ("par alliance", "beau-", "belle-") allows exactly one union
+  crossing on the path; two crossings name no relation.
+- **Step and foster** filiations are crossings too: going through one shifts the
+  relation by a generation instead of counting as blood.
+- **Uneven cousins.** French has no compact word, so the sentence goes through
+  the link person ("le cousin germain de votre père"); English says "once
+  removed", "twice removed".
+- Gendered from the person's sex, neutral when it is unknown.
+- The screen reads `?from=&to=` on the tree to light the path between the two.
