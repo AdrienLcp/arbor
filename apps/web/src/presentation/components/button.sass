@@ -1,10 +1,8 @@
 // A style system: Button and ButtonLink draw the same shapes.
-@use '../styles/focus'
 @use '../styles/typography'
 
 @layer components
   .button
-    @include focus.ring
     @include typography.name
     align-items: center
     border: var(--stroke-bold) solid transparent
@@ -37,15 +35,15 @@
     &.primary,
     &.cover
       background: var(--action)
-      box-shadow: 0 2px 0 -0.5px color-mix(in oklch, var(--shadow) 40%, transparent), 0 6px 14px -8px var(--shadow)
+      box-shadow: var(--shadow-button)
       color: var(--on-action)
 
       &[data-hovered]:not([data-disabled], [data-pending])
-        box-shadow: 0 3px 0 -0.5px color-mix(in oklch, var(--shadow) 40%, transparent), 0 10px 18px -8px var(--shadow)
+        box-shadow: var(--shadow-button-hovered)
         translate: 0 calc(-1 * var(--press-shift))
 
       &[data-pressed]:not([data-disabled], [data-pending])
-        box-shadow: 0 1px 2px -1px var(--shadow)
+        box-shadow: var(--shadow-button-pressed)
         translate: 0 var(--press-shift)
 
     &.cover

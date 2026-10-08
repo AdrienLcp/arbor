@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
-import { accessKeySchema, familyIdSchema, keyViewSchema } from './access'
-import { authorSchema, changeLogEntrySchema } from './change-log'
-import { familySettingsSchema } from './family'
-import { operationSchema } from './operation'
-import { OPERATION_REFUSALS } from './operation-refusal'
+import { accessKeySchema, familyIdSchema, keyViewSchema } from './access.ts'
+import { authorSchema, changeLogEntrySchema } from './change-log.ts'
+import { familySettingsSchema } from './family.ts'
+import { operationSchema } from './operation.ts'
+import { OPERATION_REFUSALS } from './operation-refusal.ts'
 
 export const API_PREFIX = '/api'
 

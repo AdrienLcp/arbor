@@ -6,7 +6,7 @@
   .family-tree-screen
     display: grid
     grid-template-rows: auto minmax(0, 1fr)
-    height: 100dvh
+    height: calc(100dvh - var(--safe-area-top) - var(--safe-area-bottom))
 
   .family-tree-page
     display: grid

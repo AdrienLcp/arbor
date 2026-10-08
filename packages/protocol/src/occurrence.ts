@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { fuzzyDateSchema } from './fuzzy-date'
+import { fuzzyDateSchema } from './fuzzy-date.ts'
 
 const PLACE_MAX_LENGTH = 300
 

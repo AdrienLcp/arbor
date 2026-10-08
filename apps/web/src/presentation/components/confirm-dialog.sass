@@ -4,11 +4,11 @@
 @layer components
   .confirm-dialog-overlay
     align-items: end
-    background: color-mix(in oklch, var(--shadow) 45%, transparent)
+    background: var(--scrim)
     display: grid
     inset: 0
     justify-items: center
-    padding: var(--space-gutter)
+    padding: max(var(--space-gutter), var(--safe-area-top)) max(var(--space-gutter), var(--safe-area-right)) max(var(--space-gutter), var(--safe-area-bottom)) max(var(--space-gutter), var(--safe-area-left))
     position: fixed
     transition: opacity var(--transition-base) var(--ease-out)
     z-index: 10
@@ -23,7 +23,7 @@
   .confirm-dialog-modal
     background: var(--paper)
     border-radius: var(--radius-frame)
-    box-shadow: 0 2px 4px color-mix(in oklch, var(--shadow) 30%, transparent), 0 30px 50px -30px var(--shadow)
+    box-shadow: var(--shadow-dialog)
     max-width: 32rem
     transition: translate var(--transition-base) var(--ease-out)
     width: 100%

@@ -1,6 +1,6 @@
-import type { AccessKey, FamilyId } from './access'
-import { PAGE_ROUTES } from './page-routes'
-import { pathFor } from './routes'
+import type { AccessKey, FamilyId } from './access.ts'
+import { PAGE_ROUTES } from './page-routes.ts'
+import { pathFor } from './routes.ts'
 
 /**
  * The link a relative opens. The key rides in the fragment, which browsers

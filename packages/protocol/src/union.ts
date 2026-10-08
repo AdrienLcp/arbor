@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
-import { entityIdSchema } from './entity-id'
-import { occurrenceSchema } from './occurrence'
+import { entityIdSchema } from './entity-id.ts'
+import { occurrenceSchema } from './occurrence.ts'
 
 export const UNION_KINDS = [
   'marriage',

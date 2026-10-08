@@ -1,12 +1,12 @@
 import { z } from 'zod'
 
-import { ROLES } from './access'
-import { entityIdSchema } from './entity-id'
-import { filiationSchema } from './filiation'
-import { lifeEventSchema } from './life-event'
-import { personSchema } from './person'
-import { photoSchema } from './photo'
-import { unionSchema } from './union'
+import { ROLES } from './access.ts'
+import { entityIdSchema } from './entity-id.ts'
+import { filiationSchema } from './filiation.ts'
+import { lifeEventSchema } from './life-event.ts'
+import { personSchema } from './person.ts'
+import { photoSchema } from './photo.ts'
+import { unionSchema } from './union.ts'
 
 const FAMILY_NAME_MAX_LENGTH = 200
 

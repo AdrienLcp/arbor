@@ -16,7 +16,12 @@
     @include typography.body
     background: var(--paper)
     color: var(--ink)
-    min-height: 100dvh
+    font-synthesis: none
+
+  #root
+    min-block-size: 100dvh
+    overflow-x: clip
+    padding: var(--safe-area-top) var(--safe-area-right) var(--safe-area-bottom) var(--safe-area-left)
 
   ::selection
     background: var(--g1)
@@ -26,3 +31,4 @@
     accent-color: var(--action)
     caret-color: var(--focus)
     scrollbar-color: var(--ghost) var(--paper-2)
+    scrollbar-gutter: stable

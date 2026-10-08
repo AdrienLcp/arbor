@@ -4,7 +4,7 @@
   .mini-sticker
     background: var(--sticker)
     border-radius: var(--radius-sticker)
-    box-shadow: 0 0 0 1px var(--sticker-edge), 0 3px 6px -3px color-mix(in oklch, var(--shadow) 60%, transparent)
+    box-shadow: var(--shadow-mini-sticker)
     display: flex
     flex: none
     height: 4rem
@@ -34,7 +34,7 @@
 
     &.deceased
       border-bottom: var(--stroke-bold) solid var(--ink)
-      box-shadow: 0 0 0 1px var(--sticker-edge), 0 1px 2px color-mix(in oklch, var(--shadow) 26%, transparent)
+      box-shadow: var(--shadow-sticker-matte)
 
       &::after
         display: none

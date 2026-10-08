@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
-import { entityIdSchema } from './entity-id'
-import { fuzzyDateSchema } from './fuzzy-date'
+import { entityIdSchema } from './entity-id.ts'
+import { fuzzyDateSchema } from './fuzzy-date.ts'
 
 const CAPTION_MAX_LENGTH = 1000
 

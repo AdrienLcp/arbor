@@ -1,6 +1,7 @@
 import { globSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
+import { REACT_ARIA_TOKENS } from '@adrienlcp/react-aria'
 import {
   findTokenFailures,
   findTypeLiterals,
@@ -38,18 +39,8 @@ describe.each(STYLESHEETS)('%s', (path) => {
   })
 })
 
-/**
- * Names `findTokenFailures` cannot see declared: `--trigger-width` is set by
- * react-aria on a popover, and `--g`, `--on-g` are the heads of
- * `var(--g#{$generation})` in `_generations.sass`, which it reads without the
- * Sass interpolation.
- */
-const UNSEEN_DECLARATIONS = new Set(['--g', '--on-g', '--trigger-width'])
-
 it('[styles] reads only custom properties that exist, under their one shared name', () => {
-  expect(
-    findTokenFailures(SOURCES).filter(
-      ({ name }) => !UNSEEN_DECLARATIONS.has(name)
-    )
-  ).toEqual([])
+  expect(findTokenFailures(SOURCES, { provided: REACT_ARIA_TOKENS })).toEqual(
+    []
+  )
 })

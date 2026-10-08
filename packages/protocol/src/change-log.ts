@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
-import { entityIdSchema } from './entity-id'
-import { operationSchema } from './operation'
-import { NAME_MAX_LENGTH } from './person'
+import { entityIdSchema } from './entity-id.ts'
+import { operationSchema } from './operation.ts'
+import { NAME_MAX_LENGTH } from './person.ts'
 
 /** Who the visitor said they are on "Who are you in this tree?": a person of the tree, or a name typed by someone not in it yet. */
 export const authorSchema = z.discriminatedUnion('kind', [

@@ -3,7 +3,7 @@
 
 @layer components
   .form-dialog-overlay
-    background: color-mix(in oklch, var(--shadow) 45%, transparent)
+    background: var(--scrim)
     display: grid
     inset: 0
     position: fixed
@@ -13,7 +13,7 @@
     @include layout.wide
       align-items: center
       justify-items: center
-      padding: var(--space-gutter)
+      padding: max(var(--space-gutter), var(--safe-area-top)) max(var(--space-gutter), var(--safe-area-right)) max(var(--space-gutter), var(--safe-area-bottom)) max(var(--space-gutter), var(--safe-area-left))
 
     &[data-entering],
     &[data-exiting]
@@ -25,14 +25,16 @@
     display: grid
     height: 100dvh
     min-height: 0
+    padding: var(--safe-area-top) var(--safe-area-right) var(--safe-area-bottom) var(--safe-area-left)
     transition: translate var(--transition-base) var(--ease-out)
     width: 100%
 
     @include layout.wide
       border-radius: var(--radius-frame)
-      box-shadow: 0 2px 4px color-mix(in oklch, var(--shadow) 30%, transparent), 0 30px 50px -30px var(--shadow)
+      box-shadow: var(--shadow-dialog)
       height: auto
       max-height: calc(100dvh - 2 * var(--space-gutter))
+      padding: 0
       max-width: 36rem
 
     &[data-entering],

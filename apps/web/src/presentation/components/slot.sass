@@ -31,7 +31,7 @@
     .sticker
       background: var(--sticker)
       border-radius: var(--radius-sticker)
-      box-shadow: 0 0 0 1px var(--sticker-edge), 0 1px 1.5px color-mix(in oklch, var(--shadow) 30%, transparent), 0 6px 12px -6px color-mix(in oklch, var(--shadow) 55%, transparent)
+      box-shadow: var(--shadow-sticker)
       display: flex
       flex-direction: column
       inset: 0
@@ -95,7 +95,7 @@
 
     // A deceased person's sticker: no varnish, the art dulled toward matte, a rule over the caption.
     .sticker.deceased
-      box-shadow: 0 0 0 1px var(--sticker-edge), 0 1px 2px color-mix(in oklch, var(--shadow) 26%, transparent)
+      box-shadow: var(--shadow-sticker-matte)
 
       &::after
         display: none
@@ -137,7 +137,7 @@
 
     .sticker
       background: linear-gradient(128deg, var(--foil-a), var(--foil-b) 30%, var(--foil-c) 55%, var(--foil-d) 80%, var(--foil-a))
-      box-shadow: 0 0 0 1px var(--sticker-edge), 0 0 0 4px var(--paper), 0 0 0 7px var(--ink), 0 14px 22px -10px color-mix(in oklch, var(--shadow) 70%, transparent)
+      box-shadow: var(--shadow-sticker-edge), 0 0 0 4px var(--paper), 0 0 0 7px var(--ink), var(--shadow-sticker-lift)
 
   // A person drawn a second time: flattened back into the page, in a dashed frame.
   .slot.repeated
@@ -145,7 +145,7 @@
       border-style: dashed
 
     .sticker
-      box-shadow: 0 0 0 1px var(--sticker-edge)
+      box-shadow: var(--shadow-sticker-edge)
 
       &::after
         display: none
@@ -155,11 +155,11 @@
 
   @keyframes sticker-press
     0%
-      box-shadow: 0 0 0 1px var(--sticker-edge), 0 26px 30px -14px color-mix(in oklch, var(--shadow) 70%, transparent)
-      transform: translate(-3px, -16px) rotate(-3.5deg) scale(1.07)
+      box-shadow: var(--shadow-sticker-picked-up)
+      transform: translate(-0.1875rem, -1rem) rotate(-3.5deg) scale(1.07)
 
     62%
-      transform: translate(0, 1px) rotate(0) scale(0.985)
+      transform: translate(0, 0.0625rem) rotate(0) scale(0.985)
 
     100%
       transform: none

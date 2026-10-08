@@ -1,11 +1,11 @@
 import { z } from 'zod'
 
-import { entityIdSchema } from './entity-id'
-import { filiationFieldsSchema, filiationSchema } from './filiation'
-import { lifeEventFieldsSchema, lifeEventSchema } from './life-event'
-import { personFieldsSchema, personSchema } from './person'
-import { photoFieldsSchema, photoSchema } from './photo'
-import { unionFieldsSchema, unionSchema } from './union'
+import { entityIdSchema } from './entity-id.ts'
+import { filiationFieldsSchema, filiationSchema } from './filiation.ts'
+import { lifeEventFieldsSchema, lifeEventSchema } from './life-event.ts'
+import { personFieldsSchema, personSchema } from './person.ts'
+import { photoFieldsSchema, photoSchema } from './photo.ts'
+import { unionFieldsSchema, unionSchema } from './union.ts'
 
 const fieldNames = (fields: object) => Object.keys(fields).toSorted()
 

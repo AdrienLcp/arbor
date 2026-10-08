@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { entityIdSchema } from './entity-id'
+import { entityIdSchema } from './entity-id.ts'
 
 export const FILIATION_KINDS = [
   'birth',

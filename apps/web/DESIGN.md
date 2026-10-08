@@ -12,7 +12,7 @@ colors:
   ghost-soft: "oklch(0.84 0.014 245)"
   sticker: "oklch(0.995 0.002 95)"
   sticker-edge: "oklch(0.88 0.008 245)"
-  shadow: "oklch(0.22 0.04 262)"
+  shadow-ink: "oklch(0.22 0.04 262)"
   matte: "oklch(0.55 0.005 260)"
   focus: "oklch(0.48 0.17 262)"
   warn: "oklch(0.47 0.11 65)"
@@ -215,7 +215,7 @@ A sixth or later generation cycles back to `g1`.
 - **Line Ink** (`line`): relation lines and pill borders in the tree.
 - **Printed Outline** (`ghost`) and **Faint Outline** (`ghost-soft`): dashed ghost slots, control borders, dividers and the printed slot frames.
 - **Matte Grey** (`matte`): mixed 58% into a generation ink to dull a deceased person's sticker art.
-- **Shadow** (`shadow`): the base of every shadow, always applied through `color-mix` at a stated strength.
+- **Shadow Ink** (`shadow-ink`): the base of every shadow, always applied through `color-mix` at a stated strength.
 - **Focus Blue** (`focus`): the 3px focus outline; ochre in dark theme.
 
 Dark theme (`prefers-color-scheme: dark` unless `data-theme="light"`, or `data-theme="dark"`): the paper becomes deep navy (`oklch(0.205 0.028 262)`), stickers become a raised navy (`oklch(0.300 0.030 262)`), inks lighten to around L 0.73 with dark navy text on them. The printed sheet (`.paper-light`) forces the light palette with pure-white paper whatever the screen theme.
@@ -236,7 +236,7 @@ Dark theme (`prefers-color-scheme: dark` unless `data-theme="light"`, or `data-t
 
 ### Hierarchy
 - **Display** (800, clamp(2.875rem, 0.875rem + 5vw, 5rem), 0.92, uppercase): the cover headline only. The A3 print title uses the same voice at 104px.
-- **Headline** (800, clamp(1.75rem, 1.0441rem + 1.7647vw, 2.5rem), 1, uppercase): band ribbons, a person's name at the top of their sheet (44px, 0.95), welcome and first-visit titles (40px).
+- **Headline** (800, clamp(1.75rem, 1.0441rem + 1.7647vw, 2.5rem), 1, uppercase): band ribbons, a person's name at the top of their sheet (40px, 0.95), welcome and first-visit titles (40px).
 - **Title** (800, 18 to 22px, 1, uppercase, 0.04em): generation band heads, group headings in the person sheet, the app bar family name (24px, 28px on desktop).
 - **Label** (600 to 700, 16px, 1.2, uppercase, 0.04 to 0.08em): navigation tabs, fact labels, surnames on stickers, the "Compléter" action, phone frame captions.
 - **Numeral** (700, 15 to 18px, tabular lining figures): slot numbers ("09"), dates, generation ranges. Every number in the album uses tabular figures.
@@ -261,15 +261,18 @@ Spacing is loose rather than a strict scale: 4, 8, 12, 16, 24, 32, 48 and 88px a
 
 ## Elevation & Depth
 
-Hybrid: paper is flat and divided by 1px `ghost-soft` rules and tinted bands; only stickers, the primary button and floating panels are lifted. Every shadow is built from the `shadow` token through `color-mix`, layered as a tight contact shadow plus a soft negative-spread drop, so depth reads as "a thing lying on paper", not as hovering cards.
+Hybrid: paper is flat and divided by 1px `ghost-soft` rules and tinted bands; only stickers, the primary button and floating panels are lifted. Every shadow is built from the `shadow-ink` token through `color-mix`, layered as a tight contact shadow plus a soft negative-spread drop, so depth reads as "a thing lying on paper", not as hovering cards.
 
 ### Shadow Vocabulary
-- **Sticker** (`box-shadow: 0 0 0 1px var(--sticker-edge), 0 1px 1.5px color-mix(in oklch, var(--shadow) 30%, transparent), 0 6px 12px -6px color-mix(in oklch, var(--shadow) 55%, transparent)`): every living person's sticker, together with a varnish gloss overlay (`linear-gradient(118deg, oklch(1 0 0 / 0.42) 0%, oklch(1 0 0 / 0.08) 22%, transparent 38%, transparent 78%, oklch(1 0 0 / 0.14) 100%)`).
-- **Matte sticker** (`box-shadow: 0 0 0 1px var(--sticker-edge), 0 1px 2px color-mix(in oklch, var(--shadow) 26%, transparent)`): deceased people; no gloss.
-- **Foil sticker** (`box-shadow: 0 0 0 1px var(--sticker-edge), 0 0 0 4px var(--paper), 0 0 0 7px var(--ink), 0 14px 22px -10px color-mix(in oklch, var(--shadow) 70%, transparent)`): the focus person, over the foil gradient. Ring widths grow on phone (5px / 8.5px).
-- **Far sticker** (`box-shadow: 0 0 0 1px var(--sticker-edge)`): distant relatives in the tree, flattened back into the page; their lines drop to 42% opacity.
-- **Primary button** (`box-shadow: 0 6px 14px -8px var(--shadow)` plus a contact layer; lifts 1px on hover, presses 1px down on active).
-- **Side sheet** (`box-shadow: -24px 0 40px -30px var(--shadow)`): the desktop person sheet sliding over the canvas.
+Each shadow is a token holding the whole `box-shadow`, named by role in `_tokens.sass`:
+
+- **Sticker** (`--shadow-sticker`: the die-cut edge, a contact shadow at 30% and a drop at 55%): every living person's sticker, together with a varnish gloss overlay (`linear-gradient(118deg, oklch(1 0 0 / 0.42) 0%, oklch(1 0 0 / 0.08) 22%, transparent 38%, transparent 78%, oklch(1 0 0 / 0.14) 100%)`).
+- **Matte sticker** (`--shadow-sticker-matte`: the edge and a 26% contact shadow): deceased people; no gloss.
+- **Foil sticker** (the edge, a `paper` ring of 4px and an `ink` ring of 7px, then `--shadow-sticker-lift`): the focus person, over the foil gradient. Ring widths grow on phone (5px / 8.5px).
+- **Far sticker** (`--shadow-sticker-edge`, the edge alone): distant relatives in the tree, flattened back into the page; their lines drop to 42% opacity.
+- **Primary button** (`--shadow-button`, `--shadow-button-hovered`, `--shadow-button-pressed`; lifts 1px on hover, presses 1px down on active).
+- **Floating panels**: `--shadow-card` (the focus card), `--shadow-popover` (a list under a field), `--shadow-dialog`.
+- **Side sheet** (`--shadow-sheet`: `-24px 0 40px -30px var(--shadow-ink)`): the desktop person sheet sliding over the canvas.
 
 ### Named Rules
 **The Stickers Stand Proud Rule.** Only stickers carry a gloss and a drop shadow. Bands, cards, lists, fields and panels are paper: flat, separated by rules and tints. If a new surface wants a shadow, it should either be a sticker or a floating panel.
@@ -303,7 +306,7 @@ An empty numbered slot: 2px dashed `ghost` outline, `paper-2` wash, "INCONNU" in
 A full-width strip tinted with the generation ink at 9% into paper, a 2px top border at 55%. Its head is the slanted band block ("GÉNÉRATION 3") with the year range and a count in `gc-ink` below it.
 
 ### Relation lines and pills
-SVG strokes in `line`, round caps (see The Line Speaks Rule). Union lines carry a pill: paper fill, 1.5px `line` border, Barlow 600 13.5px with the kind and year ("mariés 1957"); a dashed pill border for a free union.
+SVG strokes in `line`, round caps (see The Line Speaks Rule). Union lines carry a pill: paper fill, 1.5px `line` border, Barlow 600 14px with the kind and year ("mariés 1957"); a dashed pill border for a free union.
 
 ### Inputs / Fields
 - **Style:** 2px `ink` border, 10px radius, 56px tall, paper fill, 18px Atkinson text, leading search icon; placeholder in `ink-soft`.
