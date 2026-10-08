@@ -16,7 +16,7 @@
       transition: translate var(--transition-fast, 0s) var(--ease-out), box-shadow var(--transition-fast, 0s) var(--ease-out)
 
     &[data-hovered] .sticker
-      translate: 0 -2px
+      translate: 0 calc(-2 * var(--press-shift))
 
     &[data-pressed] .sticker
-      translate: 0 1px
+      translate: 0 var(--press-shift)

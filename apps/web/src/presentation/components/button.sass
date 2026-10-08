@@ -42,11 +42,11 @@
 
       &[data-hovered]:not([data-disabled], [data-pending])
         box-shadow: 0 3px 0 -0.5px color-mix(in oklch, var(--shadow) 40%, transparent), 0 10px 18px -8px var(--shadow)
-        translate: 0 -1px
+        translate: 0 calc(-1 * var(--press-shift))
 
       &[data-pressed]:not([data-disabled], [data-pending])
         box-shadow: 0 1px 2px -1px var(--shadow)
-        translate: 0 1px
+        translate: 0 var(--press-shift)
 
     &.cover
       background: var(--on-cover)

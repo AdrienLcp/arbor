@@ -1,3 +1,4 @@
+@use '../styles/focus'
 @use '../styles/typography'
 
 @layer components
@@ -10,6 +11,7 @@
       color: var(--ink-soft)
 
     .combo-box-field
+      @include focus.ring-within($offset: calc(var(--space-xs) / 2))
       align-items: center
       background: var(--paper)
       border: var(--stroke-bold) solid var(--ink)
@@ -17,10 +19,6 @@
       display: flex
       gap: var(--space-s)
       padding-inline: var(--space-m)
-
-    &[data-focus-within] .combo-box-field
-      outline: var(--ring)
-      outline-offset: calc(var(--space-xs) / 2)
 
     .combo-box-icon
       color: var(--ink-soft)
@@ -76,9 +74,7 @@
     &[data-focused]
       background: var(--paper-2)
 
-    &[data-focus-visible]
-      outline: var(--ring)
-      outline-offset: calc(-1 * var(--outline-thick))
+    @include focus.ring-inset
 
     &[data-pressed]
       background: var(--paper-deep)

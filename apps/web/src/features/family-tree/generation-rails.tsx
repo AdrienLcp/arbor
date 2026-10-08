@@ -58,8 +58,8 @@ export const GenerationRails: React.FC<GenerationRailsProps> = ({
         )}
         key={band.generation}
         style={{
-          '--band-height': band.bottom - band.top,
-          '--band-top': band.top - scene.origin.y
+          '--band-height': `${band.bottom - band.top}px`,
+          '--band-top': `${band.top - scene.origin.y}px`
         }}
       >
         <GenerationRail band={band} />

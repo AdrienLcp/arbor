@@ -18,7 +18,7 @@
       cursor: pointer
       display: flex
       gap: var(--space-m)
-      min-height: 56px
+      min-height: 3.5rem
       padding: var(--space-s) var(--space-m)
       transition: border-color var(--transition-fast) var(--ease-out), background-color var(--transition-fast) var(--ease-out)
 
@@ -27,20 +27,20 @@
 
       &[data-selected]
         border-color: var(--ink)
-        font-weight: 700
+        @include typography.strong
 
     // The round mark a radio has always had: an empty ring, filled when chosen.
     .choice-mark
       border: var(--stroke-bold) solid var(--ink)
       border-radius: var(--radius-pill)
       flex: none
-      height: 22px
+      height: 1.375rem
       position: relative
-      width: 22px
+      width: 1.375rem
 
     .choice[data-selected] .choice-mark::after
       background: var(--ink)
       border-radius: inherit
       content: ''
-      inset: 4px
+      inset: var(--space-xs)
       position: absolute

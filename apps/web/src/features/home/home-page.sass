@@ -12,7 +12,7 @@
     .album-cover
       --focus: var(--on-cover)
       background: var(--cover)
-      border-radius: 4px 10px 10px 4px
+      border-radius: var(--radius-art) var(--radius-frame) var(--radius-frame) var(--radius-art)
       box-shadow: inset 14px 0 0 -6px oklch(0 0 0 / 0.16), 0 30px 50px -36px color-mix(in oklab, var(--shadow) 80%, transparent)
       color: var(--on-cover)
       display: grid
@@ -28,10 +28,10 @@
         inset-block: 0
         inset-inline-start: 0
         position: absolute
-        width: 22px
+        width: 1.375rem
 
       @include layout.container-wide(46rem)
-        border-radius: 6px 14px 14px 6px
+        border-radius: var(--radius-book) var(--radius-cover) var(--radius-cover) var(--radius-book)
         padding: var(--space-xl) var(--space-2xl) var(--space-3xl) var(--space-3xl)
 
       @include layout.container-wide(68rem)

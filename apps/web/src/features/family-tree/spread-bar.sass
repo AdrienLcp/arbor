@@ -16,7 +16,7 @@
     z-index: 1
 
     .spread-bar-turn
-      @include focus.ring
+      @include focus.ring($offset: -4px)
       align-items: center
       background: none
       border: 0
@@ -25,20 +25,19 @@
       cursor: pointer
       display: grid
       flex: none
-      height: 48px
+      height: 3rem
       place-items: center
-      width: 48px
+      width: 3rem
 
       svg
-        height: 28px
-        width: 28px
+        height: 1.75rem
+        width: 1.75rem
 
       &[data-hovered]
         background: oklch(1 0 0 / 0.14)
 
       &[data-focus-visible]
         outline-color: var(--on-g3)
-        outline-offset: -4px
 
     .spread-bar-title
       @include typography.title
@@ -46,7 +45,6 @@
       text-align: center
 
     .spread-bar-subtitle
-      @include typography.label
+      @include typography.bar-subtitle
       display: block
-      letter-spacing: 0.04em
-      margin-top: 2px
+      margin-top: var(--space-2xs)

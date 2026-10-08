@@ -5,30 +5,30 @@
     stroke: var(--line)
     stroke-linecap: round
     stroke-linejoin: round
-    stroke-width: var(--line-plain)
+    stroke-width: var(--stroke-line-plain)
 
     &.marriage
-      stroke-width: var(--line-heavy)
+      stroke-width: var(--stroke-line-heavy)
 
     &.free-union
       stroke-dasharray: 7 5
       stroke-linecap: butt
-      stroke-width: var(--line-heavy)
+      stroke-width: var(--stroke-line-heavy)
 
     &.step
       stroke-dasharray: 0.1 6
-      stroke-width: var(--line-step)
+      stroke-width: var(--stroke-line-step)
 
     &.unknown
       stroke: var(--ghost)
       stroke-dasharray: 3 4
 
     &.adoption
-      stroke-width: var(--line-adoption)
+      stroke-width: var(--stroke-line-adoption)
 
     &.adoption-core
       stroke: var(--paper)
-      stroke-width: var(--line-adoption-core)
+      stroke-width: var(--stroke-line-adoption-core)
 
     // The two slashes of an ended union, over a paper gap so they read on the heavy line.
     &.cut-gap
@@ -36,4 +36,4 @@
       stroke-width: 7px
 
     &.cut
-      stroke-width: var(--line-step)
+      stroke-width: var(--stroke-line-step)

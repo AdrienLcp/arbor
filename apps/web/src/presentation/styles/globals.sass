@@ -2,12 +2,15 @@
 @use '@adrienlcp/styles/reduced-motion.css'
 @use '@adrienlcp/theme-preference/color-scheme.css'
 @use 'tokens'
+@use 'focus'
 @use 'fonts'
 @use 'generations'
 @use 'layout'
 @use 'typography'
 
 @layer base
+  @include focus.ring-focusables
+
   body
     @include layout.container
     @include typography.body

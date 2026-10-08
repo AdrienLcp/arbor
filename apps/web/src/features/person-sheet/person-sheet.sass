@@ -12,8 +12,8 @@
       padding: var(--space-l) var(--space-l) var(--space-m)
 
       .slot
-        --slot-height: 158px
-        --slot-width: 124px
+        --slot-height: 9.875rem
+        --slot-width: 7.75rem
 
     .sheet-identity
       min-width: 0
@@ -24,14 +24,12 @@
       overflow-wrap: anywhere
 
     .sheet-given-names
-      @include typography.headline
-      font-size: 44px
-      line-height: 0.95
+      @include typography.sheet-name
 
     .sheet-surname
       @include typography.headline
       color: var(--ink-soft)
-      font-size: 26px
+      font-size: 1.625rem
 
     .sheet-life
       display: grid
@@ -40,7 +38,7 @@
 
     .sheet-years
       @include typography.numeral
-      font-size: 20px
+      font-size: 1.25rem
 
     .sheet-generation
       @include typography.label
@@ -64,9 +62,9 @@
 
     .sheet-warning-icon
       flex: none
-      height: 20px
-      margin-top: 1px
-      width: 20px
+      height: var(--icon-m)
+      margin-top: 0.0625rem
+      width: var(--icon-m)
 
     .sheet-facts
       display: grid
@@ -82,7 +80,7 @@
       dt
         @include typography.label-strong
         color: var(--ink-soft)
-        padding-top: 2px
+        padding-top: var(--space-2xs)
 
       dd
         @include typography.body
@@ -95,7 +93,7 @@
       @include typography.title
       align-items: center
       display: flex
-      font-size: 19px
+      font-size: 1.1875rem
       gap: var(--space-m)
       margin-bottom: var(--space-s)
 
@@ -110,6 +108,7 @@
       white-space: pre-line
 
     .sheet-union
+      --union-swatch-width: 2.5rem
       border: var(--stroke-thin) solid var(--ghost-soft)
       border-radius: var(--radius-frame)
       margin-top: var(--space-s)
@@ -129,7 +128,9 @@
 
       .line-swatch
         flex: none
+        height: 1.375rem
+        width: var(--union-swatch-width)
 
     .sheet-union-edit
-      // Lines up with the story text, past its 40px swatch.
-      margin: var(--space-xs) 0 0 calc(40px + var(--space-m))
+      // Lines up with the story text, past its swatch.
+      margin: var(--space-xs) 0 0 calc(var(--union-swatch-width) + var(--space-m))
