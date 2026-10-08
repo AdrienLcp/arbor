@@ -28,10 +28,9 @@
         width: var(--target)
 
 // Outside the layers: react-zoom-pan-pinch injects its `fit-content` size outside any layer, and that beats every layered rule.
+// Inherited values stay put while panning: the library sets `user-select` inline on every pan, and a changed inherited value (that or a `grabbing` cursor) restyles the whole drawing — 300 ms on a slow phone.
 .tree-canvas .tree-viewport
   cursor: grab
   height: 100%
+  user-select: none
   width: 100%
-
-  &:active
-    cursor: grabbing
