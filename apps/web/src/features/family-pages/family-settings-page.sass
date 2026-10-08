@@ -6,7 +6,7 @@
     @include layout.column(40rem)
     display: grid
     gap: var(--space-3xl)
-    padding-block: var(--space-2xl) var(--space-section)
+    padding-block: var(--space-2xl) max(var(--space-section), var(--safe-area-bottom))
 
     .family-settings-title
       @include typography.headline

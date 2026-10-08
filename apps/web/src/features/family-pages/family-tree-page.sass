@@ -3,10 +3,14 @@
 @use '../../presentation/styles/typography'
 
 @layer components
+  // Held to the viewport, the screen never scrolls the document: a reserved scrollbar gutter would be an empty strip.
+  :root:has(.family-tree-screen)
+    scrollbar-gutter: auto
+
   .family-tree-screen
     display: grid
     grid-template-rows: auto minmax(0, 1fr)
-    height: calc(100dvh - var(--safe-area-top) - var(--safe-area-bottom))
+    height: 100dvh
 
   .family-tree-page
     display: grid
@@ -20,7 +24,7 @@
       flex-wrap: wrap
       gap: var(--space-l) var(--space-2xl)
       justify-content: space-between
-      padding: var(--space-l) var(--space-gutter)
+      padding: var(--space-l) var(--page-padding-inline-end) var(--space-l) var(--page-padding-inline-start)
 
     .family-tree-title
       @include typography.headline

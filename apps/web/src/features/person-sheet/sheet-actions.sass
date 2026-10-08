@@ -4,7 +4,7 @@
   .sheet-actions
     display: grid
     gap: var(--space-m)
-    padding: var(--space-xl) var(--space-l) 0
+    padding: var(--space-xl) max(var(--space-l), var(--sheet-inset-end)) 0 max(var(--space-l), var(--sheet-inset-start))
 
     .sheet-actions-note
       @include typography.body-small

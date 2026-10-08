@@ -6,7 +6,7 @@
     @include layout.column(34rem)
     display: grid
     gap: var(--space-l)
-    padding-block: var(--space-2xl) var(--space-section)
+    padding-block: var(--space-2xl) max(var(--space-section), var(--safe-area-bottom))
 
     .open-link-title
       @include typography.headline

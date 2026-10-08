@@ -21,20 +21,27 @@
 
   // A floating panel on a computer; on a phone the whole screen, so the keyboard never hides a field.
   .form-dialog-modal
+    --dialog-inset-bottom: var(--safe-area-bottom)
+    --dialog-inset-left: var(--safe-area-left)
+    --dialog-inset-right: var(--safe-area-right)
+    --dialog-inset-top: var(--safe-area-top)
     background: var(--paper)
     display: grid
     height: 100dvh
     min-height: 0
-    padding: var(--safe-area-top) var(--safe-area-right) var(--safe-area-bottom) var(--safe-area-left)
     transition: translate var(--transition-base) var(--ease-out)
     width: 100%
 
     @include layout.wide
+      // The overlay around the panel has paid the safe area.
+      --dialog-inset-bottom: 0px
+      --dialog-inset-left: 0px
+      --dialog-inset-right: 0px
+      --dialog-inset-top: 0px
       border-radius: var(--radius-frame)
       box-shadow: var(--shadow-dialog)
       height: auto
       max-height: calc(100dvh - 2 * var(--space-gutter))
-      padding: 0
       max-width: 36rem
 
     &[data-entering],
@@ -53,7 +60,7 @@
       display: flex
       gap: var(--space-m)
       justify-content: space-between
-      padding: var(--space-xs) var(--space-xs) var(--space-xs) var(--space-l)
+      padding: max(var(--space-xs), var(--dialog-inset-top)) max(var(--space-xs), var(--dialog-inset-right)) var(--space-xs) max(var(--space-l), var(--dialog-inset-left))
 
     .form-dialog-title
       @include typography.title
@@ -67,5 +74,5 @@
 
     .form-dialog-body
       overflow-y: auto
-      padding: var(--space-l) var(--space-l) var(--space-2xl)
+      padding: var(--space-l) max(var(--space-l), var(--dialog-inset-right)) max(var(--space-2xl), var(--dialog-inset-bottom)) max(var(--space-l), var(--dialog-inset-left))
       scrollbar-width: thin

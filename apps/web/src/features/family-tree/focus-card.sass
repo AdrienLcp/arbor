@@ -6,11 +6,11 @@
     background: var(--paper)
     border: var(--stroke-thin) solid var(--ghost-soft)
     border-radius: var(--radius-frame)
-    bottom: var(--space-l)
+    bottom: max(var(--space-l), var(--safe-area-bottom))
     box-shadow: var(--shadow-card)
     display: flex
     gap: var(--space-l)
-    left: var(--space-l)
+    left: max(var(--space-l), var(--safe-area-left))
     max-width: calc(100% - 2 * var(--space-l) - 4rem)
     padding: var(--space-s) var(--space-s) var(--space-s) var(--space-l)
     position: absolute

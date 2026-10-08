@@ -7,7 +7,7 @@
     display: grid
     gap: var(--space-2xl)
     grid-template-columns: minmax(0, 1fr)
-    padding-block: var(--space-2xl) var(--space-section)
+    padding-block: var(--space-2xl) max(var(--space-section), var(--safe-area-bottom))
 
     .family-home-head
       @include layout.column(var(--page-width))
@@ -47,7 +47,7 @@
       display: flex
       flex-wrap: wrap
       gap: var(--space-xs) var(--space-l)
-      padding: var(--space-s) calc(var(--space-xl) + var(--band-cut)) var(--space-s) var(--space-gutter)
+      padding: var(--space-s) calc(var(--space-xl) + var(--band-cut)) var(--space-s) var(--page-padding-inline-start)
       width: fit-content
 
     .generation-band-count

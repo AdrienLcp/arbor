@@ -6,7 +6,7 @@
     @include layout.column(36rem)
     display: grid
     gap: var(--space-l)
-    padding-top: var(--space-xl)
+    padding-top: max(var(--space-xl), var(--safe-area-top))
 
     .who-am-i-head
       display: grid
@@ -52,8 +52,8 @@
       display: grid
       gap: var(--space-s)
       justify-items: center
-      margin-inline: calc(-1 * var(--space-gutter))
-      padding: var(--space-l) var(--space-gutter) max(var(--space-xl), var(--safe-area-bottom))
+      margin-inline: calc(-1 * var(--page-padding-inline-start)) calc(-1 * var(--page-padding-inline-end))
+      padding: var(--space-l) var(--page-padding-inline-end) max(var(--space-xl), var(--safe-area-bottom)) var(--page-padding-inline-start)
       position: sticky
 
     .who-am-i-own-name

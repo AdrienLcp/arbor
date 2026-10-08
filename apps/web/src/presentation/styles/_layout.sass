@@ -1,9 +1,9 @@
 @forward '@adrienlcp/styles/breakpoints' with ($wide-screen: 40rem)
 @forward '@adrienlcp/styles/containers'
 
-/// A page's reading column, centred, kept off the screen's edges by the gutter.
+/// A page's reading column, centred, kept off the screen's edges by the gutter or the safe area, the larger.
 @mixin column($width: var(--measure))
   margin-inline: auto
-  max-width: calc($width + 2 * var(--space-gutter))
-  padding-inline: var(--space-gutter)
+  max-width: calc($width + var(--page-padding-inline-start) + var(--page-padding-inline-end))
+  padding-inline: var(--page-padding-inline-start) var(--page-padding-inline-end)
   width: 100%

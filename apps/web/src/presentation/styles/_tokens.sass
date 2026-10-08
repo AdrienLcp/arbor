@@ -94,6 +94,8 @@
     --space-3xl: 3rem
     --space-section: 4rem
     --space-gutter: 1rem
+    --page-padding-inline-start: max(var(--space-gutter), var(--safe-area-left))
+    --page-padding-inline-end: max(var(--space-gutter), var(--safe-area-right))
     --page-width: 82.5rem
 
     // Shape
@@ -127,9 +129,9 @@
     --shadow-sticker-lift: 0 14px 22px -10px color-mix(in oklch, var(--shadow-ink) 70%, transparent)
     --shadow-sticker-picked-up: var(--shadow-sticker-edge), 0 26px 30px -14px color-mix(in oklch, var(--shadow-ink) 70%, transparent)
     --shadow-mini-sticker: var(--shadow-sticker-edge), 0 3px 6px -3px color-mix(in oklch, var(--shadow-ink) 60%, transparent)
-    --shadow-button: 0 2px 0 -0.5px color-mix(in oklch, var(--shadow-ink) 40%, transparent), 0 6px 14px -8px var(--shadow-ink)
-    --shadow-button-hovered: 0 3px 0 -0.5px color-mix(in oklch, var(--shadow-ink) 40%, transparent), 0 10px 18px -8px var(--shadow-ink)
-    --shadow-button-pressed: 0 1px 2px -1px var(--shadow-ink)
+    --shadow-button: 0 calc(var(--press-shift) * 2) 0 -0.5px color-mix(in oklch, var(--shadow-ink) 40%, transparent), 0 6px 14px -8px var(--shadow-ink)
+    --shadow-button-hovered: 0 calc(var(--press-shift) * 3) 0 -0.5px color-mix(in oklch, var(--shadow-ink) 40%, transparent), 0 10px 18px -8px var(--shadow-ink)
+    --shadow-button-pressed: 0 var(--press-shift) 2px -1px var(--shadow-ink)
     --shadow-card: 0 1px 2px color-mix(in oklch, var(--shadow-ink) 20%, transparent), 0 14px 24px -18px var(--shadow-ink)
     --shadow-popover: 0 1px 2px color-mix(in oklch, var(--shadow-ink) 24%, transparent), 0 18px 32px -18px var(--shadow-ink)
     --shadow-dialog: 0 2px 4px color-mix(in oklch, var(--shadow-ink) 30%, transparent), 0 30px 50px -30px var(--shadow-ink)

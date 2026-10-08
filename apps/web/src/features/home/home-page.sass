@@ -7,7 +7,7 @@
     @include layout.container
     display: grid
     gap: var(--space-2xl)
-    padding-block: var(--space-l) var(--space-section)
+    padding-block: max(var(--space-l), var(--safe-area-top)) max(var(--space-section), var(--safe-area-bottom))
 
     .album-cover
       --focus: var(--on-cover)

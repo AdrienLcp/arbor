@@ -9,8 +9,8 @@
     justify-items: start
     margin-inline: auto
     max-width: 34rem
-    min-height: calc(100dvh - var(--safe-area-top) - var(--safe-area-bottom))
-    padding: var(--space-section) var(--space-gutter)
+    min-height: 100dvh
+    padding: max(var(--space-section), var(--safe-area-top)) var(--page-padding-inline-end) max(var(--space-section), var(--safe-area-bottom)) var(--page-padding-inline-start)
 
     .notice-icon
       color: var(--ink-soft)

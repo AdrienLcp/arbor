@@ -3,14 +3,18 @@
 
 @layer components
   // On a phone the sheet fills the stage; on a computer it slides over the canvas's right side, a floating panel.
+  // On a phone the sheet reaches both sides of the screen; on a computer only the right one.
   .person-sheet-page
+    --sheet-inset-end: var(--safe-area-right)
+    --sheet-inset-start: var(--safe-area-left)
     background: var(--paper)
     min-height: 0
     overflow-y: auto
-    padding-bottom: var(--space-2xl)
+    padding-bottom: max(var(--space-2xl), var(--safe-area-bottom))
     scrollbar-width: thin
 
     @include layout.wide
+      --sheet-inset-start: 0px
       border-left: var(--stroke-thin) solid var(--ghost-soft)
       bottom: 0
       box-shadow: var(--shadow-sheet)
@@ -23,7 +27,7 @@
     .sheet-top
       background: var(--paper)
       border-bottom: var(--stroke-thin) solid var(--ghost-soft)
-      padding: var(--space-xs)
+      padding: var(--space-xs) max(var(--space-xs), var(--sheet-inset-end)) var(--space-xs) max(var(--space-xs), var(--sheet-inset-start))
       position: sticky
       top: 0
       z-index: 1
@@ -31,7 +35,7 @@
     .sheet-missing
       display: grid
       gap: var(--space-m)
-      padding: var(--space-xl) var(--space-l)
+      padding: var(--space-xl) max(var(--space-l), var(--sheet-inset-end)) var(--space-xl) max(var(--space-l), var(--sheet-inset-start))
 
     .sheet-missing-title
       @include typography.title

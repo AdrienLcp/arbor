@@ -5,14 +5,14 @@
     min-height: 0
     overflow-x: hidden
     overflow-y: auto
-    padding-bottom: var(--space-3xl)
+    padding-bottom: max(var(--space-3xl), var(--safe-area-bottom))
     scrollbar-width: thin
 
   // A generation's band on a phone page: its ink at 9% into the paper, a firmer rule on top, as on the canvas.
   .spread-band
     background: color-mix(in oklab, var(--gc) 9%, var(--paper))
     border-top: var(--stroke-bold) solid color-mix(in oklab, var(--gc) 55%, var(--paper))
-    padding: var(--space-l) var(--space-m) var(--space-xl)
+    padding: var(--space-l) max(var(--space-m), var(--safe-area-right)) var(--space-xl) max(var(--space-m), var(--safe-area-left))
 
     .spread-band-head
       @include typography.label-strong

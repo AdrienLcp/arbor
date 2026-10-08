@@ -15,12 +15,12 @@
       background: var(--paper)
       border: var(--stroke-thin) solid var(--ghost-soft)
       border-radius: var(--radius-frame)
-      bottom: var(--space-l)
+      bottom: max(var(--space-l), var(--safe-area-bottom))
       display: grid
       gap: var(--space-xs)
       padding: var(--space-xs)
       position: absolute
-      right: var(--space-l)
+      right: max(var(--space-l), var(--safe-area-right))
 
       .button
         min-height: var(--target)

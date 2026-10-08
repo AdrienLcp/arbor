@@ -9,7 +9,7 @@
       border-bottom: var(--stroke-bold) solid color-mix(in oklab, var(--gc) 55%, var(--paper))
       display: flex
       gap: var(--space-l)
-      padding: var(--space-l) var(--space-l) var(--space-m)
+      padding: var(--space-l) max(var(--space-l), var(--sheet-inset-end)) var(--space-m) max(var(--space-l), var(--sheet-inset-start))
 
       .slot
         --slot-height: 9.875rem
@@ -48,7 +48,7 @@
       display: grid
       gap: var(--space-s)
       list-style: none
-      margin: var(--space-l) var(--space-l) 0
+      margin: var(--space-l) max(var(--space-l), var(--sheet-inset-end)) 0 max(var(--space-l), var(--sheet-inset-start))
       padding: 0
 
     .sheet-warning
@@ -70,7 +70,7 @@
       display: grid
       gap: var(--space-m)
       margin: 0
-      padding: var(--space-l) var(--space-l) 0
+      padding: var(--space-l) max(var(--space-l), var(--sheet-inset-end)) 0 max(var(--space-l), var(--sheet-inset-start))
 
       > div
         display: grid
@@ -87,7 +87,7 @@
         margin: 0
 
     .sheet-group
-      padding: var(--space-xl) var(--space-l) 0
+      padding: var(--space-xl) max(var(--space-l), var(--sheet-inset-end)) 0 max(var(--space-l), var(--sheet-inset-start))
 
     .sheet-group-title
       @include typography.title

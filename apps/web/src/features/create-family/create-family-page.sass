@@ -8,7 +8,7 @@
     display: grid
     gap: var(--space-xl)
     grid-template-areas: 'head' 'preview' 'form'
-    padding-block: var(--space-2xl) var(--space-section)
+    padding-block: var(--space-2xl) max(var(--space-section), var(--safe-area-bottom))
 
     @include layout.container-wide(40rem)
       align-items: start

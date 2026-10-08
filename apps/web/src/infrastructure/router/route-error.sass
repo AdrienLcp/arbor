@@ -1,0 +1,9 @@
+@use '../../presentation/styles/layout'
+
+@layer components
+  .route-error
+    @include layout.column(34rem)
+    display: grid
+    gap: var(--space-l)
+    justify-items: start
+    padding-block: max(var(--space-2xl), var(--safe-area-top)) max(var(--space-section), var(--safe-area-bottom))
