@@ -6,9 +6,11 @@ import type { EntityId } from '@arbor/protocol/entity-id'
 import type { Person } from '@arbor/protocol/person'
 
 import { isLiving } from '@arbor/core/family/is-living'
+import type { KinPath } from '@arbor/core/kinship/kinship'
 import type { TreeCard } from '@arbor/core/tree-layout/tree-layout'
 import { CARD_HEIGHT, CARD_WIDTH } from '@arbor/core/tree-layout/tree-metrics'
 
+import { kinHighlightOf } from '@/features/kinship/kin-highlight'
 import { lifeYears } from '@/features/people/life-years'
 import { personName } from '@/features/people/person-name'
 import { PortraitImage } from '@/features/photos/portrait-image'
@@ -20,7 +22,7 @@ import { Sticker } from '@/presentation/components/sticker'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { RelationWords } from './relation-words'
-import { TreeLines } from './tree-lines'
+import { pathOf, TreeLines } from './tree-lines'
 import type { TreeScene } from './tree-scene'
 
 import './tree-plane.sass'
@@ -39,6 +41,8 @@ export type TreePlaneProps = {
   focusId: EntityId
   /** Describes how to move between the stickers, on each of them. */
   instructionsId: string
+  /** How two people are related, traced over the tree with everyone else faded; `null` when nothing is lit. */
+  litPath: KinPath | null
   /** An arrow key pressed on a sticker; `true` when the key was an arrow, so its default scroll is kept from happening. */
   onArrowKey: (card: PersonCard, key: string) => boolean
   onFocusCard: (card: PersonCard) => void
@@ -57,6 +61,7 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
   activeKey,
   focusId,
   instructionsId,
+  litPath,
   onArrowKey,
   onFocusCard,
   onPressPerson,
@@ -67,6 +72,10 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
   today
 }) => {
   const translate = useTranslate()
+  const highlight =
+    litPath === null ? null : kinHighlightOf(scene.layout, litPath)
+  const isUnlit = (card: TreeCard): boolean =>
+    highlight !== null && !highlight.cardKeys.has(card.key)
   const placeOf = ({
     x,
     y
@@ -84,7 +93,7 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
     if (card.kind === 'unknown-parent') {
       return (
         <GhostSlot
-          className='tree-card'
+          className={classNames('tree-card', isUnlit(card) && 'unlit')}
           generation={card.generation}
           hint={translate('tree.unknownParent.hint')}
           key={card.key}
@@ -105,7 +114,7 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
       <SlotButton
         aria-describedby={instructionsId}
         aria-label={years === '' ? name : `${name}, ${years}`}
-        className='tree-card'
+        className={classNames('tree-card', isUnlit(card) && 'unlit')}
         excludeFromTabOrder={card.key !== activeKey}
         key={card.key}
         onFocus={() => onFocusCard(card)}
@@ -149,7 +158,7 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
 
   return (
     <div
-      className='tree-plane'
+      className={classNames('tree-plane', highlight !== null && 'is-lit')}
       style={{
         '--plane-height': `${scene.height}px`,
         '--plane-width': `${scene.width}px`
@@ -169,6 +178,24 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
         />
       ))}
       <TreeLines scene={scene} />
+      {highlight === null ? null : (
+        <svg
+          aria-hidden='true'
+          className='kin-marker'
+          height={scene.height}
+          width={scene.width}
+        >
+          <g transform={`translate(${-scene.origin.x} ${-scene.origin.y})`}>
+            {highlight.strokes.map((points) => (
+              <path
+                className='kin-marker-stroke'
+                d={pathOf(points)}
+                key={pathOf(points)}
+              />
+            ))}
+          </g>
+        </svg>
+      )}
       {scene.layout.cards.map(cardOf)}
       <RelationWords scene={scene} />
     </div>

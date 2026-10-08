@@ -1,6 +1,6 @@
 import type { Locale } from '@arbor/protocol/locale'
 
-import type { Kinship } from './kinship'
+import type { Kinship, KinshipPerson } from './kinship'
 import {
   describeKinshipInEnglish,
   kinshipTermInEnglish
@@ -10,7 +10,8 @@ import {
   kinshipTermInFrench
 } from './kinship-in-french'
 
-type Names = { personName: string; relativeName: string }
+/** Who the sentence is about: the relative is its subject, the person the one they are related to. */
+type Names = { person: KinshipPerson; relative: KinshipPerson }
 
 const WORDING = {
   en: { describe: describeKinshipInEnglish, term: kinshipTermInEnglish },
@@ -23,7 +24,7 @@ const WORDING = {
   }
 >
 
-/** The relation in one sentence, the relative first: "Michel est le demi-frère de Pierre." */
+/** The relation in one sentence, the relative first: "Michel est le demi-frère de Pierre.", "Michel est votre demi-frère." */
 export const describeKinship = (
   kinship: Kinship,
   { locale, ...names }: Names & { locale: Locale }

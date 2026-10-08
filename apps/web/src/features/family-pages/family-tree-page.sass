@@ -28,6 +28,14 @@
       overflow-wrap: anywhere
       text-wrap: balance
 
+      // A lit kinship path is titled by its sentence, read rather than printed (The Two Voices Rule).
+      &.is-sentence
+        @include typography.name
+        font-size: 28px
+        letter-spacing: normal
+        line-height: 1.2
+        text-transform: none
+
       // On a phone the spread bar says whose page it is: the heading stays for screen readers only.
       @include layout.narrow
         @include accessibility.visually-hidden
@@ -64,9 +72,10 @@
         justify-content: stretch
 
       // The pressed choice and the field's placeholder say what each control is; the labels stay for screen readers.
-      .segmented-label,
-      .combo-box-label
-        @include accessibility.visually-hidden
+      .family-tree-controls
+        .segmented-label,
+        .combo-box-label
+          @include accessibility.visually-hidden
 
       .person-search
         width: 100%

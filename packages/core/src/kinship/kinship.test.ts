@@ -7,6 +7,7 @@ import { DEMO_FAMILY_OPERATIONS } from '../family/demo-family'
 import { replayOperations } from '../family/replay-operations'
 import { familyLineage } from '../tree-layout/family-lineage'
 import { describeKinship, kinshipTerm } from './describe-kinship'
+import { kinStepsAlong } from './kin-steps'
 import type { KinshipSources } from './kinship'
 import { kinshipBetween } from './kinship-between'
 
@@ -186,7 +187,7 @@ describe('[kinship] naming a relation', () => {
   )
 
   it('[kinship] tells a full sentence, eliding before a vowel', () => {
-    const names = { personName: 'Anne', relativeName: 'Pierre' }
+    const names = { person: { name: 'Anne' }, relative: { name: 'Pierre' } }
     const kinship = kinshipOf('anne-morel', 'pierre-morel')
 
     expect(describeKinship(kinship, { ...names, locale: 'fr' })).toBe(
@@ -197,6 +198,65 @@ describe('[kinship] naming a relation', () => {
     )
   })
 
+  it.each([
+    [
+      'lucie-morel',
+      'pierre-morel',
+      'Pierre',
+      'Pierre est votre grand-père.',
+      'Pierre is your grandfather.'
+    ],
+    [
+      'anne-morel',
+      'rene-morel',
+      'René',
+      'René est le cousin germain de votre père.',
+      'René is your first cousin once removed.'
+    ],
+    [
+      'rene-morel',
+      'anne-morel',
+      'Anne',
+      'Anne est la fille de votre cousin germain.',
+      'Anne is your first cousin once removed.'
+    ],
+    [
+      'auguste-morel',
+      'sophie-garnier',
+      'Sophie',
+      'Sophie est votre arrière-petite-fille par alliance.',
+      'Sophie is your great-granddaughter by marriage.'
+    ],
+    [
+      'emma-bertin',
+      'noah-morel',
+      'Noah',
+      'Noah et vous n’avez aucun lien connu dans l’arbre.',
+      'Noah and you have no known link in the tree.'
+    ]
+  ])(
+    '[kinship] speaks to the visitor about their own relation to %s’s %s',
+    (personId, relativeId, relativeName, french, english) => {
+      const kinship = kinshipOf(personId, relativeId)
+      const told = { person: 'you' as const, relative: { name: relativeName } }
+
+      expect(describeKinship(kinship, { ...told, locale: 'fr' })).toBe(french)
+      expect(describeKinship(kinship, { ...told, locale: 'en' })).toBe(english)
+    }
+  )
+
+  it('[kinship] speaks to the visitor about their own place on someone else’s side', () => {
+    const kinship = kinshipOf('thomas-bertin', 'lucie-morel')
+    const told = { person: { name: 'Thomas' }, relative: 'you' as const }
+
+    expect(describeKinship(kinship, { ...told, locale: 'fr' })).toBe(
+      'Vous êtes la nièce par alliance de Thomas.'
+    )
+    expect(describeKinship(kinship, { ...told, locale: 'en' })).toBe(
+      'You are Thomas’s niece by marriage.'
+    )
+  })
+
   it('[kinship] says so when two people have no known link', () => {
     const kinship = kinshipOf('emma-bertin', 'noah-morel')
 
@@ -204,8 +264,8 @@ describe('[kinship] naming a relation', () => {
     expect(
       describeKinship(kinship, {
         locale: 'fr',
-        personName: 'Emma',
-        relativeName: 'Noah'
+        person: { name: 'Emma' },
+        relative: { name: 'Noah' }
       })
     ).toBe('Noah et Emma n’ont aucun lien connu dans l’arbre.')
   })
@@ -218,6 +278,23 @@ describe('[kinship] naming a relation', () => {
 })
 
 describe('[kinship] the path to light up', () => {
+  it('[kinship] tells each move along the path: up, down, across', () => {
+    const kinship = kinshipOf('michel-morel', 'claire-dubois')
+    const path = kinship.kind === 'in-law' ? kinship.tie.path : []
+
+    expect(
+      kinStepsAlong(demoSources().lineage, path).map((step) =>
+        step.direction === 'across'
+          ? [step.direction, step.union?.id]
+          : [step.direction, step.filiation.kind]
+      )
+    ).toEqual([
+      ['up', 'birth'],
+      ['down', 'birth'],
+      ['across', 'pierre-claire']
+    ])
+  })
+
   it('[kinship] climbs to the shared ancestor and down the other side', () => {
     const kinship = kinshipOf('anne-morel', 'rene-morel')
 

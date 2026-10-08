@@ -1,15 +1,23 @@
 import type { Union } from '@arbor/protocol/union'
 
 import { type InLawRole, inLawRoleOf } from './in-law-role'
-import type { BloodTie, Kinship, Sex } from './kinship'
+import type { BloodTie, Kinship, KinshipPerson, Sex } from './kinship'
 
 type FrenchNoun = { gender: 'feminine' | 'masculine'; word: string }
 
+/**
+ * The relative the relation is told through, for cousins of unequal
+ * generations: "d'un cousin germain" (one of the person's cousins), "du père"
+ * (the person's own father).
+ */
+type FrenchLink = { isOneOfSeveral: boolean; nouns: readonly FrenchNoun[] }
+
 /** The words for one relation: a single noun, or "le frère ou la sœur" when French has no neutral one. */
 type FrenchPhrase = {
-  /** Said after the noun: "d'un cousin germain", "par alliance". */
-  complement: string
+  link: FrenchLink | null
   nouns: readonly FrenchNoun[]
+  /** Said last: " par alliance". */
+  suffix: string
 }
 
 type GenderedWords = { feminine: string; masculine: string; neutral?: string }
@@ -35,8 +43,9 @@ const prefixed = (nouns: readonly FrenchNoun[], prefix: string): FrenchNoun[] =>
   nouns.map((noun) => ({ ...noun, word: prefix + noun.word }))
 
 const phraseOf = (nouns: readonly FrenchNoun[]): FrenchPhrase => ({
-  complement: '',
-  nouns
+  link: null,
+  nouns,
+  suffix: ''
 })
 
 const greatTimes = (count: number): string => GREAT.repeat(Math.max(0, count))
@@ -142,6 +151,7 @@ const PARTNER_WORDS = {
 
 /** Whether a word takes "l'" rather than "le" or "la": a vowel or a mute h. */
 const startsWithVowelSound = (word: string): boolean =>
+  // cspell:disable-next-line
   /^[aeiouyhàâäéèêëîïôöùûüœæ]/iu.test(word)
 
 const determined = (
@@ -163,11 +173,31 @@ const determined = (
   }
 }
 
-const said = (
-  { complement, nouns }: FrenchPhrase,
-  determiner: Determiner
-): string =>
-  nouns.map((noun) => determined(noun, determiner)).join(' ou ') + complement
+const saidAll = (
+  nouns: readonly FrenchNoun[],
+  say: (noun: FrenchNoun) => string
+): string => nouns.map(say).join(' ou ')
+
+/** The relation as it follows "est" about a named person, whose name comes next: "le cousin germain du père". */
+const saidOfSomeone = ({ link, nouns, suffix }: FrenchPhrase): string => {
+  const head = saidAll(nouns, (noun) => determined(noun, 'definite'))
+  const linked =
+    link === null
+      ? ''
+      : ` ${saidAll(link.nouns, (noun) =>
+          determined(noun, link.isOneOfSeveral ? 'ofIndefinite' : 'ofDefinite')
+        )}`
+  return head + linked + suffix
+}
+
+/** The relation as it follows "est" about the visitor: "votre grand-père", "le cousin germain de votre père". */
+const saidOfYou = ({ link, nouns, suffix }: FrenchPhrase): string => {
+  if (link === null) {
+    return saidAll(nouns, ({ word }) => `votre ${word}`) + suffix
+  }
+  const head = saidAll(nouns, (noun) => determined(noun, 'definite'))
+  return `${head} ${saidAll(link.nouns, ({ word }) => `de votre ${word}`)}${suffix}`
+}
 
 const bloodPhrase = (
   { degree: { down, up }, isHalf, removedLinkSex }: BloodTie,
@@ -185,16 +215,19 @@ const bloodPhrase = (
   if (down === 1) return phraseOf(prefixed(uncleNouns(up, sex), half))
   if (up === down) return phraseOf(prefixed(cousinNouns(up, sex), half))
   if (down > up) {
-    const cousin = phraseOf(prefixed(cousinNouns(up, linkSex), half))
     return {
-      complement: ` ${said(cousin, 'ofIndefinite')}`,
-      nouns: descendantNouns(down - up, sex)
+      link: {
+        isOneOfSeveral: true,
+        nouns: prefixed(cousinNouns(up, linkSex), half)
+      },
+      nouns: descendantNouns(down - up, sex),
+      suffix: ''
     }
   }
-  const ancestor = phraseOf(ancestorNouns(up - down, linkSex))
   return {
-    complement: ` ${said(ancestor, 'ofDefinite')}`,
-    nouns: prefixed(cousinNouns(down, sex), half)
+    link: { isOneOfSeveral: false, nouns: ancestorNouns(up - down, linkSex) },
+    nouns: prefixed(cousinNouns(down, sex), half),
+    suffix: ''
   }
 }
 
@@ -223,10 +256,9 @@ const kinshipPhrase = (kinship: Kinship): FrenchPhrase | null => {
           phraseOf(nounsFor(kinship.relativeSex, IN_LAW_WORDS[role]))
         )
       }
-      const asBlood = bloodPhrase(kinship.tie, kinship.relativeSex)
       return formerIf(kinship.isFormer, {
-        ...asBlood,
-        complement: `${asBlood.complement} par alliance`
+        ...bloodPhrase(kinship.tie, kinship.relativeSex),
+        suffix: ' par alliance'
       })
     }
     default:
@@ -237,20 +269,31 @@ const kinshipPhrase = (kinship: Kinship): FrenchPhrase | null => {
 /** The relation with its article, as it follows "est": "la demi-sœur", "le cousin germain du père". */
 export const kinshipTermInFrench = (kinship: Kinship): string | null => {
   const phrase = kinshipPhrase(kinship)
-  return phrase === null ? null : said(phrase, 'definite')
+  return phrase === null ? null : saidOfSomeone(phrase)
 }
 
 const ofName = (name: string): string =>
   startsWithVowelSound(name) ? `d’${name}` : `de ${name}`
 
-/** "Anne est la petite-fille de Louis." */
+/** "Anne est la petite-fille de Louis.", "Pierre est votre grand-père.", "Vous êtes la nièce de Simone." */
 export const describeKinshipInFrench = (
   kinship: Kinship,
-  { personName, relativeName }: { personName: string; relativeName: string }
+  { person, relative }: { person: KinshipPerson; relative: KinshipPerson }
 ): string => {
+  const phrase = kinshipPhrase(kinship)
   if (kinship.kind === 'self') return 'C’est la même personne.'
-  const term = kinshipTermInFrench(kinship)
-  return term === null
-    ? `${relativeName} et ${personName} n’ont aucun lien connu dans l’arbre.`
-    : `${relativeName} est ${term} ${ofName(personName)}.`
+  if (person === 'you') {
+    const relativeName = relative === 'you' ? '' : relative.name
+    return phrase === null
+      ? `${relativeName} et vous n’avez aucun lien connu dans l’arbre.`
+      : `${relativeName} est ${saidOfYou(phrase)}.`
+  }
+  if (relative === 'you') {
+    return phrase === null
+      ? `Vous et ${person.name} n’avez aucun lien connu dans l’arbre.`
+      : `Vous êtes ${saidOfSomeone(phrase)} ${ofName(person.name)}.`
+  }
+  return phrase === null
+    ? `${relative.name} et ${person.name} n’ont aucun lien connu dans l’arbre.`
+    : `${relative.name} est ${saidOfSomeone(phrase)} ${ofName(person.name)}.`
 }

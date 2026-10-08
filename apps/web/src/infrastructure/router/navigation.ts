@@ -87,6 +87,36 @@ export const useHistoryPersonId = (): EntityId | null => {
   return personId.success ? personId.data : null
 }
 
+/** The query fields that light up, on the tree, how one person is related to another. */
+const KINSHIP_QUERY = { personId: 'from', relativeId: 'to' } as const
+
+export type KinshipPair = { personId: EntityId; relativeId: EntityId }
+
+/** The whole tree with the path from one person to another lit up. */
+export const kinshipTreePathFor = ({
+  familyId,
+  personId,
+  relativeId
+}: KinshipPair & { familyId: FamilyId }): string =>
+  `${familyTreePathFor(familyId)}?${new URLSearchParams({
+    [KINSHIP_QUERY.personId]: personId,
+    [KINSHIP_QUERY.relativeId]: relativeId
+  })}`
+
+/** The two people whose path the tree's address lights up, `null` when it lights none. */
+export const useLitKinshipPair = (): KinshipPair | null => {
+  const [searchParams] = useSearchParams()
+  const personId = entityIdSchema.safeParse(
+    searchParams.get(KINSHIP_QUERY.personId)
+  )
+  const relativeId = entityIdSchema.safeParse(
+    searchParams.get(KINSHIP_QUERY.relativeId)
+  )
+  return personId.success && relativeId.success
+    ? { personId: personId.data, relativeId: relativeId.data }
+    : null
+}
+
 type Loader = (...args: never[]) => unknown
 
 /** What the current route's loader resolved. */

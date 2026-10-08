@@ -1,7 +1,7 @@
 import type { Union } from '@arbor/protocol/union'
 
 import { type InLawRole, inLawRoleOf } from './in-law-role'
-import type { BloodTie, Kinship, Sex } from './kinship'
+import type { BloodTie, Kinship, KinshipPerson, Sex } from './kinship'
 
 type GenderedWords = { female: string; male: string; neutral?: string }
 
@@ -184,14 +184,20 @@ export const kinshipTermInEnglish = (kinship: Kinship): string | null => {
   }
 }
 
-/** "Anne is Louis’s granddaughter." */
+/** "Anne is Louis’s granddaughter.", "Pierre is your grandfather.", "You are Simone’s niece." */
 export const describeKinshipInEnglish = (
   kinship: Kinship,
-  { personName, relativeName }: { personName: string; relativeName: string }
+  { person, relative }: { person: KinshipPerson; relative: KinshipPerson }
 ): string => {
   if (kinship.kind === 'self') return 'That is the same person.'
   const term = kinshipTermInEnglish(kinship)
-  return term === null
-    ? `${relativeName} and ${personName} have no known link in the tree.`
-    : `${relativeName} is ${personName}’s ${term}.`
+  const personName = person === 'you' ? 'you' : person.name
+  const relativeName = relative === 'you' ? 'You' : relative.name
+  if (term === null) {
+    return `${relativeName} and ${personName} have no known link in the tree.`
+  }
+  const whose = person === 'you' ? 'your' : `${person.name}’s`
+  return relative === 'you'
+    ? `You are ${whose} ${term}.`
+    : `${relativeName} is ${whose} ${term}.`
 }

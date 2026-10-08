@@ -1,0 +1,69 @@
+@use '../../presentation/styles/typography'
+@use '../family-tree/line-strokes'
+
+@layer components
+  // Wider than a phone only when a relation by marriage crosses over twice: then it scrolls sideways.
+  .kin-chart
+    margin-inline: calc(-1 * var(--space-l))
+    overflow-x: auto
+    padding: var(--space-m) var(--space-l)
+
+  .kin-chart-plane
+    height: var(--chart-height)
+    margin-inline: auto
+    position: relative
+    width: var(--chart-width)
+
+  .kin-chart-lines
+    inset: 0
+    overflow: visible
+    pointer-events: none
+    position: absolute
+    @include line-strokes.strokes
+
+  .kin-chart-people
+    list-style: none
+    margin: 0
+    padding: 0
+
+  .kin-chart-person
+    left: var(--x)
+    position: absolute
+    top: var(--y)
+    width: 108px
+
+  .kin-chart-button
+    align-items: center
+    background: none
+    border: 0
+    border-radius: var(--radius-control)
+    color: var(--ink-soft)
+    cursor: pointer
+    display: grid
+    gap: var(--space-xs)
+    justify-items: center
+    min-height: 44px
+    padding: 0
+    width: 100%
+
+    &[data-hovered] .kin-chart-name
+      text-decoration: underline
+
+    &[data-focus-visible]
+      outline: 3px solid var(--focus)
+      outline-offset: 3px
+
+  // The name covers the lines that run under it, so they seem to leave from the sticker.
+  .kin-chart-name
+    @include typography.name
+    background: var(--paper)
+    border-radius: var(--radius-control)
+    font-size: 16px
+    max-width: 100%
+    overflow: hidden
+    padding: 0 var(--space-xs)
+    text-overflow: ellipsis
+    white-space: nowrap
+
+  .kin-chart-person.end .kin-chart-name
+    color: var(--ink)

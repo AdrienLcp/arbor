@@ -59,3 +59,6 @@ export type Kinship =
       relativeSex: Sex
       tie: BloodTie
     }
+
+/** Whom a relation is told to: a named person ("le grand-père d'Anne"), or the visitor reading it ("votre grand-père"). */
+export type KinshipPerson = 'you' | { name: string }

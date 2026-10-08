@@ -1,3 +1,4 @@
+import { classNames } from '@adrienlcp/react'
 import type React from 'react'
 import { useState } from 'react'
 
@@ -5,16 +6,18 @@ import type { EntityId } from '@arbor/protocol/entity-id'
 
 import type { FamilyState } from '@arbor/core/family/family-state'
 import { familyStateOfSnapshot } from '@arbor/core/family/family-state-of-snapshot'
+import { describeKinship } from '@arbor/core/kinship/describe-kinship'
+import type { KinPath } from '@arbor/core/kinship/kinship'
 import { familyLineage } from '@arbor/core/tree-layout/family-lineage'
 
-import { ONLOOKER } from '@/features/family-access/family-access'
-import { rememberedMe } from '@/features/family-access/remembered-families'
+import { rememberedMyPersonId } from '@/features/family-access/remembered-families'
 import {
   type Adding,
   AddRelativeDialog
 } from '@/features/family-edits/add-relative-dialog'
 import { useFamilyEdit } from '@/features/family-edits/use-family-edit'
 import { FocusCard } from '@/features/family-tree/focus-card'
+import type { PersonFace } from '@/features/family-tree/person-face'
 import { PersonSearch } from '@/features/family-tree/person-search'
 import { slotNumbersOf } from '@/features/family-tree/slot-numbers'
 import { TreeCanvas } from '@/features/family-tree/tree-canvas'
@@ -29,18 +32,24 @@ import {
   type TreeScope
 } from '@/features/family-tree/tree-view'
 import { useTreeView } from '@/features/family-tree/use-tree-view'
+import { familyKinship, kinPathOf } from '@/features/kinship/family-kinship'
 import { today } from '@/infrastructure/clock'
 import {
+  familyTreePathFor,
+  type KinshipPair,
   personSheetPathFor,
   useChildPage,
+  useLitKinshipPair,
   useNavigateTo,
   useSheetPersonId
 } from '@/infrastructure/router/navigation'
+import { Button } from '@/presentation/components/button'
 import { Main } from '@/presentation/components/main'
+import { PHONE_SCREEN } from '@/presentation/components/phone-screen'
 import { SegmentedControl } from '@/presentation/components/segmented-control'
 import { useMediaQuery } from '@/presentation/components/use-media-query'
 import { DocumentTitle } from '@/presentation/head/document-title'
-import { useTranslate } from '@/presentation/i18n/i18n-context'
+import { useLocale, useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { FamilyAppBar } from './family-app-bar'
 import { useOpenFamily } from './family-loader'
@@ -48,22 +57,63 @@ import { usePersonFaces } from './use-person-faces'
 
 import './family-tree-page.sass'
 
-/** Under the app's wide-screen breakpoint the canvas gives way to one page at a time. */
-const PHONE_SCREEN = '(width < 640px)'
-
 type FamilyTreeProps = {
   /** Where the tree turns when the person in its middle is put in the bin. */
   fallbackFocusId: EntityId | null
   family: FamilyState
   initialFocusId: EntityId
   isFocusMe: boolean
+  /** How two people are related, traced over the whole tree on a computer. */
+  litKinship: LitKinship | null
+}
+
+type LitKinship = { path: KinPath; relativeId: EntityId; sentence: string }
+
+/** The kinship the address asks the tree to light up, `null` when it names someone out of the tree or no path joins them. */
+const useLitKinship = (
+  family: FamilyState,
+  faces: ReadonlyMap<EntityId, PersonFace>,
+  myPersonId: EntityId | null
+): LitKinship | null => {
+  const locale = useLocale()
+  const pair: KinshipPair | null = useLitKinshipPair()
+  if (
+    pair === null ||
+    !isInTree(family, pair.personId) ||
+    !isInTree(family, pair.relativeId)
+  ) {
+    return null
+  }
+  const kinship = familyKinship(family, pair)
+  const path = kinPathOf(kinship)
+  if (path === null) return null
+  const calledName = (personId: EntityId): string => {
+    const face = faces.get(personId)
+    return face === undefined ? '' : face.givenNames || face.name
+  }
+  return {
+    path,
+    relativeId: pair.relativeId,
+    sentence: describeKinship(kinship, {
+      locale,
+      person:
+        pair.personId === myPersonId
+          ? 'you'
+          : { name: calledName(pair.personId) },
+      relative:
+        pair.relativeId === myPersonId
+          ? 'you'
+          : { name: calledName(pair.relativeId) }
+    })
+  }
 }
 
 const FamilyTree: React.FC<FamilyTreeProps> = ({
   fallbackFocusId,
   family,
   initialFocusId,
-  isFocusMe
+  isFocusMe,
+  litKinship
 }) => {
   const translate = useTranslate()
   const navigateTo = useNavigateTo()
@@ -84,15 +134,14 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   const edit = useFamilyEdit()
   const canAdd = edit.canEdit && edit.author !== null
   const [adding, setAdding] = useState<Adding | null>(null)
-  const focus = faces.get(view.focusId)
-  const focusSheetPath = personSheetPathFor({
-    familyId,
-    personId: view.focusId
-  })
-  /** Touching the person already in the middle opens their sheet; anyone else comes to the middle. */
+  const lit = isPhone ? null : litKinship
+  const focusId = lit?.relativeId ?? view.focusId
+  const focus = faces.get(focusId)
+  const focusSheetPath = personSheetPathFor({ familyId, personId: focusId })
+  /** Touching the person already in the middle opens their sheet; anyone else comes to the middle. While a path is lit, anyone's sheet opens. */
   const pressPerson = (personId: EntityId) => {
-    if (personId === view.focusId) {
-      navigateTo(focusSheetPath)
+    if (personId === focusId || lit !== null) {
+      navigateTo(personSheetPathFor({ familyId, personId }))
       return
     }
     setFocus(personId)
@@ -100,12 +149,18 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   const focusName =
     faces.get(view.focusId)?.name ?? translate('common.unnamedPerson')
   const shownScope: TreeScope =
-    isPhone && view.scope === 'whole' ? 'around' : view.scope
-  const title = {
-    around: translate('tree.titleAround', { name: focusName }),
-    list: translate('tree.outline.label'),
-    whole: translate('tree.titleWhole')
-  }[shownScope]
+    lit !== null
+      ? 'whole'
+      : isPhone && view.scope === 'whole'
+        ? 'around'
+        : view.scope
+  const title =
+    lit?.sentence ??
+    {
+      around: translate('tree.titleAround', { name: focusName }),
+      list: translate('tree.outline.label'),
+      whole: translate('tree.titleWhole')
+    }[shownScope]
   const scopeOptions = isPhone
     ? [
         { label: translate('tree.scope.page'), value: 'around' as const },
@@ -142,14 +197,15 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
       )
     }
     const scene = treeScene({
-      layout: layoutOfView(family, view),
+      layout: layoutOfView(family, { ...view, focusId, scope: shownScope }),
       persons: family.persons
     })
     return (
       <>
         <TreeCanvas
-          focusId={view.focusId}
+          focusId={focusId}
           label={title}
+          litPath={lit?.path ?? null}
           onPressPerson={pressPerson}
           persons={family.persons}
           scene={scene}
@@ -172,14 +228,26 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
         <DocumentTitle>{`${title} — ${response.settings.name}`}</DocumentTitle>
       ) : null}
       <div className='family-tree-head'>
-        <h1 className='family-tree-title'>{title}</h1>
+        <h1 className={classNames('family-tree-title', lit && 'is-sentence')}>
+          {title}
+        </h1>
         <div className='family-tree-controls'>
-          <SegmentedControl<TreeScope>
-            label={translate('tree.scope.label')}
-            onChange={setScope}
-            options={scopeOptions}
-            value={shownScope}
-          />
+          {lit === null ? null : (
+            <Button
+              onPress={() => navigateTo(familyTreePathFor(familyId))}
+              variant='ghost'
+            >
+              {translate('kinship.clear')}
+            </Button>
+          )}
+          {lit !== null ? null : (
+            <SegmentedControl<TreeScope>
+              label={translate('tree.scope.label')}
+              onChange={setScope}
+              options={scopeOptions}
+              value={shownScope}
+            />
+          )}
           {shownScope === 'around' && !isPhone ? (
             <SegmentedControl
               label={translate('tree.depth.label')}
@@ -213,11 +281,11 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
 export const FamilyTreePage: React.FC = () => {
   const translate = useTranslate()
   const { family: response, familyId } = useOpenFamily()
-  const me = rememberedMe(familyId)
-  const myPersonId =
-    me !== null && me !== ONLOOKER && me.kind === 'person' ? me.personId : null
+  const myPersonId = rememberedMyPersonId(familyId)
   const family = familyStateOfSnapshot(response.family)
   const sheetPersonId = useSheetPersonId()
+  const faces = usePersonFaces()
+  const litKinship = useLitKinship(family, faces, myPersonId)
   const arrivalFocusId = firstFocusId({ family, me: myPersonId })
   const focusId =
     sheetPersonId !== null && isInTree(family, sheetPersonId)
@@ -238,6 +306,7 @@ export const FamilyTreePage: React.FC = () => {
           family={family}
           initialFocusId={focusId}
           isFocusMe={focusId === myPersonId}
+          litKinship={litKinship}
         />
       )}
     </div>

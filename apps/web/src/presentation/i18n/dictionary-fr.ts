@@ -558,6 +558,18 @@ export const FR_DICTIONARY = defineDictionary({
       title: 'Vos arbres'
     }
   },
+  kinship: {
+    backToMe: 'Revenir à votre lien',
+    chart: 'Le chemin de {from} à {to}',
+    clear: 'Éteindre le chemin',
+    compareLabel: 'Comparer avec quelqu’un d’autre',
+    lit: 'Le chemin de {from} à {to}, dans l’arbre',
+    pickLabel: 'Quel lien entre {name} et…',
+    pickLabelForYou: 'Votre lien avec…',
+    showInTree: 'Voir le chemin dans l’arbre',
+    title: 'Lien de parenté',
+    you: 'Vous'
+  },
   me: {
     change: 'Changer',
     is: 'Vous êtes {name}.',

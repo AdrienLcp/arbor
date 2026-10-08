@@ -555,6 +555,18 @@ export const EN_DICTIONARY = defineDictionary({
       title: 'Your trees'
     }
   },
+  kinship: {
+    backToMe: 'Back to your own link',
+    chart: 'The path from {from} to {to}',
+    clear: 'Turn the path off',
+    compareLabel: 'Compare with someone else',
+    lit: 'The path from {from} to {to}, in the tree',
+    pickLabel: 'How is {name} related to…',
+    pickLabelForYou: 'How you are related to…',
+    showInTree: 'Show the path in the tree',
+    title: 'Family relationship',
+    you: 'You'
+  },
   me: {
     change: 'Change',
     is: 'You are {name}.',

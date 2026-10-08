@@ -9,6 +9,7 @@ import type { FamilyState } from '@arbor/core/family/family-state'
 import { familyWarnings } from '@arbor/core/family/family-warnings'
 
 import type { PersonFace } from '@/features/family-tree/person-face'
+import { SheetKinship } from '@/features/kinship/sheet-kinship'
 import { PersonPhotos } from '@/features/photos/person-photos'
 import { PortraitImage } from '@/features/photos/portrait-image'
 import { generationClass } from '@/presentation/components/generation-class'
@@ -116,6 +117,7 @@ export const PersonSheet: React.FC<PersonSheetProps> = ({
           ))}
         </ul>
       )}
+      <SheetKinship face={face} faces={faces} family={family} key={face.id} />
       {birth === null && death === null && !hasBirthSurname ? null : (
         <dl className='sheet-facts'>
           {birth === null ? null : (

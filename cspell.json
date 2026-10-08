@@ -15,7 +15,8 @@
         "docs/**/*.md",
         "packages/core/src/family/demo-family.ts",
         "packages/core/src/**/*.test.ts",
-        "packages/core/src/fuzzy-date/fuzzy-date-wording.ts"
+        "packages/core/src/fuzzy-date/fuzzy-date-wording.ts",
+        "packages/core/src/kinship/**/*.ts"
       ],
       "language": "en,en-GB,fr"
     }
@@ -27,6 +28,7 @@
     "ANSEL",
     "bertin",
     "bezier",
+    "camille",
     "biomejs",
     "cloudflare",
     "dasharray",

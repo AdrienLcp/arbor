@@ -9,7 +9,9 @@ import {
 import type { EntityId } from '@arbor/protocol/entity-id'
 import type { Person } from '@arbor/protocol/person'
 
+import type { KinPath } from '@arbor/core/kinship/kinship'
 import type { TreeCard } from '@arbor/core/tree-layout/tree-layout'
+import { CARD_HEIGHT, CARD_WIDTH } from '@arbor/core/tree-layout/tree-metrics'
 
 import { Button } from '@/presentation/components/button'
 import {
@@ -30,6 +32,8 @@ import './tree-canvas.sass'
 
 const MIN_SCALE = 0.15
 const MAX_SCALE = 2
+/** Paper kept around a lit path when it is fitted on screen: room for the slot numbers and the focus card. */
+const LIT_PATH_MARGIN = 112
 /** How long the canvas glides to the person the keyboard moved to. */
 const GLIDE_MS = 200
 
@@ -49,6 +53,8 @@ type TreeCanvasProps = {
   focusId: EntityId
   /** Names the canvas for a screen reader: "The tree, around Pierre Morel". */
   label: string
+  /** A kinship path to trace and fit on screen; `null` to centre on the focus person. */
+  litPath: KinPath | null
   onPressPerson: (personId: EntityId) => void
   persons: ReadonlyMap<EntityId, Person>
   scene: TreeScene
@@ -60,6 +66,7 @@ type TreeCanvasProps = {
 export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   focusId,
   label,
+  litPath,
   onPressPerson,
   persons,
   scene,
@@ -90,10 +97,41 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     )
   }
 
+  /** Fits the lit path on screen, never closer than the stickers' own size. */
+  const showLitPath = (placed: TreeScene): boolean => {
+    const controls = viewport.current
+    const wrapper = controls?.instance.wrapperComponent
+    if (litPath === null || controls == null || wrapper == null) return false
+    const litIds = new Set(litPath)
+    const litCards = placed.layout.cards.filter(
+      (card) => card.kind === 'person' && litIds.has(card.personId)
+    )
+    if (litCards.length === 0) return false
+
+    const left = Math.min(...litCards.map(({ x }) => x)) - placed.origin.x
+    const top = Math.min(...litCards.map(({ y }) => y)) - placed.origin.y
+    const right =
+      Math.max(...litCards.map(({ x }) => x + CARD_WIDTH)) - placed.origin.x
+    const bottom =
+      Math.max(...litCards.map(({ y }) => y + CARD_HEIGHT)) - placed.origin.y
+    const scale = Math.min(
+      1,
+      wrapper.clientWidth / (right - left + 2 * LIT_PATH_MARGIN),
+      wrapper.clientHeight / (bottom - top + 2 * LIT_PATH_MARGIN)
+    )
+    controls.setTransform(
+      wrapper.clientWidth / 2 - ((left + right) / 2) * scale,
+      wrapper.clientHeight / 2 - ((top + bottom) / 2) * scale,
+      scale,
+      0
+    )
+    return true
+  }
+
   // Inside the refocus transition, so the stickers slide from where they were to the centre.
-  const centreOnFocusOf = useEffectEvent((placed: TreeScene) =>
-    centreOn(focusKeyIn(placed, focusId), 0)
-  )
+  const centreOnFocusOf = useEffectEvent((placed: TreeScene) => {
+    if (!showLitPath(placed)) centreOn(focusKeyIn(placed, focusId), 0)
+  })
   useLayoutEffect(() => {
     centreOnFocusOf(scene)
   }, [scene])
@@ -132,7 +170,9 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
         limitToBounds={false}
         maxScale={MAX_SCALE}
         minScale={MIN_SCALE}
-        onInit={() => centreOn(focusKey, 0)}
+        onInit={() => {
+          if (!showLitPath(scene)) centreOn(focusKey, 0)
+        }}
         onTransform={(_, { positionY, scale }) => {
           rails.current?.style.setProperty('--pan-y', `${positionY}px`)
           rails.current?.style.setProperty('--zoom', String(scale))
@@ -146,6 +186,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
                 activeKey={currentKey}
                 focusId={focusId}
                 instructionsId={instructionsId}
+                litPath={litPath}
                 onArrowKey={walkWithArrows}
                 onFocusCard={(card) => setActiveKey(card.key)}
                 onPressPerson={pressPerson}
