@@ -16,7 +16,7 @@ Steps run in order: each one ends deployed and seen in a browser.
 | 05 | Create and join | Landing, create a family, links + QR, "Who are you?", keeper settings | done 2026-10-07 |
 | 06 | Tree view | Layout of real families, pan/zoom, focus on a person, mobile first | done 2026-10-08 |
 | 07 | Person sheet and editing | Add/edit people, unions, filiations, events, photos | done 2026-10-08 |
-| 08 | History and undo | Change log screen, undo, bin, restore to a moment | to do |
+| 08 | History and undo | Change log screen, undo, bin, restore to a moment | done 2026-10-08 |
 | 09 | Printable tree | The drawing exported as a print-ready PDF: scope, paper size, tiling, QR code | to do |
 | 10 | How are we related? | Kinship between two people, named in plain French | to do |
 | 11 | GEDCOM import and export | Bring in the father's existing tree; export back; full backup zip | to do |

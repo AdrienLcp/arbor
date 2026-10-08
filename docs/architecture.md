@@ -200,6 +200,24 @@ Built in step 07, closed 2026-10-08.
 - The running Vite dev server caches a failed Sass `@use`: a partial created
   after the first failed import stays "not found" until it restarts.
 
+## History and undo
+
+Built in step 08, closed 2026-10-08. The log rules are in
+`docs/data-model.md` § change log.
+
+- **The restore preview replays the log** to the target revision, then on to
+  today (`packages/core/src/history/restore-preview.ts`), and names who comes
+  back, who leaves and who gets earlier details back (a rename reads "X
+  redevient Y"); other entities get one sentence. The dialog posts the last
+  revision the preview used as `baseRevision`, so an edit made meanwhile
+  answers `revision_conflict` instead of restoring something unseen.
+- **One write path for taking back:** `useUndo` both undoes and restores —
+  sign, send, reload, explain a refusal.
+- The restore button reads "Revenir ici" so it fits beside "Annuler" at
+  360 px; its accessible name and the dialog's confirm carry the full meaning.
+  On phones an entry's action row spans the whole entry.
+- e2e journeys shared between specs live in `e2e/support/journeys.ts`.
+
 ## Security notes
 
 - Keys: 128-bit random, base64url, sent in an `Authorization` header; only
