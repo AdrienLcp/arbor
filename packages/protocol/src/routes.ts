@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { accessKeySchema, familyIdSchema, keyViewSchema } from './access'
 import { authorSchema, changeLogEntrySchema } from './change-log'
 import { familySettingsSchema } from './family'
+import { HISTORY_REFUSALS } from './history-refusal'
 import { operationSchema } from './operation'
 import { OPERATION_REFUSALS } from './operation-refusal'
 
@@ -21,7 +22,9 @@ export const API_ROUTES = {
   operations: `${FAMILY}/operations`,
   photo: `${FAMILY}/photos/:photoId`,
   photoFile: `${FAMILY}/photos/:photoId/:variant`,
+  restore: `${FAMILY}/restore`,
   settings: `${FAMILY}/settings`,
+  undo: `${FAMILY}/undo`,
   usage: `${FAMILY}/usage`
 } as const
 
@@ -77,6 +80,25 @@ export type RecordOperationsInput = z.infer<typeof recordOperationsInputSchema>
 export const recordedOperationsSchema = z.object({ revision: z.int().min(1) })
 export type RecordedOperations = z.infer<typeof recordedOperationsSchema>
 
+/** Entries to take back together, as one new entry; the server works out how. */
+export const undoInputSchema = z.object({
+  author: authorSchema,
+  revisions: z.array(z.int().min(1)).min(1)
+})
+export type UndoInput = z.infer<typeof undoInputSchema>
+
+/**
+ * A keeper's restore of the whole family to how it stood at `revision`, made
+ * from the preview of `baseRevision`: an edit since then is a conflict, never
+ * taken back unseen.
+ */
+export const restoreInputSchema = z.object({
+  author: authorSchema,
+  baseRevision: z.int().min(0),
+  revision: z.int().min(0)
+})
+export type RestoreInput = z.infer<typeof restoreInputSchema>
+
 export const changeLogPageSchema = z.object({
   entries: z.array(changeLogEntrySchema),
   /** Where the next page starts, `null` on the last one. */
@@ -126,6 +148,7 @@ export const apiErrorCodes = [
   'too_many_attempts',
   'unauthorized',
   'unsupported_image',
+  ...HISTORY_REFUSALS,
   ...OPERATION_REFUSALS
 ] as const
 export type ApiErrorCode = (typeof apiErrorCodes)[number]

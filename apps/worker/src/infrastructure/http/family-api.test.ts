@@ -286,6 +286,123 @@ describe('[log] edits', () => {
   })
 })
 
+const familyWithHistory = async () => {
+  const { api, family, record } = await familyWithOneEdit()
+  await record([{ person: personNamed('jeanne'), type: 'person.create' }], 0)
+  const rename = (givenNames: string, baseRevision: number) =>
+    record(
+      [
+        {
+          after: { givenNames },
+          before: { givenNames: '' },
+          personId: 'jeanne',
+          type: 'person.update'
+        }
+      ],
+      baseRevision
+    )
+  const takeBack = (revisions: number[], key = family.familyKey) =>
+    api.call(familyPath(family.familyId, 'undo'), {
+      body: { author: AUTHOR, revisions },
+      key,
+      method: 'POST'
+    })
+  const restore = (
+    revision: number,
+    baseRevision: number,
+    key = family.keeperKey
+  ) =>
+    api.call(familyPath(family.familyId, 'restore'), {
+      body: { author: AUTHOR, baseRevision, revision },
+      key,
+      method: 'POST'
+    })
+  const jeanne = async () => {
+    const response = await api.call(familyPath(family.familyId), {
+      key: family.keeperKey
+    })
+    const { family: snapshot } = familyResponseSchema.parse(
+      await response.json()
+    )
+    return snapshot.persons.find((person) => person.id === 'jeanne')
+  }
+  const lastEntry = async () => {
+    const response = await api.call(familyPath(family.familyId, 'operations'), {
+      key: family.familyKey
+    })
+    return changeLogPageSchema.parse(await response.json()).entries.at(-1)
+  }
+  return { family, jeanne, lastEntry, rename, restore, takeBack }
+}
+
+describe('[history] undo and restore', () => {
+  it('[history] takes an entry back as a new one that says so, once', async () => {
+    const { jeanne, lastEntry, rename, takeBack } = await familyWithHistory()
+    await rename('Jeannette', 1)
+
+    const undone = await takeBack([2])
+    const again = await takeBack([2])
+
+    expect(undone.status).toBe(201)
+    expect((await jeanne())?.givenNames).toBe('Jeanne')
+    expect(await lastEntry()).toMatchObject({
+      cause: { kind: 'undo', revisions: [2] },
+      revision: 3
+    })
+    expect(again.status).toBe(409)
+    expect(await errorCodeOf(again)).toBe('already_undone')
+  })
+
+  it('[history] refuses an entry a later one builds on, until both go together', async () => {
+    const { jeanne, rename, takeBack } = await familyWithHistory()
+    await rename('Jeannette', 1)
+    await rename('Jeanine', 2)
+
+    const alone = await takeBack([2])
+    const together = await takeBack([3, 2])
+
+    expect(alone.status).toBe(409)
+    expect(await errorCodeOf(alone)).toBe('later_changes_depend')
+    expect(together.status).toBe(201)
+    expect((await jeanne())?.givenNames).toBe('Jeanne')
+  })
+
+  it('[history] lets the keeper alone restore a past moment, from the latest revision', async () => {
+    const { family, jeanne, lastEntry, rename, restore } =
+      await familyWithHistory()
+    await rename('Jeannette', 1)
+    await rename('Vandale', 2)
+
+    const byContributor = await restore(1, 3, family.familyKey)
+    const stale = await restore(1, 2)
+    const restored = await restore(1, 3)
+
+    expect(byContributor.status).toBe(403)
+    expect(stale.status).toBe(409)
+    expect(await errorCodeOf(stale)).toBe('revision_conflict')
+    expect(restored.status).toBe(201)
+    expect((await jeanne())?.givenNames).toBe('Jeanne')
+    expect(await lastEntry()).toMatchObject({
+      cause: { kind: 'restore', revision: 1 },
+      revision: 4
+    })
+  })
+
+  it('[history] keeps the keeper’s restore from being taken back by anyone else', async () => {
+    const { family, jeanne, rename, restore, takeBack } =
+      await familyWithHistory()
+    await rename('Vandale', 1)
+    await restore(1, 2)
+
+    const byContributor = await takeBack([3])
+    const byKeeper = await takeBack([3], family.keeperKey)
+
+    expect(byContributor.status).toBe(403)
+    expect(byKeeper.status).toBe(201)
+    expect((await jeanne())?.givenNames).toBe('Vandale')
+  })
+})
+
 describe('[privacy] the read-only link', () => {
   it('[privacy] hides a living person’s exact birth date, notes and photos', async () => {
     const { api, family, record } = await familyWithOneEdit()

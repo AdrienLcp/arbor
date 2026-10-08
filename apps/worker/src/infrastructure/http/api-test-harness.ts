@@ -81,6 +81,8 @@ export const familyPath = (
     | 'familyKey'
     | 'keys'
     | 'operations'
+    | 'restore'
     | 'settings'
+    | 'undo'
     | 'usage' = 'family'
 ) => pathFor(API_ROUTES[route], { familyId })

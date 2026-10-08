@@ -59,6 +59,17 @@ creation while nothing links to the person yet.
 - Undo = a new operation that applies the inverse; nothing is rewritten.
 - Restore to a moment = inverse operations back to that revision, as one
   grouped operation, itself undoable.
+- The client never posts an inverse: it names the entries to take back
+  (`POST …/undo`) or the revision to restore (`POST …/restore`, keeper only,
+  refused as a conflict if the family moved since the preview), and the server
+  builds the operation from its own log (`packages/core/src/history`). The new
+  entry carries a `cause` naming what it takes back; an edit's is `null`. An
+  undo or a restore that is itself taken back takes nothing back any more.
+- An entry cannot be taken back alone while a later, still-acting entry builds
+  on it: one writes the same field of the same entity, one creates, removes,
+  bins or restores it, or the later one links to an entity it created
+  (`laterDependents`, transitive). The client offers to take them back
+  together. Only a keeper may take back a restore.
 - Concurrency: a write carries the revision it was based on; per-field last
   write wins, and the history shows both values. Structural conflicts (a person
   deleted while someone edits them) are rejected with a typed error and the

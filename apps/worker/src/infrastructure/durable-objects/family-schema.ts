@@ -19,7 +19,8 @@ const MIGRATIONS: readonly (readonly string[])[] = [
     'CREATE TABLE photo_files (photo_id TEXT NOT NULL, variant TEXT NOT NULL, content_type TEXT NOT NULL, bytes BLOB NOT NULL, PRIMARY KEY (photo_id, variant))',
     'CREATE TABLE access_keys (id TEXT PRIMARY KEY, digest TEXT NOT NULL UNIQUE, role TEXT NOT NULL, created_at TEXT NOT NULL, revoked_at TEXT)',
     'CREATE TABLE key_check_window (id INTEGER PRIMARY KEY CHECK (id = 1), failures INTEGER NOT NULL, started_at TEXT NOT NULL)'
-  ]
+  ],
+  ['ALTER TABLE operations ADD COLUMN cause TEXT']
 ]
 
 const versionRowSchema = z.object({ version: z.int() })

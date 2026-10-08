@@ -3,10 +3,17 @@ import { z } from 'zod'
 import {
   AFTER_REVISION_QUERY,
   API_ROUTES,
-  recordOperationsInputSchema
+  recordOperationsInputSchema,
+  restoreInputSchema,
+  undoInputSchema
 } from '@arbor/protocol/routes'
 
-import { readLogPage, recordOperations } from '@/domain/family/family-service'
+import {
+  readLogPage,
+  recordOperations,
+  restoreFamily,
+  undoEntries
+} from '@/domain/family/family-service'
 import { toFamilyResponse } from '@/domain/family/family-view'
 import { now } from '@/infrastructure/clock'
 import { toIsoString } from '@/infrastructure/dates'
@@ -64,5 +71,44 @@ export const FAMILY_ROUTES: readonly RoomRoute[] = [
     method: 'GET',
     needs: 'contributor',
     pattern: API_ROUTES.operations
+  },
+  {
+    handle: async ({ admission, request, stores }) => {
+      const input = undoInputSchema.safeParse(await readJsonBody(request))
+      if (!input.success) return apiError('invalid_input', input.error.message)
+
+      const at = toIsoString(now())
+      const undone = stores.transaction(() =>
+        undoEntries({
+          at,
+          input: input.data,
+          role: admission.role,
+          store: stores.family
+        })
+      )
+      return undone.status === 'failure'
+        ? apiError(undone.error, 'The family refused to take the entries back')
+        : apiJson(undone.data, 201)
+    },
+    method: 'POST',
+    needs: 'contributor',
+    pattern: API_ROUTES.undo
+  },
+  {
+    handle: async ({ request, stores }) => {
+      const input = restoreInputSchema.safeParse(await readJsonBody(request))
+      if (!input.success) return apiError('invalid_input', input.error.message)
+
+      const at = toIsoString(now())
+      const restored = stores.transaction(() =>
+        restoreFamily({ at, input: input.data, store: stores.family })
+      )
+      return restored.status === 'failure'
+        ? apiError(restored.error, 'The family refused the restore')
+        : apiJson(restored.data, 201)
+    },
+    method: 'POST',
+    needs: 'keeper',
+    pattern: API_ROUTES.restore
   }
 ]

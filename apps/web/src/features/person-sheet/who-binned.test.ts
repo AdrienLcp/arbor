@@ -15,6 +15,7 @@ const entry = (
 ): ChangeLogEntry => ({
   at: '2026-10-08T09:00:00.000Z',
   author,
+  cause: null,
   operation,
   revision
 })
