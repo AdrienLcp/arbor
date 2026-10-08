@@ -1,0 +1,11 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .sheet-actions
+    display: grid
+    gap: var(--space-m)
+    padding: var(--space-xl) var(--space-l) 0
+
+    .sheet-actions-note
+      @include typography.body-small
+      color: var(--ink-soft)

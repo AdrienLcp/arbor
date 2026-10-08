@@ -17,12 +17,15 @@ import {
   familySettingsSchema
 } from '@arbor/protocol/family'
 import {
+  AFTER_REVISION_QUERY,
   API_ROUTES,
   type ApiErrorCode,
   AUTHORIZATION_SCHEME,
   apiErrorResponseSchema,
+  type ChangeLogPage,
   type CreatedFamily,
   type CreateFamilyInput,
+  changeLogPageSchema,
   createdFamilySchema,
   keyListSchema,
   pathFor,
@@ -149,6 +152,23 @@ export const recordOperations = ({
     method: 'POST',
     path: pathFor(API_ROUTES.operations, { familyId }),
     schema: recordedOperationsSchema,
+    signal
+  })
+
+/** The family's changes recorded after a revision, oldest first, one page at a time. */
+export const readChangeLog = ({
+  after,
+  familyId,
+  key,
+  signal
+}: FamilyAccess & {
+  after: number
+  signal?: AbortSignal
+}): ApiResult<ChangeLogPage> =>
+  callApi({
+    access: key,
+    path: `${pathFor(API_ROUTES.operations, { familyId })}?${new URLSearchParams({ [AFTER_REVISION_QUERY]: String(after) })}`,
+    schema: changeLogPageSchema,
     signal
   })
 

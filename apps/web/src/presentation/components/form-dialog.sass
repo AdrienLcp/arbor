@@ -1,0 +1,69 @@
+@use '../styles/layout'
+@use '../styles/typography'
+
+@layer components
+  .form-dialog-overlay
+    background: color-mix(in oklch, var(--shadow) 45%, transparent)
+    display: grid
+    inset: 0
+    position: fixed
+    transition: opacity var(--transition-base) var(--ease-out)
+    z-index: 10
+
+    @include layout.wide
+      align-items: center
+      justify-items: center
+      padding: var(--space-gutter)
+
+    &[data-entering],
+    &[data-exiting]
+      opacity: 0
+
+  // A floating panel on a computer; on a phone the whole screen, so the keyboard never hides a field.
+  .form-dialog-modal
+    background: var(--paper)
+    display: grid
+    height: 100dvh
+    min-height: 0
+    transition: translate var(--transition-base) var(--ease-out)
+    width: 100%
+
+    @include layout.wide
+      border-radius: var(--radius-frame)
+      box-shadow: 0 2px 4px color-mix(in oklch, var(--shadow) 30%, transparent), 0 30px 50px -30px var(--shadow)
+      height: auto
+      max-height: calc(100dvh - 2 * var(--space-gutter))
+      max-width: 36rem
+
+    &[data-entering],
+    &[data-exiting]
+      translate: 0 var(--space-xl)
+
+  .form-dialog
+    display: grid
+    grid-template-rows: auto minmax(0, 1fr)
+    min-height: 0
+    outline: none
+
+    .form-dialog-head
+      align-items: center
+      border-bottom: var(--stroke-thin) solid var(--ghost-soft)
+      display: flex
+      gap: var(--space-m)
+      justify-content: space-between
+      padding: var(--space-xs) var(--space-xs) var(--space-xs) var(--space-l)
+
+    .form-dialog-title
+      @include typography.title
+      overflow-wrap: anywhere
+
+    .form-dialog-close
+      flex: none
+      min-height: var(--target)
+      padding: 0
+      width: var(--target)
+
+    .form-dialog-body
+      overflow-y: auto
+      padding: var(--space-l) var(--space-l) var(--space-2xl)
+      scrollbar-width: thin

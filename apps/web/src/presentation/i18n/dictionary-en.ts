@@ -38,6 +38,72 @@ export const EN_DICTIONARY = defineDictionary({
     treeNameMissing: 'Give the tree a name.',
     treeNameSuggestion: 'The {surname} family'
   },
+  edit: {
+    cancel: 'Cancel',
+    date: {
+      and: 'and',
+      certainty: 'How sure',
+      day: 'Day',
+      from: 'First date',
+      hint: 'The year alone is enough. Leave it empty if nobody knows.',
+      month: 'Month',
+      noMonth: 'Month unknown',
+      problem: {
+        impossible_date:
+          'This date does not exist: check the day and the month.',
+        range_end_missing: 'Write the second date too.',
+        reversed_range: 'The second date must come after the first.',
+        year_missing: 'Write at least the year.'
+      },
+      qualifier: {
+        about: 'About',
+        after: 'After',
+        before: 'Before',
+        between: 'Between two dates',
+        exact: 'Exact date'
+      },
+      to: 'Second date',
+      when: 'Date',
+      year: 'Year'
+    },
+    failure: {
+      movedBy:
+        'The tree was just changed by {names}. The sheet is up to date: check it, then save again.',
+      movedBySomeone:
+        'The tree was just changed by someone else. The sheet is up to date: check it, then save again.',
+      refused: {
+        ancestry_cycle: 'Impossible: nobody can be their own ancestor.',
+        other:
+          'The tree refused this change. Close, reopen the sheet, then try again.',
+        person_binned: 'This person is in the bin: bring them back first.',
+        same_partner: 'A union is between two different people.',
+        too_many_birth_parents: 'This person already has two birth parents.'
+      }
+    },
+    person: {
+      birthDate: 'Date of birth',
+      birthPlace: 'Place of birth',
+      birthSurname: 'Birth name',
+      birthSurnameHint: 'If it is different, for instance before a marriage.',
+      deathDate: 'Date of death',
+      deathPlace: 'Place of death',
+      givenNames: 'Given names',
+      notesHint: 'A trade, a memory, where a piece of information comes from.',
+      open: 'Fix some information',
+      sex: 'Woman or man',
+      sexes: {
+        female: 'Woman',
+        male: 'Man',
+        unknown: 'Not said'
+      },
+      surname: 'Surname',
+      title: 'Fix {name}’s sheet'
+    },
+    save: 'Save',
+    whoFirst:
+      'To add to the tree, first say who you are: your changes will be signed with your name.',
+    whoFirstAction: 'Say who I am'
+  },
   error: {
     screen: {
       home: 'Back to the home page',

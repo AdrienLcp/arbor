@@ -16,6 +16,7 @@ import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { useOccurrenceWords } from './occurrence-words'
 import { type PersonWarning, warningsAbout } from './person-warnings'
+import { SheetActions } from './sheet-actions'
 import { SheetRelatives } from './sheet-relatives'
 
 import './person-sheet.sass'
@@ -140,6 +141,7 @@ export const PersonSheet: React.FC<PersonSheetProps> = ({
           <p className='sheet-notes'>{person.notes}</p>
         </div>
       )}
+      <SheetActions face={face} person={person} />
       <SheetRelatives face={face} faces={faces} family={family} />
     </section>
   )

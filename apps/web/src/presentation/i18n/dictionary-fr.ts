@@ -39,6 +39,75 @@ export const FR_DICTIONARY = defineDictionary({
     treeNameMissing: 'Donnez un nom à l’arbre.',
     treeNameSuggestion: 'Famille {surname}'
   },
+  edit: {
+    cancel: 'Annuler',
+    date: {
+      and: 'et',
+      certainty: 'Certitude',
+      day: 'Jour',
+      from: 'Première date',
+      hint: 'L’année seule suffit. Laissez vide si personne ne sait.',
+      month: 'Mois',
+      noMonth: 'Mois inconnu',
+      problem: {
+        impossible_date:
+          'Cette date n’existe pas : vérifiez le jour et le mois.',
+        range_end_missing: 'Écrivez aussi la seconde date.',
+        reversed_range: 'La seconde date doit venir après la première.',
+        year_missing: 'Écrivez au moins l’année.'
+      },
+      qualifier: {
+        about: 'Environ',
+        after: 'Après',
+        before: 'Avant',
+        between: 'Entre deux dates',
+        exact: 'Date sûre'
+      },
+      to: 'Seconde date',
+      when: 'Date',
+      year: 'Année'
+    },
+    failure: {
+      movedBy:
+        'L’arbre vient d’être modifié par {names}. La fiche est à jour : vérifiez, puis enregistrez à nouveau.',
+      movedBySomeone:
+        'L’arbre vient d’être modifié par quelqu’un d’autre. La fiche est à jour : vérifiez, puis enregistrez à nouveau.',
+      refused: {
+        ancestry_cycle:
+          'Impossible : une personne ne peut pas être son propre ancêtre.',
+        other:
+          'L’arbre a refusé ce changement. Fermez, rouvrez la fiche, puis réessayez.',
+        person_binned:
+          'Cette personne est dans la corbeille : il faut d’abord l’en sortir.',
+        same_partner: 'Une union se fait entre deux personnes différentes.',
+        too_many_birth_parents:
+          'Cette personne a déjà deux parents de naissance.'
+      }
+    },
+    person: {
+      birthDate: 'Date de naissance',
+      birthPlace: 'Lieu de naissance',
+      birthSurname: 'Nom de naissance',
+      birthSurnameHint: 'S’il est différent, par exemple avant un mariage.',
+      deathDate: 'Date du décès',
+      deathPlace: 'Lieu du décès',
+      givenNames: 'Prénoms',
+      notesHint: 'Un métier, un souvenir, d’où vient une information.',
+      open: 'Corriger une information',
+      sex: 'Femme ou homme',
+      sexes: {
+        female: 'Femme',
+        male: 'Homme',
+        unknown: 'Non précisé'
+      },
+      surname: 'Nom de famille',
+      title: 'Corriger la fiche de {name}'
+    },
+    save: 'Enregistrer',
+    whoFirst:
+      'Pour compléter l’arbre, dites d’abord qui vous êtes : vos changements seront signés de votre nom.',
+    whoFirstAction: 'Dire qui je suis'
+  },
   error: {
     screen: {
       home: 'Revenir à l’accueil',

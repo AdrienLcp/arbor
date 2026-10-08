@@ -4,6 +4,7 @@ export {
   BookOpen as BookIcon,
   Camera as CameraIcon,
   Check as CheckIcon,
+  ChevronDown as OpenListIcon,
   ChevronLeft as PreviousIcon,
   ChevronRight as ChevronIcon,
   ClipboardPaste as PasteIcon,

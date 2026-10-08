@@ -72,12 +72,10 @@ export const useLayoutData = <TLoader extends Loader>(routeId: RouteId) => {
 }
 
 /** Runs the loaders of the routes on screen again, after a change they read. */
-export const useRefreshRouteData = (): (() => void) => {
+export const useRefreshRouteData = (): (() => Promise<void>) => {
   const { revalidate } = useRevalidator()
 
-  return () => {
-    void revalidate()
-  }
+  return () => revalidate()
 }
 
 type NavigateToOptions = {
