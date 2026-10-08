@@ -5,12 +5,17 @@ import type { EntityId } from '@arbor/protocol/entity-id'
 
 import type { PersonFace } from '@/features/family-tree/person-face'
 import type { TreeScene } from '@/features/family-tree/tree-scene'
+import { useTranslate } from '@/presentation/i18n/i18n-context'
 
+import { bandPanelPlan } from './band-panel-plan'
+import { columnPanelPlan } from './column-panel-plan'
+import type { PanelWords } from './panel-plan'
+import { usePrintLegendEntries } from './print-legend-entries'
 import type { Size } from './print-pages'
 import { PRINT_PALETTE } from './print-palette'
 import { PrintPanel } from './print-panel'
 import { PrintTreeDrawing } from './print-tree-drawing'
-import { sheetLayout } from './sheet-layout'
+import { isTallSheet, sheetLayout } from './sheet-layout'
 
 export type PrintSheetProps = {
   className?: string
@@ -46,11 +51,24 @@ export const PrintSheet: React.FC<PrintSheetProps> = ({
   summary
 }) => {
   const idPrefix = `print${useId().replaceAll(':', '')}`
+  const translate = useTranslate()
+  const words: PanelWords = {
+    familyName,
+    hasLiveLink: liveLink !== null,
+    legend: usePrintLegendEntries(),
+    liveWords: translate('print.live.text'),
+    summary
+  }
+  const band = isTallSheet(drawing)
+    ? bandPanelPlan({ width: drawing.width, words })
+    : null
   const layout = sheetLayout({
+    bandHeight: band?.height ?? null,
     drawing,
     tree: { height: scene.height, width: scene.width }
   })
   const { tree } = layout
+  const plan = band ?? columnPanelPlan({ panel: layout.panel, words })
 
   return (
     <svg
@@ -78,11 +96,10 @@ export const PrintSheet: React.FC<PrintSheetProps> = ({
         />
       </g>
       <PrintPanel
-        familyName={familyName}
         liveLink={liveLink}
         panel={layout.panel}
+        plan={plan}
         printedOn={printedOn}
-        summary={summary}
         treeScale={tree.scale}
       />
     </svg>

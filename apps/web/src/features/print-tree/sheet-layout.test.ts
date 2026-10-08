@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest'
 
-import { sheetLayout } from './sheet-layout'
+import { isTallSheet, sheetLayout } from './sheet-layout'
 
 const A3_LANDSCAPE = { height: 277, width: 400 }
 
 describe('[print] layout of a printed sheet', () => {
   it('[print] gives the panel a fifth of an A3 and the tree the rest of the width', () => {
     const layout = sheetLayout({
+      bandHeight: null,
       drawing: A3_LANDSCAPE,
       tree: { height: 1000, width: 3000 }
     })
@@ -19,6 +20,7 @@ describe('[print] layout of a printed sheet', () => {
 
   it('[print] fits a tall tree to the height and centres it across', () => {
     const layout = sheetLayout({
+      bandHeight: null,
       drawing: A3_LANDSCAPE,
       tree: { height: 2770, width: 1000 }
     })
@@ -30,10 +32,12 @@ describe('[print] layout of a printed sheet', () => {
   it('[print] grows a family to fill a poster, short of swelling a small one', () => {
     const poster = { height: 368, width: 807 }
     const family = sheetLayout({
+      bandHeight: null,
       drawing: poster,
       tree: { height: 1300, width: 1500 }
     })
     const couple = sheetLayout({
+      bandHeight: null,
       drawing: poster,
       tree: { height: 300, width: 400 }
     })
@@ -45,10 +49,25 @@ describe('[print] layout of a printed sheet', () => {
 
   it('[print] keeps the panel readable on an A4', () => {
     const layout = sheetLayout({
+      bandHeight: null,
       drawing: { height: 190, width: 277 },
       tree: { height: 100, width: 100 }
     })
 
     expect(layout.panel.width).toBe(62)
+  })
+
+  it('[print] lays a tall sheet out with the panel as a band under the tree', () => {
+    const drawing = { height: 277, width: 190 }
+    const layout = sheetLayout({
+      bandHeight: 60,
+      drawing,
+      tree: { height: 1000, width: 1000 }
+    })
+
+    expect(isTallSheet(drawing)).toBe(true)
+    expect(layout.panel).toEqual({ height: 60, width: 190, x: 0, y: 217 })
+    expect(layout.tree.height).toBeCloseTo(190)
+    expect(layout.tree.y).toBeCloseTo((207 - 190) / 2)
   })
 })

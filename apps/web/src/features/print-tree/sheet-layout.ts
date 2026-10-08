@@ -20,23 +20,55 @@ export type SheetLayout = {
   tree: Rect & { scale: number }
 }
 
-/** Lays the tree and its side panel out on a drawing of a given size: the tree as large as fits, centred in its room. */
+/** A sheet taller than wide carries its panel as a band under the tree: a side column would squeeze the tree into a strip. */
+export const isTallSheet = (drawing: Size): boolean =>
+  drawing.height > drawing.width
+
+const panelRect = ({
+  bandHeight,
+  drawing
+}: {
+  bandHeight: number | null
+  drawing: Size
+}): Rect => {
+  if (bandHeight !== null) {
+    return {
+      height: bandHeight,
+      width: drawing.width,
+      x: 0,
+      y: drawing.height - bandHeight
+    }
+  }
+  const width = Math.min(
+    PANEL_MAX_WIDTH,
+    Math.max(PANEL_MIN_WIDTH, drawing.width * PANEL_SHARE)
+  )
+  return { height: drawing.height, width, x: drawing.width - width, y: 0 }
+}
+
+/** Lays the tree and its panel out on a drawing of a given size: the tree as large as fits, centred in the room the panel leaves. */
 export const sheetLayout = ({
+  bandHeight,
   drawing,
   tree
 }: {
+  /** The band's height under the tree, or `null` for a side column. */
+  bandHeight: number | null
   drawing: Size
   /** The tree drawing's natural size, in screen pixels. */
   tree: Size
 }): SheetLayout => {
-  const panelWidth = Math.min(
-    PANEL_MAX_WIDTH,
-    Math.max(PANEL_MIN_WIDTH, drawing.width * PANEL_SHARE)
-  )
-  const room = {
-    height: drawing.height,
-    width: drawing.width - panelWidth - PANEL_GAP
-  }
+  const panel = panelRect({ bandHeight, drawing })
+  const room =
+    bandHeight === null
+      ? {
+          height: drawing.height,
+          width: drawing.width - panel.width - PANEL_GAP
+        }
+      : {
+          height: drawing.height - panel.height - PANEL_GAP,
+          width: drawing.width
+        }
   const scale =
     tree.width === 0 || tree.height === 0
       ? MAX_TREE_SCALE
@@ -49,12 +81,7 @@ export const sheetLayout = ({
   const height = tree.height * scale
 
   return {
-    panel: {
-      height: drawing.height,
-      width: panelWidth,
-      x: drawing.width - panelWidth,
-      y: 0
-    },
+    panel,
     tree: {
       height,
       scale,
