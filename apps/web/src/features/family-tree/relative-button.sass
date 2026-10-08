@@ -1,0 +1,40 @@
+@use '../../presentation/styles/focus'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .relative-button
+    @include focus.ring
+    align-items: center
+    background: none
+    border: 0
+    border-radius: var(--radius-control)
+    color: inherit
+    cursor: pointer
+    display: flex
+    gap: var(--space-m)
+    min-height: 72px
+    padding: var(--space-xs)
+    text-align: start
+    width: 100%
+
+    &[data-hovered]
+      background: color-mix(in oklab, var(--ink) 6%, transparent)
+
+    &[data-pressed]
+      background: color-mix(in oklab, var(--ink) 10%, transparent)
+
+    .relative-button-text
+      display: grid
+      gap: 2px
+      min-width: 0
+
+    .relative-button-name
+      @include typography.name
+      overflow-wrap: anywhere
+
+    .relative-button-line
+      @include typography.body-small
+      color: var(--ink-soft)
+
+      .line-swatch
+        margin-inline-end: var(--space-s)

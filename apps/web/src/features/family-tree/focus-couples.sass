@@ -1,0 +1,90 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  // Phone row of the focus and their partners: the slots shrink with the screen, never under the 16px text floor.
+  .focus-couples
+    --partner-width: min(23vw, 104px)
+    --partner-height: calc(var(--partner-width) * 1.3 + 34px)
+    margin-top: var(--space-s)
+
+    .focus-couples-row
+      align-items: start
+      display: flex
+      justify-content: center
+
+    .sticker-years
+      white-space: nowrap
+
+    .focus-couples-self
+      --slot-width: min(32vw, 132px)
+      --slot-height: calc(var(--slot-width) * 1.25 + 24px)
+
+    .focus-couples-partner
+      display: grid
+      justify-items: center
+      width: var(--partner-width)
+
+      .slot
+        --slot-height: var(--partner-height)
+        --slot-width: var(--partner-width)
+
+      .sticker-given-names
+        font-size: 1.0625rem
+
+      .slot.unnumbered .slot-number
+        visibility: hidden
+
+    // Level with the partners' art, where the union line runs on the canvas.
+    .focus-couples-tie
+      flex: none
+      padding-top: calc(18px + var(--partner-height) * 0.24)
+
+    // Under the partners, out to the page's edges: a partner's slot is too narrow for "divorced 1968".
+    .focus-couples-tags
+      display: flex
+      gap: var(--space-l)
+      justify-content: space-between
+      margin-top: var(--space-s)
+
+    .focus-couples-tag
+      @include typography.body-small
+      font-weight: 700
+      max-width: 48%
+
+      &.start
+        text-align: start
+
+      &.end
+        margin-inline-start: auto
+        text-align: end
+
+    .focus-couples-when
+      color: var(--ink-soft)
+      display: block
+      font-weight: 400
+
+    &.alone
+      align-items: center
+      display: flex
+      flex-direction: column
+
+      .focus-couples-self
+        --slot-height: 200px
+        --slot-width: 160px
+
+        .sticker
+          box-shadow: 0 0 0 1px var(--sticker-edge), 0 0 0 5px var(--paper), 0 0 0 8.5px var(--ink), 0 14px 22px -10px color-mix(in oklch, var(--shadow) 70%, transparent)
+
+        .sticker-given-names
+          font-size: var(--text-l)
+
+        .sticker-years
+          font-size: var(--text-m)
+
+    .focus-couples-list
+      display: grid
+      gap: var(--space-xs)
+      list-style: none
+      margin: var(--space-xl) 0 0
+      padding: 0
+      width: 100%

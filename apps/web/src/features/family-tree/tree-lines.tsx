@@ -20,14 +20,19 @@ const pathOf = (points: readonly TreePoint[]): string =>
     .map(({ x, y }, index) => `${index === 0 ? 'M' : 'L'}${x} ${y}`)
     .join('')
 
-const cutPath = ({ x, y }: TreePoint): string =>
+/** The two slashes that cut an ended union, centred on `at`. */
+export const cutPath = ({ x, y }: TreePoint): string =>
   [-CUT_STEP / 2 - CUT_LEAN / 2, CUT_STEP / 2 - CUT_LEAN / 2]
     .map(
       (offset) => `M${x + offset} ${y + CUT_RISE}l${CUT_LEAN} ${-2 * CUT_RISE}`
     )
     .join('')
 
-const Line: React.FC<{ path: string; style: LineStyle }> = ({ path, style }) =>
+/** One relation line, stroked for its kind; an adoption is a double line, a paper core in a wide stroke. */
+export const RelationLine: React.FC<{ path: string; style: LineStyle }> = ({
+  path,
+  style
+}) =>
   style === 'adoption' ? (
     <>
       <path className='tree-line adoption' d={path} />
@@ -52,8 +57,10 @@ const ConnectorLines: React.FC<{ connector: TreeConnector }> = ({
 
   return (
     <>
-      <Line path={pathOf(connector.points)} style={style} />
-      {stub === null ? null : <Line path={pathOf(stub)} style='plain' />}
+      <RelationLine path={pathOf(connector.points)} style={style} />
+      {stub === null ? null : (
+        <RelationLine path={pathOf(stub)} style='plain' />
+      )}
       {isEnded ? (
         <>
           <path

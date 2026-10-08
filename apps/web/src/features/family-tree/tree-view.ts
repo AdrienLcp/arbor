@@ -6,11 +6,14 @@ import { layoutWholeFamily } from '@arbor/core/tree-layout/layout-whole-family'
 import type { TreeLayout } from '@arbor/core/tree-layout/tree-layout'
 
 /**
- * What the canvas shows:
+ * What the tree shows:
  * - `'around'` — the focus person's ancestors above and descendants below, `depth` generations each way
  * - `'whole'` — the family as a descendancy from its widest founder
+ * - `'list'` — the whole family as nested lists, the drawing's accessible twin
+ *
+ * A phone draws no canvas: it shows the focus person's page for both drawings.
  */
-export type TreeScope = 'around' | 'whole'
+export type TreeScope = 'around' | 'list' | 'whole'
 
 export type TreeView = {
   depth: number
@@ -27,7 +30,7 @@ export const layoutOfView = (
   family: FamilyState,
   { depth, focusId, scope }: TreeView
 ): TreeLayout => {
-  if (scope === 'whole') {
+  if (scope !== 'around') {
     return layoutWholeFamily(family)
   }
 

@@ -1,0 +1,52 @@
+@use '../../presentation/styles/focus'
+@use '../../presentation/styles/typography'
+
+@layer components
+  // The phone spread bar: Generation Pine, whatever generation the page shows.
+  .spread-bar
+    align-items: center
+    background: var(--g3)
+    color: var(--on-g3)
+    display: flex
+    gap: var(--space-xs)
+    justify-content: space-between
+    padding: var(--space-s) var(--space-s)
+    position: sticky
+    top: 0
+    z-index: 1
+
+    .spread-bar-turn
+      @include focus.ring
+      align-items: center
+      background: none
+      border: 0
+      border-radius: var(--radius-control)
+      color: inherit
+      cursor: pointer
+      display: grid
+      flex: none
+      height: 48px
+      place-items: center
+      width: 48px
+
+      svg
+        height: 28px
+        width: 28px
+
+      &[data-hovered]
+        background: oklch(1 0 0 / 0.14)
+
+      &[data-focus-visible]
+        outline-color: var(--on-g3)
+        outline-offset: -4px
+
+    .spread-bar-title
+      @include typography.title
+      min-width: 0
+      text-align: center
+
+    .spread-bar-subtitle
+      @include typography.label
+      display: block
+      letter-spacing: 0.04em
+      margin-top: 2px

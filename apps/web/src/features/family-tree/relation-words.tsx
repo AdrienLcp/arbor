@@ -1,20 +1,17 @@
 import { classNames } from '@adrienlcp/react'
 import type React from 'react'
 
-import type { Occurrence } from '@arbor/protocol/occurrence'
-import type { Union } from '@arbor/protocol/union'
-
 import type {
   TreeConnector,
   TreePoint
 } from '@arbor/core/tree-layout/tree-layout'
 
-import { yearOf } from '@/features/people/fuzzy-year'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { tellingFiliationKind } from './line-style'
 import type { TreeScene } from './tree-scene'
 import { unionWordsPlace } from './union-marks'
+import { useUnionWords } from './union-words'
 
 /** Above a child's slot number, where the word of an adoption or a step-child hangs on the line. */
 const DESCENT_WORDS_ABOVE_CARD = 40
@@ -28,20 +25,7 @@ type PlacedWords = {
 
 const useRelationWords = () => {
   const translate = useTranslate()
-
-  const dated = (word: string, occurrence: Occurrence | null): string => {
-    const year = yearOf(occurrence?.date)
-    return year === null
-      ? word
-      : translate('tree.dated', { word, year: String(year) })
-  }
-
-  const unionLines = (union: Union): string[] => [
-    dated(translate(`tree.union.${union.kind}`), union.start),
-    ...(union.end === null
-      ? []
-      : [dated(translate(`tree.unionEnd.${union.end.kind}`), union.end)])
-  ]
+  const unionWords = useUnionWords()
 
   return (connector: TreeConnector): PlacedWords | null => {
     switch (connector.kind) {
@@ -52,7 +36,7 @@ const useRelationWords = () => {
               at: unionWordsPlace(connector.points).at,
               isDashed: connector.union.kind === 'partnership',
               key: connector.union.id,
-              lines: unionLines(connector.union)
+              lines: unionWords(connector.union)
             }
       case 'descent': {
         const kind = tellingFiliationKind(connector.filiations)

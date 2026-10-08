@@ -1,0 +1,35 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .tree-outline
+    min-height: 0
+    overflow-x: hidden
+    overflow-y: auto
+    padding-block: var(--space-l) var(--space-3xl)
+
+    .outline-list,
+    .outline-couples
+      display: grid
+      gap: var(--space-xs)
+      list-style: none
+      margin: 0
+      padding: 0
+
+    > .outline-list
+      @include layout.column(var(--page-width))
+
+    // One step in per generation, hung from a thin printed rule: a partner stays level with the person they married.
+    .outline-couple > .outline-list
+      border-inline-start: var(--stroke-thin) solid var(--ghost-soft)
+      margin: var(--space-xs) 0 0 26px
+      padding-inline-start: var(--space-s)
+
+    .relative-button
+      max-width: 32rem
+
+    .outline-unknown,
+    .outline-repeated
+      @include typography.body-small
+      color: var(--ink-soft)
+      padding: var(--space-s) var(--space-xs)

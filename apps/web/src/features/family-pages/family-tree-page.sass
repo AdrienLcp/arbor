@@ -1,3 +1,4 @@
+@use '@adrienlcp/styles/accessibility'
 @use '../../presentation/styles/layout'
 @use '../../presentation/styles/typography'
 
@@ -27,6 +28,10 @@
       overflow-wrap: anywhere
       text-wrap: balance
 
+      // On a phone the spread bar says whose page it is: the heading stays for screen readers only.
+      @include layout.narrow
+        @include accessibility.visually-hidden
+
     .family-tree-controls
       align-items: end
       display: flex
@@ -37,6 +42,23 @@
     .person-search
       max-width: 100%
       width: 22rem
+
+    @include layout.narrow
+      .family-tree-head
+        padding-block: var(--space-m)
+
+      .family-tree-controls
+        display: grid
+        gap: var(--space-s)
+        justify-content: stretch
+
+      // The pressed choice and the field's placeholder say what each control is; the labels stay for screen readers.
+      .segmented-label,
+      .combo-box-label
+        @include accessibility.visually-hidden
+
+      .person-search
+        width: 100%
 
   .family-tree-empty
     @include layout.column(var(--page-width))

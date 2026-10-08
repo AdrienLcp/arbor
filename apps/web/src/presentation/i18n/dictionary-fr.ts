@@ -237,23 +237,131 @@ export const FR_DICTIONARY = defineDictionary({
     },
     empty: 'Personne dans l’arbre pour l’instant.',
     generation: 'Génération {number:number}',
+    generationShort: 'Gén. {number:number}',
     instructions:
       'Les flèches passent d’une personne à sa voisine. Entrée centre l’arbre sur elle.',
+    kin: {
+      child: {
+        adoption: {
+          female: 'sa fille adoptive',
+          male: 'son fils adoptif',
+          unknown: 'son enfant adoptif'
+        },
+        birth: { female: 'sa fille', male: 'son fils', unknown: 'son enfant' },
+        foster: {
+          female: 'accueillie par {name}',
+          male: 'accueilli par {name}',
+          unknown: 'accueilli par {name}'
+        },
+        step: {
+          female: 'élevée par {name}',
+          male: 'élevé par {name}',
+          unknown: 'élevé par {name}'
+        },
+        unknown: { female: 'sa fille', male: 'son fils', unknown: 'son enfant' }
+      },
+      halfSibling: {
+        female: 'sa demi-sœur',
+        male: 'son demi-frère',
+        unknown: 'demi-frère ou demi-sœur'
+      },
+      parent: {
+        adoption: {
+          female: 'sa mère adoptive',
+          male: 'son père adoptif',
+          unknown: 'son parent adoptif'
+        },
+        birth: { female: 'sa mère', male: 'son père', unknown: 'son parent' },
+        foster: {
+          female: 'sa mère d’accueil',
+          male: 'son père d’accueil',
+          unknown: 'son parent d’accueil'
+        },
+        step: {
+          female: 'sa belle-mère',
+          male: 'son beau-père',
+          unknown: 'son beau-parent'
+        },
+        unknown: { female: 'sa mère', male: 'son père', unknown: 'son parent' }
+      },
+      partner: {
+        marriage: {
+          female: 'son épouse',
+          male: 'son époux',
+          unknown: 'son conjoint'
+        },
+        none: {
+          female: 'l’autre parent',
+          male: 'l’autre parent',
+          unknown: 'l’autre parent'
+        },
+        pacs: {
+          female: 'sa partenaire de PACS',
+          male: 'son partenaire de PACS',
+          unknown: 'partenaire de PACS'
+        },
+        partnership: {
+          female: 'sa compagne',
+          male: 'son compagnon',
+          unknown: 'en couple'
+        },
+        unknown: {
+          female: 'sa compagne',
+          male: 'son compagnon',
+          unknown: 'en couple'
+        }
+      },
+      sibling: {
+        female: 'sa sœur',
+        male: 'son frère',
+        unknown: 'son frère ou sa sœur'
+      },
+      stepSibling: {
+        female: 'élevée aussi par {name}',
+        male: 'élevé aussi par {name}',
+        unknown: 'élevé aussi par {name}'
+      },
+      withParent: '{word}, avec {name}'
+    },
     missing: defineTranslation('{count:plural}', {
       plural: { count: { one: '{?} à compléter', other: '{?} à compléter' } }
     }),
+    outline: {
+      children: 'Les enfants de {name}',
+      label: 'Toute la famille, en liste',
+      repeated: '{name}, déjà nommé plus haut',
+      with: 'avec {name}',
+      withUnknown: 'avec une personne inconnue'
+    },
     people: defineTranslation('{count:plural}', {
       plural: { count: { one: '{?} personne', other: '{?} personnes' } }
     }),
     scope: {
       around: 'Autour d’une personne',
       label: 'Afficher',
+      list: 'En liste',
+      page: 'Page par page',
       whole: 'Toute la famille'
     },
     search: {
       empty: 'Personne de ce nom dans l’arbre.',
       label: 'Chercher quelqu’un',
       placeholder: 'Un prénom, un nom'
+    },
+    spread: {
+      children: 'Ses enfants',
+      childrenEmpty: 'Pas encore d’enfant dans l’arbre.',
+      focus: '{name} et ses unions',
+      next: 'Descendre vers {name}',
+      page: 'page de {name}',
+      parents: 'Ses parents',
+      parentsEmpty: 'Ses parents ne sont pas encore dans l’arbre.',
+      previous: 'Monter vers {name}',
+      siblings: 'Ses frères et sœurs',
+      unknownPartner: {
+        hint: 'l’autre parent',
+        title: 'Inconnu'
+      }
     },
     titleAround: 'L’arbre, autour de {name}',
     titleWhole: 'L’arbre de toute la famille',

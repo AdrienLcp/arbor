@@ -235,23 +235,115 @@ export const EN_DICTIONARY = defineDictionary({
     },
     empty: 'Nobody in the tree yet.',
     generation: 'Generation {number:number}',
+    generationShort: 'Gen. {number:number}',
     instructions:
       'The arrow keys move from one person to the next. Enter centres the tree on them.',
+    kin: {
+      child: {
+        adoption: {
+          female: 'adopted daughter',
+          male: 'adopted son',
+          unknown: 'adopted child'
+        },
+        birth: { female: 'daughter', male: 'son', unknown: 'child' },
+        foster: {
+          female: 'fostered by {name}',
+          male: 'fostered by {name}',
+          unknown: 'fostered by {name}'
+        },
+        step: {
+          female: 'raised by {name}',
+          male: 'raised by {name}',
+          unknown: 'raised by {name}'
+        },
+        unknown: { female: 'daughter', male: 'son', unknown: 'child' }
+      },
+      halfSibling: {
+        female: 'half-sister',
+        male: 'half-brother',
+        unknown: 'half-sibling'
+      },
+      parent: {
+        adoption: {
+          female: 'adoptive mother',
+          male: 'adoptive father',
+          unknown: 'adoptive parent'
+        },
+        birth: { female: 'mother', male: 'father', unknown: 'parent' },
+        foster: {
+          female: 'foster mother',
+          male: 'foster father',
+          unknown: 'foster parent'
+        },
+        step: {
+          female: 'stepmother',
+          male: 'stepfather',
+          unknown: 'step-parent'
+        },
+        unknown: { female: 'mother', male: 'father', unknown: 'parent' }
+      },
+      partner: {
+        marriage: { female: 'wife', male: 'husband', unknown: 'spouse' },
+        none: {
+          female: 'other parent',
+          male: 'other parent',
+          unknown: 'other parent'
+        },
+        pacs: {
+          female: 'civil partner',
+          male: 'civil partner',
+          unknown: 'civil partner'
+        },
+        partnership: { female: 'partner', male: 'partner', unknown: 'partner' },
+        unknown: { female: 'partner', male: 'partner', unknown: 'partner' }
+      },
+      sibling: { female: 'sister', male: 'brother', unknown: 'sibling' },
+      stepSibling: {
+        female: 'also raised by {name}',
+        male: 'also raised by {name}',
+        unknown: 'also raised by {name}'
+      },
+      withParent: '{word}, with {name}'
+    },
     missing: defineTranslation('{count:plural}', {
       plural: { count: { one: '{?} to complete', other: '{?} to complete' } }
     }),
+    outline: {
+      children: '{name}’s children',
+      label: 'The whole family, as a list',
+      repeated: '{name}, named above',
+      with: 'with {name}',
+      withUnknown: 'with an unknown person'
+    },
     people: defineTranslation('{count:plural}', {
       plural: { count: { one: '{?} person', other: '{?} people' } }
     }),
     scope: {
       around: 'Around one person',
       label: 'Show',
+      list: 'As a list',
+      page: 'Page by page',
       whole: 'The whole family'
     },
     search: {
       empty: 'Nobody by that name in the tree.',
       label: 'Find someone',
       placeholder: 'A first name, a surname'
+    },
+    spread: {
+      children: 'Children',
+      childrenEmpty: 'No children in the tree yet.',
+      focus: '{name} and their unions',
+      next: 'Down to {name}',
+      page: '{name}’s page',
+      parents: 'Parents',
+      parentsEmpty: 'Their parents are not in the tree yet.',
+      previous: 'Up to {name}',
+      siblings: 'Brothers and sisters',
+      unknownPartner: {
+        hint: 'other parent',
+        title: 'Unknown'
+      }
     },
     titleAround: 'The tree, around {name}',
     titleWhole: 'The whole family’s tree',

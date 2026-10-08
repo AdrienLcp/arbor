@@ -1,0 +1,41 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .tree-spread
+    min-height: 0
+    overflow-x: hidden
+    overflow-y: auto
+    padding-bottom: var(--space-3xl)
+    scrollbar-width: thin
+
+  // A generation's band on a phone page: its ink at 9% into the paper, a firmer rule on top, as on the canvas.
+  .spread-band
+    background: color-mix(in oklab, var(--gc) 9%, var(--paper))
+    border-top: var(--stroke-bold) solid color-mix(in oklab, var(--gc) 55%, var(--paper))
+    padding: var(--space-l) var(--space-m) var(--space-xl)
+
+    .spread-band-head
+      @include typography.label-strong
+      color: var(--gc-ink)
+      display: flex
+      flex-wrap: wrap
+      font-size: var(--text-m)
+      gap: var(--space-xs) var(--space-s)
+      justify-content: space-between
+
+    .spread-band-aside
+      color: var(--ink-soft)
+      font-weight: 600
+
+    .spread-relatives
+      display: grid
+      gap: var(--space-xs)
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr))
+      list-style: none
+      margin: var(--space-s) 0 0
+      padding: 0
+
+    .spread-empty
+      @include typography.body-small
+      color: var(--ink-soft)
+      margin-top: var(--space-s)

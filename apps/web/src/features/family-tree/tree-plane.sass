@@ -1,5 +1,6 @@
 // A style system: the bands, lines, words and stickers of the tree canvas are only ever restyled together.
 @use '../../presentation/styles/typography'
+@use 'line-strokes'
 
 @layer components
   .tree-plane
@@ -23,43 +24,7 @@
       pointer-events: none
       position: absolute
 
-    .tree-line
-      fill: none
-      stroke: var(--line)
-      stroke-linecap: round
-      stroke-linejoin: round
-      stroke-width: var(--line-plain)
-
-      &.marriage
-        stroke-width: var(--line-heavy)
-
-      &.free-union
-        stroke-dasharray: 7 5
-        stroke-linecap: butt
-        stroke-width: var(--line-heavy)
-
-      &.step
-        stroke-dasharray: 0.1 6
-        stroke-width: var(--line-step)
-
-      &.unknown
-        stroke: var(--ghost)
-        stroke-dasharray: 3 4
-
-      &.adoption
-        stroke-width: var(--line-adoption)
-
-      &.adoption-core
-        stroke: var(--paper)
-        stroke-width: var(--line-adoption-core)
-
-      // The two slashes of an ended union, over a paper gap so they read on the heavy line.
-      &.cut-gap
-        stroke: var(--paper)
-        stroke-width: 7px
-
-      &.cut
-        stroke-width: var(--line-step)
+    @include line-strokes.strokes
 
     .tree-card
       left: var(--x)

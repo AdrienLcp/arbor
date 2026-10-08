@@ -44,16 +44,21 @@ export const tellingFiliationKind = (
     filiations.some((filiation) => filiation.kind === kind)
   ) ?? 'unknown'
 
+/** A union's stroke; a couple with no recorded union is drawn as an unknown link. */
+export const unionLineStyle = (union: Union | null): LineStyle =>
+  union === null ? 'unknown' : UNION_LINE[union.kind]
+
+export const filiationLineStyle = (kind: FiliationKind): LineStyle =>
+  DESCENT_LINE[kind]
+
 export const lineStyleOf = (connector: TreeConnector): LineStyle => {
   switch (connector.kind) {
     case 'union':
-      return connector.union === null
-        ? 'unknown'
-        : UNION_LINE[connector.union.kind]
+      return unionLineStyle(connector.union)
     case 'siblings':
       return 'plain'
     case 'descent':
-      return DESCENT_LINE[tellingFiliationKind(connector.filiations)]
+      return filiationLineStyle(tellingFiliationKind(connector.filiations))
     default:
       return connector satisfies never
   }
