@@ -1,4 +1,6 @@
-# 11 — GEDCOM import and export
+# 12 — GEDCOM import and export
+
+On hold: not started before the launch, and only if Adrien asks for it.
 
 Goal: the father's existing tree comes in without retyping, and the family's
 data can always leave.

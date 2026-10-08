@@ -19,5 +19,5 @@ Steps run in order: each one ends deployed and seen in a browser.
 | 08 | History and undo | Change log screen, undo, bin, restore to a moment | done 2026-10-08 |
 | 09 | Printable tree | The drawing exported as a print-ready PDF: scope, paper size, tiling, QR code | done 2026-10-08 |
 | 10 | How are we related? | Kinship between two people, named in plain French | done 2026-10-08 |
-| 11 | GEDCOM import and export | Bring in the father's existing tree; export back; full backup zip | to do |
-| 12 | Launch | Public demo family, Lighthouse, README, portfolio project page, the father onboarded | to do |
+| 11 | Launch | Public demo family, Lighthouse, README, portfolio project page, the father onboarded | to do |
+| 12 | GEDCOM import and export | Bring in the father's existing tree; export back; full backup zip | on hold, after launch, only if Adrien asks |
