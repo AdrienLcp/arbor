@@ -173,6 +173,33 @@ on Chromium at CPU ×4:
 - Canvas sticker text is below the phone size floor on purpose; it is never
   reused on phone views.
 
+## Editing
+
+Built in step 07, closed 2026-10-08.
+
+- **Every save is one batch against the revision on screen.** The object
+  applies a batch made over an older revision when it still applies — an edit
+  carries each field's before and after, so two people fixing different fields
+  of one sheet both land. It answers `revision_conflict` only when the batch no
+  longer applies there; the client then reloads and names who moved the tree.
+- **Nothing pushes changes to an open page.** The family reloads after the
+  visitor's own saves only, so a sheet that empties under their eyes means one
+  of their saves was refused: the sheet reads the log since the revision it
+  showed and says who put the person in the bin. A sheet opened from an old
+  link keeps the generic line — finding the bin there means reading the whole
+  log, which step 08's bin screen will answer instead.
+- **A photo is resized in the browser** (WebP; JPEG where Safari cannot
+  encode WebP), recorded with `photo.create`, then its files go up in the
+  save's `afterRecording` step. A failed upload records the photo's
+  withdrawal, so the log never points at files that do not exist.
+- **View transitions:** the root `ViewTransition` is keyed by
+  `pageUnderneath(pathname)`, not the pathname, so opening a sheet does not
+  replay the tree's entrance. Sheet-to-sheet moves replace history, so the
+  sheet's Back closes it. Sheet rows never morph (`isMorphing={false}`): a
+  name shared with the tree under them would collide.
+- The running Vite dev server caches a failed Sass `@use`: a partial created
+  after the first failed import stays "not found" until it restarts.
+
 ## Security notes
 
 - Keys: 128-bit random, base64url, sent in an `Authorization` header; only

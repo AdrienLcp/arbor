@@ -12,7 +12,8 @@ Goal: no mistake and no vandal can cost the family anything.
    ("Marie a ajouté Léo, fils de Marie et Thomas"), filterable by person.
 2. Undo an entry (or a group) → inverse operations; refused with an
    explanation when later changes depend on it (undo those first, offered).
-3. Bin: deleted people with their links, restorable by anyone.
+3. Bin: deleted people with their links, who put them there and when, restorable
+   by anyone. A sheet opened from an old link to a binned person names who too.
 4. Keeper: restore the whole family to a moment (one grouped, undoable
    operation), shown as a preview first.
 5. Person sheet: "historique de cette fiche".
