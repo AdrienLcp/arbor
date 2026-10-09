@@ -53,10 +53,6 @@ test('[e2e] a family is created, joined through its link, and locked out once th
   await treePage(relative).sayWhoYouAre.click()
   await whoAmIDialog(relative).person(FOUNDER_NAME).click()
   await expect(
-    treePage(relative).title(FOUNDER_NAME),
-    'the tree turns around the relative once they said who they are'
-  ).toBeVisible()
-  await expect(
     treePage(relative).youAre(FOUNDER_NAME),
     'the relative’s choice is remembered'
   ).toBeVisible()

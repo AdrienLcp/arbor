@@ -742,10 +742,6 @@ export const EN_DICTIONARY = defineDictionary({
   },
   tree: {
     dated: '{word} {year}',
-    depth: {
-      label: 'Generations each way',
-      option: '{count:number}'
-    },
     descent: {
       adoption: 'adoption',
       foster: 'foster family',
@@ -838,6 +834,7 @@ export const EN_DICTIONARY = defineDictionary({
     }),
     scope: {
       around: 'Around one person',
+      generations: 'By generation',
       label: 'Show',
       list: 'As a list',
       page: 'Page by page',
@@ -849,7 +846,6 @@ export const EN_DICTIONARY = defineDictionary({
       label: 'Find someone',
       placeholder: 'A first name, a surname'
     },
-    showGenerations: 'Generations',
     spread: {
       children: 'Children',
       childrenEmpty: 'No children in the tree yet.',

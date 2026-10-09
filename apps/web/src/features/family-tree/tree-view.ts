@@ -7,29 +7,24 @@ import type { TreeLayout } from '@arbor/core/tree-layout/tree-layout'
 
 /**
  * What the tree shows:
- * - `'around'` — the focus person's ancestors above and descendants below, `depth` generations each way
+ * - `'around'` — the focus person's whole lineage: every ancestor above, every descendant below
  * - `'whole'` — the family as a descendancy from its widest founder
+ * - `'generations'` — the whole family, a tinted band under each generation
  * - `'list'` — the whole family as nested lists, the drawing's accessible twin
  * - `'spread'` — on a phone only, the focus person's page: one generation spread at a time
  */
-export type TreeScope = 'around' | 'list' | 'spread' | 'whole'
+export type TreeScope = 'around' | 'generations' | 'list' | 'spread' | 'whole'
 
 export type TreeView = {
-  depth: number
   /** The person the tree turns around: the foil sticker, the one the canvas centres on. */
   focusId: EntityId
-  /** Whether the drawing lays a band under each generation; off by default, as most family trees are drawn. */
-  hasGenerationBands: boolean
   scope: TreeScope
 }
-
-export const TREE_DEPTHS = [1, 2, 3, 4] as const
-export const DEFAULT_TREE_DEPTH = 2
 
 /** The layout a view draws; a focus person since binned falls back to the whole family. */
 export const layoutOfView = (
   family: FamilyState,
-  { depth, focusId, scope }: TreeView
+  { focusId, scope }: TreeView
 ): TreeLayout => {
   if (scope !== 'around') {
     return layoutWholeFamily(family)
@@ -37,8 +32,8 @@ export const layoutOfView = (
 
   const around = layoutAroundPerson(family, {
     focusId,
-    generationsDown: depth,
-    generationsUp: depth
+    generationsDown: Number.POSITIVE_INFINITY,
+    generationsUp: Number.POSITIVE_INFINITY
   })
 
   return around.status === 'success' ? around.data : layoutWholeFamily(family)

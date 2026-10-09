@@ -150,7 +150,7 @@ family with no overlap and no line under a card, in 3 ms.
   founder with the most descendants. The parents of someone who married in are
   not drawn there; their card offers to refocus on them.
 - **Around a person** is an hourglass: ancestors above (each parent's own
-  parents, depth adjustable), descendants below, both laid out by the same
+  parents, as far back as the tree goes), descendants below, both laid out by the same
   tidy tree from the focus block.
 - On a phone the tree is not this canvas but one spread around the focus
   person (`DESIGN.md`, Layout), which needs no layout at all. "Whole family"

@@ -48,14 +48,6 @@ const GLIDE_MS = 200
 
 type PersonCard = Extract<TreeCard, { kind: 'person' }>
 
-/** What a sheet hides of the canvas, so a centred person is centred in what stays in sight. */
-type SheetCover = {
-  /** The share of the window's height a bottom sheet hides. */
-  bottomShare: number
-  /** The pixels a side sheet hides on the right. */
-  right: number
-}
-
 const isPersonCard = (card: TreeCard): card is PersonCard =>
   card.kind === 'person'
 
@@ -79,14 +71,11 @@ type TreeCanvasProps = {
   today: Temporal.PlainDate
   /** The share of the window's height a bottom sheet hides, so the focus person is centred in what stays in sight. */
   coveredBottomShare?: number
-  /** The pixels a side sheet hides on the canvas's right, so the focus person is centred in what stays in sight. */
-  coveredRight?: number
 }
 
 /** The tree on a canvas to pan, pinch and zoom, and to walk through person by person with the arrow keys. */
 export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   coveredBottomShare = 0,
-  coveredRight = 0,
   focusId,
   label,
   litPath,
@@ -116,9 +105,9 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     key: string | null,
     animationMs: number,
     {
-      cover = { bottomShare: coveredBottomShare, right: coveredRight },
+      bottomShare = coveredBottomShare,
       scale
-    }: { cover?: SheetCover; scale?: number } = {}
+    }: { bottomShare?: number; scale?: number } = {}
   ) => {
     const element = key === null ? undefined : cardElements.current.get(key)
     const controls = viewport.current
@@ -126,8 +115,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     void controls.zoomToElement(
       element,
       {
-        offsetX: -cover.right / 2,
-        offsetY: -(cover.bottomShare * window.innerHeight) / 2,
+        offsetY: -(bottomShare * window.innerHeight) / 2,
         scale: scale ?? controls.state.scale
       },
       animationMs
@@ -170,25 +158,22 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     if (!showLitPath(scene)) centreOn(focusKey, 0, { scale: ARRIVAL_SCALE })
   }
 
-  // A new scene jumps, inside the refocus transition, so the stickers slide from where they were to the centre; a sheet opening or closing glides.
+  // A new scene jumps, inside the refocus transition, so the stickers slide from where they were to the centre; a phone's bottom sheet opening or closing glides, a computer's side sheet leaves the tree still.
   const centreOnFocusOf = useEffectEvent(
-    (placed: TreeScene, cover: SheetCover) => {
+    (placed: TreeScene, bottomShare: number) => {
       const isNewScene = placed !== centredScene.current
       centredScene.current = placed
       hasVisitorMoved.current = false
       if (!showLitPath(placed)) {
         centreOn(focusKeyIn(placed, focusId), isNewScene ? 0 : GLIDE_MS, {
-          cover
+          bottomShare
         })
       }
     }
   )
   useLayoutEffect(() => {
-    centreOnFocusOf(scene, {
-      bottomShare: coveredBottomShare,
-      right: coveredRight
-    })
-  }, [scene, coveredBottomShare, coveredRight])
+    centreOnFocusOf(scene, coveredBottomShare)
+  }, [scene, coveredBottomShare])
 
   // The canvas can be measured before its stylesheet sizes it: until the visitor moves, a new size centres it again.
   const centreAfterResize = useEffectEvent(() => {

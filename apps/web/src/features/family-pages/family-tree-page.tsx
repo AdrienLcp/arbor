@@ -29,7 +29,6 @@ import {
   firstFocusId,
   isInTree,
   layoutOfView,
-  TREE_DEPTHS,
   type TreeScope
 } from '@/features/family-tree/tree-view'
 import { useTreeView } from '@/features/family-tree/use-tree-view'
@@ -54,7 +53,6 @@ import { Button } from '@/presentation/components/button'
 import { Main } from '@/presentation/components/main'
 import { PHONE_SCREEN } from '@/presentation/components/phone-screen'
 import { SegmentedControl } from '@/presentation/components/segmented-control'
-import { Switch } from '@/presentation/components/switch'
 import { useMediaQuery } from '@/presentation/components/use-media-query'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useLocale, useTranslate } from '@/presentation/i18n/i18n-context'
@@ -72,7 +70,6 @@ type FamilyTreeProps = {
   fallbackFocusId: EntityId | null
   family: FamilyState
   initialFocusId: EntityId
-  isFocusMe: boolean
   /** How two people are related, traced over the whole tree. */
   litKinship: LitKinship | null
   myPersonId: EntityId | null
@@ -80,7 +77,7 @@ type FamilyTreeProps = {
 
 type LitKinship = { path: KinPath; relativeId: EntityId; sentence: string }
 
-/** What the screen draws of the chosen scope: a lit path needs the whole family, the page-by-page spread is a phone's, and a phone's canvas turns around one person. */
+/** What the screen draws of the chosen scope: a lit path needs the whole family, a phone's canvas turns around one person, and each screen reads generations its own way (a computer's bands, a phone's page by page). */
 const scopeOnScreen = ({
   isLit,
   isPhone,
@@ -91,8 +88,11 @@ const scopeOnScreen = ({
   scope: TreeScope
 }): TreeScope => {
   if (isLit) return 'whole'
-  if (isPhone) return scope === 'whole' ? 'around' : scope
-  return scope === 'spread' ? 'around' : scope
+  if (isPhone) {
+    if (scope === 'whole') return 'around'
+    return scope === 'generations' ? 'spread' : scope
+  }
+  return scope === 'spread' ? 'generations' : scope
 }
 
 /** The kinship the address asks the tree to light up, `null` when it names someone out of the tree or no path joins them. */
@@ -138,7 +138,6 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   fallbackFocusId,
   family,
   initialFocusId,
-  isFocusMe,
   litKinship,
   myPersonId
 }) => {
@@ -149,20 +148,13 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   const isPhone = useMediaQuery(PHONE_SCREEN)
   const sheet = useChildPage()
   const sheetPersonId = useSheetPersonId()
-  const {
-    setDepth,
-    setFocus,
-    setHasGenerationBands,
-    setScope,
-    showAround,
-    view
-  } = useTreeView({
+  const { setFocus, setScope, showAround, view } = useTreeView({
     fallbackFocusId,
     initialFocusId,
-    isFocusMe,
     isInTree: (personId) => isInTree(family, personId),
     myPersonId,
-    shownPersonId: sheetPersonId
+    // A computer's side sheet lies over the tree, which stays still beneath it; a phone's bottom sheet would hide the person touched, so the tree turns to them.
+    shownPersonId: isPhone ? sheetPersonId : null
   })
   const personIds = [...family.persons.keys()]
   const faces = usePersonFaces()
@@ -198,6 +190,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     lit?.sentence ??
     {
       around: aroundTitle,
+      generations: translate('tree.titleWhole'),
       list: translate('tree.outline.label'),
       spread: aroundTitle,
       whole: translate('tree.titleWhole')
@@ -214,6 +207,10 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     : [
         { label: translate('tree.scope.around'), value: 'around' as const },
         { label: translate('tree.scope.whole'), value: 'whole' as const },
+        {
+          label: translate('tree.scope.generations'),
+          value: 'generations' as const
+        },
         { label: translate('tree.scope.list'), value: 'list' as const }
       ]
 
@@ -246,7 +243,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
       )
     }
     const scene = treeScene({
-      hasGenerationBands: view.hasGenerationBands,
+      hasGenerationBands: shownScope === 'generations',
       layout: layoutOfView(family, { ...view, focusId, scope: shownScope }),
       persons: family.persons
     })
@@ -254,7 +251,6 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
       <>
         <TreeCanvas
           coveredBottomShare={sheet !== null && isPhone ? BOTTOM_SHEET_PEEK : 0}
-          coveredRight={sheet !== null && !isPhone ? SIDE_SHEET_WIDTH : 0}
           focusId={focusId}
           label={title}
           litPath={lit?.path ?? null}
@@ -302,25 +298,6 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
               options={scopeOptions}
               value={shownScope}
             />
-          )}
-          {shownScope === 'around' && !isPhone ? (
-            <SegmentedControl
-              label={translate('tree.depth.label')}
-              onChange={(depth) => setDepth(Number(depth))}
-              options={TREE_DEPTHS.map((depth) => ({
-                label: translate('tree.depth.option', { count: depth }),
-                value: String(depth)
-              }))}
-              value={String(view.depth)}
-            />
-          ) : null}
-          {shownScope === 'list' || isPhone ? null : (
-            <Switch
-              isSelected={view.hasGenerationBands}
-              onChange={setHasGenerationBands}
-            >
-              {translate('tree.showGenerations')}
-            </Switch>
           )}
           <PersonSearch onPick={showAround} people={[...faces.values()]} />
         </div>
@@ -381,7 +358,6 @@ export const FamilyTreePage: React.FC = () => {
           fallbackFocusId={arrivalFocusId}
           family={family}
           initialFocusId={focusId}
-          isFocusMe={focusId === myPersonId}
           litKinship={litKinship}
           myPersonId={myPersonId}
         />

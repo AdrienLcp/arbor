@@ -744,14 +744,10 @@ export const FR_DICTIONARY = defineDictionary({
     dark: 'Sombre',
     label: 'Apparence',
     light: 'Clair',
-    system: 'Comme le téléphone'
+    system: 'Comme l’appareil'
   },
   tree: {
     dated: '{word} {year}',
-    depth: {
-      label: 'Générations de chaque côté',
-      option: '{count:number}'
-    },
     descent: {
       adoption: 'adoption',
       foster: 'famille d’accueil',
@@ -860,6 +856,7 @@ export const FR_DICTIONARY = defineDictionary({
     }),
     scope: {
       around: 'Autour d’une personne',
+      generations: 'Par générations',
       label: 'Afficher',
       list: 'En liste',
       page: 'Page par page',
@@ -871,7 +868,6 @@ export const FR_DICTIONARY = defineDictionary({
       label: 'Chercher quelqu’un',
       placeholder: 'Un prénom, un nom'
     },
-    showGenerations: 'Générations',
     spread: {
       children: 'Ses enfants',
       childrenEmpty: 'Pas encore d’enfant dans l’arbre.',
