@@ -5,7 +5,7 @@ import {
   editPersonDialog,
   formDialog,
   personSheet,
-  whoAmIPage
+  whoAmIDialog
 } from './support/locators'
 
 /** A common laptop screen: shorter than the person form, which must scroll inside its floating panel. */
@@ -20,11 +20,14 @@ test('[e2e] on a laptop, the person form scrolls to its save button and saves', 
 }) => {
   const page = await (await browser.newContext({ viewport: LAPTOP })).newPage()
 
-  await openHydrated(page, `${DEMO_FAMILY_PATH}/me`)
-  await whoAmIPage(page).person(VISITOR_NAME).click()
   await openHydrated(page, `${DEMO_FAMILY_PATH}/tree/auguste-morel`)
 
   await personSheet(page).editPerson.click()
+  await expect(
+    whoAmIDialog(page).beforeEdit,
+    'a visitor who never said who they are is asked before their first change'
+  ).toBeVisible()
+  await whoAmIDialog(page).person(VISITOR_NAME).click()
   const dialog = editPersonDialog(page)
   await dialog.givenNames.fill(RENAMED_GIVEN_NAMES)
   await dialog.save.click()

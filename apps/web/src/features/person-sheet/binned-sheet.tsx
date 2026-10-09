@@ -42,11 +42,13 @@ export const BinnedSheet: React.FC<{ personId: EntityId }> = ({ personId }) => {
             })}
       </p>
       {binning === null ? null : <p>{translate('bin.nothingLinked')}</p>}
-      {edit.canEdit && edit.author !== null ? (
+      {edit.canEdit ? (
         <Button
           isPending={edit.isPending}
           onPress={() =>
-            edit.save([{ personId, type: 'person.restore' }], () => undefined)
+            edit.signFirst(() =>
+              edit.save([{ personId, type: 'person.restore' }], () => undefined)
+            )
           }
         >
           <UnbinIcon aria-hidden='true' />

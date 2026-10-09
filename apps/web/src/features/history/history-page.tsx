@@ -6,7 +6,6 @@ import type { ChangeLogEntry } from '@arbor/protocol/change-log'
 import { takenBackRevisions } from '@arbor/core/history/taken-back-revisions'
 
 import { useAuthorName } from '@/features/family-edits/use-author-name'
-import { WhoFirstNotice } from '@/features/family-edits/who-first-notice'
 import { FamilyAppBar } from '@/features/family-pages/family-app-bar'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
 import { usePersonFaces } from '@/features/family-pages/use-person-faces'
@@ -89,14 +88,11 @@ export const HistoryPage: React.FC = () => {
   const binCount = family.family.binnedPersonIds.length
 
   const canUndo = (entry: ChangeLogEntry): boolean =>
-    undo.author !== null &&
     !takenBack.has(entry.revision) &&
     (entry.cause?.kind !== 'restore' || family.role === 'keeper')
   const lastRevision = entries.at(-1)?.revision ?? 0
   const canRestore = (entry: ChangeLogEntry): boolean =>
-    undo.author !== null &&
-    family.role === 'keeper' &&
-    entry.revision < lastRevision
+    family.role === 'keeper' && entry.revision < lastRevision
   const takenBackBy = (entry: ChangeLogEntry): TakenBackBy | null => {
     const by = byRevision.get(takenBack.get(entry.revision) ?? -1)
     return by === undefined
@@ -135,7 +131,6 @@ export const HistoryPage: React.FC = () => {
                 : translate('history.binWith', { count: binCount })}
             </ButtonLink>
           </div>
-          {undo.author === null ? <WhoFirstNotice /> : null}
         </div>
         {log.status === 'loading' ? (
           <p className='history-status' role='status'>
@@ -177,7 +172,9 @@ export const HistoryPage: React.FC = () => {
                     authorName={authorName(run.author)}
                     key={run.entries[0]?.revision}
                     onUndoAll={() =>
-                      setChoosing(undoable.map(({ revision }) => revision))
+                      undo.signFirst(() =>
+                        setChoosing(undoable.map(({ revision }) => revision))
+                      )
                     }
                     undoableCount={undoable.length}
                   >
@@ -188,12 +185,18 @@ export const HistoryPage: React.FC = () => {
                         lines={stories.get(entry.revision)?.lines ?? []}
                         onRestore={
                           canRestore(entry)
-                            ? () => setRestoringTo(entry.revision)
+                            ? () =>
+                                undo.signFirst(() =>
+                                  setRestoringTo(entry.revision)
+                                )
                             : null
                         }
                         onUndo={
                           canUndo(entry)
-                            ? () => setChoosing([entry.revision])
+                            ? () =>
+                                undo.signFirst(() =>
+                                  setChoosing([entry.revision])
+                                )
                             : null
                         }
                         takenBackBy={takenBackBy(entry)}

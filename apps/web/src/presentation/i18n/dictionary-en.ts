@@ -199,10 +199,7 @@ export const EN_DICTIONARY = defineDictionary({
       surname: 'Surname',
       title: 'Fix {name}’s sheet'
     },
-    save: 'Save',
-    whoFirst:
-      'To add to the tree, first say who you are: your changes will be signed with your name.',
-    whoFirstAction: 'Say who I am'
+    save: 'Save'
   },
   error: {
     screen: {
@@ -571,9 +568,10 @@ export const EN_DICTIONARY = defineDictionary({
   me: {
     change: 'Change',
     is: 'You are {name}.',
-    nobody: 'You have not said who you are yet.',
+    nobody: 'Are you in the tree?',
     onlooker: 'You are looking at the tree without changing it.',
     reader: 'This link lets you look at the tree, not change it.',
+    tell: 'Say who you are',
     you: 'you'
   },
   notFound: {
@@ -915,6 +913,7 @@ export const EN_DICTIONARY = defineDictionary({
     place: 'Place of the union'
   },
   whoAmI: {
+    beforeEdit: 'Before you change anything: who are you in this tree?',
     intro:
       'Tap your name. Your changes will be signed with it: the family will know who did what.',
     noMatch: 'Nobody in the tree has that name.',

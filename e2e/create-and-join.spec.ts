@@ -9,7 +9,7 @@ import {
   linkRefusedScreen,
   sharePage,
   treePage,
-  whoAmIPage
+  whoAmIDialog
 } from './support/locators'
 
 const FOUNDER = { givenNames: 'Jeanne', surname: 'Delorme' }
@@ -43,17 +43,18 @@ test('[e2e] a family is created, joined through its link, and locked out once th
 
   await openHydrated(relative, link)
   await expect(
-    whoAmIPage(relative).title,
-    'a relative arriving by the link is asked who they are'
-  ).toBeVisible()
-  await whoAmIPage(relative).person(FOUNDER_NAME).click()
-  await expect(
     familyAppBar(relative).familyName(TREE_NAME),
-    'the relative sees the family after picking themselves'
+    'a relative arriving by the link lands on the family’s tree'
   ).toBeVisible()
+  await expect(
+    treePage(relative).sayWhoYouAre,
+    'the tree invites the relative to say who they are, without asking first'
+  ).toBeVisible()
+  await treePage(relative).sayWhoYouAre.click()
+  await whoAmIDialog(relative).person(FOUNDER_NAME).click()
   await expect(
     treePage(relative).title(FOUNDER_NAME),
-    'the family opens on its tree, around the relative'
+    'the tree turns around the relative once they said who they are'
   ).toBeVisible()
   await expect(
     treePage(relative).youAre(FOUNDER_NAME),

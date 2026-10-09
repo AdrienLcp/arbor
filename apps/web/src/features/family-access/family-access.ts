@@ -7,8 +7,9 @@ import {
   ROLES,
   type Role
 } from '@arbor/protocol/access'
-import { authorSchema } from '@arbor/protocol/change-log'
+import { type Author, authorSchema } from '@arbor/protocol/change-log'
 import { DEMO_FAMILY_ID, DEMO_FAMILY_KEY } from '@arbor/protocol/demo-family'
+import type { EntityId } from '@arbor/protocol/entity-id'
 
 /** Someone who opened the tree only to look, and said so on "Who are you?". */
 export const ONLOOKER = 'onlooker'
@@ -27,6 +28,14 @@ export const familyAccessSchema = z.object({
   unverifiedKey: accessKeySchema.nullable()
 })
 export type FamilyAccess = z.infer<typeof familyAccessSchema>
+
+/** Who signs the visitor's changes: their answer to "Who are you?", `null` while they gave none or only look. */
+export const signingAuthor = (me: FamilyAccess['me']): Author | null =>
+  me === null || me === ONLOOKER ? null : me
+
+/** The person the visitor said they are, `null` for an onlooker, a newcomer or someone not in the tree yet. */
+export const personIdOfMe = (me: FamilyAccess['me']): EntityId | null =>
+  me !== null && me !== ONLOOKER && me.kind === 'person' ? me.personId : null
 
 export const NO_FAMILY_ACCESS: FamilyAccess = {
   keys: {},

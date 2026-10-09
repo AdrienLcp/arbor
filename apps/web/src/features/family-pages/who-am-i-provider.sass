@@ -1,0 +1,12 @@
+@layer components
+  .who-am-i-dialog
+    --who-am-i-inset: var(--space-l)
+    // Past the dialog body's bottom padding (`--space-2xl`, form-dialog.sass), else the list shows under the sticky band.
+    --who-am-i-sticky-bottom: calc(-1 * var(--space-2xl))
+    display: grid
+    gap: var(--space-l)
+
+    .who-am-i-dialog-intro
+      color: var(--ink-soft)
+      text-wrap: pretty
+

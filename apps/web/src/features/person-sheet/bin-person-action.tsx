@@ -86,7 +86,7 @@ export const BinPersonAction: React.FC<BinPersonActionProps> = ({
     <>
       <Button
         className='sheet-bin'
-        onPress={() => setIsAsking(true)}
+        onPress={() => edit.signFirst(() => setIsAsking(true))}
         variant='link'
       >
         <BinIcon aria-hidden='true' />

@@ -15,7 +15,7 @@ import {
   restoreDialog,
   sharePage,
   treePage,
-  whoAmIPage
+  whoAmIDialog
 } from './support/locators'
 
 const PHONE = { height: 844, width: 390 }
@@ -62,7 +62,8 @@ test('[e2e] the keeper puts the tree back as it was before a contributor binned 
   }
 
   await openHydrated(contributor, link)
-  await whoAmIPage(contributor).person(PARTNER_NAME).click()
+  await treePage(contributor).sayWhoYouAre.click()
+  await whoAmIDialog(contributor).person(PARTNER_NAME).click()
   await expect(treePage(contributor).title(PARTNER_NAME)).toBeAttached()
   const sheet = personSheet(contributor)
   for (const { name } of CHILDREN) {

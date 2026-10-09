@@ -15,7 +15,7 @@ import {
   personSheet,
   sharePage,
   treePage,
-  whoAmIPage
+  whoAmIDialog
 } from './support/locators'
 
 const PHONE = { height: 844, width: 390 }
@@ -71,8 +71,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   ).toBeVisible()
 
   await openHydrated(relative, link)
-  await whoAmIPage(relative).person(FIRST_SPOUSE_NAME).click()
-  await expect(treePage(relative).title(FIRST_SPOUSE_NAME)).toBeAttached()
+  await expect(treePage(relative).sayWhoYouAre).toBeAttached()
 
   await addRelative(founder, 'A child', { givenNames: 'Rose' })
   await expect(
@@ -136,6 +135,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   await expect(relativeSheet.photo(PHOTO_CAPTION)).toBeVisible()
 
   await relativeSheet.editPerson.click()
+  await whoAmIDialog(relative).person(FIRST_SPOUSE_NAME).click()
   const relativeEdit = editPersonDialog(relative)
   await relativeEdit.birthYear.fill('1947')
   await openSheetFromTree(founder, FOUNDER_NAME)

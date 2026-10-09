@@ -28,10 +28,16 @@ export const familyAppBar = (page: Page) => ({
   settings: page.getByRole('link', { name: 'Settings' })
 })
 
-export const whoAmIPage = (page: Page) => ({
-  person: (name: string) => page.getByRole('button', { name }),
-  title: page.getByRole('heading', { name: 'Who are you in this tree?' })
-})
+/** "Who are you?" over the tree: asked before the first change, or when the visitor offers to say it. */
+export const whoAmIDialog = (page: Page) => {
+  const dialog = page.locator('.who-am-i-dialog')
+  return {
+    beforeEdit: page.getByRole('heading', {
+      name: 'Before you change anything: who are you in this tree?'
+    }),
+    person: (name: string) => dialog.getByRole('button', { name })
+  }
+}
 
 export const familySettingsPage = (page: Page) => ({
   /** The dialog repeats the button's name, so the confirmation is found inside it. */
@@ -52,6 +58,8 @@ export const formDialog = (page: Page) => page.locator('.form-dialog')
 export const treePage = (page: Page) => ({
   /** Touching a person on the tree opens their sheet. */
   person: (name: string) => page.getByRole('button', { name }).first(),
+  /** The invitation of a visitor who has not said who they are yet. */
+  sayWhoYouAre: page.getByRole('button', { name: 'Say who you are' }),
   title: (focusName: string) =>
     page.getByRole('heading', {
       level: 1,

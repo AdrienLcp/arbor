@@ -5,6 +5,7 @@ import { useChildPage } from '@/infrastructure/router/navigation'
 import { useFamilyRouteData } from './family-loader'
 import { FamilyUnreachableScreen } from './family-unreachable-screen'
 import { LinkRefusedScreen } from './link-refused-screen'
+import { WhoAmIProvider } from './who-am-i-provider'
 
 /** Every page of a family, once the family let this device in. */
 export const FamilyLayout: React.FC = () => {
@@ -13,7 +14,7 @@ export const FamilyLayout: React.FC = () => {
 
   switch (family.status) {
     case 'open':
-      return page
+      return <WhoAmIProvider key={family.familyId}>{page}</WhoAmIProvider>
     case 'refused':
       return <LinkRefusedScreen />
     case 'unreachable':

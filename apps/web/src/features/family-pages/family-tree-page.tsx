@@ -11,7 +11,7 @@ import type { KinPath } from '@arbor/core/kinship/kinship'
 import { familyLineage } from '@arbor/core/tree-layout/family-lineage'
 
 import { DemoNotice } from '@/features/demo/demo-notice'
-import { rememberedMyPersonId } from '@/features/family-access/remembered-families'
+import { personIdOfMe } from '@/features/family-access/family-access'
 import {
   type Adding,
   AddRelativeDialog
@@ -63,6 +63,7 @@ import { FamilyAppBar } from './family-app-bar'
 import { useOpenFamily } from './family-loader'
 import { MeSummary } from './me-summary'
 import { usePersonFaces } from './use-person-faces'
+import { useWhoAmI } from './who-am-i-provider'
 
 import './family-tree-page.sass'
 
@@ -74,6 +75,7 @@ type FamilyTreeProps = {
   isFocusMe: boolean
   /** How two people are related, traced over the whole tree. */
   litKinship: LitKinship | null
+  myPersonId: EntityId | null
 }
 
 type LitKinship = { path: KinPath; relativeId: EntityId; sentence: string }
@@ -137,7 +139,8 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   family,
   initialFocusId,
   isFocusMe,
-  litKinship
+  litKinship,
+  myPersonId
 }) => {
   const translate = useTranslate()
   const navigateTo = useNavigateTo()
@@ -158,12 +161,12 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     initialFocusId,
     isFocusMe,
     isInTree: (personId) => isInTree(family, personId),
+    myPersonId,
     shownPersonId: sheetPersonId
   })
   const personIds = [...family.persons.keys()]
   const faces = usePersonFaces()
   const edit = useFamilyEdit()
-  const canAdd = edit.canEdit && edit.author !== null
   const [adding, setAdding] = useState<Adding | null>(null)
   const closeSheet = useGoBack(familyTreePathFor(familyId))
   const isSpread = isPhone && view.scope === 'spread'
@@ -232,7 +235,11 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
           // A new page opens at its top, its parents in sight.
           key={view.focusId}
           lineage={familyLineage(family)}
-          onAdd={canAdd ? setAdding : undefined}
+          onAdd={
+            edit.canEdit
+              ? (relation) => edit.signFirst(() => setAdding(relation))
+              : undefined
+          }
           onPressPerson={turnSpreadTo}
           sheetPath={focusSheetPath}
         />
@@ -348,8 +355,9 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
 /** The family drawn as a tree: around the visitor when they are in it, else the whole family from its founders. */
 export const FamilyTreePage: React.FC = () => {
   const translate = useTranslate()
-  const { family: response, familyId } = useOpenFamily()
-  const myPersonId = rememberedMyPersonId(familyId)
+  const { family: response } = useOpenFamily()
+  const { me } = useWhoAmI()
+  const myPersonId = personIdOfMe(me)
   const family = familyStateOfSnapshot(response.family)
   const sheetPersonId = useSheetPersonId()
   const faces = usePersonFaces()
@@ -375,6 +383,7 @@ export const FamilyTreePage: React.FC = () => {
           initialFocusId={focusId}
           isFocusMe={focusId === myPersonId}
           litKinship={litKinship}
+          myPersonId={myPersonId}
         />
       )}
     </div>

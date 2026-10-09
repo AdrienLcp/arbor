@@ -8,9 +8,9 @@ import {
 } from '@arbor/protocol/history-refusal'
 import type { RecordedOperations } from '@arbor/protocol/routes'
 
-import { ONLOOKER } from '@/features/family-access/family-access'
-import { rememberedMe } from '@/features/family-access/remembered-families'
+import { rememberedAuthor } from '@/features/family-access/remembered-families'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
+import { useWhoAmI } from '@/features/family-pages/who-am-i-provider'
 import {
   type ApiFailure,
   restoreFamily,
@@ -48,8 +48,7 @@ export const useUndo = () => {
   const refreshFamily = useRefreshRouteData()
   const [isPending, startTransition] = useTransition()
   const [failure, setFailure] = useState<UndoFailure | null>(null)
-  const me = rememberedMe(familyId)
-  const author = me === null || me === ONLOOKER ? null : me
+  const { signFirst } = useWhoAmI()
 
   const send = (
     write: (
@@ -57,10 +56,11 @@ export const useUndo = () => {
     ) => Promise<Result<RecordedOperations, ApiFailure>>,
     onDone: () => void
   ) => {
-    if (author === null) return
+    const signer = rememberedAuthor(familyId)
+    if (signer === null) return
     setFailure(null)
     startTransition(async () => {
-      const written = await write(author)
+      const written = await write(signer)
       if (written.status === 'failure' && written.error === 'aborted') return
       await refreshFamily()
       startTransition(() => {
@@ -102,12 +102,12 @@ export const useUndo = () => {
     )
 
   return {
-    /** Who signs the undo; `null` until the visitor says who they are. */
-    author,
     dismissFailure: () => setFailure(null),
     failure,
     isPending,
     restore,
+    /** Opens an undo or a restore: at once for a visitor who said who they are, after "Who are you?" for anyone else. */
+    signFirst,
     undo
   }
 }

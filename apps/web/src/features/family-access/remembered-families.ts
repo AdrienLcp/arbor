@@ -1,12 +1,12 @@
 import type { AccessKey, FamilyId, Role } from '@arbor/protocol/access'
-import type { EntityId } from '@arbor/protocol/entity-id'
+import type { Author } from '@arbor/protocol/change-log'
 
 import { warnOnFailure } from '@/infrastructure/diagnostics'
 
 import {
   type FamilyAccess,
   NO_FAMILY_ACCESS,
-  ONLOOKER,
+  signingAuthor,
   withReceivedKey
 } from './family-access'
 import {
@@ -76,13 +76,9 @@ export const receiveFamilyLink = ({ familyId, key }: ReceivedLink): void => {
 export const rememberedMe = (familyId: FamilyId): FamilyAccess['me'] =>
   rememberedFamily(familyId).me
 
-/** The person this device's visitor said they are, `null` for an onlooker, a newcomer or someone not in the tree yet. */
-export const rememberedMyPersonId = (familyId: FamilyId): EntityId | null => {
-  const me = rememberedMe(familyId)
-  return me !== null && me !== ONLOOKER && me.kind === 'person'
-    ? me.personId
-    : null
-}
+/** Who signs a change made now, read at the moment it is sent: an answer given since the last render counts. */
+export const rememberedAuthor = (familyId: FamilyId): Author | null =>
+  signingAuthor(rememberedMe(familyId))
 
 /** Remembers the visitor's answer to "Who are you?": it signs every change they make from this device. */
 export const rememberMe = (
