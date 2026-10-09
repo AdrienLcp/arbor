@@ -1,3 +1,5 @@
+@use '../../presentation/styles/layout'
+
 @layer components
   .who-am-i-choices
     display: grid
@@ -32,6 +34,10 @@
       margin-inline: calc(-1 * var(--who-am-i-inset-start, var(--gutter-left))) calc(-1 * var(--who-am-i-inset-end, var(--gutter-right)))
       padding: var(--space-l) var(--who-am-i-inset-end, var(--gutter-right)) max(var(--space-xl), var(--safe-area-bottom)) var(--who-am-i-inset-start, var(--gutter-left))
       position: sticky
+
+      // On a phone held sideways the band would hide the whole list: it waits under it.
+      @include layout.short
+        position: static
 
     .who-am-i-own-name
       display: grid

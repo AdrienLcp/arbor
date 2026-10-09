@@ -123,13 +123,21 @@
       .family-tree-title
         @include accessibility.visually-hidden
 
+      // Who the visitor is wraps in the room the controls leave it.
+      .family-tree-heading
+        flex: 0 1 auto
+        min-width: 0
+
       .family-tree-controls
         align-items: center
         display: flex
-        flex: 1
+        flex: 1 0 auto
         flex-wrap: nowrap
         gap: var(--space-l)
         justify-content: start
+
+      .segmented-options
+        flex-wrap: nowrap
 
       .segmented-label,
       .combo-box-label
@@ -137,7 +145,7 @@
 
       .person-search
         flex: 1
-        min-width: 12rem
+        min-width: 10rem
         width: auto
 
   .family-tree-empty

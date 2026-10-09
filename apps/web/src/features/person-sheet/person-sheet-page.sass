@@ -2,15 +2,14 @@
 @use '../../presentation/styles/typography'
 
 @layer components
-  // On a phone the sheet is the content of a bottom sheet, which scrolls it; on a computer it slides over the canvas's right side, a floating panel.
-  // On a phone the sheet reaches both sides of the screen; on a computer only the right one.
+  // On a phone the sheet is the content of a bottom sheet, which scrolls it, and reaches both sides of the screen; beside the canvas it slides over its right side, a floating panel that reaches only the right one.
   .person-sheet-page
     --sheet-inset-end: var(--safe-area-right)
     --sheet-inset-start: var(--safe-area-left)
     background: var(--paper)
     padding-bottom: max(var(--space-2xl), var(--safe-area-bottom))
 
-    @include layout.wide
+    @include layout.canvas-screen
       --sheet-inset-start: 0px
       border-left: var(--stroke-thin) solid var(--ghost-soft)
       bottom: 0

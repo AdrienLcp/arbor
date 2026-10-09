@@ -1,4 +1,5 @@
-@forward '@adrienlcp/styles/breakpoints' with ($wide-screen: 40rem)
+@use 'arbor:screen-sizes'
+@forward '@adrienlcp/styles/breakpoints' with ($wide-screen: screen-sizes.$wide-screen)
 @forward '@adrienlcp/styles/containers'
 
 /// A page's reading column, centred, kept off the screen's edges by the gutter or the safe area, the larger.
@@ -10,5 +11,10 @@
 
 /// A screen too short for a page's controls and its content side by side in height: a phone held sideways.
 @mixin short
-  @media (height < 30rem)
+  @media (height < screen-sizes.$short-screen)
+    @content
+
+/// Room for the tree's canvas with a person's sheet beside it; every other screen is a phone's (`PHONE_SCREEN`), where the sheet rises from the bottom.
+@mixin canvas-screen
+  @media (width >= screen-sizes.$wide-screen) and (height >= screen-sizes.$short-screen)
     @content

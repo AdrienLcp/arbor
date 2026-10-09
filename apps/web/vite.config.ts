@@ -9,6 +9,7 @@ import { defineConfig } from 'vite'
 
 import { API_PREFIX } from '../../packages/protocol/src/routes.ts'
 import { REGIONAL_LOCALES } from './src/presentation/i18n/regional-locales.ts'
+import { SCREEN_SIZES } from './src/presentation/styles/screen-sizes.ts'
 import { themeStore } from './src/presentation/theme/theme-store.ts'
 
 /** `_fonts.sass` writes these per weight band, with `fonts.fallback-faces`. */
@@ -18,6 +19,21 @@ const FALLBACK_FACES_WRITTEN_BY_HAND = new Set([
 ])
 
 const WORKER_ORIGIN = 'http://127.0.0.1:8790'
+
+const SCREEN_SIZES_MODULE = new URL('arbor:screen-sizes')
+
+/** Hands `_layout.sass` the breakpoints the scripts' media queries read, from their one source. */
+const screenSizesImporter = {
+  canonicalize: (url: string): URL | null =>
+    url === SCREEN_SIZES_MODULE.href ? SCREEN_SIZES_MODULE : null,
+  load: () => ({
+    contents: [
+      `$wide-screen: ${SCREEN_SIZES.wideScreen}`,
+      `$short-screen: ${SCREEN_SIZES.shortScreen}`
+    ].join('\n'),
+    syntax: 'indented' as const
+  })
+}
 
 export default defineConfig({
   css: {
@@ -31,6 +47,9 @@ export default defineConfig({
         }),
         metricTwins()
       ]
+    },
+    preprocessorOptions: {
+      sass: { importers: [screenSizesImporter] }
     }
   },
   plugins: [
