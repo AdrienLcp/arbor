@@ -5,14 +5,21 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
 import { chromium } from '@playwright/test'
-import lighthouse, { type Config, type Flags } from 'lighthouse'
+import lighthouse, {
+  type Config,
+  type Flags,
+  type RunnerResult
+} from 'lighthouse'
 import desktopConfig from 'lighthouse/core/config/desktop-config.js'
 
 /**
  * The landing, the demo family's tree and one of its sheets, on a phone and on
  * a desktop, in daylight and at night, score 100 in accessibility, best
- * practices and SEO, or the run fails. Performance is not gated: Arbor is a
- * family's tool, not a page competing for visitors.
+ * practices and SEO, and transfer no more script than the budget, or the run
+ * fails. No performance score or LCP is gated: simulated throttling swings
+ * them by ten points between two runs of one build, and Arbor is a family's
+ * tool, not a page competing for visitors. The script budget moves only when
+ * a module enters the first load.
  *
  * Lighthouse drives a Chromium launched here, through its debugging port:
  * `chrome-launcher` would make a profile it fails to delete on Windows. The
@@ -62,6 +69,9 @@ const AUDITED_PATHS = [
 
 const CATEGORIES = ['accessibility', 'best-practices', 'seo']
 const MIN_SCORE = 100
+
+/** 13% over the 349,033 bytes a person's sheet, the heaviest page, transfers today. */
+const SCRIPT_TRANSFER_BUDGET_BYTES = 395_000
 
 /**
  * The quick pass: one screen, one theme. The full matrix stays in CI, since
@@ -150,14 +160,27 @@ const stopServerProcessTree = (server: ChildProcess): void => {
   }
 }
 
+const scriptBytesIn = (result: RunnerResult): number => {
+  const details = result.lhr.audits['resource-summary']?.details
+  const rows = details?.type === 'table' ? details.items : []
+  const scripts = rows.find((row) => row.resourceType === 'script')
+
+  return typeof scripts?.transferSize === 'number' ? scripts.transferSize : 0
+}
+
 const audit = async (
   url: string,
   formFactor: FormFactor,
   categories: string[],
   skipAudits: string[]
-): Promise<{ report: string; scores: Record<string, number> }> => {
+): Promise<{
+  report: string
+  scores: Record<string, number>
+  scriptBytes: number
+}> => {
   const flags: Flags = {
     logLevel: 'error',
+    onlyAudits: ['resource-summary'],
     onlyCategories: categories,
     output: 'html',
     port: PLAYWRIGHT_CHROMIUM_DEBUGGING_PORT,
@@ -182,7 +205,11 @@ const audit = async (
     ])
   )
 
-  return { report: String(result.report), scores }
+  return {
+    report: String(result.report),
+    scores,
+    scriptBytes: scriptBytesIn(result)
+  }
 }
 
 const reportNameFor = (path: string, formFactor: FormFactor, scheme: Scheme) =>
@@ -235,19 +262,24 @@ try {
     try {
       for (const formFactor of formFactors) {
         for (const path of paths) {
-          const { report, scores } = await audit(
+          const { report, scores, scriptBytes } = await audit(
             `${origin}${path}`,
             formFactor,
             categoriesFor(path),
             skippedAuditsFor(path)
           )
-          const broken = Object.entries(scores)
-            .filter(([, score]) => score < MIN_SCORE)
-            .map(([id, score]) => `${id} ${score}`)
+          const broken = [
+            ...Object.entries(scores)
+              .filter(([, score]) => score < MIN_SCORE)
+              .map(([id, score]) => `${id} ${score}`),
+            ...(scriptBytes > SCRIPT_TRANSFER_BUDGET_BYTES
+              ? [`JS over ${SCRIPT_TRANSFER_BUDGET_BYTES} B`]
+              : [])
+          ]
           const label = `${path} ${formFactor} ${scheme}`
 
           console.info(
-            `${broken.length === 0 ? 'ok  ' : 'FAIL'} ${label}${broken.length === 0 ? '' : ` · ${broken.join(', ')}`}`
+            `${broken.length === 0 ? 'ok  ' : 'FAIL'} ${label} · JS ${scriptBytes} B${broken.length === 0 ? '' : ` · ${broken.join(', ')}`}`
           )
 
           if (broken.length > 0) {
@@ -271,11 +303,11 @@ try {
 
 if (failures.length > 0) {
   console.error(
-    `\n${failures.length} audit(s) under 100, reports in lighthouse-reports/:\n${failures.join('\n')}`
+    `\n${failures.length} audit(s) under 100 or over the script budget, reports in lighthouse-reports/:\n${failures.join('\n')}`
   )
   process.exit(1)
 }
 
 console.info(
-  '\nEvery page scores 100 in accessibility, best practices and SEO, on both screens and in both themes.'
+  '\nEvery page scores 100 in accessibility, best practices and SEO within the script budget, on both screens and in both themes.'
 )
