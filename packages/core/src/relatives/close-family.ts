@@ -4,6 +4,7 @@ import type { Union } from '@arbor/protocol/union'
 
 import type { FamilyLineage } from '../tree-layout/family-lineage'
 import { type Couple, couplesOf } from './couples'
+import { haveSameKinParents, kinParentIdsOf } from './kin-parents'
 
 /**
  * How a brother or a sister is one:
@@ -30,12 +31,6 @@ export type CloseFamily = {
   siblings: readonly Sibling[]
 }
 
-const hasSameMembers = (
-  first: ReadonlySet<EntityId>,
-  second: ReadonlySet<EntityId>
-): boolean =>
-  first.size === second.size && [...first].every((id) => second.has(id))
-
 const unionBetween = (
   lineage: FamilyLineage,
   [first, second]: readonly EntityId[]
@@ -48,27 +43,12 @@ const unionBetween = (
   )
 }
 
-/** A step or foster parent raises a child without making them kin to that parent's other children. */
-const isKinLink = ({ kind }: Filiation): boolean =>
-  kind !== 'step' && kind !== 'foster'
-
-const kinParentsOf = (
-  lineage: FamilyLineage,
-  personId: EntityId
-): Set<EntityId> =>
-  new Set(
-    lineage
-      .parentLinksOf(personId)
-      .filter(isKinLink)
-      .map(({ parentId }) => parentId)
-  )
-
 const siblingsOf = (
   lineage: FamilyLineage,
   personId: EntityId,
   parentIds: readonly EntityId[]
 ): Sibling[] => {
-  const ownKinParents = kinParentsOf(lineage, personId)
+  const ownKinParents = kinParentIdsOf(lineage, personId)
   const sharedParents = new Map<EntityId, EntityId>()
 
   for (const parentId of parentIds) {
@@ -80,14 +60,16 @@ const siblingsOf = (
   }
 
   return Array.from(sharedParents, ([siblingId, sharedParentId]) => {
-    const siblingKinParents = kinParentsOf(lineage, siblingId)
-    const commonKinParent = [...siblingKinParents].find((parentId) =>
-      ownKinParents.has(parentId)
+    const commonKinParent = [...kinParentIdsOf(lineage, siblingId)].find(
+      (parentId) => ownKinParents.has(parentId)
     )
     const kind: SiblingKind =
       commonKinParent === undefined
         ? 'step'
-        : hasSameMembers(siblingKinParents, ownKinParents)
+        : haveSameKinParents(lineage, {
+              firstId: siblingId,
+              secondId: personId
+            })
           ? 'full'
           : 'half'
 

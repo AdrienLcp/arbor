@@ -13,8 +13,8 @@ export type RecordedChange = {
 /** The family's settings, its change log and the state the log leads to. Synchronous: the object's SQLite storage is. */
 export type FamilyStore = {
   readFamily: () => FamilyState
-  /** The log entries after revision `after`, oldest first, at most `limit` of them. */
-  readLog: (page: { after: number; limit: number }) => ChangeLogEntry[]
+  /** The log entries after revision `after`, oldest first: at most `limit` of them, all of them without one. */
+  readLog: (page: { after: number; limit?: number }) => ChangeLogEntry[]
   /** The revision of the last entry, 0 for a family no one has edited yet. */
   readRevision: () => number
   readSettings: () => FamilySettings | null

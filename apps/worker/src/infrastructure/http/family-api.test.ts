@@ -2,6 +2,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { issuedKeySchema } from '@arbor/protocol/access'
 import type { Author } from '@arbor/protocol/change-log'
+import { DEMO_FAMILY_ID, DEMO_FAMILY_KEY } from '@arbor/protocol/demo-family'
 import {
   familyResponseSchema,
   familySettingsSchema
@@ -18,10 +19,14 @@ import {
 } from '@arbor/protocol/routes'
 
 import { MAX_FAILED_KEY_CHECKS } from '@/domain/access/key-check-limit'
+import { DEMO_WRITES_PER_NIGHT } from '@/domain/demo/demo-write-limit'
 
-import { createTestApi, familyPath } from './api-test-harness'
+import { createTestApi, familyPath, TEST_JPEG } from './api-test-harness'
 
 const api = createTestApi()
+
+/** Every one of the night's edits is a real round trip: seconds of work, longer when the other test projects share the machine. */
+const A_NIGHT_OF_DEMO_EDITS_TIMEOUT_MS = 30_000
 
 const AUTHOR: Author = { kind: 'named', name: 'Mamie Jeanne' }
 
@@ -302,6 +307,123 @@ describe('[log] edits', () => {
   })
 })
 
+const familyWithHistory = async () => {
+  const { family, record } = await familyWithOneEdit()
+  await record([{ person: personNamed('jeanne'), type: 'person.create' }], 0)
+  const rename = (givenNames: string, baseRevision: number) =>
+    record(
+      [
+        {
+          after: { givenNames },
+          before: { givenNames: '' },
+          personId: 'jeanne',
+          type: 'person.update'
+        }
+      ],
+      baseRevision
+    )
+  const takeBack = (revisions: number[], key = family.familyKey) =>
+    api.call(familyPath(family.familyId, 'undo'), {
+      body: { author: AUTHOR, revisions },
+      key,
+      method: 'POST'
+    })
+  const restore = (
+    revision: number,
+    baseRevision: number,
+    key = family.keeperKey
+  ) =>
+    api.call(familyPath(family.familyId, 'restore'), {
+      body: { author: AUTHOR, baseRevision, revision },
+      key,
+      method: 'POST'
+    })
+  const jeanne = async () => {
+    const response = await api.call(familyPath(family.familyId), {
+      key: family.keeperKey
+    })
+    const { family: snapshot } = familyResponseSchema.parse(
+      await response.json()
+    )
+    return snapshot.persons.find((person) => person.id === 'jeanne')
+  }
+  const lastEntry = async () => {
+    const response = await api.call(familyPath(family.familyId, 'operations'), {
+      key: family.familyKey
+    })
+    return changeLogPageSchema.parse(await response.json()).entries.at(-1)
+  }
+  return { family, jeanne, lastEntry, rename, restore, takeBack }
+}
+
+describe('[history] undo and restore', () => {
+  it('[history] takes an entry back as a new one that says so, once', async () => {
+    const { jeanne, lastEntry, rename, takeBack } = await familyWithHistory()
+    await rename('Jeannette', 1)
+
+    const undone = await takeBack([2])
+    const again = await takeBack([2])
+
+    expect(undone.status).toBe(201)
+    expect((await jeanne())?.givenNames).toBe('Jeanne')
+    expect(await lastEntry()).toMatchObject({
+      cause: { kind: 'undo', revisions: [2] },
+      revision: 3
+    })
+    expect(again.status).toBe(409)
+    expect(await errorCodeOf(again)).toBe('already_undone')
+  })
+
+  it('[history] refuses an entry a later one builds on, until both go together', async () => {
+    const { jeanne, rename, takeBack } = await familyWithHistory()
+    await rename('Jeannette', 1)
+    await rename('Jeanine', 2)
+
+    const alone = await takeBack([2])
+    const together = await takeBack([3, 2])
+
+    expect(alone.status).toBe(409)
+    expect(await errorCodeOf(alone)).toBe('later_changes_depend')
+    expect(together.status).toBe(201)
+    expect((await jeanne())?.givenNames).toBe('Jeanne')
+  })
+
+  it('[history] lets the keeper alone restore a past moment, from the latest revision', async () => {
+    const { family, jeanne, lastEntry, rename, restore } =
+      await familyWithHistory()
+    await rename('Jeannette', 1)
+    await rename('Vandale', 2)
+
+    const byContributor = await restore(1, 3, family.familyKey)
+    const stale = await restore(1, 2)
+    const restored = await restore(1, 3)
+
+    expect(byContributor.status).toBe(403)
+    expect(stale.status).toBe(409)
+    expect(await errorCodeOf(stale)).toBe('revision_conflict')
+    expect(restored.status).toBe(201)
+    expect((await jeanne())?.givenNames).toBe('Jeanne')
+    expect(await lastEntry()).toMatchObject({
+      cause: { kind: 'restore', revision: 1 },
+      revision: 4
+    })
+  })
+
+  it('[history] keeps the keeper’s restore from being taken back by anyone else', async () => {
+    const { family, jeanne, rename, restore, takeBack } =
+      await familyWithHistory()
+    await rename('Vandale', 1)
+    await restore(1, 2)
+
+    const byContributor = await takeBack([3])
+    const byKeeper = await takeBack([3], family.keeperKey)
+
+    expect(byContributor.status).toBe(403)
+    expect(byKeeper.status).toBe(201)
+    expect((await jeanne())?.givenNames).toBe('Vandale')
+  })
+})
+
 describe('[privacy] the read-only link', () => {
   it('[privacy] hides a living person’s exact birth date, notes and photos', async () => {
     const { family, record } = await familyWithOneEdit()
@@ -356,7 +478,7 @@ describe('[privacy] the read-only link', () => {
 })
 
 describe('[photos] images', () => {
-  const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10])
+  const JPEG = TEST_JPEG
 
   const photoForm = (bytes: Uint8Array) => {
     const form = new FormData()
@@ -513,4 +635,83 @@ describe('[settings] the keeper settings', () => {
     expect(response.status).toBe(403)
     expect(await errorCodeOf(response)).toBe('forbidden')
   })
+})
+
+describe('[demo] the public demo', () => {
+  it('[demo] opens the fixture family with the public key, its photos behind it', async () => {
+    const response = await api.call(familyPath(DEMO_FAMILY_ID), {
+      key: DEMO_FAMILY_KEY
+    })
+    const portrait = await api.call(
+      pathFor(API_ROUTES.photoFile, {
+        familyId: DEMO_FAMILY_ID,
+        photoId: 'auguste-portrait',
+        variant: 'thumbnail'
+      }),
+      { key: DEMO_FAMILY_KEY }
+    )
+
+    expect(response.status).toBe(200)
+    const opened = familyResponseSchema.parse(await response.json())
+    expect(opened).toMatchObject({
+      role: 'contributor',
+      settings: { name: 'Famille Morel' }
+    })
+    expect(opened.family.persons.length).toBeGreaterThan(20)
+    expect(portrait.status).toBe(200)
+  })
+
+  it('[demo] lets a visitor edit it, and keeps the keeper routes shut', async () => {
+    const { revision } = familyResponseSchema.parse(
+      await (
+        await api.call(familyPath(DEMO_FAMILY_ID), { key: DEMO_FAMILY_KEY })
+      ).json()
+    )
+
+    const edited = await api.call(familyPath(DEMO_FAMILY_ID, 'operations'), {
+      body: {
+        author: AUTHOR,
+        baseRevision: revision,
+        operations: [{ person: personNamed('visitor'), type: 'person.create' }]
+      },
+      key: DEMO_FAMILY_KEY,
+      method: 'POST'
+    })
+    const keys = await api.call(familyPath(DEMO_FAMILY_ID, 'keys'), {
+      key: DEMO_FAMILY_KEY
+    })
+
+    expect(edited.status).toBe(201)
+    expect(keys.status).toBe(403)
+  })
+
+  it(
+    '[demo] stops taking edits once what is left of its night is spent, and still opens',
+    async () => {
+      const operationsPath = familyPath(DEMO_FAMILY_ID, 'operations')
+      const edit = () =>
+        api.call(operationsPath, {
+          body: {},
+          key: DEMO_FAMILY_KEY,
+          method: 'POST'
+        })
+
+      let refused = await edit()
+      for (
+        let write = 1;
+        refused.status === 400 && write <= DEMO_WRITES_PER_NIGHT;
+        write += 1
+      ) {
+        refused = await edit()
+      }
+      const opened = await api.call(familyPath(DEMO_FAMILY_ID), {
+        key: DEMO_FAMILY_KEY
+      })
+
+      expect(refused.status).toBe(429)
+      expect(await errorCodeOf(refused)).toBe('demo_write_limit')
+      expect(opened.status).toBe(200)
+    },
+    A_NIGHT_OF_DEMO_EDITS_TIMEOUT_MS
+  )
 })

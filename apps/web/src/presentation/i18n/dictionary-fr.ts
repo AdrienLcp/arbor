@@ -7,6 +7,13 @@ const MEGABYTES = {
   unitDisplay: 'short'
 } as const
 
+const UNION_WORDS_FR = {
+  marriage: 'le mariage',
+  pacs: 'le PACS',
+  partnership: 'l’union libre',
+  unknown: 'le couple'
+} as const
+
 /** The reference dictionary: its keys are the type every other locale is checked against. */
 export const FR_DICTIONARY = defineDictionary({
   add: {
@@ -63,6 +70,31 @@ export const FR_DICTIONARY = defineDictionary({
   app: {
     name: 'Arbor'
   },
+  bin: {
+    cancel: 'Garder la fiche',
+    children: 'Lien avec ses enfants : {names}',
+    confirm: 'Mettre à la corbeille',
+    leaving: 'Quittent l’arbre avec sa fiche :',
+    nothingLinked:
+      'Rien n’est perdu : la fiche revient dès qu’on la sort de la corbeille.',
+    open: 'Mettre à la corbeille',
+    parents: 'Lien avec ses parents : {names}',
+    partners: 'Union avec {names}',
+    photos: 'Photos : {count:number}',
+    stays:
+      'Ces personnes restent dans l’arbre. Rien n’est perdu : la fiche revient avec ses liens et ses photos dès qu’on la sort de la corbeille.',
+    title: 'Mettre {name} à la corbeille ?'
+  },
+  binPage: {
+    binnedBy: 'Mise à la corbeille par {name}, le {moment}',
+    comesBack: 'Revient avec sa fiche :',
+    empty: 'La corbeille est vide.',
+    intro:
+      'Une fiche mise à la corbeille quitte l’arbre sans rien perdre. N’importe qui peut l’en sortir : elle revient avec ses liens et ses photos.',
+    restore: 'Sortir de la corbeille',
+    restored: '{name} est de retour dans l’arbre.',
+    title: 'La corbeille'
+  },
   common: {
     failed:
       'Ça n’a pas marché. Vérifiez que le téléphone est connecté à Internet, puis réessayez.',
@@ -89,6 +121,14 @@ export const FR_DICTIONARY = defineDictionary({
     treeNameHint: 'Il s’affiche en haut de l’arbre et sur la feuille imprimée.',
     treeNameMissing: 'Donnez un nom à l’arbre.',
     treeNameSuggestion: 'Famille {surname}'
+  },
+  demo: {
+    notice: {
+      body: 'Changez ce que vous voulez : chaque nuit, elle revient comme au premier jour.',
+      title: 'Une famille inventée, pour essayer.'
+    },
+    resting:
+      'Beaucoup de visiteurs ont modifié cette famille d’exemple aujourd’hui : elle n’accepte plus de changements jusqu’à cette nuit. Vous pouvez toujours la regarder.'
   },
   edit: {
     cancel: 'Annuler',
@@ -189,12 +229,15 @@ export const FR_DICTIONARY = defineDictionary({
   },
   familyBar: {
     label: 'Arbre',
+    print: 'Imprimer',
     settings: 'Réglages',
     share: 'Partager'
   },
   familyHome: {
+    bin: 'La corbeille',
     empty: 'Personne dans l’arbre pour l’instant.',
     generation: 'Génération {number:number}',
+    history: 'Ce qui a changé',
     openTree: 'Voir l’arbre',
     people: defineTranslation('{count:plural}', {
       plural: { count: { one: '{?} personne', other: '{?} personnes' } }
@@ -286,8 +329,211 @@ export const FR_DICTIONARY = defineDictionary({
     sendTitle: 'L’arbre {name}',
     title: 'Partager l’arbre'
   },
+  history: {
+    allHistory: 'Voir tout l’historique',
+    binWith: 'La corbeille ({count:number})',
+    day: defineTranslation('{day:date}', {
+      date: { day: { day: 'numeric', month: 'long', weekday: 'long' } }
+    }),
+    dayOfYear: defineTranslation('{day:date}', {
+      date: {
+        day: { day: 'numeric', month: 'long', weekday: 'long', year: 'numeric' }
+      }
+    }),
+    event: {
+      baptism: 'un baptême',
+      burial: 'une inhumation',
+      labelled: '« {label} »',
+      other: 'un événement'
+    },
+    failed:
+      'L’historique n’a pas pu être chargé. Vérifiez que le téléphone est connecté à Internet.',
+    field: {
+      birth: 'la naissance',
+      birthSurname: 'le nom de naissance',
+      death: 'le décès',
+      livingOverride: '« en vie ou décédé »',
+      notes: 'les notes',
+      portraitPhotoId: 'la photo de la vignette',
+      sex: '« femme ou homme »'
+    },
+    intro:
+      'Chaque changement est gardé ici, signé par la personne qui l’a fait. Rien n’est perdu : tout peut être annulé.',
+    line: {
+      added: 'a ajouté {name}',
+      binned: 'a mis {name} à la corbeille',
+      childOf: 'enfant {ofNames}',
+      corrected: 'a corrigé {fields} {ofName}',
+      event: {
+        create: 'a ajouté {event} sur la fiche {ofName}',
+        remove: 'a retiré {event} de la fiche {ofName}',
+        update: 'a corrigé {event} sur la fiche {ofName}'
+      },
+      filiation: {
+        create: 'a noté {thatChild} est l’enfant {ofParent}',
+        createKind: defineTranslation(
+          'a noté {thatChild} est l’enfant {ofParent} ({kind:enum})',
+          {
+            enum: {
+              kind: {
+                adoption: 'adoption',
+                birth: 'naissance',
+                foster: 'accueil',
+                step: 'beau-parent',
+                unknown: 'lien incertain'
+              }
+            }
+          }
+        ),
+        remove: 'a retiré le lien entre {child} et {parent}',
+        update: 'a corrigé le lien entre {child} et {parent}'
+      },
+      parentOf: 'parent {ofNames}',
+      partnerOf: 'en couple avec {names}',
+      photo: {
+        create: 'a ajouté une photo {ofName}',
+        createUnlinked: 'a ajouté une photo',
+        remove: 'a retiré une photo {ofName}',
+        removeUnlinked: 'a retiré une photo',
+        update: 'a modifié une photo {ofName}',
+        updateUnlinked: 'a modifié une photo'
+      },
+      removed: 'a retiré {name} de l’arbre',
+      renamed: 'a renommé {before} en {after}',
+      restore: 'a remis l’arbre comme il était le {moment}',
+      restored: 'a sorti {name} de la corbeille',
+      restoreStart: 'a remis l’arbre comme à sa création',
+      undo: defineTranslation('a annulé {count:plural} {ofNames}', {
+        plural: { count: { one: 'un changement', other: '{?} changements' } }
+      }),
+      union: {
+        create: defineTranslation('a noté {union:enum} {ofNames}', {
+          enum: { union: UNION_WORDS_FR }
+        }),
+        remove: defineTranslation('a retiré {union:enum} {ofNames}', {
+          enum: { union: UNION_WORDS_FR }
+        }),
+        update: defineTranslation('a corrigé {union:enum} {ofNames}', {
+          enum: { union: UNION_WORDS_FR }
+        })
+      },
+      unionEnded: defineTranslation('a noté {ending:enum} {ofNames}', {
+        enum: { ending: { divorce: 'le divorce', separation: 'la séparation' } }
+      })
+    },
+    loading: 'L’historique arrive…',
+    moment: defineTranslation('{at:date}', {
+      date: { at: { dateStyle: 'long', timeStyle: 'short' } }
+    }),
+    more: defineTranslation('{count:plural}', {
+      plural: {
+        count: {
+          one: 'Voir l’autre changement',
+          other: 'Voir les {?} autres changements'
+        }
+      }
+    }),
+    nothingForPerson: 'Rien n’a encore changé sur cette fiche.',
+    onlyPerson: 'Seulement ce qui touche {name}.',
+    personTitle: 'Historique de la fiche {ofName}',
+    reader:
+      'L’historique s’ouvre avec le lien de la famille. Le lien que vous avez reçu permet de regarder l’arbre, pas de le modifier.',
+    restore: {
+      action: 'Revenir ici',
+      actionLabel:
+        'Remettre l’arbre comme il était à {time}, juste après ce changement',
+      back: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'Revient dans l’arbre',
+            other: 'Reviennent dans l’arbre'
+          }
+        }
+      }),
+      body: 'Tout ce qui a été fait ensuite sera défait d’un coup.',
+      changed: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'Retrouve ses anciennes informations',
+            other: 'Retrouvent leurs anciennes informations'
+          }
+        }
+      }),
+      confirm: 'Revenir à ce moment',
+      gone: defineTranslation('{count:plural}', {
+        plural: { count: { one: 'Quitte l’arbre', other: 'Quittent l’arbre' } }
+      }),
+      others:
+        'Les liens, les dates et les photos redeviennent aussi comme ce jour-là.',
+      quiet: 'L’arbre est déjà comme ce jour-là : rien ne changera à l’écran.',
+      renamed: '{now} redevient {past}',
+      safe: 'Rien n’est perdu : ce retour sera noté dans l’historique, et vous pourrez le défaire.',
+      title: 'Remettre l’arbre comme le {moment} ?'
+    },
+    retry: 'Réessayer',
+    takenBack: 'Annulé par {name}, le {moment}',
+    time: defineTranslation('{at:date}', {
+      date: { at: { timeStyle: 'short' } }
+    }),
+    times: '× {count:number}',
+    title: 'Historique',
+    today: 'Aujourd’hui',
+    undo: {
+      allOfRun: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'Annuler ce changement',
+            other: 'Annuler ces {?} changements'
+          }
+        }
+      }),
+      body: 'L’arbre redeviendra comme avant. Rien n’est perdu : l’annulation sera notée dans l’historique, et pourra elle-même être annulée.',
+      cancel: 'Ne rien changer',
+      confirm: 'Oui, annuler',
+      confirmAll: 'Tout annuler ensemble',
+      dependBody:
+        'D’autres changements ont été faits ensuite, sur les mêmes fiches. Pour revenir en arrière, il faut tout annuler en même temps :',
+      dependTitle: 'D’autres changements en dépendent',
+      entry: 'Annuler',
+      entryLabel: 'Annuler le changement de {time}',
+      failure: {
+        already_undone:
+          'Ce changement vient déjà d’être annulé. L’historique est à jour.',
+        demo_write_limit:
+          'Beaucoup de visiteurs ont modifié cette famille d’exemple aujourd’hui : elle n’accepte plus de changements jusqu’à cette nuit. Vous pouvez toujours la regarder.',
+        forbidden:
+          'Seul le gardien de l’arbre peut défaire un retour à une date passée.',
+        later_changes_depend:
+          'Quelqu’un vient de faire un changement qui en dépend. L’historique est à jour : regardez, puis réessayez.',
+        not_sent:
+          'Ça n’a pas marché. Vérifiez que le téléphone est connecté à Internet, puis réessayez.',
+        nothing_to_restore: 'L’arbre est déjà dans cet état.',
+        revision_conflict:
+          'Quelqu’un vient de modifier l’arbre. L’aperçu est à jour : regardez, puis réessayez.',
+        revision_not_found:
+          'Ce moment n’est plus dans l’historique. L’historique est à jour : réessayez.'
+      },
+      redo: 'Rétablir',
+      redoBody:
+        'Ce qui avait été annulé revient dans l’arbre. Ce retour sera noté dans l’historique, lui aussi.',
+      redoConfirm: 'Oui, rétablir',
+      redoLabel: 'Rétablir ce qui a été annulé à {time}',
+      redoTitle: 'Rétablir ce qui a été annulé ?',
+      title: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'Annuler ce changement ?',
+            other: 'Annuler ces {?} changements ?'
+          }
+        }
+      })
+    },
+    unknownPerson: 'une personne inconnue',
+    yesterday: 'Hier'
+  },
   home: {
     create: 'Créer l’arbre de votre famille',
+    demo: 'Voir une famille d’exemple',
     fine: 'Gratuit. Pas de compte, pas de mot de passe. Rien ne se perd : chaque modification peut être annulée.',
     lead: 'Votre arbre généalogique, en ligne et à plusieurs. Vous l’envoyez sur WhatsApp, chacun y ajoute les siens, et il s’imprime en grand.',
     openLink: 'J’ai reçu un lien',
@@ -323,6 +569,18 @@ export const FR_DICTIONARY = defineDictionary({
       title: 'Vos arbres'
     }
   },
+  kinship: {
+    backToMe: 'Revenir à votre lien',
+    chart: 'Le chemin de {from} à {to}',
+    clear: 'Éteindre le chemin',
+    compareLabel: 'Comparer avec quelqu’un d’autre',
+    lit: 'Le chemin de {from} à {to}, dans l’arbre',
+    pickLabel: 'Quel lien entre {name} et…',
+    pickLabelForYou: 'Votre lien avec…',
+    showInTree: 'Voir le chemin dans l’arbre',
+    title: 'Lien de parenté',
+    you: 'Vous'
+  },
   me: {
     change: 'Changer',
     is: 'Vous êtes {name}.',
@@ -347,6 +605,107 @@ export const FR_DICTIONARY = defineDictionary({
     submit: 'Ouvrir l’arbre',
     title: 'J’ai reçu un lien'
   },
+  photos: {
+    add: 'Ajouter une photo',
+    adding: 'Préparation de la photo…',
+    asPortrait: 'En faire le portrait de {name}, sur sa vignette',
+    caption: 'Légende',
+    captionHint:
+      'Qui, où, quand : « Mariage de Louis et Jeanne, Quimper, 1931 ».',
+    close: 'Fermer',
+    dialogTitle: 'Une photo de {name}',
+    isPortrait: 'C’est le portrait de {name}, sur sa vignette.',
+    makePortrait: 'En faire son portrait',
+    portrait: 'Portrait',
+    problem: {
+      too_large:
+        'Cette image reste trop lourde, même réduite. Choisissez-en une autre.',
+      unreadable:
+        'Ce fichier n’est pas une photo que le téléphone sait lire. Choisissez une photo.'
+    },
+    save: 'Ajouter la photo',
+    title: 'Photos',
+    untitled: 'Photo de {name}'
+  },
+  print: {
+    content: {
+      hasDates: 'Les dates',
+      hasPhotos: 'Les photos',
+      hasPlaces: 'Les lieux de naissance et de décès',
+      label: 'Sur chaque vignette'
+    },
+    download: 'Télécharger le PDF',
+    failed: 'Le PDF n’a pas pu être préparé. Réessayez dans un instant.',
+    fileName: '{name} — arbre.pdf',
+    fontsFailed:
+      'L’aperçu n’a pas pu se charger. Vérifiez la connexion, puis rouvrez la page.',
+    generations: defineTranslation('{count:plural}', {
+      plural: {
+        count: { one: '{?} génération', other: '{?} générations' }
+      }
+    }),
+    intro:
+      'Choisissez qui mettre sur la feuille et sur quel papier. Chaque feuille porte la légende et un code pour retrouver l’arbre à jour.',
+    legend: {
+      adoption: 'Enfant adopté : trait double',
+      child: 'Enfant',
+      deceased: 'Décès : vignette mate',
+      ended: 'Divorce ou séparation : le trait est coupé',
+      freeUnion: 'Union libre',
+      marriage: 'Mariage ou PACS',
+      step: 'Enfant du conjoint, enfant accueilli : pointillés',
+      title: 'Légende',
+      unknownLink: 'Lien inconnu',
+      unknownPerson: 'Personne inconnue : case à compléter'
+    },
+    live: {
+      text: 'Scannez avec l’appareil photo du téléphone : l’arbre à jour, à consulter.',
+      title: 'L’arbre vivant'
+    },
+    loading: 'L’aperçu arrive…',
+    making: 'Préparation du PDF…',
+    orientation: {
+      label: 'Sens de la feuille',
+      landscape: 'En largeur',
+      portrait: 'En hauteur'
+    },
+    paper: {
+      a1: 'Une grande feuille A1, chez l’imprimeur',
+      a2: 'Une feuille A2, chez l’imprimeur',
+      a3: 'Une feuille A3',
+      a4: 'Une feuille A4',
+      label: 'Sur quel papier',
+      poster: 'Une affiche de 6 feuilles A4, à coller'
+    },
+    posterHint:
+      'Six feuilles à imprimer chez vous. Coupez chaque feuille au trait plein, puis collez-la sur sa voisine jusqu’aux pointillés.',
+    printedOn: defineTranslation('Imprimé le {day:date} · Arbor', {
+      date: { day: { day: 'numeric', month: 'long', year: 'numeric' } }
+    }),
+    scope: {
+      allGenerations: 'Toutes',
+      ancestors: 'Les ancêtres de quelqu’un',
+      ancestorsOf: 'Les ancêtres de {name}',
+      depth: 'Sur combien de générations',
+      descendants: 'Les descendants de quelqu’un',
+      descendantsOf: 'Les descendants de {name}',
+      label: 'Qui mettre sur la feuille',
+      other: 'Choisir quelqu’un d’autre',
+      whole: 'Toute la famille'
+    },
+    share: {
+      failed: 'L’image n’a pas pu être préparée. Réessayez dans un instant.',
+      label: 'Pour l’envoyer dans un message',
+      png: 'Une image (PNG)',
+      pngFileName: '{name} — arbre.png',
+      svg: 'Un dessin (SVG)',
+      svgFileName: '{name} — arbre.svg'
+    },
+    shopHint:
+      'Un imprimeur ou une boutique de reprographie imprime ce PDF en grand. Une imprimante de maison ne le peut pas.',
+    tile: 'Feuille {number:number} sur {count:number} · rangée {row:number}, colonne {column:number}',
+    title: 'Imprimer l’arbre'
+  },
   sheet: {
     atPlace: 'à {place}',
     back: 'L’arbre',
@@ -355,8 +714,14 @@ export const FR_DICTIONARY = defineDictionary({
     death: 'Décès',
     deathUnknown: 'Date et lieu inconnus',
     generation: 'génération {number:number}',
+    history: 'Historique de cette fiche',
     inPeriod: 'en {date}',
     missing: {
+      binned: '{name} a mis cette fiche à la corbeille le {moment}.',
+      binnedBy:
+        '{name} vient de mettre cette fiche à la corbeille : votre modification n’a pas été enregistrée.',
+      binnedBySomeone:
+        'Quelqu’un vient de mettre cette fiche à la corbeille : votre modification n’a pas été enregistrée.',
       body: 'Elle a peut-être été mise à la corbeille. Rien n’est perdu : on peut l’en sortir.',
       title: 'Cette personne n’est plus dans l’arbre'
     },
@@ -516,6 +881,7 @@ export const FR_DICTIONARY = defineDictionary({
       label: 'Chercher quelqu’un',
       placeholder: 'Un prénom, un nom'
     },
+    showGenerations: 'Générations',
     spread: {
       children: 'Ses enfants',
       childrenEmpty: 'Pas encore d’enfant dans l’arbre.',

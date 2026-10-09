@@ -2,6 +2,7 @@ import type React from 'react'
 import { ViewTransition } from 'react'
 import { Button } from 'react-aria-components'
 
+import { PortraitImage } from '@/features/photos/portrait-image'
 import { MiniSticker } from '@/presentation/components/mini-sticker'
 
 import type { LineStyle } from './line-style'
@@ -37,6 +38,7 @@ export const RelativeButton: React.FC<RelativeButtonProps> = ({
       generation={face.generation}
       isDeceased={face.isDeceased}
       monogram={face.monogram}
+      portrait={<PortraitImage photoId={face.portraitPhotoId} />}
     />
   )
 

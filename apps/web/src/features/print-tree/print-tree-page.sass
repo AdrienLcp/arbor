@@ -1,0 +1,80 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .print-tree-page
+    @include layout.column(72rem)
+    display: grid
+    gap: var(--space-2xl)
+    justify-items: start
+    padding-block: var(--space-2xl) var(--space-section)
+
+    .print-tree-head
+      display: grid
+      gap: var(--space-m)
+
+    .print-tree-title
+      @include typography.headline
+      text-wrap: balance
+
+    .print-tree-intro,
+    .print-tree-loading
+      color: var(--ink-soft)
+      max-width: var(--measure)
+      text-wrap: pretty
+
+    // Options above the sheet on a phone; beside it once there is room, the sheet kept in view while the options change.
+    .print-tree-body
+      align-items: start
+      display: grid
+      gap: var(--space-2xl)
+      width: 100%
+
+      @media (width >= 60rem)
+        grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr)
+
+    .print-tree-result
+      display: grid
+      gap: var(--space-l)
+      justify-items: start
+      min-width: 0
+
+      @media (width >= 60rem)
+        inset-block-start: var(--space-l)
+        position: sticky
+
+    // The sheet lies on the page as paper does: pure white whatever the theme, with the drop of a sheet on a table.
+    .print-tree-preview
+      background: var(--print-paper)
+      box-shadow: 0 1px 2px color-mix(in oklch, var(--shadow) 25%, transparent), 0 18px 32px -20px color-mix(in oklch, var(--shadow) 60%, transparent)
+      display: grid
+      // A tall sheet is not allowed to run off the screen: its width follows the height left to it.
+      width: min(100%, 80svh * var(--sheet-ratio))
+
+    // A second, quieter way out under the PDF: a picture for a message rather than paper.
+    .print-tree-share
+      display: grid
+      gap: var(--space-s)
+
+    .print-tree-share-label
+      color: var(--ink-soft)
+
+    .print-tree-share-buttons
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-s)
+
+    .print-tree-sheet,
+    .print-tree-tiles
+      grid-area: 1 / 1
+      height: auto
+      width: 100%
+
+    .print-tree-tiles
+      pointer-events: none
+
+    .print-tile
+      fill: none
+      stroke: var(--focus)
+      stroke-dasharray: 3 2
+      stroke-width: 0.6

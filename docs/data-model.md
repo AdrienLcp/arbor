@@ -59,6 +59,17 @@ creation while nothing links to the person yet.
 - Undo = a new operation that applies the inverse; nothing is rewritten.
 - Restore to a moment = inverse operations back to that revision, as one
   grouped operation, itself undoable.
+- The client never posts an inverse: it names the entries to take back
+  (`POST …/undo`) or the revision to restore (`POST …/restore`, keeper only,
+  refused as a conflict if the family moved since the preview), and the server
+  builds the operation from its own log (`packages/core/src/history`). The new
+  entry carries a `cause` naming what it takes back; an edit's is `null`. An
+  undo or a restore that is itself taken back takes nothing back any more.
+- An entry cannot be taken back alone while a later, still-acting entry builds
+  on it: one writes the same field of the same entity, one creates, removes,
+  bins or restores it, or the later one links to an entity it created
+  (`laterDependents`, transitive). The client offers to take them back
+  together. Only a keeper may take back a restore.
 - Concurrency: a write carries the revision it was based on; per-field last
   write wins, and the history shows both values. Structural conflicts (a person
   deleted while someone edits them) are rejected with a typed error and the
@@ -87,6 +98,20 @@ creation while nothing links to the person yet.
 Given two people, find the closest common ancestors through `birth` and
 `adoption` filiations, and name the relation in French and English: generation
 distance on each side → parent, grand-parent, oncle/tante, cousin germain,
-cousin issu de germain, petit-cousin… with "par alliance" when the path goes
-through a union, and "demi-" for a single shared parent. Pure function in
-`packages/core`, table-tested.
+cousin issu de germain, petit-cousin… Pure function in `packages/core/kinship`
+(`kinshipBetween`, then `describeKinship` per language), table-tested on the
+fixture family.
+
+- **Partner before blood.** Two people in a union are named as partners first,
+  even when they also share an ancestor.
+- **Half** ("demi-") is read the way the person sheet reads it: the two people
+  do not share the same set of kin parents.
+- **In-law** ("par alliance", "beau-", "belle-") allows exactly one union
+  crossing on the path; two crossings name no relation.
+- **Step and foster** filiations are crossings too: going through one shifts the
+  relation by a generation instead of counting as blood.
+- **Uneven cousins.** French has no compact word, so the sentence goes through
+  the link person ("le cousin germain de votre père"); English says "once
+  removed", "twice removed".
+- Gendered from the person's sex, neutral when it is unknown.
+- The screen reads `?from=&to=` on the tree to light the path between the two.

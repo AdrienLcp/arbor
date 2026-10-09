@@ -1,10 +1,11 @@
 import { classNames } from '@adrienlcp/react'
 import type React from 'react'
-import { ViewTransition } from 'react'
+import { useId, ViewTransition } from 'react'
 
 import type { EntityId } from '@arbor/protocol/entity-id'
 import type { Union } from '@arbor/protocol/union'
 
+import { PortraitImage } from '@/features/photos/portrait-image'
 import { GhostSlot } from '@/presentation/components/ghost-slot'
 import { SlotButton } from '@/presentation/components/slot-button'
 import { Sticker } from '@/presentation/components/sticker'
@@ -19,8 +20,8 @@ import { useUnionWords } from './union-words'
 
 import './focus-couples.sass'
 
-/** Beyond two partners the row would not fit a phone: the focus stands alone and the partners are listed under it. */
-const MOST_PARTNERS_IN_A_ROW = 2
+/** A second partner would squeeze three stickers into a phone's width, under the 16px floor: the focus then stands alone and the partners are listed under it. */
+const MOST_PARTNERS_IN_A_ROW = 1
 
 export type FocusCouple = {
   partner: PersonFace | null
@@ -42,6 +43,7 @@ const FocusSticker: React.FC<{ focus: PersonFace }> = ({ focus }) => (
       isDeceased={focus.isDeceased}
       lifeYears={focus.years}
       monogram={focus.monogram}
+      portrait={<PortraitImage photoId={focus.portraitPhotoId} />}
       slotNumber={focus.slotNumber}
       surname={focus.surname}
     />
@@ -66,6 +68,7 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
   onPressPerson
 }) => {
   const translate = useTranslate()
+  const tagIdPrefix = useId()
   const kin = useKinWords()
   const unionWords = useUnionWords()
   const wordsOf = ({ partner, union }: FocusCouple): string[] => [
@@ -74,6 +77,11 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
       : kin.partner(partner, union),
     ...(union === null ? [] : [unionWords(union).join(', ')])
   ]
+
+  const keyOf = ({ partner, union }: FocusCouple): string =>
+    `${union?.id ?? 'no-union'}-${partner?.id ?? 'unknown'}`
+  const tagIdOf = (couple: FocusCouple): string =>
+    `${tagIdPrefix}-${keyOf(couple)}`
 
   if (couples.length > MOST_PARTNERS_IN_A_ROW) {
     return (
@@ -104,10 +112,7 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
     const partner = couple.partner
 
     return (
-      <div
-        className='focus-couples-partner'
-        key={`${couple.union?.id ?? 'no-union'}-${partner?.id ?? 'unknown'}`}
-      >
+      <div className='focus-couples-partner' key={keyOf(couple)}>
         {partner === null ? (
           <GhostSlot
             className='unnumbered'
@@ -118,7 +123,14 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
           />
         ) : (
           <SlotButton
-            aria-label={`${partner.name}, ${wordsOf(couple).join(', ')}`}
+            aria-describedby={tagIdOf(couple)}
+            aria-label={
+              partner.givenNames === '' && partner.surname === ''
+                ? [partner.name, partner.years]
+                    .filter((words) => words !== '')
+                    .join(', ')
+                : undefined
+            }
             onPress={() => onPressPerson(partner.id)}
           >
             <ViewTransition name={`person-${partner.id}`}>
@@ -128,6 +140,7 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
                 isDeceased={partner.isDeceased}
                 lifeYears={partner.years}
                 monogram={partner.monogram}
+                portrait={<PortraitImage photoId={partner.portraitPhotoId} />}
                 slotNumber={partner.slotNumber}
                 surname={partner.surname}
               />
@@ -138,13 +151,14 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
     )
   }
 
-  const tagOf = (couple: FocusCouple, side: 'end' | 'start') => {
+  const tagOf = (couple: FocusCouple) => {
     const [word, ...when] = wordsOf(couple)
 
     return (
       <span
         aria-hidden='true'
-        className={classNames('focus-couples-tag', side)}
+        className='focus-couples-tag'
+        id={tagIdOf(couple)}
       >
         {word}
         {when.map((line) => (
@@ -156,32 +170,23 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
     )
   }
 
-  const [first, second] = couples
-  const left = second === undefined ? null : (first ?? null)
-  const right = second ?? first ?? null
+  const [couple] = couples
 
   return (
-    <div className={classNames('focus-couples', right === null && 'alone')}>
+    <div
+      className={classNames('focus-couples', couple === undefined && 'alone')}
+    >
       <div className='focus-couples-row'>
-        {left === null ? null : (
-          <>
-            {partnerColumn(left)}
-            <CoupleTie union={left.union} />
-          </>
-        )}
         <FocusSticker focus={focus} key={focus.id} />
-        {right === null ? null : (
+        {couple === undefined ? null : (
           <>
-            <CoupleTie union={right.union} />
-            {partnerColumn(right)}
+            <CoupleTie union={couple.union} />
+            {partnerColumn(couple)}
           </>
         )}
       </div>
-      {right === null ? null : (
-        <div className='focus-couples-tags'>
-          {left === null ? null : tagOf(left, 'start')}
-          {tagOf(right, 'end')}
-        </div>
+      {couple === undefined ? null : (
+        <div className='focus-couples-tags'>{tagOf(couple)}</div>
       )}
     </div>
   )

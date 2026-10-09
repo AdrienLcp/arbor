@@ -1,10 +1,13 @@
 import { classNames } from '@adrienlcp/react'
 import type React from 'react'
 
+import { DemoNotice } from '@/features/demo/demo-notice'
 import { ONLOOKER } from '@/features/family-access/family-access'
 import { rememberedMe } from '@/features/family-access/remembered-families'
 import { today } from '@/infrastructure/clock'
 import {
+  familyBinPathFor,
+  familyHistoryPathFor,
   familySharePathFor,
   familyTreePathFor,
   Redirect,
@@ -12,7 +15,12 @@ import {
 } from '@/infrastructure/router/navigation'
 import { ButtonLink } from '@/presentation/components/button-link'
 import { generationClass } from '@/presentation/components/generation-class'
-import { ShareIcon, TreeIcon } from '@/presentation/components/icons'
+import {
+  BinIcon,
+  HistoryIcon,
+  ShareIcon,
+  TreeIcon
+} from '@/presentation/components/icons'
 import { Main } from '@/presentation/components/main'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
@@ -49,16 +57,32 @@ export const FamilyHomePage: React.FC = () => {
           <p className='family-home-count'>
             {translate('familyHome.people', { count: people.length })}
           </p>
+          <DemoNotice familyId={familyId} />
           <MeSummary />
           <ButtonLink href={familyTreePathFor(familyId)}>
             <TreeIcon aria-hidden='true' />
             {translate('familyHome.openTree')}
           </ButtonLink>
           {family.role === 'reader' ? null : (
-            <ButtonLink href={familySharePathFor(familyId)} variant='ghost'>
-              <ShareIcon aria-hidden='true' />
-              {translate('familyHome.share')}
-            </ButtonLink>
+            <>
+              <ButtonLink href={familySharePathFor(familyId)} variant='ghost'>
+                <ShareIcon aria-hidden='true' />
+                {translate('familyHome.share')}
+              </ButtonLink>
+              <div className='family-home-links'>
+                <ButtonLink
+                  href={familyHistoryPathFor({ familyId })}
+                  variant='link'
+                >
+                  <HistoryIcon aria-hidden='true' />
+                  {translate('familyHome.history')}
+                </ButtonLink>
+                <ButtonLink href={familyBinPathFor(familyId)} variant='link'>
+                  <BinIcon aria-hidden='true' />
+                  {translate('familyHome.bin')}
+                </ButtonLink>
+              </div>
+            </>
           )}
         </div>
         {people.length === 0 ? (

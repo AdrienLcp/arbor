@@ -18,7 +18,7 @@
       position: absolute
       top: var(--y)
 
-    .tree-lines
+    .tree-lines, .kin-marker
       inset: 0
       overflow: visible
       pointer-events: none
@@ -64,3 +64,15 @@
 
       &.dashed
         border-style: dashed
+
+    // A kinship path traced over the tree like a marker on paper, in the selection's ochre; everyone else steps back.
+    .kin-marker-stroke
+      fill: none
+      stroke: color-mix(in oklab, var(--g1) 72%, transparent)
+      stroke-linecap: round
+      stroke-linejoin: round
+      stroke-width: 22px
+
+    &.is-lit
+      .tree-lines, .relation-words, .tree-card.unlit
+        opacity: 0.32

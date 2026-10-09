@@ -1,6 +1,10 @@
 import { z } from 'zod'
 
-import { authorSchema, type ChangeLogEntry } from '@arbor/protocol/change-log'
+import {
+  authorSchema,
+  type ChangeLogEntry,
+  entryCauseSchema
+} from '@arbor/protocol/change-log'
 import type { EntityId } from '@arbor/protocol/entity-id'
 import { familySettingsSchema } from '@arbor/protocol/family'
 import { filiationSchema } from '@arbor/protocol/filiation'
@@ -18,6 +22,9 @@ import type { FamilyStore } from './family-store'
 
 const SETTINGS_KEY = 'family'
 
+/** What SQLite reads as no limit at all. */
+const NO_LIMIT = -1
+
 /** The tables holding one kind of entity as JSON, keyed by id. */
 const ENTITY_TABLES = {
   events: 'events',
@@ -33,6 +40,7 @@ const revisionRowSchema = z.object({ revision: z.int() })
 const logRowSchema = z.object({
   at: z.string(),
   author: z.string(),
+  cause: z.string().nullable(),
   operation: z.string(),
   revision: z.int()
 })
@@ -145,15 +153,19 @@ export const createSqlFamilyStore = (database: SqlDatabase): FamilyStore => {
     readLog: ({ after, limit }) =>
       database
         .exec(
-          'SELECT revision, at, author, operation FROM operations WHERE revision > ? ORDER BY revision LIMIT ?',
+          'SELECT revision, at, author, cause, operation FROM operations WHERE revision > ? ORDER BY revision LIMIT ?',
           after,
-          limit
+          limit ?? NO_LIMIT
         )
         .map((row): ChangeLogEntry => {
           const stored = logRowSchema.parse(row)
           return {
             at: stored.at,
             author: parseStored(authorSchema, stored.author),
+            cause:
+              stored.cause === null
+                ? null
+                : parseStored(entryCauseSchema, stored.cause),
             operation: parseStored(operationSchema, stored.operation),
             revision: stored.revision
           }
@@ -174,10 +186,11 @@ export const createSqlFamilyStore = (database: SqlDatabase): FamilyStore => {
     },
     record: ({ after, before, entry }) => {
       database.exec(
-        'INSERT INTO operations (revision, at, author, operation) VALUES (?, ?, ?, ?)',
+        'INSERT INTO operations (revision, at, author, cause, operation) VALUES (?, ?, ?, ?, ?)',
         entry.revision,
         entry.at,
         JSON.stringify(entry.author),
+        entry.cause === null ? null : JSON.stringify(entry.cause),
         JSON.stringify(entry.operation)
       )
       writePersons(before, after)

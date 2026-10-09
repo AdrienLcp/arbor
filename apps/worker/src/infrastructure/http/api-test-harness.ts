@@ -18,6 +18,9 @@ const WEB_APP_DIRECTORY = resolve(WORKER_DIRECTORY, '../web/dist')
 /** `name` in `wrangler.jsonc`. */
 const WORKER_NAME = 'arbor'
 
+/** The smallest bytes a JPEG sniff accepts. */
+export const TEST_JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10])
+
 type Call = {
   body?: BodyInit | object
   key?: AccessKey
@@ -112,6 +115,8 @@ export const familyPath = (
     | 'familyKey'
     | 'keys'
     | 'operations'
+    | 'restore'
     | 'settings'
+    | 'undo'
     | 'usage' = 'family'
 ) => pathFor(API_ROUTES[route], { familyId })

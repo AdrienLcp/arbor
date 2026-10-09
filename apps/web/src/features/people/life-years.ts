@@ -2,7 +2,10 @@ import type { Person } from '@arbor/protocol/person'
 
 import { yearOf } from './fuzzy-year'
 
-const DEATH_MARK = '†'
+export const DEATH_MARK = '†'
+
+/** Holds a year to the mark beside it, so a narrow sticker breaks its years only after the dash. */
+const NO_BREAK_SPACE = ' '
 
 /**
  * A person's years as a list prints them: "1932 – † 2019", "1990", "† 1918".
@@ -19,7 +22,8 @@ export const lifeYears = (
     return born === null ? '' : String(born)
   }
 
-  const deathText = died === null ? DEATH_MARK : `${DEATH_MARK} ${died}`
+  const deathText =
+    died === null ? DEATH_MARK : `${DEATH_MARK}${NO_BREAK_SPACE}${died}`
 
-  return born === null ? deathText : `${born} – ${deathText}`
+  return born === null ? deathText : `${born}${NO_BREAK_SPACE}– ${deathText}`
 }

@@ -2,6 +2,7 @@ import type React from 'react'
 
 import { familyStateOfSnapshot } from '@arbor/core/family/family-state-of-snapshot'
 
+import { useAuthorName } from '@/features/family-edits/use-author-name'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
 import { usePersonFaces } from '@/features/family-pages/use-person-faces'
 import {
@@ -14,7 +15,9 @@ import { PreviousIcon } from '@/presentation/components/icons'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
+import { BinnedSheet } from './binned-sheet'
 import { PersonSheet } from './person-sheet'
+import { useBinnedWhileOpen } from './use-binned-while-open'
 
 import './person-sheet-page.sass'
 
@@ -28,6 +31,18 @@ export const PersonSheetPage: React.FC = () => {
   const family = familyStateOfSnapshot(response.family)
   const person = personId === null ? undefined : family.persons.get(personId)
   const face = personId === null ? undefined : faces.get(personId)
+  const isShown = person !== undefined && face !== undefined
+  const isBinned = personId !== null && family.binnedPersonIds.has(personId)
+  const binnedWhileOpen = useBinnedWhileOpen({ isShown, personId })
+  const authorName = useAuthorName()
+
+  const missingBody = (): string => {
+    if (binnedWhileOpen === null) return translate('sheet.missing.body')
+    const { binnedBy } = binnedWhileOpen
+    return binnedBy === null
+      ? translate('sheet.missing.binnedBySomeone')
+      : translate('sheet.missing.binnedBy', { name: authorName(binnedBy) })
+  }
 
   return (
     <article className='person-sheet-page'>
@@ -37,13 +52,22 @@ export const PersonSheetPage: React.FC = () => {
           {translate('sheet.back')}
         </Button>
       </div>
-      {person === undefined || face === undefined ? (
+      {!isShown ? (
         <div className='sheet-missing'>
           <DocumentTitle>{`${translate('sheet.missing.title')} — ${response.settings.name}`}</DocumentTitle>
           <h2 className='sheet-missing-title'>
             {translate('sheet.missing.title')}
           </h2>
-          <p>{translate('sheet.missing.body')}</p>
+          {binnedWhileOpen === null && isBinned ? (
+            <BinnedSheet personId={personId} />
+          ) : (
+            <>
+              <p>{missingBody()}</p>
+              {binnedWhileOpen === null ? null : (
+                <p>{translate('bin.nothingLinked')}</p>
+              )}
+            </>
+          )}
         </div>
       ) : (
         <>

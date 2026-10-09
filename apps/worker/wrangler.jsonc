@@ -5,7 +5,17 @@
     "directory": "../web/dist",
     "not_found_handling": "single-page-application",
     // Pages go through the worker so an unknown address answers 404; built files skip it.
-    "run_worker_first": ["/*", "!/assets/*", "!/fonts/*", "!/favicon.svg"]
+    "run_worker_first": [
+      "/*",
+      "!/assets/*",
+      "!/fonts/*",
+      "!/favicon.svg",
+      "!/favicon.ico",
+      "!/apple-touch-icon.png",
+      "!/og-image.png",
+      "!/robots.txt",
+      "!/sitemap.xml"
+    ]
   },
   "compatibility_date": "2026-09-01",
   "dev": {
@@ -20,5 +30,7 @@
   "name": "arbor",
   "observability": { "enabled": true },
   "routes": [{ "custom_domain": true, "pattern": "arbor.adrienlcp.com" }],
+  // The demo family's photos ride in the bundle as bytes.
+  "rules": [{ "fallthrough": true, "globs": ["**/*.webp"], "type": "Data" }],
   "workers_dev": false
 }

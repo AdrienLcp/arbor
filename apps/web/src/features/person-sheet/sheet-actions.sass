@@ -1,11 +1,17 @@
-@use '../../presentation/styles/typography'
-
 @layer components
   .sheet-actions
     display: grid
     gap: var(--space-m)
     padding: var(--space-xl) max(var(--space-l), var(--sheet-inset-end)) 0 max(var(--space-l), var(--sheet-inset-start))
 
-    .sheet-actions-note
-      @include typography.body-small
-      color: var(--ink-soft)
+    .sheet-bin,
+    .sheet-history
+      justify-self: start
+
+  // In the bin's question, which sits over the page rather than inside the sheet.
+  .sheet-bin-list
+    display: grid
+    gap: var(--space-xs)
+    list-style: disc
+    margin: var(--space-s) 0
+    padding-inline-start: var(--space-l)

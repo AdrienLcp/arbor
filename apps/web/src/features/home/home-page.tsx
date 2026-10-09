@@ -1,10 +1,12 @@
 import type React from 'react'
 import { useId } from 'react'
 
-import { paths } from '@/infrastructure/router/navigation'
+import { DEMO_FAMILY_ID } from '@arbor/protocol/demo-family'
+
+import { familyPathFor, paths } from '@/infrastructure/router/navigation'
 import { AlbumGlyph } from '@/presentation/components/album-glyph'
 import { ButtonLink } from '@/presentation/components/button-link'
-import { AddIcon, PasteIcon } from '@/presentation/components/icons'
+import { AddIcon, LookIcon, PasteIcon } from '@/presentation/components/icons'
 import { Main } from '@/presentation/components/main'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
@@ -44,6 +46,10 @@ export const HomePage: React.FC = () => {
             <ButtonLink href={paths.openLink} variant='link'>
               <PasteIcon aria-hidden='true' />
               {translate('home.openLink')}
+            </ButtonLink>
+            <ButtonLink href={familyPathFor(DEMO_FAMILY_ID)} variant='link'>
+              <LookIcon aria-hidden='true' />
+              {translate('home.demo')}
             </ButtonLink>
           </div>
           <p className='cover-fine'>{translate('home.fine')}</p>

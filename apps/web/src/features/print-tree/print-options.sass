@@ -1,0 +1,58 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .print-options
+    display: grid
+    gap: var(--space-2xl)
+    width: 100%
+
+  .print-option-group,
+  .print-option-person
+    display: grid
+    gap: var(--space-l)
+    justify-items: start
+
+  .print-option-group > *,
+  .print-option-person > *
+    max-width: 100%
+
+  .print-options .choice-list
+    width: 100%
+
+  .print-option-person
+    border-inline-start: var(--stroke-thin) solid var(--ghost)
+    padding-inline-start: var(--space-l)
+
+  .print-chosen-person
+    align-items: center
+    display: flex
+    gap: var(--space-m)
+
+  .print-chosen-text
+    display: grid
+    gap: var(--space-xs)
+    min-width: 0
+
+  .print-chosen-name
+    @include typography.name
+    overflow-wrap: anywhere
+
+  .print-chosen-years
+    @include typography.numeral
+    color: var(--ink-soft)
+
+  .print-content-switches
+    border: 0
+    margin: 0
+    min-inline-size: 0
+    padding: 0
+
+  .print-option-label
+    margin-block-end: var(--space-l)
+    padding: 0
+    @include typography.name
+
+  .print-option-hint
+    color: var(--ink-soft)
+    max-width: var(--measure)
+    text-wrap: pretty

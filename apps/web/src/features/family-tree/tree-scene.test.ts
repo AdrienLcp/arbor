@@ -19,7 +19,11 @@ const demoFamily = (): FamilyState => {
 }
 
 const sceneOf = (family: FamilyState) =>
-  treeScene({ layout: layoutWholeFamily(family), persons: family.persons })
+  treeScene({
+    hasGenerationBands: true,
+    layout: layoutWholeFamily(family),
+    persons: family.persons
+  })
 
 const FAMILIES = [
   ['the demo family', demoFamily()],
@@ -102,7 +106,11 @@ describe('treeScene', () => {
       connectors: []
     }
 
-    const [band] = treeScene({ layout, persons: new Map() }).bands
+    const [band] = treeScene({
+      hasGenerationBands: true,
+      layout,
+      persons: new Map()
+    }).bands
 
     expect(band).toMatchObject({
       births: null,
@@ -149,7 +157,11 @@ describe('treeScene', () => {
       ['marie', bornIn('marie', 1898)]
     ])
 
-    const [band] = treeScene({ layout, persons }).bands
+    const [band] = treeScene({
+      hasGenerationBands: true,
+      layout,
+      persons
+    }).bands
 
     expect(band?.births).toEqual({ first: 1898, last: 1902 })
   })

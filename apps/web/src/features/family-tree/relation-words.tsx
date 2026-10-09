@@ -16,16 +16,21 @@ import { useUnionWords } from './union-words'
 /** Above a child's slot number, where the word of an adoption or a step-child hangs on the line. */
 const DESCENT_WORDS_ABOVE_CARD = 40
 
-type PlacedWords = {
+export type PlacedWords = {
   at: TreePoint
   isDashed: boolean
   key: string
   lines: readonly string[]
 }
 
-const useRelationWords = () => {
+/** The words a relation line carries and where they sit, `null` for a line that carries none. `isDated: false` leaves the unions' years out. */
+export const useRelationWords = ({
+  isDated = true
+}: {
+  isDated?: boolean
+} = {}) => {
   const translate = useTranslate()
-  const unionWords = useUnionWords()
+  const unionWords = useUnionWords({ isDated })
 
   return (connector: TreeConnector): PlacedWords | null => {
     switch (connector.kind) {

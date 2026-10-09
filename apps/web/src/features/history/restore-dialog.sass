@@ -1,0 +1,29 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .restore-dialog-changes
+    border-block: var(--hairline)
+    display: grid
+    gap: var(--space-l)
+    margin-block: var(--space-m)
+    max-height: 45vh
+    overflow-y: auto
+    padding-block: var(--space-m)
+
+  .restore-dialog-group
+    display: grid
+    gap: var(--space-xs)
+
+  .restore-dialog-group-title
+    @include typography.label
+    color: var(--ink-soft)
+
+  .restore-dialog-names
+    display: grid
+    gap: var(--space-xs) var(--space-l)
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr))
+    list-style: none
+
+  .restore-dialog-others
+    @include typography.body-small
+    color: var(--ink-soft)

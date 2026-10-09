@@ -20,3 +20,6 @@
 
 # Playwright output: traces and screenshots of the last run.
 e2e/test-results/
+
+# Lighthouse reports of the last gate run.
+lighthouse-reports/

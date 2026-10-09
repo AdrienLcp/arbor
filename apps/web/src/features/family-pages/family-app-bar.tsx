@@ -2,12 +2,17 @@ import type React from 'react'
 
 import {
   familyPathFor,
+  familyPrintPathFor,
   familySettingsPathFor,
   familySharePathFor
 } from '@/infrastructure/router/navigation'
 import { AlbumGlyph } from '@/presentation/components/album-glyph'
 import { ButtonLink } from '@/presentation/components/button-link'
-import { SettingsIcon, ShareIcon } from '@/presentation/components/icons'
+import {
+  PrintIcon,
+  SettingsIcon,
+  ShareIcon
+} from '@/presentation/components/icons'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { useOpenFamily } from './family-loader'
@@ -37,6 +42,12 @@ export const FamilyAppBar: React.FC = () => {
           <ShareIcon aria-hidden='true' />
           <span className='family-bar-action-label'>
             {translate('familyBar.share')}
+          </span>
+        </ButtonLink>
+        <ButtonLink href={familyPrintPathFor(familyId)} variant='quiet'>
+          <PrintIcon aria-hidden='true' />
+          <span className='family-bar-action-label'>
+            {translate('familyBar.print')}
           </span>
         </ButtonLink>
         <ButtonLink href={familySettingsPathFor(familyId)} variant='quiet'>

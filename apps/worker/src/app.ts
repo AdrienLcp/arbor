@@ -2,6 +2,7 @@ import { zValidator } from '@hono/zod-validator'
 import { type Context, Hono } from 'hono'
 
 import { familyIdSchema } from '@arbor/protocol/access'
+import { DEMO_FAMILY_ID } from '@arbor/protocol/demo-family'
 import {
   API_PREFIX,
   API_ROUTES,
@@ -33,7 +34,10 @@ const forwardToFamily = (context: Context<WorkerEnv>) => {
   if (!familyId.success) {
     return apiError('not_found', 'No family behind this address')
   }
-  return context.var.rooms.fetch(familyId.data, context.req.raw)
+  const { rooms } = context.var
+  return familyId.data === DEMO_FAMILY_ID
+    ? rooms.fetchDemo(context.req.raw)
+    : rooms.fetch(familyId.data, context.req.raw)
 }
 
 /** The worker's front door: the API; every other address is the web app. */

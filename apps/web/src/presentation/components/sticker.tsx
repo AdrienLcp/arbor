@@ -17,6 +17,8 @@ type StickerProps = {
   lifeYears?: string
   /** The initials drawn on the art. */
   monogram: string
+  /** A picture laid over the monogram: the person's portrait, when they have one. */
+  portrait?: React.ReactNode
   /** The number printed above the slot. */
   slotNumber: number
   /** Hands the slot its size, `--slot-width` and `--slot-height`. */
@@ -24,7 +26,10 @@ type StickerProps = {
   surname: string
 }
 
-/** A person pressed into their numbered slot: the album's sticker, at full size. Phrasing content only, so a button may hold it. */
+/**
+ * A person pressed into their numbered slot: the album's sticker, at full size. Phrasing content only, so a button may hold it.
+ * Its words are spaced in the markup, where the layout drops the spaces: a name read from the content must not run "02MarieMorel".
+ */
 export const Sticker: React.FC<StickerProps> = ({
   className,
   generation,
@@ -32,6 +37,7 @@ export const Sticker: React.FC<StickerProps> = ({
   isDeceased = false,
   lifeYears,
   monogram,
+  portrait,
   slotNumber,
   style,
   surname
@@ -40,17 +46,21 @@ export const Sticker: React.FC<StickerProps> = ({
     className={classNames('slot', generationClass(generation), className)}
     style={style}
   >
-    <span className='slot-number'>{slotNumberText(slotNumber)}</span>
+    <span className='slot-number'>{slotNumberText(slotNumber)}</span>{' '}
     <span className='slot-bed'>
       <span className={classNames('sticker', isDeceased && 'deceased')}>
         <span aria-hidden='true' className='sticker-art'>
           {monogram}
-        </span>
+          {portrait}
+        </span>{' '}
         <span className='sticker-caption'>
-          <span className='sticker-given-names'>{givenNames}</span>
+          <span className='sticker-given-names'>{givenNames}</span>{' '}
           <span className='sticker-surname'>{surname}</span>
           {lifeYears ? (
-            <span className='sticker-years'>{lifeYears}</span>
+            <>
+              {' '}
+              <span className='sticker-years'>{lifeYears}</span>
+            </>
           ) : null}
         </span>
       </span>

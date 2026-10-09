@@ -46,6 +46,16 @@ jobs:
       - name: End-to-end
         run: pnpm test:e2e
 
+      - name: Lighthouse
+        run: pnpm lighthouse
+
+      - if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: lighthouse-reports
+          path: lighthouse-reports
+          if-no-files-found: ignore
+
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [validate, actionlint]

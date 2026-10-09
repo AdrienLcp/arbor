@@ -1,3 +1,4 @@
+@use '../styles/sticker-photo'
 @use '../styles/typography'
 
 @layer components
@@ -30,7 +31,12 @@
       flex: 1
       @include typography.monogram
       font-size: var(--text-l)
+      overflow: hidden
       place-items: center
+      position: relative
+
+      .sticker-portrait
+        @include sticker-photo.art-photo
 
     &.deceased
       border-bottom: var(--stroke-bold) solid var(--ink)

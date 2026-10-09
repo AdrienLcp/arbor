@@ -15,7 +15,8 @@ const CUT_RISE = 7
 const CUT_LEAN = 5
 const CUT_STEP = 7
 
-const pathOf = (points: readonly TreePoint[]): string =>
+/** The SVG path through a line's points. */
+export const pathOf = (points: readonly TreePoint[]): string =>
   points
     .map(({ x, y }, index) => `${index === 0 ? 'M' : 'L'}${x} ${y}`)
     .join('')

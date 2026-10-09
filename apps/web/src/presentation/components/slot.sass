@@ -1,4 +1,5 @@
 // A style system: a numbered slot holds either a sticker or a ghost outline.
+@use '../styles/sticker-photo'
 @use '../styles/typography'
 
 @layer components
@@ -56,8 +57,12 @@
       flex: 0 0 47%
       @include typography.monogram
       font-size: calc(var(--slot-width) * 0.36)
+      overflow: hidden
       place-items: center
       position: relative
+
+      .sticker-portrait
+        @include sticker-photo.art-photo
 
       &::after
         border: 1px solid color-mix(in oklch, var(--on-gc) 45%, transparent)
@@ -80,6 +85,7 @@
 
     .sticker-given-names
       @include typography.name
+      hyphens: auto
       max-width: 100%
       overflow-wrap: anywhere
 

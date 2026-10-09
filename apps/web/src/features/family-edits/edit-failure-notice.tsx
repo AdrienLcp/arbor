@@ -1,13 +1,12 @@
 import type React from 'react'
 
-import type { Author } from '@arbor/protocol/change-log'
 import type { OperationRefusal } from '@arbor/protocol/operation-refusal'
 
-import { usePersonFaces } from '@/features/family-pages/use-person-faces'
 import { FailureNotice } from '@/presentation/components/failure-notice'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 import { useWordList } from '@/presentation/i18n/word-list'
 
+import { useAuthorName } from './use-author-name'
 import type { EditFailure } from './use-family-edit'
 
 /** The refusals a visitor can cause from a form, each told in its own words; any other means the tree changed under them. */
@@ -28,11 +27,7 @@ export const EditFailureNotice: React.FC<{ failure: EditFailure }> = ({
 }) => {
   const translate = useTranslate()
   const wordList = useWordList()
-  const faces = usePersonFaces()
-  const nameOf = (author: Author): string =>
-    author.kind === 'named'
-      ? author.name
-      : (faces.get(author.personId)?.name ?? translate('common.unnamedPerson'))
+  const nameOf = useAuthorName()
 
   const message = (): string => {
     switch (failure.kind) {
@@ -46,6 +41,8 @@ export const EditFailureNotice: React.FC<{ failure: EditFailure }> = ({
         return isTold(failure.refusal)
           ? translate(`edit.failure.refused.${failure.refusal}`)
           : translate('edit.failure.refused.other')
+      case 'demo_resting':
+        return translate('demo.resting')
       case 'not_sent':
         return translate('common.failed')
       default:

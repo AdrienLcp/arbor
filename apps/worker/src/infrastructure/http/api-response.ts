@@ -16,15 +16,20 @@ const isOperationRefusal = (code: ApiErrorCode): code is OperationRefusal =>
   OPERATION_REFUSAL_SET.has(code)
 
 const API_ERROR_STATUS = {
+  already_undone: 409,
+  demo_write_limit: 429,
   family_exists: 409,
   forbidden: 403,
   internal_error: 500,
   invalid_input: 400,
   last_keeper_key: 409,
+  later_changes_depend: 409,
   not_found: 404,
+  nothing_to_restore: 409,
   photo_file_exists: 409,
   photo_too_large: 413,
   revision_conflict: 409,
+  revision_not_found: 404,
   too_many_attempts: 429,
   unauthorized: 401,
   unsupported_image: 415

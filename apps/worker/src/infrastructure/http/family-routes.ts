@@ -4,10 +4,17 @@ import { z } from 'zod'
 import {
   AFTER_REVISION_QUERY,
   API_ROUTES,
-  recordOperationsInputSchema
+  recordOperationsInputSchema,
+  restoreInputSchema,
+  undoInputSchema
 } from '@arbor/protocol/routes'
 
-import { readLogPage, recordOperations } from '@/domain/family/family-service'
+import {
+  readLogPage,
+  recordOperations,
+  restoreFamily,
+  undoEntries
+} from '@/domain/family/family-service'
 import { toFamilyResponse } from '@/domain/family/family-view'
 import { now } from '@/infrastructure/clock'
 import { toIsoString } from '@/infrastructure/dates'
@@ -62,5 +69,39 @@ export const registerFamilyRoutes = (app: RoomApp) => {
           store: context.var.stores.family
         })
       )
+  )
+
+  app.post(
+    API_ROUTES.undo,
+    admitted('contributor'),
+    zValidator('json', undoInputSchema, invalidInput),
+    (context) => {
+      const { admission, stores } = context.var
+      const input = context.req.valid('json')
+      const at = toIsoString(now())
+      const undone = stores.transaction(() =>
+        undoEntries({ at, input, role: admission.role, store: stores.family })
+      )
+      return undone.status === 'failure'
+        ? apiError(undone.error, 'The family refused to take the entries back')
+        : apiJson(undone.data, 201)
+    }
+  )
+
+  app.post(
+    API_ROUTES.restore,
+    admitted('keeper'),
+    zValidator('json', restoreInputSchema, invalidInput),
+    (context) => {
+      const { stores } = context.var
+      const input = context.req.valid('json')
+      const at = toIsoString(now())
+      const restored = stores.transaction(() =>
+        restoreFamily({ at, input, store: stores.family })
+      )
+      return restored.status === 'failure'
+        ? apiError(restored.error, 'The family refused the restore')
+        : apiJson(restored.data, 201)
+    }
   )
 }

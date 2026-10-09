@@ -4,7 +4,7 @@ import type { FamilyResponse } from '@arbor/protocol/family'
 import {
   afterAccepted,
   afterRefused,
-  keysToTry
+  keysToTryFor
 } from '@/features/family-access/family-access'
 import {
   rememberedFamily,
@@ -53,7 +53,7 @@ export const familyLoader = async ({
     return { status: 'refused' }
   }
 
-  for (const key of keysToTry(rememberedFamily(familyId))) {
+  for (const key of keysToTryFor(familyId, rememberedFamily(familyId))) {
     const family = await fetchFamily({ familyId, key, signal })
 
     if (family.status === 'success') {

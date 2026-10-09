@@ -1,5 +1,6 @@
-import { expect, type Page, test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
+import { openHydrated, waitForHydration } from './support/journeys'
 import {
   createFamilyPage,
   familyAppBar,
@@ -15,11 +16,6 @@ const FOUNDER = { givenNames: 'Jeanne', surname: 'Delorme' }
 const FOUNDER_NAME = `${FOUNDER.givenNames} ${FOUNDER.surname}`
 /** What the create form suggests from the surname while the tree name is left alone. */
 const TREE_NAME = `The ${FOUNDER.surname} family`
-
-const openHydrated = async (page: Page, url: string): Promise<void> => {
-  await page.goto(url)
-  await page.locator('html[data-hydrated]').waitFor()
-}
 
 /**
  * Two phones: the founder's, and a relative's that only ever receives the link.
@@ -70,7 +66,7 @@ test('[e2e] a family is created, joined through its link, and locked out once th
   ).toBeVisible()
 
   await relative.reload()
-  await relative.locator('html[data-hydrated]').waitFor()
+  await waitForHydration(relative)
   await expect(
     linkRefusedScreen(relative).title,
     'the old link no longer opens the tree'

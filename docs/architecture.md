@@ -176,6 +176,71 @@ on Chromium at CPU ×4:
 - Canvas sticker text is below the phone size floor on purpose; it is never
   reused on phone views.
 
+## Editing
+
+Built in step 07, closed 2026-10-08.
+
+- **Every save is one batch against the revision on screen.** The object
+  applies a batch made over an older revision when it still applies — an edit
+  carries each field's before and after, so two people fixing different fields
+  of one sheet both land. It answers `revision_conflict` only when the batch no
+  longer applies there; the client then reloads and names who moved the tree.
+- **Nothing pushes changes to an open page.** The family reloads after the
+  visitor's own saves only, so a sheet that empties under their eyes means one
+  of their saves was refused: the sheet reads the log since the revision it
+  showed and says who put the person in the bin. A sheet opened from an old
+  link keeps the generic line — finding the bin there means reading the whole
+  log, which step 08's bin screen will answer instead.
+- **A photo is resized in the browser** (WebP; JPEG where Safari cannot
+  encode WebP), recorded with `photo.create`, then its files go up in the
+  save's `afterRecording` step. A failed upload records the photo's
+  withdrawal, so the log never points at files that do not exist.
+- **View transitions:** the root `ViewTransition` is keyed by
+  `pageUnderneath(pathname)`, not the pathname, so opening a sheet does not
+  replay the tree's entrance. Sheet-to-sheet moves replace history, so the
+  sheet's Back closes it. Sheet rows never morph (`isMorphing={false}`): a
+  name shared with the tree under them would collide.
+- The running Vite dev server caches a failed Sass `@use`: a partial created
+  after the first failed import stays "not found" until it restarts.
+
+## History and undo
+
+Built in step 08, closed 2026-10-08. The log rules are in
+`docs/data-model.md` § change log.
+
+- **The restore preview replays the log** to the target revision, then on to
+  today (`packages/core/src/history/restore-preview.ts`), and names who comes
+  back, who leaves and who gets earlier details back (a rename reads "X
+  redevient Y"); other entities get one sentence. The dialog posts the last
+  revision the preview used as `baseRevision`, so an edit made meanwhile
+  answers `revision_conflict` instead of restoring something unseen.
+- **One write path for taking back:** `useUndo` both undoes and restores —
+  sign, send, reload, explain a refusal.
+- The restore button reads "Revenir ici" so it fits beside "Annuler" at
+  360 px; its accessible name and the dialog's confirm carry the full meaning.
+  On phones an entry's action row spans the whole entry.
+- e2e journeys shared between specs live in `e2e/support/journeys.ts`.
+
+## Printing
+
+Built in step 09, closed 2026-10-08.
+
+- **The PDF is made in the browser** from the sheet's own SVG (`jsPDF` +
+  `svg2pdf.js`, loaded on demand), not by the browser's print dialog: page
+  sizes and a poster's tiling come out the same on every browser. A poster is
+  one drawing clipped page by page through a window, with overlap, cut and glue
+  marks in the margins (`pdf-file.ts`, `print-pages.ts`).
+- **One family name per font weight.** jsPDF reads TrueType only and places
+  centred text by the width the page measured, so the print faces are loaded
+  into the page under the names the drawing uses (`print-fonts.ts`) and the
+  same bytes are embedded in the PDF, and as data URLs in the SVG and PNG
+  downloads (`drawing-files.ts`).
+- **Photos go in as JPEG data URLs** (`use-print-portraits.ts`): the PDF, the
+  standalone SVG and the PNG canvas then never fetch anything.
+- The panel (name, legend, QR, print date) is a side column on wide sheets and
+  a band under the tree on tall ones; a poster carries it once, on its last
+  tile. The QR is the reader link only, absent when the family has none.
+
 ## Security notes
 
 - Keys: 128-bit random, base64url, sent in an `Authorization` header; only

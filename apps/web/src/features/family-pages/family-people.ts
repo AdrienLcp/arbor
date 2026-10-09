@@ -50,6 +50,28 @@ export const listedPeople = (
     .toSorted(byGenerationThenName)
 }
 
+/** Everyone in the bin, by name, each with the generation they hold in the tree once taken out. */
+export const binnedPeople = (
+  family: FamilySnapshot,
+  today: Temporal.PlainDate
+): ListedPerson[] => {
+  const binned = new Set(family.binnedPersonIds)
+  const generations = generationNumbers({
+    filiations: family.filiations,
+    personIds: family.persons.map(({ id }) => id),
+    unions: family.unions
+  })
+
+  return family.persons
+    .filter(({ id }) => binned.has(id))
+    .map((person) => ({
+      generation: generations.get(person.id) ?? 1,
+      isLiving: isLiving(person, today),
+      person
+    }))
+    .toSorted(byName)
+}
+
 /** The same people, one group per generation. */
 export const groupedByGeneration = (
   people: readonly ListedPerson[]

@@ -32,6 +32,8 @@ export type GenerationBand = {
 /** A layout placed on its plane, whose top-left corner is `origin` in layout coordinates. */
 export type TreeScene = {
   bands: readonly GenerationBand[]
+  /** Whether the generations are drawn: a tinted strip across each row, its rail on the left. */
+  hasGenerationBands: boolean
   height: number
   layout: TreeLayout
   origin: TreePoint
@@ -77,11 +79,13 @@ const bandsOf = (
   }).toSorted((first, second) => first.generation - second.generation)
 }
 
-/** Where a layout sits on its plane: room for the rails on the left, a margin all round. */
+/** Where a layout sits on its plane: a margin all round, and room for the rails on the left when the generations are drawn. */
 export const treeScene = ({
+  hasGenerationBands,
   layout,
   persons
 }: {
+  hasGenerationBands: boolean
   layout: TreeLayout
   persons: ReadonlyMap<EntityId, Person>
 }): TreeScene => {
@@ -97,16 +101,24 @@ export const treeScene = ({
   ]
 
   if (xs.length === 0 || ys.length === 0) {
-    return { bands, height: 0, layout, origin: { x: 0, y: 0 }, width: 0 }
+    return {
+      bands,
+      hasGenerationBands,
+      height: 0,
+      layout,
+      origin: { x: 0, y: 0 },
+      width: 0
+    }
   }
 
   const origin = {
-    x: Math.min(...xs) - RAIL_WIDTH - PLANE_MARGIN,
+    x: Math.min(...xs) - (hasGenerationBands ? RAIL_WIDTH : 0) - PLANE_MARGIN,
     y: Math.min(...ys) - PLANE_MARGIN
   }
 
   return {
     bands,
+    hasGenerationBands,
     height: Math.max(...ys) + PLANE_MARGIN - origin.y,
     layout,
     origin,

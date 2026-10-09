@@ -9,6 +9,9 @@ import type { FamilyState } from '@arbor/core/family/family-state'
 import { familyWarnings } from '@arbor/core/family/family-warnings'
 
 import type { PersonFace } from '@/features/family-tree/person-face'
+import { SheetKinship } from '@/features/kinship/sheet-kinship'
+import { PersonPhotos } from '@/features/photos/person-photos'
+import { PortraitImage } from '@/features/photos/portrait-image'
 import { generationClass } from '@/presentation/components/generation-class'
 import { WarningIcon } from '@/presentation/components/icons'
 import { Sticker } from '@/presentation/components/sticker'
@@ -79,6 +82,7 @@ export const PersonSheet: React.FC<PersonSheetProps> = ({
           isDeceased={face.isDeceased}
           lifeYears={face.years}
           monogram={face.monogram}
+          portrait={<PortraitImage photoId={face.portraitPhotoId} />}
           slotNumber={face.slotNumber}
           surname={face.surname}
         />
@@ -113,6 +117,7 @@ export const PersonSheet: React.FC<PersonSheetProps> = ({
           ))}
         </ul>
       )}
+      <SheetKinship face={face} faces={faces} family={family} key={face.id} />
       {birth === null && death === null && !hasBirthSurname ? null : (
         <dl className='sheet-facts'>
           {birth === null ? null : (
@@ -141,7 +146,8 @@ export const PersonSheet: React.FC<PersonSheetProps> = ({
           <p className='sheet-notes'>{person.notes}</p>
         </div>
       )}
-      <SheetActions face={face} person={person} />
+      <PersonPhotos family={family} name={face.name} person={person} />
+      <SheetActions face={face} faces={faces} family={family} person={person} />
       <SheetRelatives face={face} faces={faces} family={family} />
     </section>
   )

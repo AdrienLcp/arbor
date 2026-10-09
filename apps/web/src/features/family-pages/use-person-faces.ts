@@ -32,6 +32,7 @@ export const usePersonFaces = (): ReadonlyMap<EntityId, PersonFace> => {
           isDeceased: !isLiving,
           monogram: monogramOf(person),
           name: personName(person) ?? translate('common.unnamedPerson'),
+          portraitPhotoId: person.portraitPhotoId,
           sex: person.sex,
           slotNumber: slotNumbers.get(person.id) ?? 0,
           surname: person.surname,

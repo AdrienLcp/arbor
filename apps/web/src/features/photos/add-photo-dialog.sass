@@ -1,0 +1,20 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .add-photo-status
+    @include typography.body
+    color: var(--ink-soft)
+
+  .add-photo-form
+    display: grid
+    gap: var(--space-xl)
+
+    .add-photo-preview
+      background: var(--paper-2)
+      border: 5px solid var(--sticker)
+      border-radius: var(--radius-sticker)
+      box-shadow: 0 0 0 1px var(--sticker-edge)
+      display: block
+      justify-self: center
+      max-height: 45dvh
+      max-width: 100%

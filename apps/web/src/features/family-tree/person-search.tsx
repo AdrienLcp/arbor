@@ -21,12 +21,15 @@ export type SearchablePerson = {
 }
 
 type PersonSearchProps = {
+  /** What the field asks; the tree's own search wording when not given. */
+  label?: string
   onPick: (personId: EntityId) => void
   people: readonly SearchablePerson[]
 }
 
 /** Finds someone by name, accents or not, and turns the tree around them. */
 export const PersonSearch: React.FC<PersonSearchProps> = ({
+  label,
   onPick,
   people
 }) => {
@@ -52,7 +55,7 @@ export const PersonSearch: React.FC<PersonSearchProps> = ({
       emptyText={translate('tree.search.empty')}
       inputValue={query}
       items={matches}
-      label={translate('tree.search.label')}
+      label={label ?? translate('tree.search.label')}
       menuTrigger='input'
       onInputChange={setQuery}
       onSelectionChange={pick}

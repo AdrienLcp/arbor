@@ -1,13 +1,23 @@
 import { Result } from '@adrienlcp/result'
 import { Hono } from 'hono'
 
+import { DEMO_FAMILY_KEY } from '@arbor/protocol/demo-family'
 import type { CreatedFamily, CreateFamilyInput } from '@arbor/protocol/routes'
 
 import { createSqlAccessStore } from '@/domain/access/sql-access-store'
+import {
+  DEMO_WRITES_PER_NIGHT,
+  isWriteRequest
+} from '@/domain/demo/demo-write-limit'
+import {
+  type DemoPhotoFiles,
+  openDemoFamily
+} from '@/domain/demo/open-demo-family'
+import { createSqlDemoWriteCount } from '@/domain/demo/sql-demo-write-count'
 import { openFamily } from '@/domain/family/family-service'
 import { createSqlFamilyStore } from '@/domain/family/sql-family-store'
 import { createSqlPhotoStore } from '@/domain/photos/sql-photo-store'
-import { mintKey } from '@/infrastructure/access-keys'
+import { digestOf, mintKey } from '@/infrastructure/access-keys'
 import { now } from '@/infrastructure/clock'
 import { toIsoString } from '@/infrastructure/dates'
 import {
@@ -15,6 +25,7 @@ import {
   migrateFamilySchema
 } from '@/infrastructure/durable-objects/family-schema'
 import type { SqlDatabase } from '@/infrastructure/durable-objects/sql-database'
+import { newKeyId } from '@/infrastructure/ids'
 
 import { registerAccessRoutes } from './access-routes'
 import { answerUnexpected, apiError } from './api-response'
@@ -32,6 +43,10 @@ export type FamilyRoomApp = {
     input: CreateFamilyInput
   ) => Promise<Result<FamilyKeys, 'family_exists'>>
   fetch: (request: Request) => Promise<Response>
+  /** The demo's API: as `fetch`, until its edits for the night run out. */
+  fetchDemo: (request: Request) => Promise<Response>
+  /** Builds the demo family if the object holds none yet; its family link opens with the public demo key. */
+  openDemo: (photoFiles: DemoPhotoFiles) => Promise<void>
 }
 
 /**
@@ -49,6 +64,8 @@ export const familyRoomApp = (database: SqlDatabase): FamilyRoomApp => {
     photos: createSqlPhotoStore(database),
     transaction: database.transaction
   }
+
+  const demoWrites = createSqlDemoWriteCount(database)
 
   const app: RoomApp = new Hono()
 
@@ -86,6 +103,42 @@ export const familyRoomApp = (database: SqlDatabase): FamilyRoomApp => {
         ? opened
         : Result.success({ familyKey: familyKey.key, keeperKey: keeperKey.key })
     },
-    fetch: async (request) => app.fetch(request)
+    fetch: async (request) => app.fetch(request),
+    fetchDemo: async (request) => {
+      if (isOpen && isWriteRequest(request)) {
+        if (demoWrites.read() >= DEMO_WRITES_PER_NIGHT) {
+          return apiError(
+            'demo_write_limit',
+            'The demo takes no more edits until its reset'
+          )
+        }
+        demoWrites.add()
+      }
+      return app.fetch(request)
+    },
+    openDemo: async (photoFiles) => {
+      if (isOpen) return
+      const keeperKey = await mintKey()
+      const familyKey = {
+        digest: await digestOf(DEMO_FAMILY_KEY),
+        id: newKeyId(),
+        key: DEMO_FAMILY_KEY
+      }
+      // A second request may have built it while the keys were hashed.
+      if (isOpen) return
+      migrateFamilySchema(database)
+      stores.transaction(() =>
+        openDemoFamily({
+          access: stores.access,
+          at: toIsoString(now()),
+          familyKey,
+          keeperKey,
+          photoFiles,
+          photos: stores.photos,
+          store: stores.family
+        })
+      )
+      isOpen = true
+    }
   }
 }
