@@ -25,8 +25,11 @@ $barlow-metrics: (ascent: 1, descent: 0.2, cap-height: 0.7)
   @include fonts.font-face('Barlow Condensed', '/fonts/barlow-condensed-extrabold-latin.woff2', fonts.$latin, $weight: 800)
   @include fonts.font-face('Barlow Condensed', '/fonts/barlow-condensed-extrabold-latin-ext.woff2', fonts.$latin-ext, $weight: 800)
 
-  // fontaine's size-adjust for each family's file, from its average character
-  // width; each width ratio is Arial's over the face's at that band's weight,
-  // Arial Bold from 650, measured over the French dictionary and the demo family.
-  @include fonts.fallback-faces('Atkinson Hyperlegible', $atkinson-metrics, 0.993717, (400 649: 1.0071, 650 700: 0.9882))
-  @include fonts.fallback-faces('Barlow Condensed', $barlow-metrics, 0.764916, (600 649: 0.9678, 650 749: 1.0104, 750 800: 0.9875))
+  // Each width ratio is a static file at its own weight against the family's one size-adjust, over
+  // Arial Bold from 650, measured over the text that weight sets on the demo family's pages, uppercase
+  // where the voice transforms it. Barlow's ratios leave out its tabular figures, which are far wider
+  // than Arial's: matched on them, every uppercase label would set wider in the fallback and wrap.
+  // Italic sets no text there, and is measured over the French dictionary and the demo family.
+  @include fonts.fallback-faces('Atkinson Hyperlegible', $atkinson-metrics, 0.993717, (400 649: 1.0035, 650 700: 1.0051))
+  @include fonts.fallback-faces('Atkinson Hyperlegible', $atkinson-metrics, 0.993717, (400 649: 1.001), $style: italic)
+  @include fonts.fallback-faces('Barlow Condensed', $barlow-metrics, 0.764916, (600 649: 1.1556, 650 749: 1.1343, 750 800: 1.1157))
