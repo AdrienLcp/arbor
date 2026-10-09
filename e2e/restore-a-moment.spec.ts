@@ -1,10 +1,13 @@
-import { expect, type Page, test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
-import { addRelative, openHydrated } from './support/journeys'
+import {
+  addRelative,
+  openHydrated,
+  openSheetFromTree
+} from './support/journeys'
 import {
   createFamilyPage,
   editPersonDialog,
-  familyHomePage,
   formDialog,
   historyPage,
   homePage,
@@ -31,14 +34,6 @@ const RENAMES = [
   { after: 'Lewis', person: PARTNER }
 ]
 
-const openSheetFromTree = async (
-  page: Page,
-  person: { givenNames: string; surname: string }
-): Promise<void> => {
-  await treePage(page).person(`${person.givenNames} ${person.surname}`).click()
-  await treePage(page).openSheet(person.givenNames).click()
-}
-
 /**
  * A contributor's bad afternoon: three people in the bin, two renamed. The
  * keeper puts the whole family back as it was before, in one action, and the
@@ -60,8 +55,7 @@ test('[e2e] the keeper puts the tree back as it was before a contributor binned 
   await form.submit.click()
   const link = await sharePage(keeper).familyLink.innerText()
   await sharePage(keeper).openTree.click()
-  await familyHomePage(keeper).openTree.click()
-  await treePage(keeper).openSheet(KEEPER.givenNames).click()
+  await openSheetFromTree(keeper, KEEPER_NAME)
   await addRelative(keeper, 'A partner', PARTNER)
   for (const { givenNames } of CHILDREN) {
     await addRelative(keeper, 'A child', { givenNames })
@@ -69,24 +63,24 @@ test('[e2e] the keeper puts the tree back as it was before a contributor binned 
 
   await openHydrated(contributor, link)
   await whoAmIPage(contributor).person(PARTNER_NAME).click()
-  await familyHomePage(contributor).openTree.click()
+  await expect(treePage(contributor).title(PARTNER_NAME)).toBeAttached()
   const sheet = personSheet(contributor)
-  for (const { givenNames } of CHILDREN) {
-    await openSheetFromTree(contributor, {
-      givenNames,
-      surname: KEEPER.surname
-    })
+  for (const { name } of CHILDREN) {
+    await openSheetFromTree(contributor, name)
     await sheet.bin.click()
     await sheet.confirmBin.click()
     await expect(contributor.getByRole('alertdialog')).toBeHidden()
   }
   for (const { after, person } of RENAMES) {
-    await openSheetFromTree(contributor, person)
+    await openSheetFromTree(
+      contributor,
+      `${person.givenNames} ${person.surname}`
+    )
     await sheet.editPerson.click()
     await editPersonDialog(contributor).givenNames.fill(after)
     await editPersonDialog(contributor).save.click()
     await expect(formDialog(contributor)).toBeHidden()
-    await sheet.backToTree.click()
+    await sheet.close.click()
   }
 
   const familyPath = new URL(link).pathname

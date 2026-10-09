@@ -1,4 +1,5 @@
 @use '@adrienlcp/styles/accessibility'
+@use '../../presentation/styles/layout'
 
 @layer components
   .tree-canvas
@@ -21,6 +22,11 @@
       padding: var(--space-xs)
       position: absolute
       right: var(--space-l)
+
+      // On a phone the zoom stands at the top, leaving the bottom's whole width to the focus card.
+      @include layout.narrow
+        bottom: auto
+        top: var(--space-l)
 
       .button
         min-height: var(--target)

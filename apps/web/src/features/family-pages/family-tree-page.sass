@@ -22,9 +22,17 @@
       justify-content: space-between
       padding: var(--space-l) var(--space-gutter)
 
+    // The title and its notes take the first row, the controls the second: the canvas keeps the height.
+    .family-tree-heading
+      align-items: baseline
+      display: flex
+      flex: 1 1 100%
+      flex-wrap: wrap
+      gap: var(--space-s) var(--space-2xl)
+      min-width: 0
+
     .family-tree-title
       @include typography.headline
-      flex: 1 1 20rem
       overflow-wrap: anywhere
       text-wrap: balance
 
@@ -36,15 +44,40 @@
         line-height: 1.2
         text-transform: none
 
-      // On a phone the spread bar says whose page it is: the heading stays for screen readers only.
+      // On a phone the focus card, or the spread bar, says whose tree it is: the heading stays for screen readers only.
       @include layout.narrow
         @include accessibility.visually-hidden
+
+    // Two quiet lines under the title, never a block: who the visitor is, and on the demo that the family is made up.
+    .family-tree-notes
+      @include typography.body-small
+      align-items: center
+      display: flex
+      flex-wrap: wrap
+      gap: 0 var(--space-xl)
+
+      // The demo's first sentence says enough beside the tree; the rest stays for screen readers.
+      .demo-notice-body
+        @include accessibility.visually-hidden
+
+      .demo-notice
+        background: none
+        border: none
+        padding: 0
+
+      .me-summary
+        align-items: center
+
+        .me-summary-icon
+          height: 1.25rem
+          margin-top: 0
+          width: 1.25rem
 
     .family-tree-controls
       align-items: end
       display: flex
       flex-wrap: wrap
-      justify-content: end
+      justify-content: start
       gap: var(--space-l) var(--space-xl)
 
     .person-search
@@ -79,14 +112,6 @@
 
       .person-search
         width: 100%
-
-      // On a phone the sheet is the page: the tree waits behind it, mounted, so closing the sheet returns to the same spread.
-      &[data-sheet-open]
-        grid-template-rows: minmax(0, 1fr)
-
-        .family-tree-head,
-        .family-tree-drawing
-          display: none
 
   .family-tree-empty
     @include layout.column(var(--page-width))

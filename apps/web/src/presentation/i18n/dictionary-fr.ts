@@ -228,22 +228,12 @@ export const FR_DICTIONARY = defineDictionary({
     }
   },
   familyBar: {
+    bin: 'La corbeille',
+    history: 'Ce qui a changé',
     label: 'Arbre',
     print: 'Imprimer',
     settings: 'Réglages',
     share: 'Partager'
-  },
-  familyHome: {
-    bin: 'La corbeille',
-    empty: 'Personne dans l’arbre pour l’instant.',
-    generation: 'Génération {number:number}',
-    history: 'Ce qui a changé',
-    openTree: 'Voir l’arbre',
-    people: defineTranslation('{count:plural}', {
-      plural: { count: { one: '{?} personne', other: '{?} personnes' } }
-    }),
-    share: 'Inviter la famille',
-    you: 'vous'
   },
   familySettings: {
     device: {
@@ -586,7 +576,8 @@ export const FR_DICTIONARY = defineDictionary({
     is: 'Vous êtes {name}.',
     nobody: 'Vous n’avez pas encore dit qui vous êtes.',
     onlooker: 'Vous regardez l’arbre sans le modifier.',
-    reader: 'Ce lien permet de regarder l’arbre, pas de le modifier.'
+    reader: 'Ce lien permet de regarder l’arbre, pas de le modifier.',
+    you: 'vous'
   },
   notFound: {
     home: 'Revenir à l’accueil',
@@ -708,9 +699,9 @@ export const FR_DICTIONARY = defineDictionary({
   },
   sheet: {
     atPlace: 'à {place}',
-    back: 'L’arbre',
     birth: 'Naissance',
     birthSurname: 'Nom de naissance',
+    close: 'Fermer',
     death: 'Décès',
     deathUnknown: 'Date et lieu inconnus',
     generation: 'génération {number:number}',
@@ -874,6 +865,7 @@ export const FR_DICTIONARY = defineDictionary({
       label: 'Afficher',
       list: 'En liste',
       page: 'Page par page',
+      tree: 'L’arbre',
       whole: 'Toute la famille'
     },
     search: {

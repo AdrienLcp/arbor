@@ -23,14 +23,9 @@ export const sharePage = (page: Page) => ({
 })
 
 export const familyAppBar = (page: Page) => ({
+  familyName: (treeName: string) =>
+    page.getByRole('banner').getByRole('link', { name: treeName }),
   settings: page.getByRole('link', { name: 'Settings' })
-})
-
-export const familyHomePage = (page: Page) => ({
-  openTree: page.getByRole('link', { name: 'See the tree' }),
-  title: (treeName: string) =>
-    page.getByRole('heading', { level: 1, name: treeName }),
-  youAre: (name: string) => page.getByText(`You are ${name}.`)
 })
 
 export const whoAmIPage = (page: Page) => ({
@@ -55,9 +50,14 @@ export const linkRefusedScreen = (page: Page) => ({
 export const formDialog = (page: Page) => page.locator('.form-dialog')
 
 export const treePage = (page: Page) => ({
-  openSheet: (givenNames: string) =>
-    page.getByRole('link', { name: `Open ${givenNames}’s sheet` }),
-  person: (name: string) => page.getByRole('button', { name }).first()
+  /** Touching a person on the tree opens their sheet. */
+  person: (name: string) => page.getByRole('button', { name }).first(),
+  title: (focusName: string) =>
+    page.getByRole('heading', {
+      level: 1,
+      name: `The tree, around ${focusName}`
+    }),
+  youAre: (name: string) => page.getByText(`You are ${name}.`)
 })
 
 export const personSheet = (page: Page) => ({
@@ -65,8 +65,8 @@ export const personSheet = (page: Page) => ({
   addRelative: page.getByRole('button', {
     name: 'Add a child, a parent, a partner…'
   }),
-  backToTree: page.getByRole('button', { name: 'The tree' }),
   bin: page.getByRole('button', { name: 'Put in the bin' }),
+  close: page.getByRole('button', { exact: true, name: 'Close' }),
   /** The dialog repeats the button's name, so the confirmation is found inside it. */
   confirmBin: page
     .getByRole('alertdialog')

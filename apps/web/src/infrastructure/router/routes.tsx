@@ -15,8 +15,8 @@ const pageFor = {
       .CreateFamilyPage
   }),
   [paths.family]: async () => ({
-    Component: (await import('@/features/family-pages/family-home-page'))
-      .FamilyHomePage
+    Component: (await import('@/features/family-pages/family-entry-page'))
+      .FamilyEntryPage
   }),
   [paths.familyBin]: async () => ({
     Component: (await import('@/features/history/bin-page')).BinPage

@@ -59,7 +59,7 @@ export const BinnedSheet: React.FC<{ personId: EntityId }> = ({ personId }) => {
       {edit.canEdit ? (
         <ButtonLink href={familyBinPathFor(familyId)} variant='link'>
           <BinIcon aria-hidden='true' />
-          {translate('familyHome.bin')}
+          {translate('familyBar.bin')}
         </ButtonLink>
       ) : null}
     </>

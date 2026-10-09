@@ -10,6 +10,7 @@ import { describeKinship } from '@arbor/core/kinship/describe-kinship'
 import type { KinPath } from '@arbor/core/kinship/kinship'
 import { familyLineage } from '@arbor/core/tree-layout/family-lineage'
 
+import { DemoNotice } from '@/features/demo/demo-notice'
 import { rememberedMyPersonId } from '@/features/family-access/remembered-families'
 import {
   type Adding,
@@ -33,16 +34,22 @@ import {
 } from '@/features/family-tree/tree-view'
 import { useTreeView } from '@/features/family-tree/use-tree-view'
 import { familyKinship, kinPathOf } from '@/features/kinship/family-kinship'
+import { SIDE_SHEET_WIDTH } from '@/features/person-sheet/side-sheet'
 import { today } from '@/infrastructure/clock'
 import {
   familyTreePathFor,
   type KinshipPair,
   personSheetPathFor,
   useChildPage,
+  useGoBack,
   useLitKinshipPair,
   useNavigateTo,
   useSheetPersonId
 } from '@/infrastructure/router/navigation'
+import {
+  BOTTOM_SHEET_PEEK,
+  BottomSheet
+} from '@/presentation/components/bottom-sheet'
 import { Button } from '@/presentation/components/button'
 import { Main } from '@/presentation/components/main'
 import { PHONE_SCREEN } from '@/presentation/components/phone-screen'
@@ -54,6 +61,7 @@ import { useLocale, useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { FamilyAppBar } from './family-app-bar'
 import { useOpenFamily } from './family-loader'
+import { MeSummary } from './me-summary'
 import { usePersonFaces } from './use-person-faces'
 
 import './family-tree-page.sass'
@@ -64,11 +72,26 @@ type FamilyTreeProps = {
   family: FamilyState
   initialFocusId: EntityId
   isFocusMe: boolean
-  /** How two people are related, traced over the whole tree on a computer. */
+  /** How two people are related, traced over the whole tree. */
   litKinship: LitKinship | null
 }
 
 type LitKinship = { path: KinPath; relativeId: EntityId; sentence: string }
+
+/** What the screen draws of the chosen scope: a lit path needs the whole family, the page-by-page spread is a phone's, and a phone's canvas turns around one person. */
+const scopeOnScreen = ({
+  isLit,
+  isPhone,
+  scope
+}: {
+  isLit: boolean
+  isPhone: boolean
+  scope: TreeScope
+}): TreeScope => {
+  if (isLit) return 'whole'
+  if (isPhone) return scope === 'whole' ? 'around' : scope
+  return scope === 'spread' ? 'around' : scope
+}
 
 /** The kinship the address asks the tree to light up, `null` when it names someone out of the tree or no path joins them. */
 const useLitKinship = (
@@ -142,36 +165,47 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   const edit = useFamilyEdit()
   const canAdd = edit.canEdit && edit.author !== null
   const [adding, setAdding] = useState<Adding | null>(null)
-  const lit = isPhone ? null : litKinship
+  const closeSheet = useGoBack(familyTreePathFor(familyId))
+  const isSpread = isPhone && view.scope === 'spread'
+  const lit = isSpread ? null : litKinship
   const focusId = lit?.relativeId ?? view.focusId
   const focus = faces.get(focusId)
   const focusSheetPath = personSheetPathFor({ familyId, personId: focusId })
-  /** Touching the person already in the middle opens their sheet; anyone else comes to the middle. While a path is lit, anyone's sheet opens. */
-  const pressPerson = (personId: EntityId) => {
-    if (personId === focusId || lit !== null) {
-      navigateTo(personSheetPathFor({ familyId, personId }))
+  /** Touching anyone on the canvas opens their sheet, every change at hand; the tree turns to them behind it. */
+  const openSheetOf = (personId: EntityId) => {
+    navigateTo(personSheetPathFor({ familyId, personId }))
+  }
+  /** On a spread, touching the person in the middle opens their sheet; anyone else's page turns to them. */
+  const turnSpreadTo = (personId: EntityId) => {
+    if (personId === view.focusId) {
+      openSheetOf(personId)
       return
     }
     setFocus(personId)
   }
   const focusName =
     faces.get(view.focusId)?.name ?? translate('common.unnamedPerson')
-  const shownScope: TreeScope =
-    lit !== null
-      ? 'whole'
-      : isPhone && view.scope === 'whole'
-        ? 'around'
-        : view.scope
+  const shownScope = scopeOnScreen({
+    isLit: lit !== null,
+    isPhone,
+    scope: view.scope
+  })
+  const aroundTitle = translate('tree.titleAround', { name: focusName })
   const title =
     lit?.sentence ??
     {
-      around: translate('tree.titleAround', { name: focusName }),
+      around: aroundTitle,
       list: translate('tree.outline.label'),
+      spread: aroundTitle,
       whole: translate('tree.titleWhole')
     }[shownScope]
+  const sheetName =
+    (sheetPersonId === null ? undefined : faces.get(sheetPersonId)?.name) ??
+    translate('common.unnamedPerson')
   const scopeOptions = isPhone
     ? [
-        { label: translate('tree.scope.page'), value: 'around' as const },
+        { label: translate('tree.scope.tree'), value: 'around' as const },
+        { label: translate('tree.scope.page'), value: 'spread' as const },
         { label: translate('tree.scope.list'), value: 'list' as const }
       ]
     : [
@@ -190,7 +224,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
         />
       )
     }
-    if (isPhone) {
+    if (shownScope === 'spread') {
       return (
         <TreeSpread
           faces={faces}
@@ -199,7 +233,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
           key={view.focusId}
           lineage={familyLineage(family)}
           onAdd={canAdd ? setAdding : undefined}
-          onPressPerson={pressPerson}
+          onPressPerson={turnSpreadTo}
           sheetPath={focusSheetPath}
         />
       )
@@ -212,10 +246,12 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     return (
       <>
         <TreeCanvas
+          coveredBottomShare={sheet !== null && isPhone ? BOTTOM_SHEET_PEEK : 0}
+          coveredRight={sheet !== null && !isPhone ? SIDE_SHEET_WIDTH : 0}
           focusId={focusId}
           label={title}
           litPath={lit?.path ?? null}
-          onPressPerson={pressPerson}
+          onPressPerson={openSheetOf}
           persons={family.persons}
           scene={scene}
           slotNumbers={slotNumbersOf({ layout: scene.layout, personIds })}
@@ -229,17 +265,20 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   }
 
   return (
-    <Main
-      className='family-tree-page'
-      data-sheet-open={sheet === null ? undefined : true}
-    >
+    <Main className='family-tree-page'>
       {sheet === null ? (
         <DocumentTitle>{`${title} — ${response.settings.name}`}</DocumentTitle>
       ) : null}
       <div className='family-tree-head'>
-        <h1 className={classNames('family-tree-title', lit && 'is-sentence')}>
-          {title}
-        </h1>
+        <div className='family-tree-heading'>
+          <h1 className={classNames('family-tree-title', lit && 'is-sentence')}>
+            {title}
+          </h1>
+          <div className='family-tree-notes'>
+            <DemoNotice familyId={familyId} />
+            <MeSummary />
+          </div>
+        </div>
         <div className='family-tree-controls'>
           {lit === null ? null : (
             <Button
@@ -279,10 +318,22 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
           <PersonSearch onPick={showAround} people={[...faces.values()]} />
         </div>
       </div>
-      <div className='family-tree-stage'>
+      <div
+        className='family-tree-stage'
+        style={{ '--side-sheet-width': `${SIDE_SHEET_WIDTH}px` }}
+      >
         <div className='family-tree-drawing'>{drawing()}</div>
-        {sheet}
+        {isPhone ? null : sheet}
       </div>
+      {isPhone ? (
+        <BottomSheet
+          isOpen={sheet !== null}
+          label={translate('sheet.title', { name: sheetName })}
+          onClose={closeSheet}
+        >
+          {sheet}
+        </BottomSheet>
+      ) : null}
       {focus === undefined ? null : (
         <AddRelativeDialog
           adding={adding}

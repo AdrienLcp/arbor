@@ -131,7 +131,7 @@ export const HistoryPage: React.FC = () => {
             <ButtonLink href={familyBinPathFor(familyId)} variant='link'>
               <BinIcon aria-hidden='true' />
               {binCount === 0
-                ? translate('familyHome.bin')
+                ? translate('familyBar.bin')
                 : translate('history.binWith', { count: binCount })}
             </ButtonLink>
           </div>

@@ -1,3 +1,4 @@
+@use '../../presentation/styles/layout'
 @use '../../presentation/styles/typography'
 
 @layer components
@@ -14,6 +15,12 @@
     max-width: calc(100% - 2 * var(--space-l) - 4rem)
     padding: var(--space-s) var(--space-s) var(--space-s) var(--space-l)
     position: absolute
+
+    // On a phone the zoom stands at the top: the card takes the bottom's whole width.
+    @include layout.narrow
+      justify-content: space-between
+      max-width: none
+      right: var(--space-l)
 
     .focus-card-text
       display: grid

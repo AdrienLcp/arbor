@@ -115,7 +115,7 @@ export const BinPage: React.FC = () => {
           <p className='bin-intro'>{translate('binPage.intro')}</p>
           <ButtonLink href={familyHistoryPathFor({ familyId })} variant='link'>
             <HistoryIcon aria-hidden='true' />
-            {translate('familyHome.history')}
+            {translate('familyBar.history')}
           </ButtonLink>
           {edit.author === null && people.length > 0 ? (
             <WhoFirstNotice />

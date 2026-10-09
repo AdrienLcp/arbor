@@ -4,11 +4,11 @@ import { openHydrated, waitForHydration } from './support/journeys'
 import {
   createFamilyPage,
   familyAppBar,
-  familyHomePage,
   familySettingsPage,
   homePage,
   linkRefusedScreen,
   sharePage,
+  treePage,
   whoAmIPage
 } from './support/locators'
 
@@ -48,11 +48,15 @@ test('[e2e] a family is created, joined through its link, and locked out once th
   ).toBeVisible()
   await whoAmIPage(relative).person(FOUNDER_NAME).click()
   await expect(
-    familyHomePage(relative).title(TREE_NAME),
+    familyAppBar(relative).familyName(TREE_NAME),
     'the relative sees the family after picking themselves'
   ).toBeVisible()
   await expect(
-    familyHomePage(relative).youAre(FOUNDER_NAME),
+    treePage(relative).title(FOUNDER_NAME),
+    'the family opens on its tree, around the relative'
+  ).toBeVisible()
+  await expect(
+    treePage(relative).youAre(FOUNDER_NAME),
     'the relative’s choice is remembered'
   ).toBeVisible()
 

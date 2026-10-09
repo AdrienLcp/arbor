@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import type { FamilySnapshot } from '@arbor/protocol/family'
 import type { Person } from '@arbor/protocol/person'
 
-import { groupedByGeneration, listedPeople } from './family-people'
+import { listedPeople } from './family-people'
 
 const TODAY = Temporal.PlainDate.from('2026-10-07')
 
@@ -76,16 +76,5 @@ describe('family people', () => {
     )
 
     expect(pierre?.isLiving).toBe(false)
-  })
-
-  it('[family-people] groups people by generation, oldest first', () => {
-    expect(
-      groupedByGeneration(listedPeople(family, TODAY)).map(
-        ({ generation, people }) => [generation, people.length]
-      )
-    ).toEqual([
-      [1, 2],
-      [2, 1]
-    ])
   })
 })

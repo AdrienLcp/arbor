@@ -1,0 +1,43 @@
+@layer components
+  // Under the form dialogs a sheet opens (z-index 10), over everything on the page.
+  .bottom-sheet-overlay
+    z-index: 5
+
+  // A faint veil: the page above stays readable, and touching it closes the sheet.
+  .bottom-sheet-backdrop
+    background: color-mix(in oklch, var(--shadow) 14%, transparent)
+
+  // A floating panel of paper, lifted from the page by the side sheet's shadow turned upward.
+  .bottom-sheet
+    background: var(--paper)
+    border-radius: calc(2 * var(--radius-frame)) calc(2 * var(--radius-frame)) 0 0
+    border-top: var(--stroke-thin) solid var(--ghost-soft)
+    box-shadow: 0 -24px 40px -30px var(--shadow)
+    height: calc(100dvh - var(--space-2xl))
+    outline: none
+    // Clip, not hidden: a scroll container here would capture the snap markers the swipe rests on.
+    overflow: clip
+    position: relative
+    width: 100%
+
+  .bottom-sheet-handle
+    background: var(--ghost)
+    border-radius: var(--radius-pill)
+    height: 5px
+    left: 50%
+    position: absolute
+    top: var(--space-s)
+    translate: -50% 0
+    width: 2.75rem
+    z-index: 2
+
+  .bottom-sheet-content
+    outline: none
+    overflow-y: auto
+    overscroll-behavior: contain
+    padding-top: var(--space-l)
+    scrollbar-width: thin
+
+  // Half open, a swipe on the content raises the sheet rather than scrolling inside it.
+  .bottom-sheet:not([data-expanded]) .bottom-sheet-content
+    overflow-y: hidden

@@ -224,22 +224,12 @@ export const EN_DICTIONARY = defineDictionary({
     }
   },
   familyBar: {
+    bin: 'The bin',
+    history: 'What changed',
     label: 'Tree',
     print: 'Print',
     settings: 'Settings',
     share: 'Share'
-  },
-  familyHome: {
-    bin: 'The bin',
-    empty: 'Nobody in the tree yet.',
-    generation: 'Generation {number:number}',
-    history: 'What changed',
-    openTree: 'See the tree',
-    people: defineTranslation('{count:plural}', {
-      plural: { count: { one: '{?} person', other: '{?} people' } }
-    }),
-    share: 'Invite the family',
-    you: 'you'
   },
   familySettings: {
     device: {
@@ -583,7 +573,8 @@ export const EN_DICTIONARY = defineDictionary({
     is: 'You are {name}.',
     nobody: 'You have not said who you are yet.',
     onlooker: 'You are looking at the tree without changing it.',
-    reader: 'This link lets you look at the tree, not change it.'
+    reader: 'This link lets you look at the tree, not change it.',
+    you: 'you'
   },
   notFound: {
     home: 'Back to the home page',
@@ -703,9 +694,9 @@ export const EN_DICTIONARY = defineDictionary({
   },
   sheet: {
     atPlace: 'in {place}',
-    back: 'The tree',
     birth: 'Birth',
     birthSurname: 'Birth name',
+    close: 'Close',
     death: 'Death',
     deathUnknown: 'Date and place unknown',
     generation: 'generation {number:number}',
@@ -852,6 +843,7 @@ export const EN_DICTIONARY = defineDictionary({
       label: 'Show',
       list: 'As a list',
       page: 'Page by page',
+      tree: 'The tree',
       whole: 'The whole family'
     },
     search: {

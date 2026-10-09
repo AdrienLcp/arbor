@@ -13,7 +13,7 @@ import {
 import { personName } from '@/features/people/person-name'
 import { today } from '@/infrastructure/clock'
 import {
-  familyPathFor,
+  familyTreePathFor,
   Redirect,
   useNavigateTo
 } from '@/infrastructure/router/navigation'
@@ -49,7 +49,7 @@ export const WhoAmIPage: React.FC = () => {
   const titleId = useId()
 
   if (family.role === 'reader') {
-    return <Redirect to={familyPathFor(familyId)} />
+    return <Redirect to={familyTreePathFor(familyId)} />
   }
 
   const me = rememberedMe(familyId)
@@ -64,7 +64,7 @@ export const WhoAmIPage: React.FC = () => {
 
   const choose = (chosen: NonNullable<FamilyAccess['me']>): void => {
     rememberMe(familyId, chosen)
-    navigateTo(familyPathFor(familyId), { replace: true })
+    navigateTo(familyTreePathFor(familyId), { replace: true })
   }
 
   const chooseOwnName = (event: React.FormEvent<HTMLFormElement>): void => {
