@@ -30,7 +30,7 @@
     left: var(--x)
     position: absolute
     top: var(--y)
-    width: 108px
+    width: var(--node-width)
 
   .kin-chart-button
     align-items: center
@@ -42,7 +42,7 @@
     display: grid
     gap: var(--space-xs)
     justify-items: center
-    min-height: 44px
+    min-height: var(--target)
     padding: 0
     width: 100%
 
@@ -50,15 +50,15 @@
       text-decoration: underline
 
     &[data-focus-visible]
-      outline: 3px solid var(--focus)
-      outline-offset: 3px
+      outline: var(--ring)
+      outline-offset: var(--ring-offset)
 
   // The name covers the lines that run under it, so they seem to leave from the sticker.
   .kin-chart-name
     @include typography.name
     background: var(--paper)
     border-radius: var(--radius-control)
-    font-size: 16px
+    font-size: var(--text-s)
     max-width: 100%
     overflow: hidden
     padding: 0 var(--space-xs)

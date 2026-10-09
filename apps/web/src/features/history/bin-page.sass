@@ -56,9 +56,9 @@
 
       // A binned sticker is peeled off its slot: lifted and askew, as it is the instant before it is pressed back (DESIGN.md, Motion).
       .mini-sticker
-        box-shadow: 0 0 0 1px var(--sticker-edge), 0 10px 16px -8px color-mix(in oklch, var(--shadow) 65%, transparent)
+        box-shadow: 0 0 0 1px var(--sticker-edge), 0 10px 16px -8px color-mix(in oklch, var(--shadow-ink) 65%, transparent)
         rotate: -3.5deg
-        translate: 0 -2px
+        translate: 0 calc(-1 * var(--space-2xs))
 
     .bin-person-when
       @include typography.body-small

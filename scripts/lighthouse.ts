@@ -1,5 +1,6 @@
 import { type ChildProcess, spawn, spawnSync } from 'node:child_process'
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
+import { createServer } from 'node:net'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -21,12 +22,32 @@ import desktopConfig from 'lighthouse/core/config/desktop-config.js'
  * `LIGHTHOUSE_BASE_URL` audits a deployment; otherwise the built web app is
  * served by the worker under `wrangler dev`, the way the end-to-end journeys
  * run it, with a state directory of its own so the demo family is built fresh.
+ *
+ * `LIGHTHOUSE_DEBUGGING_PORT` pins the browser's debugging port; otherwise the
+ * system hands out a free one, so two projects' runs never meet on it.
  */
 
 const ROOT = join(import.meta.dirname, '..')
 const REPORT_DIR = join(ROOT, 'lighthouse-reports')
 const WORKER_PORT = 8792
-const PLAYWRIGHT_CHROMIUM_DEBUGGING_PORT = 9223
+
+/** A port nothing listens on, as the system hands it out. */
+const freePort = (): Promise<number> =>
+  new Promise((resolvePort, reject) => {
+    const server = createServer()
+    server.once('error', reject)
+    server.listen(0, '127.0.0.1', () => {
+      const address = server.address()
+      server.close(() =>
+        typeof address === 'object' && address !== null
+          ? resolvePort(address.port)
+          : reject(new Error('The system handed out no port'))
+      )
+    })
+  })
+
+const PLAYWRIGHT_CHROMIUM_DEBUGGING_PORT =
+  Number(process.env.LIGHTHOUSE_DEBUGGING_PORT) || (await freePort())
 
 const SITE_ORIGIN = 'https://arbor.adrienlcp.com'
 const DEMO_FAMILY_ID = 'demo-famille-morel-001'

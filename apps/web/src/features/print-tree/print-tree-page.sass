@@ -46,7 +46,7 @@
     // The sheet lies on the page as paper does: pure white whatever the theme, with the drop of a sheet on a table.
     .print-tree-preview
       background: var(--print-paper)
-      box-shadow: 0 1px 2px color-mix(in oklch, var(--shadow) 25%, transparent), 0 18px 32px -20px color-mix(in oklch, var(--shadow) 60%, transparent)
+      box-shadow: 0 1px 2px color-mix(in oklch, var(--shadow-ink) 25%, transparent), 0 18px 32px -20px color-mix(in oklch, var(--shadow-ink) 60%, transparent)
       display: grid
       // A tall sheet is not allowed to run off the screen: its width follows the height left to it.
       width: min(100%, 80svh * var(--sheet-ratio))

@@ -6,6 +6,11 @@
 
 @use '@adrienlcp/styles/fonts'
 
+/// Atkinson Hyperlegible: 950 and 290 of 1000 units, capitals at 668.
+$atkinson-metrics: (ascent: 0.95, descent: 0.29, cap-height: 0.668)
+/// Barlow Condensed: 1000 and 200 of 1000 units, capitals at 700.
+$barlow-metrics: (ascent: 1, descent: 0.2, cap-height: 0.7)
+
 @layer base
   @include fonts.font-face('Atkinson Hyperlegible', '/fonts/atkinson-latin.woff2', fonts.$latin)
   @include fonts.font-face('Atkinson Hyperlegible', '/fonts/atkinson-latin-ext.woff2', fonts.$latin-ext)
@@ -19,3 +24,9 @@
   @include fonts.font-face('Barlow Condensed', '/fonts/barlow-condensed-bold-latin-ext.woff2', fonts.$latin-ext, $weight: 700)
   @include fonts.font-face('Barlow Condensed', '/fonts/barlow-condensed-extrabold-latin.woff2', fonts.$latin, $weight: 800)
   @include fonts.font-face('Barlow Condensed', '/fonts/barlow-condensed-extrabold-latin-ext.woff2', fonts.$latin-ext, $weight: 800)
+
+  // fontaine's size-adjust for each family's file, from its average character
+  // width; each width ratio is Arial's over the face's at that band's weight,
+  // Arial Bold from 650, measured over the French dictionary and the demo family.
+  @include fonts.fallback-faces('Atkinson Hyperlegible', $atkinson-metrics, 0.993717, (400 649: 1.0071, 650 700: 0.9882))
+  @include fonts.fallback-faces('Barlow Condensed', $barlow-metrics, 0.764916, (600 649: 0.9678, 650 749: 1.0104, 750 800: 0.9875))

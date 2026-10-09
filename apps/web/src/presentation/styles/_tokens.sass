@@ -65,8 +65,8 @@
     --rule-strong: var(--line)
     --outline-thick: 3px
 
-    // Type. Each `fallback` face is fontaine's metric-matched Arial: it only
-    // reaches `font-family` declarations, not custom properties, so it is named here.
+    // Type. Each `fallback` face is a metric-matched Arial per weight band (_fonts.sass):
+    // nothing rewrites a custom property, so the token names it.
     --font-display: 'Barlow Condensed', 'Barlow Condensed fallback', sans-serif
     --font-text: 'Atkinson Hyperlegible', 'Atkinson Hyperlegible fallback', sans-serif
     --text-2xs: 0.8125rem
@@ -93,9 +93,6 @@
     --space-2xl: 2rem
     --space-3xl: 3rem
     --space-section: 4rem
-    --space-gutter: 1rem
-    --page-padding-inline-start: max(var(--space-gutter), var(--safe-area-left))
-    --page-padding-inline-end: max(var(--space-gutter), var(--safe-area-right))
     --page-width: 82.5rem
 
     // Shape
@@ -103,6 +100,7 @@
     --radius-art-frame: 2px
     --radius-art: 4px
     --radius-book: 6px
+    --radius-box: 6px
     --radius-sticker: 7px
     --radius-control: 8px
     --radius-frame: 10px
@@ -146,4 +144,4 @@
 
     @include layout.wide
       --space-section: 5.5rem
-      --space-gutter: 1.5rem
+      --gutter: 1.5rem

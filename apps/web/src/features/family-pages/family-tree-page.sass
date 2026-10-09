@@ -24,7 +24,7 @@
       flex-wrap: wrap
       gap: var(--space-l) var(--space-2xl)
       justify-content: space-between
-      padding: var(--space-l) var(--page-padding-inline-end) var(--space-l) var(--page-padding-inline-start)
+      padding: var(--space-l) var(--gutter-right) var(--space-l) var(--gutter-left)
 
     .family-tree-title
       @include typography.headline
@@ -34,11 +34,7 @@
 
       // A lit kinship path is titled by its sentence, read rather than printed (The Two Voices Rule).
       &.is-sentence
-        @include typography.name
-        font-size: 28px
-        letter-spacing: normal
-        line-height: 1.2
-        text-transform: none
+        @include typography.title-sentence
 
       // On a phone the spread bar says whose page it is: the heading stays for screen readers only.
       @include layout.narrow

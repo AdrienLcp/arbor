@@ -11,6 +11,12 @@ import { API_PREFIX } from '../../packages/protocol/src/routes.ts'
 import { REGIONAL_LOCALES } from './src/presentation/i18n/regional-locales.ts'
 import { themeStore } from './src/presentation/theme/theme-store.ts'
 
+/** `_fonts.sass` writes these per weight band, with `fonts.fallback-faces`. */
+const FALLBACK_FACES_WRITTEN_BY_HAND = new Set([
+  'Atkinson Hyperlegible fallback',
+  'Barlow Condensed fallback'
+])
+
 const WORKER_ORIGIN = 'http://127.0.0.1:8790'
 
 export default defineConfig({
@@ -19,7 +25,9 @@ export default defineConfig({
       plugins: [
         fontaine({
           fallbacks: ['Arial'],
-          resolvePath: (path) => new URL(`./public${path}`, import.meta.url)
+          resolvePath: (path) => new URL(`./public${path}`, import.meta.url),
+          skipFontFaceGeneration: (fallbackName) =>
+            FALLBACK_FACES_WRITTEN_BY_HAND.has(fallbackName)
         }),
         metricTwins()
       ]

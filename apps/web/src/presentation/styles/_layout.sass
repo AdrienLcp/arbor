@@ -4,8 +4,8 @@
 /// A page's reading column, centred, kept off the screen's edges by the gutter or the safe area, the larger.
 @mixin column($width: var(--measure))
   margin-inline: auto
-  max-width: calc($width + var(--page-padding-inline-start) + var(--page-padding-inline-end))
-  padding-inline: var(--page-padding-inline-start) var(--page-padding-inline-end)
+  max-width: calc($width + var(--gutter-left) + var(--gutter-right))
+  padding-inline: var(--gutter-left) var(--gutter-right)
   width: 100%
 
 /// A screen too short for a page's controls and its content side by side in height: a phone held sideways.

@@ -83,7 +83,8 @@ export const KinChartView: React.FC<KinChartViewProps> = ({
         className='kin-chart-plane'
         style={{
           '--chart-height': `${height}px`,
-          '--chart-width': `${width}px`
+          '--chart-width': `${width}px`,
+          '--node-width': `${NODE_WIDTH}px`
         }}
       >
         <svg
