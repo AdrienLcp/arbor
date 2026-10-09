@@ -1,5 +1,12 @@
 import type React from 'react'
-import { useEffectEvent, useId, useLayoutEffect, useRef, useState } from 'react'
+import {
+  useEffect,
+  useEffectEvent,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react'
 import {
   type ReactZoomPanPinchRef,
   TransformComponent,
@@ -32,12 +39,22 @@ import './tree-canvas.sass'
 
 const MIN_SCALE = 0.15
 const MAX_SCALE = 2
+/** The stickers at their own size: the scale the canvas opens at, whatever it was left at. */
+const ARRIVAL_SCALE = 1
 /** Paper kept around a lit path when it is fitted on screen: room for the slot numbers and the focus card. */
 const LIT_PATH_MARGIN = 112
 /** How long the canvas glides to the person the keyboard moved to. */
 const GLIDE_MS = 200
 
 type PersonCard = Extract<TreeCard, { kind: 'person' }>
+
+/** What a sheet hides of the canvas, so a centred person is centred in what stays in sight. */
+type SheetCover = {
+  /** The share of the window's height a bottom sheet hides. */
+  bottomShare: number
+  /** The pixels a side sheet hides on the right. */
+  right: number
+}
 
 const isPersonCard = (card: TreeCard): card is PersonCard =>
   card.kind === 'person'
@@ -60,10 +77,16 @@ type TreeCanvasProps = {
   scene: TreeScene
   slotNumbers: ReadonlyMap<string, number>
   today: Temporal.PlainDate
+  /** The share of the window's height a bottom sheet hides, so the focus person is centred in what stays in sight. */
+  coveredBottomShare?: number
+  /** The pixels a side sheet hides on the canvas's right, so the focus person is centred in what stays in sight. */
+  coveredRight?: number
 }
 
 /** The tree on a canvas to pan, pinch and zoom, and to walk through person by person with the arrow keys. */
 export const TreeCanvas: React.FC<TreeCanvasProps> = ({
+  coveredBottomShare = 0,
+  coveredRight = 0,
   focusId,
   label,
   litPath,
@@ -79,6 +102,9 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   const cardElements = useRef(new Map<string, HTMLElement>())
   const rails = useRef<HTMLDivElement>(null)
   const [activeKey, setActiveKey] = useState<string | null>(null)
+  /** Whether the visitor panned or zoomed since the canvas last centred itself: from then on a resize leaves the view where they put it. */
+  const hasVisitorMoved = useRef(false)
+  const centredScene = useRef<TreeScene | null>(null)
 
   const personCards = scene.layout.cards.filter(isPersonCard)
   const focusKey = focusKeyIn(scene, focusId)
@@ -86,13 +112,24 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     ? activeKey
     : focusKey
 
-  const centreOn = (key: string | null, animationMs: number) => {
+  const centreOn = (
+    key: string | null,
+    animationMs: number,
+    {
+      cover = { bottomShare: coveredBottomShare, right: coveredRight },
+      scale
+    }: { cover?: SheetCover; scale?: number } = {}
+  ) => {
     const element = key === null ? undefined : cardElements.current.get(key)
     const controls = viewport.current
     if (element === undefined || controls === null) return
     void controls.zoomToElement(
       element,
-      { scale: controls.state.scale },
+      {
+        offsetX: -cover.right / 2,
+        offsetY: -(cover.bottomShare * window.innerHeight) / 2,
+        scale: scale ?? controls.state.scale
+      },
       animationMs
     )
   }
@@ -128,13 +165,52 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     return true
   }
 
-  // Inside the refocus transition, so the stickers slide from where they were to the centre.
-  const centreOnFocusOf = useEffectEvent((placed: TreeScene) => {
-    if (!showLitPath(placed)) centreOn(focusKeyIn(placed, focusId), 0)
-  })
+  const centreOnArrival = () => {
+    hasVisitorMoved.current = false
+    if (!showLitPath(scene)) centreOn(focusKey, 0, { scale: ARRIVAL_SCALE })
+  }
+
+  // A new scene jumps, inside the refocus transition, so the stickers slide from where they were to the centre; a sheet opening or closing glides.
+  const centreOnFocusOf = useEffectEvent(
+    (placed: TreeScene, cover: SheetCover) => {
+      const isNewScene = placed !== centredScene.current
+      centredScene.current = placed
+      hasVisitorMoved.current = false
+      if (!showLitPath(placed)) {
+        centreOn(focusKeyIn(placed, focusId), isNewScene ? 0 : GLIDE_MS, {
+          cover
+        })
+      }
+    }
+  )
   useLayoutEffect(() => {
-    centreOnFocusOf(scene)
-  }, [scene])
+    centreOnFocusOf(scene, {
+      bottomShare: coveredBottomShare,
+      right: coveredRight
+    })
+  }, [scene, coveredBottomShare, coveredRight])
+
+  // The canvas can be measured before its stylesheet sizes it: until the visitor moves, a new size centres it again.
+  const centreAfterResize = useEffectEvent(() => {
+    if (!hasVisitorMoved.current) centreOnArrival()
+  })
+  useEffect(() => {
+    const wrapper = viewport.current?.instance.wrapperComponent
+    if (wrapper == null) return
+    let lastSize = ''
+    const observer = new ResizeObserver(() => {
+      const size = `${wrapper.clientWidth}x${wrapper.clientHeight}`
+      if (size === lastSize) return
+      lastSize = size
+      centreAfterResize()
+    })
+    observer.observe(wrapper)
+    return () => observer.disconnect()
+  }, [])
+
+  const noteVisitorMoved = () => {
+    hasVisitorMoved.current = true
+  }
 
   const registerCard = (key: string, element: HTMLElement | null) => {
     if (element === null) {
@@ -170,13 +246,15 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
         limitToBounds={false}
         maxScale={MAX_SCALE}
         minScale={MIN_SCALE}
-        onInit={() => {
-          if (!showLitPath(scene)) centreOn(focusKey, 0)
-        }}
+        onInit={centreOnArrival}
+        onPanningStart={noteVisitorMoved}
+        onPinchStart={noteVisitorMoved}
         onTransform={(_, { positionY, scale }) => {
           rails.current?.style.setProperty('--pan-y', `${positionY}px`)
           rails.current?.style.setProperty('--zoom', String(scale))
         }}
+        onWheelStart={noteVisitorMoved}
+        onZoomStart={noteVisitorMoved}
         ref={viewport}
       >
         {(controls) => (
