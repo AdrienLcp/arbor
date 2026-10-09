@@ -1,3 +1,5 @@
+@use '../../presentation/styles/typography'
+
 @layer components
   .me-summary
     align-items: start
@@ -16,3 +18,12 @@
     .text-link
       color: var(--ink)
       padding-block: 0.6em
+
+    // A button that reads like the sentence's link: inline, in the sentence's own type.
+    .button.me-summary-ask
+      color: var(--ink)
+      display: inline
+      font: inherit
+      @include typography.strong
+      min-height: 0
+      padding: 0.6em 0

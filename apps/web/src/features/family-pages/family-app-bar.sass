@@ -26,11 +26,25 @@
       @include layout.container-wide(40rem)
         font-size: var(--text-2xl)
 
+      // Beside six actions on a phone, the name needs the glyph's width more than the glyph.
+      .album-glyph
+        @include layout.container-narrow(30rem)
+          display: none
+
     .family-bar-name-text
       min-width: 0
       overflow: hidden
       text-overflow: ellipsis
       white-space: nowrap
+
+      // Beside six actions on a phone, the name takes two lines rather than an ellipsis after its first letter.
+      @include layout.container-narrow(30rem)
+        -webkit-box-orient: vertical
+        display: -webkit-box
+        font-size: var(--text-m)
+        -webkit-line-clamp: 2
+        line-clamp: 2
+        white-space: normal
 
     .family-bar-actions
       display: flex
@@ -38,5 +52,5 @@
       gap: var(--space-xs)
 
     .family-bar-action-label
-      @include layout.container-narrow(30rem)
+      @include layout.container-narrow(64rem)
         @include accessibility.visually-hidden

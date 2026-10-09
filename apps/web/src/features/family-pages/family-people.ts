@@ -11,11 +11,6 @@ export type ListedPerson = {
   person: Person
 }
 
-export type GenerationGroup = {
-  generation: number
-  people: ListedPerson[]
-}
-
 /** Names are French data: they sort the French way whatever language the interface speaks. */
 const FRENCH_NAMES = new Intl.Collator('fr', { sensitivity: 'base' })
 
@@ -70,23 +65,4 @@ export const binnedPeople = (
       person
     }))
     .toSorted(byName)
-}
-
-/** The same people, one group per generation. */
-export const groupedByGeneration = (
-  people: readonly ListedPerson[]
-): GenerationGroup[] => {
-  const groups = new Map<number, ListedPerson[]>()
-
-  for (const listed of people) {
-    groups.set(listed.generation, [
-      ...(groups.get(listed.generation) ?? []),
-      listed
-    ])
-  }
-
-  return Array.from(groups, ([generation, members]) => ({
-    generation,
-    people: members
-  })).toSorted((first, second) => first.generation - second.generation)
 }

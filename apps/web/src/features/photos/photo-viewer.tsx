@@ -79,7 +79,9 @@ export const PhotoViewer: React.FC<PhotoViewerProps> = ({
             <Button
               isBlock
               isPending={edit.isPending}
-              onPress={() => edit.save([toPortrait], close)}
+              onPress={() =>
+                edit.signFirst(() => edit.save([toPortrait], close))
+              }
             >
               <PersonIcon aria-hidden='true' />
               {translate('photos.makePortrait')}

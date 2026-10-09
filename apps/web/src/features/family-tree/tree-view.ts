@@ -10,10 +10,9 @@ import type { TreeLayout } from '@arbor/core/tree-layout/tree-layout'
  * - `'around'` — the focus person's ancestors above and descendants below, `depth` generations each way
  * - `'whole'` — the family as a descendancy from its widest founder
  * - `'list'` — the whole family as nested lists, the drawing's accessible twin
- *
- * A phone draws no canvas: it shows the focus person's page for both drawings.
+ * - `'spread'` — on a phone only, the focus person's page: one generation spread at a time
  */
-export type TreeScope = 'around' | 'list' | 'whole'
+export type TreeScope = 'around' | 'list' | 'spread' | 'whole'
 
 export type TreeView = {
   depth: number

@@ -1,17 +1,21 @@
 import { expect, test } from '@playwright/test'
 
-import { addRelative, openHydrated, waitForHydration } from './support/journeys'
+import {
+  addRelative,
+  openHydrated,
+  openSheetFromTree,
+  waitForHydration
+} from './support/journeys'
 import {
   addPhotoDialog,
   createFamilyPage,
   editPersonDialog,
-  familyHomePage,
   formDialog,
   homePage,
   personSheet,
   sharePage,
   treePage,
-  whoAmIPage
+  whoAmIDialog
 } from './support/locators'
 
 const PHONE = { height: 844, width: 390 }
@@ -57,8 +61,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   const link = await sharePage(founder).familyLink.innerText()
 
   await sharePage(founder).openTree.click()
-  await familyHomePage(founder).openTree.click()
-  await treePage(founder).openSheet(FOUNDER.givenNames).click()
+  await openSheetFromTree(founder, FOUNDER_NAME)
   const sheet = personSheet(founder)
 
   await addRelative(founder, 'A partner', FIRST_SPOUSE)
@@ -68,8 +71,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   ).toBeVisible()
 
   await openHydrated(relative, link)
-  await whoAmIPage(relative).person(FIRST_SPOUSE_NAME).click()
-  await familyHomePage(relative).openTree.click()
+  await expect(treePage(relative).sayWhoYouAre).toBeAttached()
 
   await addRelative(founder, 'A child', { givenNames: 'Rose' })
   await expect(
@@ -111,7 +113,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
     'the photo joins the sheet'
   ).toBeVisible()
 
-  await sheet.backToTree.click()
+  await sheet.close.click()
   for (const name of [FIRST_SPOUSE_NAME, SECOND_SPOUSE_NAME, CHILD_NAME]) {
     await expect(
       treePage(founder).person(name),
@@ -121,8 +123,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
 
   await relative.reload()
   await waitForHydration(relative)
-  await treePage(relative).person(FOUNDER_NAME).click()
-  await treePage(relative).openSheet(FOUNDER.givenNames).click()
+  await openSheetFromTree(relative, FOUNDER_NAME)
   const relativeSheet = personSheet(relative)
   for (const name of [SECOND_SPOUSE_NAME, CHILD_NAME]) {
     await expect(
@@ -134,9 +135,10 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   await expect(relativeSheet.photo(PHOTO_CAPTION)).toBeVisible()
 
   await relativeSheet.editPerson.click()
+  await whoAmIDialog(relative).person(FIRST_SPOUSE_NAME).click()
   const relativeEdit = editPersonDialog(relative)
   await relativeEdit.birthYear.fill('1947')
-  await treePage(founder).openSheet(FOUNDER.givenNames).click()
+  await openSheetFromTree(founder, FOUNDER_NAME)
   await sheet.editPerson.click()
   await edit.givenNames.fill(RENAMED_GIVEN_NAMES)
   await edit.save.click()
@@ -144,7 +146,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   await relativeEdit.save.click()
   await expect(formDialog(relative)).toBeHidden()
   await expect(
-    relative.getByRole('heading', { name: RENAMED_FOUNDER_NAME }),
+    relative.getByRole('heading', { exact: true, name: RENAMED_FOUNDER_NAME }),
     'a change made over an older sheet keeps what someone else changed meanwhile'
   ).toBeVisible()
   await expect(relative.getByText(/about 1947/i).first()).toBeVisible()

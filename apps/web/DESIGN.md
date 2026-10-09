@@ -253,7 +253,9 @@ Dark theme (`prefers-color-scheme: dark` unless `data-theme="light"`, or `data-t
 
 The page is a 1320px max-width column with 24px gutters (16px under 640px); sections are spaced by 88px (64px on phone). Breakpoints are 1100px (two-column layouts stack, the cover spread stops tilting) and 640px (single column everywhere, compact header).
 
-The tree is drawn in rows, one per generation, oldest at the top. By default it is drawn as on any family tree: stickers on the paper, the SVG relation lines and word pills underneath, nothing marking the rows. A "Générations" switch in the tree controls lays a full-width tinted band under each row, with a rail on the left (band head, year range, count); it is off by default because most people never read a family tree by generation. On a phone the tree is one spread at a time around a focus person: parents strip above, the focus person large in the middle (160 by 200px) between their unions, children strip below, with a spread bar in Generation Pine for moving between spreads and a sticky bottom dock for the main action.
+A family opens on its tree, on every screen: a canvas to pan, pinch and zoom, centred on the focus person at the stickers' own size. It is drawn in rows, one per generation, oldest at the top, as on any family tree: stickers on the paper, the SVG relation lines and word pills underneath, nothing marking the rows. Touching a person opens their sheet, where every change is made: on a computer a side sheet over the canvas's right, the tree still live beside it; on a phone a bottom sheet rising half way, the tree in sight above it, swiped up to read the rest or down to close. The head stays two rows at most: the title with its notes (who the visitor is, the demo's notice), then the controls; the family's history and bin are app bar actions.
+
+Generations are a secondary reading, never the default. A "Générations" switch on a computer lays a full-width tinted band under each row, with a rail on the left (band head, year range, count). On a phone, "Page par page" shows one spread at a time around a focus person: parents strip above, the focus person large in the middle (160 by 200px) between their unions, children strip below, with a spread bar in Generation Pine for moving between spreads.
 
 Slots have a fixed sticker ratio of roughly 3:4: 112 by 150px by default, 104 by 140 on the cover spread, 132 by 164 in phone rows, 124 by 158 in the sheet hero. The slot number sits above the slot, 18px tall.
 
@@ -273,6 +275,7 @@ Each shadow is a token holding the whole `box-shadow`, named by role in `_tokens
 - **Primary button** (`--shadow-button`, `--shadow-button-hovered`, `--shadow-button-pressed`; lifts 1px on hover, presses 1px down on active).
 - **Floating panels**: `--shadow-card` (the focus card), `--shadow-popover` (a list under a field), `--shadow-dialog`.
 - **Side sheet** (`--shadow-sheet`: `-24px 0 40px -30px var(--shadow-ink)`): the desktop person sheet sliding over the canvas.
+- **Bottom sheet** (`--shadow-bottom-sheet`: the side sheet's shadow turned upward): the phone person sheet, 20px top corners and a grab handle, over a 14% veil.
 
 ### Named Rules
 **The Stickers Stand Proud Rule.** Only stickers carry a gloss and a drop shadow. Bands, cards, lists, fields and panels are paper: flat, separated by rules and tints. If a new surface wants a shadow, it should either be a sticker or a floating panel.
@@ -303,7 +306,7 @@ The person. A `sticker`-white card (7px, 5px padding) inside a numbered slot. To
 An empty numbered slot: 2px dashed `ghost` outline, `paper-2` wash, "INCONNU" in Barlow 800, a one-line hint ("le père de Louis"), and a round "+ Compléter" pill. The whole slot is the button; hover darkens the outline to `ink`.
 
 ### Generation band
-Shown only when the "Générations" switch is on. A full-width strip tinted with the generation ink at 9% into paper, a 2px top border at 55%. Its head is the slanted band block ("GÉNÉRATION 3") with the year range and a count in `gc-ink` below it.
+Secondary: shown only when the "Générations" switch is on, or on the phone's "Page par page" spreads. A full-width strip tinted with the generation ink at 9% into paper, a 2px top border at 55%. Its head is the slanted band block ("GÉNÉRATION 3") with the year range and a count in `gc-ink` below it.
 
 ### Relation lines and pills
 SVG strokes in `line`, round caps (see The Line Speaks Rule). Union lines carry a pill: paper fill, 1.5px `line` border, Barlow 600 14px with the kind and year ("mariés 1957"); a dashed pill border for a free union.

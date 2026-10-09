@@ -8,8 +8,9 @@ import { describeKinship } from '@arbor/core/kinship/describe-kinship'
 import { kinStepsAlong } from '@arbor/core/kinship/kin-steps'
 import { familyLineage } from '@arbor/core/tree-layout/family-lineage'
 
-import { rememberedMyPersonId } from '@/features/family-access/remembered-families'
+import { personIdOfMe } from '@/features/family-access/family-access'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
+import { useWhoAmI } from '@/features/family-pages/who-am-i-provider'
 import type { PersonFace } from '@/features/family-tree/person-face'
 import { PersonSearch } from '@/features/family-tree/person-search'
 import { isInTree } from '@/features/family-tree/tree-view'
@@ -56,7 +57,8 @@ export const SheetKinship: React.FC<SheetKinshipProps> = ({
   const { familyId } = useOpenFamily()
   const [comparedId, setComparedId] = useState<EntityId | null>(null)
 
-  const myId = rememberedMyPersonId(familyId)
+  const { me } = useWhoAmI()
+  const myId = personIdOfMe(me)
   const youId = myId !== null && isInTree(family, myId) ? myId : null
   const ownId = youId === face.id ? null : youId
   const personId = comparedId ?? ownId

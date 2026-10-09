@@ -67,9 +67,8 @@ export const PersonPhotos: React.FC<PersonPhotosProps> = ({
   const photos = [...family.photos.values()].filter(
     (photo) => photo.personId === person.id
   )
-  const canAdd = edit.canEdit && edit.author !== null
 
-  if (photos.length === 0 && !canAdd) return null
+  if (photos.length === 0 && !edit.canEdit) return null
 
   return (
     <div className='sheet-group person-photos'>
@@ -89,10 +88,13 @@ export const PersonPhotos: React.FC<PersonPhotosProps> = ({
             portraitWord={translate('photos.portrait')}
           />
         ))}
-        {canAdd ? (
+        {edit.canEdit ? (
           <FileTrigger
             acceptedFileTypes={['image/*']}
-            onSelect={(files) => setPicked(files?.[0] ?? null)}
+            onSelect={(files) => {
+              const file = files?.[0]
+              if (file !== undefined) edit.signFirst(() => setPicked(file))
+            }}
           >
             <Button className='photo-drop-slot' variant='quiet'>
               <CameraIcon aria-hidden='true' />
@@ -109,7 +111,7 @@ export const PersonPhotos: React.FC<PersonPhotosProps> = ({
         person={person}
       />
       <PhotoViewer
-        canEdit={canAdd}
+        canEdit={edit.canEdit}
         edit={edit}
         name={name}
         onClose={() => setShownId(null)}

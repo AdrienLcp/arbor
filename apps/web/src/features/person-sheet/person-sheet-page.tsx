@@ -11,7 +11,7 @@ import {
   useSheetPersonId
 } from '@/infrastructure/router/navigation'
 import { Button } from '@/presentation/components/button'
-import { PreviousIcon } from '@/presentation/components/icons'
+import { ClearIcon } from '@/presentation/components/icons'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
@@ -21,7 +21,7 @@ import { useBinnedWhileOpen } from './use-binned-while-open'
 
 import './person-sheet-page.sass'
 
-/** A person's sheet, over the tree: on a phone it is the page, on a computer it slides in beside the album. */
+/** A person's sheet, over the tree: on a phone it rises from the bottom, on a computer it slides in beside the album. */
 export const PersonSheetPage: React.FC = () => {
   const translate = useTranslate()
   const { family: response, familyId } = useOpenFamily()
@@ -48,8 +48,8 @@ export const PersonSheetPage: React.FC = () => {
     <article className='person-sheet-page'>
       <div className='sheet-top'>
         <Button onPress={goBack} variant='quiet'>
-          <PreviousIcon aria-hidden='true' />
-          {translate('sheet.back')}
+          <ClearIcon aria-hidden='true' />
+          {translate('sheet.close')}
         </Button>
       </div>
       {!isShown ? (

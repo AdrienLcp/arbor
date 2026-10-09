@@ -35,9 +35,7 @@ export const PersonLine: React.FC<PersonLineProps> = ({
         <span className='person-line-name'>
           {personName(person) ?? translate('common.unnamedPerson')}
           {isMe ? (
-            <span className='person-line-me'>
-              {translate('familyHome.you')}
-            </span>
+            <span className='person-line-me'>{translate('me.you')}</span>
           ) : null}
         </span>
         {years === '' ? null : (

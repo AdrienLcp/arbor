@@ -8,9 +8,9 @@ import {
   type OperationRefusal
 } from '@arbor/protocol/operation-refusal'
 
-import { ONLOOKER } from '@/features/family-access/family-access'
-import { rememberedMe } from '@/features/family-access/remembered-families'
+import { rememberedAuthor } from '@/features/family-access/remembered-families'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
+import { useWhoAmI } from '@/features/family-pages/who-am-i-provider'
 import {
   type ApiFailure,
   readChangeLog,
@@ -63,8 +63,7 @@ export const useFamilyEdit = () => {
   const refreshFamily = useRefreshRouteData()
   const [isPending, startTransition] = useTransition()
   const [failure, setFailure] = useState<EditFailure | null>(null)
-  const me = rememberedMe(familyId)
-  const author = me === null || me === ONLOOKER ? null : me
+  const { author, signFirst } = useWhoAmI()
 
   const authorsSince = async (revision: number): Promise<Author[]> => {
     const log = await readChangeLog({ after: revision, familyId, key })
@@ -81,13 +80,14 @@ export const useFamilyEdit = () => {
     onSaved: () => void,
     afterRecording?: AfterRecording
   ) => {
-    if (author === null || operations.length === 0) return
+    const signer = rememberedAuthor(familyId)
+    if (signer === null || operations.length === 0) return
     const baseRevision = response.revision
     setFailure(null)
     startTransition(async () => {
       const recorded = await recordOperations({
         familyId,
-        input: { author, baseRevision, operations: [...operations] },
+        input: { author: signer, baseRevision, operations: [...operations] },
         key
       })
       if (recorded.status === 'success') {
@@ -120,7 +120,9 @@ export const useFamilyEdit = () => {
     dismissFailure: () => setFailure(null),
     failure,
     isPending,
-    save
+    save,
+    /** Opens a change: at once for a visitor who said who they are, after "Who are you?" for anyone else. */
+    signFirst
   }
 }
 

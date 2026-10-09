@@ -18,7 +18,7 @@ type EditUnionActionProps = {
   union: Union
 }
 
-/** The link that fixes a couple, under it on a sheet, for a relative who said who they are. */
+/** The link that fixes a couple, under it on a sheet, for anyone but a reader. */
 export const EditUnionAction: React.FC<EditUnionActionProps> = ({
   partnerNames,
   union
@@ -28,7 +28,7 @@ export const EditUnionAction: React.FC<EditUnionActionProps> = ({
   const edit = useFamilyEdit()
   const [isEditing, setIsEditing] = useState(false)
 
-  if (!edit.canEdit || edit.author === null) return null
+  if (!edit.canEdit) return null
 
   const closeEditing = () => {
     edit.dismissFailure()
@@ -39,7 +39,7 @@ export const EditUnionAction: React.FC<EditUnionActionProps> = ({
     <>
       <Button
         className='sheet-union-edit'
-        onPress={() => setIsEditing(true)}
+        onPress={() => edit.signFirst(() => setIsEditing(true))}
         variant='link'
       >
         <EditIcon aria-hidden='true' />

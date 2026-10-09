@@ -12,7 +12,6 @@ import {
   AddRelativeDialog
 } from '@/features/family-edits/add-relative-dialog'
 import { useFamilyEdit } from '@/features/family-edits/use-family-edit'
-import { WhoFirstNotice } from '@/features/family-edits/who-first-notice'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
 import type { PersonFace } from '@/features/family-tree/person-face'
 import { familyHistoryPathFor } from '@/infrastructure/router/navigation'
@@ -51,7 +50,7 @@ type SheetActionsProps = {
   person: Person
 }
 
-/** What a relative can do from a sheet; nothing on a reader's link, and first "who are you?" for an unsigned visitor. */
+/** What a relative can do from a sheet; nothing on a reader's link. A visitor who never said who they are is asked before the change opens. */
 export const SheetActions: React.FC<SheetActionsProps> = ({
   face,
   faces,
@@ -66,15 +65,6 @@ export const SheetActions: React.FC<SheetActionsProps> = ({
 
   if (!edit.canEdit) return null
 
-  if (edit.author === null) {
-    return (
-      <div className='sheet-actions'>
-        <WhoFirstNotice />
-        <HistoryLink familyId={familyId} personId={face.id} />
-      </div>
-    )
-  }
-
   const closeEditing = () => {
     edit.dismissFailure()
     setIsEditing(false)
@@ -82,11 +72,15 @@ export const SheetActions: React.FC<SheetActionsProps> = ({
 
   return (
     <div className='sheet-actions'>
-      <Button isBlock onPress={() => setAdding('choose')}>
+      <Button isBlock onPress={() => edit.signFirst(() => setAdding('choose'))}>
         <AddIcon aria-hidden='true' />
         {translate('add.open')}
       </Button>
-      <Button isBlock onPress={() => setIsEditing(true)} variant='ghost'>
+      <Button
+        isBlock
+        onPress={() => edit.signFirst(() => setIsEditing(true))}
+        variant='ghost'
+      >
         <EditIcon aria-hidden='true' />
         {translate('edit.person.open')}
       </Button>

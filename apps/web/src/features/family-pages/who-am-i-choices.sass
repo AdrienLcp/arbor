@@ -1,0 +1,39 @@
+@layer components
+  .who-am-i-choices
+    display: grid
+    gap: var(--space-l)
+
+    .who-am-i-no-match
+      color: var(--ink-soft)
+      padding-block: var(--space-xl)
+
+    .who-am-i-people
+      list-style: none
+      margin: 0
+      padding: 0
+
+      li + li
+        border-top: var(--hairline)
+
+    .button.who-am-i-person
+      justify-content: start
+      min-height: 4.75rem
+      padding-inline: var(--space-s)
+      width: 100%
+
+    // Stays in reach at the bottom of a long list; whatever scrolls it sets `--who-am-i-inset-start` and `--who-am-i-inset-end` to its own side paddings, so the band runs edge to edge.
+    .who-am-i-others
+      background: var(--paper)
+      border-top: var(--hairline)
+      bottom: var(--who-am-i-sticky-bottom, 0)
+      display: grid
+      gap: var(--space-s)
+      justify-items: center
+      margin-inline: calc(-1 * var(--who-am-i-inset-start, var(--gutter-left))) calc(-1 * var(--who-am-i-inset-end, var(--gutter-right)))
+      padding: var(--space-l) var(--who-am-i-inset-end, var(--gutter-right)) max(var(--space-xl), var(--safe-area-bottom)) var(--who-am-i-inset-start, var(--gutter-left))
+      position: sticky
+
+    .who-am-i-own-name
+      display: grid
+      gap: var(--space-l)
+      width: 100%

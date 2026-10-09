@@ -24,7 +24,9 @@ export const DemoNotice: React.FC<DemoNoticeProps> = ({ familyId }) => {
         <strong className='demo-notice-title'>
           {translate('demo.notice.title')}
         </strong>{' '}
-        {translate('demo.notice.body')}
+        <span className='demo-notice-body'>
+          {translate('demo.notice.body')}
+        </span>
       </span>
     </p>
   )

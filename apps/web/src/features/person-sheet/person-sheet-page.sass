@@ -2,26 +2,26 @@
 @use '../../presentation/styles/typography'
 
 @layer components
-  // On a phone the sheet fills the stage; on a computer it slides over the canvas's right side, a floating panel.
+  // On a phone the sheet is the content of a bottom sheet, which scrolls it; on a computer it slides over the canvas's right side, a floating panel.
   // On a phone the sheet reaches both sides of the screen; on a computer only the right one.
   .person-sheet-page
     --sheet-inset-end: var(--safe-area-right)
     --sheet-inset-start: var(--safe-area-left)
     background: var(--paper)
-    min-height: 0
-    overflow-y: auto
     padding-bottom: max(var(--space-2xl), var(--safe-area-bottom))
-    scrollbar-width: thin
 
     @include layout.wide
       --sheet-inset-start: 0px
       border-left: var(--stroke-thin) solid var(--ghost-soft)
       bottom: 0
       box-shadow: var(--shadow-sheet)
+      min-height: 0
+      overflow-y: auto
       position: absolute
       right: 0
+      scrollbar-width: thin
       top: 0
-      width: min(29.375rem, 100%)
+      width: min(var(--side-sheet-width), 100%)
       z-index: 2
 
     .sheet-top

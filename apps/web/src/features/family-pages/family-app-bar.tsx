@@ -1,6 +1,8 @@
 import type React from 'react'
 
 import {
+  familyBinPathFor,
+  familyHistoryPathFor,
   familyPathFor,
   familyPrintPathFor,
   familySettingsPathFor,
@@ -9,6 +11,8 @@ import {
 import { AlbumGlyph } from '@/presentation/components/album-glyph'
 import { ButtonLink } from '@/presentation/components/button-link'
 import {
+  BinIcon,
+  HistoryIcon,
   PrintIcon,
   SettingsIcon,
   ShareIcon
@@ -19,7 +23,7 @@ import { useOpenFamily } from './family-loader'
 
 import './family-app-bar.sass'
 
-/** The bar over every page of an open family: its name, back to its tree, and the ways to share and set it up. */
+/** The bar over every page of an open family: its name, back to its tree, what changed and the bin, and the ways to share and set it up. */
 export const FamilyAppBar: React.FC = () => {
   const translate = useTranslate()
   const { family, familyId } = useOpenFamily()
@@ -38,6 +42,25 @@ export const FamilyAppBar: React.FC = () => {
         aria-label={translate('familyBar.label')}
         className='family-bar-actions'
       >
+        {family.role === 'reader' ? null : (
+          <>
+            <ButtonLink
+              href={familyHistoryPathFor({ familyId })}
+              variant='quiet'
+            >
+              <HistoryIcon aria-hidden='true' />
+              <span className='family-bar-action-label'>
+                {translate('familyBar.history')}
+              </span>
+            </ButtonLink>
+            <ButtonLink href={familyBinPathFor(familyId)} variant='quiet'>
+              <BinIcon aria-hidden='true' />
+              <span className='family-bar-action-label'>
+                {translate('familyBar.bin')}
+              </span>
+            </ButtonLink>
+          </>
+        )}
         <ButtonLink href={familySharePathFor(familyId)} variant='quiet'>
           <ShareIcon aria-hidden='true' />
           <span className='family-bar-action-label'>

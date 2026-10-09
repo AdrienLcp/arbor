@@ -1,6 +1,11 @@
 import { expect, type Page } from '@playwright/test'
 
-import { addRelativeDialog, formDialog, personSheet } from './locators'
+import {
+  addRelativeDialog,
+  formDialog,
+  personSheet,
+  treePage
+} from './locators'
 
 /** The page has hydrated: a press before it would land on server markup that does nothing. */
 export const waitForHydration = (page: Page) =>
@@ -9,6 +14,21 @@ export const waitForHydration = (page: Page) =>
 export const openHydrated = async (page: Page, url: string): Promise<void> => {
   await page.goto(url)
   await waitForHydration(page)
+}
+
+/**
+ * Opens a person's sheet from the tree and raises it to its whole height, as a
+ * swipe up does: half open, what lies under its fold is out of reach. The
+ * keyboard raises it here, a headless browser having no finger to swipe with.
+ */
+export const openSheetFromTree = async (
+  page: Page,
+  name: string
+): Promise<void> => {
+  await treePage(page).person(name).click()
+  await expect(page.locator('.bottom-sheet-content')).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(page.locator('.bottom-sheet')).toHaveAttribute('data-expanded')
 }
 
 /** Adds a relative from the open sheet, through the "add" dialog, and waits for it to close. */

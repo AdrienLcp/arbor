@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import type { Author } from '@arbor/protocol/change-log'
 import { DEMO_FAMILY_ID, DEMO_FAMILY_KEY } from '@arbor/protocol/demo-family'
 
 import {
@@ -8,6 +9,9 @@ import {
   keysToTry,
   keysToTryFor,
   NO_FAMILY_ACCESS,
+  ONLOOKER,
+  personIdOfMe,
+  signingAuthor,
   withReceivedKey
 } from './family-access'
 
@@ -84,5 +88,27 @@ describe('family access', () => {
       DEMO_FAMILY_KEY
     ])
     expect(keysToTryFor('other-family-aaaaaaaaa', NO_FAMILY_ACCESS)).toEqual([])
+  })
+
+  it('[family-access] signs a change only for a visitor who said who they are in the tree', () => {
+    const person: Author = {
+      kind: 'person',
+      personId: 'person-aaaaaaaaaaaaaaa'
+    }
+    const named: Author = { kind: 'named', name: 'Claire Morel' }
+
+    expect(signingAuthor(null)).toBeNull()
+    expect(signingAuthor(ONLOOKER)).toBeNull()
+    expect(signingAuthor(person)).toEqual(person)
+    expect(signingAuthor(named)).toEqual(named)
+  })
+
+  it('[family-access] knows the visitor’s person only when they tapped one', () => {
+    expect(
+      personIdOfMe({ kind: 'person', personId: 'person-aaaaaaaaaaaaaaa' })
+    ).toBe('person-aaaaaaaaaaaaaaa')
+    expect(personIdOfMe({ kind: 'named', name: 'Claire Morel' })).toBeNull()
+    expect(personIdOfMe(ONLOOKER)).toBeNull()
+    expect(personIdOfMe(null)).toBeNull()
   })
 })

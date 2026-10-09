@@ -8,7 +8,6 @@ import { familyStateOfSnapshot } from '@arbor/core/family/family-state-of-snapsh
 import { EditFailureNotice } from '@/features/family-edits/edit-failure-notice'
 import { useAuthorName } from '@/features/family-edits/use-author-name'
 import { useFamilyEdit } from '@/features/family-edits/use-family-edit'
-import { WhoFirstNotice } from '@/features/family-edits/who-first-notice'
 import { FamilyAppBar } from '@/features/family-pages/family-app-bar'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
 import { binnedPeople } from '@/features/family-pages/family-people'
@@ -115,11 +114,8 @@ export const BinPage: React.FC = () => {
           <p className='bin-intro'>{translate('binPage.intro')}</p>
           <ButtonLink href={familyHistoryPathFor({ familyId })} variant='link'>
             <HistoryIcon aria-hidden='true' />
-            {translate('familyHome.history')}
+            {translate('familyBar.history')}
           </ButtonLink>
-          {edit.author === null && people.length > 0 ? (
-            <WhoFirstNotice />
-          ) : null}
         </div>
         <div className='bin-news' role='status'>
           {restored === null ? null : (
@@ -161,17 +157,15 @@ export const BinPage: React.FC = () => {
                       </ul>
                     </div>
                   )}
-                  {edit.author === null ? null : (
-                    <Button
-                      isDisabled={edit.isPending && restoring !== id}
-                      isPending={edit.isPending && restoring === id}
-                      onPress={() => takeOut(id)}
-                      variant='ghost'
-                    >
-                      <UnbinIcon aria-hidden='true' />
-                      {translate('binPage.restore')}
-                    </Button>
-                  )}
+                  <Button
+                    isDisabled={edit.isPending && restoring !== id}
+                    isPending={edit.isPending && restoring === id}
+                    onPress={() => edit.signFirst(() => takeOut(id))}
+                    variant='ghost'
+                  >
+                    <UnbinIcon aria-hidden='true' />
+                    {translate('binPage.restore')}
+                  </Button>
                   {restoring === id && edit.failure !== null ? (
                     <EditFailureNotice failure={edit.failure} />
                   ) : null}

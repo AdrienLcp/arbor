@@ -52,9 +52,11 @@ not that strangers are kept out by a login.
   printed QR code), **contributor** (the family link), **keeper**.
 - The keeper can **replace** the family link: the old one stops working at once
   (a leaked link is a one-tap fix). Several keepers are possible.
-- On first visit, the app asks **"Who are you in this tree?"** and the visitor
-  taps their own person (or "not in the tree yet"). Every change is signed with
-  that choice — unverified, but enough to know who did what.
+- The link opens the tree, never a list of people. The app asks **"Who are you
+  in this tree?"** before the visitor's first change, or when they offer to say
+  it, and the visitor taps their own person (or "not in the tree yet"). Every
+  change is signed with that choice — unverified, but enough to know who did
+  what.
 - Sharing: copy, the system share sheet (WhatsApp, SMS, mail) and a QR code.
 
 ## Nothing is ever lost

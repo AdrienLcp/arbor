@@ -20,13 +20,15 @@
       opacity: 0
 
   // A floating panel on a computer; on a phone the whole screen, so the keyboard never hides a field.
+  // A column, not a grid: an auto grid row grows with the form and the max-height clips it, while a flex item shrinks into it and lets the body scroll.
   .form-dialog-modal
     --dialog-inset-bottom: var(--safe-area-bottom)
     --dialog-inset-left: var(--safe-area-left)
     --dialog-inset-right: var(--safe-area-right)
     --dialog-inset-top: var(--safe-area-top)
     background: var(--paper)
-    display: grid
+    display: flex
+    flex-direction: column
     height: 100dvh
     min-height: 0
     transition: translate var(--transition-base) var(--ease-out)
@@ -50,6 +52,7 @@
 
   .form-dialog
     display: grid
+    flex: 1 1 auto
     grid-template-rows: auto minmax(0, 1fr)
     min-height: 0
     outline: none
