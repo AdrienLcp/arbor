@@ -27,9 +27,14 @@ $barlow-metrics: (ascent: 1, descent: 0.2, cap-height: 0.7)
 
   // Each width ratio is a static file at its own weight against the family's one size-adjust, over
   // Arial Bold from 650, measured over the text that weight sets on the demo family's pages, uppercase
-  // where the voice transforms it. Barlow's ratios leave out its tabular figures, which are far wider
-  // than Arial's: matched on them, every uppercase label would set wider in the fallback and wrap.
-  // Italic sets no text there, and is measured over the French dictionary and the demo family.
-  @include fonts.fallback-faces('Atkinson Hyperlegible', $atkinson-metrics, 0.993717, (400 649: 1.0035, 650 700: 1.0051))
+  // where the voice transforms it. Three ratios are set by the lines that fill their box instead, since
+  // one phrase can stand 3 % off its weight's average: Atkinson's 400 sits between the birth date and
+  // place on a phone's sheet, which wraps in the fallback under 1.0041, and the hint of the landing's
+  // empty slot, which keeps a line too few over 1.0091; Barlow's 700 is measured over a sheet's labels,
+  // where the add-photo label fills its slot, and its 800 over the title of the landing's empty slot,
+  // which fills it. Barlow's letter ratios leave out its tabular figures, far wider than Arial's:
+  // $figures gives the digits their own face, measured with tnum and lnum as they are set. Italic sets
+  // no text there, and is measured over the French dictionary and the demo family.
+  @include fonts.fallback-faces('Atkinson Hyperlegible', $atkinson-metrics, 0.993717, (400 649: 1.0052, 650 700: 1.0051))
   @include fonts.fallback-faces('Atkinson Hyperlegible', $atkinson-metrics, 0.993717, (400 649: 1.001), $style: italic)
-  @include fonts.fallback-faces('Barlow Condensed', $barlow-metrics, 0.764916, (600 649: 1.1556, 650 749: 1.1343, 750 800: 1.1157))
+  @include fonts.fallback-faces('Barlow Condensed', $barlow-metrics, 0.764916, (600 649: 1.1556, 650 749: 1.1252, 750 800: 1.1322), $figures: (600 649: 0.8956, 650 749: 0.8542, 750 800: 0.8181))
