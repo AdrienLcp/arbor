@@ -162,9 +162,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  '@adrienlcp/i18n@0.5.2': 5674523aa3591198446cd93597bb906df56d7f314d583ef9b524d999a7be6bfa
-
 importers:
 
   .:
@@ -212,8 +209,8 @@ importers:
         specifier: ^0.2.1
         version: 0.2.1(react@19.3.0)
       '@adrienlcp/i18n':
-        specifier: ^0.5.2
-        version: 0.5.2(patch_hash=5674523aa3591198446cd93597bb906df56d7f314d583ef9b524d999a7be6bfa)
+        specifier: ^0.6.0
+        version: 0.6.0
       '@adrienlcp/react':
         specifier: ^0.4.0
         version: 0.4.0(react@19.3.0)
@@ -387,8 +384,8 @@ packages:
       react:
         optional: true
 
-  '@adrienlcp/i18n@0.5.2':
-    resolution: {integrity: sha512-xKNWqkmLiKbfEYe594r+zupwa0x1RQQPED0Si+TmtwLY/SG3RPxKXMNk/2xkj9ZxVEZaEfYbxRK58y805crhHw==}
+  '@adrienlcp/i18n@0.6.0':
+    resolution: {integrity: sha512-VUTCGrYuQ/3FWdsOG/M/Zuk0cXzARcCdatOtOrp+Q9rX9lpwc40jLbU2toE3aXFIYqlo6SZVHu9weI6Omg0Sng==}
 
   '@adrienlcp/react-aria@0.4.1':
     resolution: {integrity: sha512-PgSK2vIRFT7IOTBtjLXrQ5ANIpI9MQVReTSs0Gbu/yp6V+qZXwG52p524metL9Cls6O5tx05P5WsghmYK7Ia/w==}
@@ -3023,7 +3020,7 @@ snapshots:
     optionalDependencies:
       react: 19.3.0
 
-  '@adrienlcp/i18n@0.5.2(patch_hash=5674523aa3591198446cd93597bb906df56d7f314d583ef9b524d999a7be6bfa)': {}
+  '@adrienlcp/i18n@0.6.0': {}
 
   '@adrienlcp/react-aria@0.4.1(react-aria-components@1.22.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)(sass@1.105.1)':
     dependencies:
