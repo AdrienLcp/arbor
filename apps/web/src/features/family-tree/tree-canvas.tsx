@@ -33,6 +33,7 @@ import { useMediaQuery } from '@/presentation/components/use-media-query'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { type CanvasLinking, LINK_DRAG_START_CLASS } from './canvas-linking'
+import { fitView } from './fit-view'
 import { GenerationRails } from './generation-rails'
 import { arrowDirectionOf, nearestCardToward } from './nearest-card'
 import { placementOf } from './scene-placement'
@@ -106,6 +107,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   const viewport = useRef<ReactZoomPanPinchRef>(null)
   const cardElements = useRef(new Map<string, HTMLElement>())
   const rails = useRef<HTMLDivElement>(null)
+  const zoomTools = useRef<HTMLDivElement>(null)
   const [activeKey, setActiveKey] = useState<string | null>(null)
   /** Whether the visitor panned or zoomed since the canvas last centred itself: from then on a resize leaves the view where they put it. */
   const hasVisitorMoved = useRef(false)
@@ -183,6 +185,55 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
       0
     )
     return true
+  }
+
+  /** Fits every card in the part of the canvas left in sight by the zoom column, the focus card and a phone's sheet. */
+  const showWholeTree = () => {
+    const controls = viewport.current
+    const wrapper = controls?.instance.wrapperComponent
+    if (controls == null || wrapper == null) return
+    const { cards } = scene.layout
+    if (cards.length === 0) return
+
+    const canvas = wrapper.getBoundingClientRect()
+    const band = visibleBandOf({
+      canvas,
+      coveredBottomShare,
+      windowHeight: window.innerHeight
+    })
+    const bandTop = canvas.height / 2 + band.centreOffset - band.height / 2
+    const toolsLeft = zoomTools.current?.getBoundingClientRect().left
+    const focusCardTop = document
+      .querySelector('.focus-card')
+      ?.getBoundingClientRect().top
+    const fitted = fitView({
+      content: {
+        bottom:
+          Math.max(...cards.map(({ y }) => y + CARD_HEIGHT)) - scene.origin.y,
+        left: Math.min(...cards.map(({ x }) => x)) - scene.origin.x,
+        right:
+          Math.max(...cards.map(({ x }) => x + CARD_WIDTH)) - scene.origin.x,
+        top: Math.min(...cards.map(({ y }) => y)) - scene.origin.y
+      },
+      margin: BAND_MARGIN,
+      maxScale: MAX_SCALE,
+      minScale: MIN_SCALE,
+      view: {
+        bottom: Math.min(
+          bandTop + band.height,
+          focusCardTop === undefined
+            ? Number.POSITIVE_INFINITY
+            : focusCardTop - canvas.top
+        ),
+        left: 0,
+        right:
+          toolsLeft === undefined
+            ? canvas.width
+            : Math.min(canvas.width, toolsLeft - canvas.left),
+        top: bandTop
+      }
+    })
+    controls.setTransform(fitted.x, fitted.y, fitted.scale, GLIDE_MS)
   }
 
   const centreOnArrival = () => {
@@ -312,6 +363,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
               aria-label={translate('tree.zoom.label')}
               className='tree-zoom'
               orientation='vertical'
+              ref={zoomTools}
             >
               {linkTool}
               <Button
@@ -343,7 +395,10 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
               </Button>
               <Button
                 aria-label={translate('tree.zoom.fit')}
-                onPress={() => void controls.fitToView()}
+                onPress={() => {
+                  noteVisitorMoved()
+                  showWholeTree()
+                }}
                 variant='quiet'
               >
                 <FitIcon aria-hidden='true' />

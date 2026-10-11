@@ -275,6 +275,7 @@ export const FR_DICTIONARY = defineDictionary({
     bin: 'La corbeille',
     history: 'Ce qui a changé',
     label: 'Arbre',
+    more: 'Plus',
     print: 'Imprimer',
     settings: 'Réglages',
     share: 'Partager'

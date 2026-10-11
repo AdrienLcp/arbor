@@ -1,4 +1,5 @@
 @use '@adrienlcp/styles/accessibility'
+@use '../../presentation/styles/focus'
 @use '../../presentation/styles/layout'
 @use '../../presentation/styles/typography'
 
@@ -26,18 +27,13 @@
       @include layout.container-wide(40rem)
         font-size: var(--text-2xl)
 
-      // Beside six actions on a phone, the name needs the mark's width more than the mark.
-      .tree-mark
-        @include layout.container-narrow(30rem)
-          display: none
-
     .family-bar-name-text
       min-width: 0
       overflow: hidden
       text-overflow: ellipsis
       white-space: nowrap
 
-      // Beside six actions on a phone, the name takes two lines rather than an ellipsis after its first letter.
+      // A family name too long for a phone's bar takes two lines rather than an ellipsis.
       @include layout.container-narrow(30rem)
         -webkit-box-orient: vertical
         display: -webkit-box
@@ -54,3 +50,52 @@
     .family-bar-action-label
       @include layout.container-narrow(64rem)
         @include accessibility.visually-hidden
+
+    .family-bar-folded
+      @include layout.container-narrow(30rem)
+        display: none
+
+    .button.family-bar-more
+      display: none
+
+      @include layout.container-narrow(30rem)
+        display: inline-flex
+
+  .family-bar-menu-popover
+    background: var(--paper)
+    border: var(--stroke-thin) solid var(--ghost)
+    border-radius: var(--radius-frame)
+    box-shadow: var(--shadow-popover)
+    padding: var(--space-xs)
+    transition: opacity var(--transition-fast) var(--ease-out)
+
+    &[data-entering],
+    &[data-exiting]
+      opacity: 0
+
+  .family-bar-menu
+    display: grid
+    outline: none
+
+  .family-bar-menu-item
+    @include typography.body
+    align-items: center
+    border-radius: var(--radius-control)
+    color: var(--ink)
+    cursor: pointer
+    display: flex
+    gap: var(--space-s)
+    min-height: var(--target)
+    outline: none
+    padding: var(--space-xs) var(--space-l) var(--space-xs) var(--space-m)
+    text-decoration: none
+
+    svg
+      flex: none
+      height: 1.25rem
+      width: 1.25rem
+
+    &[data-focused]
+      background: var(--paper-2)
+
+    @include focus.ring-inset

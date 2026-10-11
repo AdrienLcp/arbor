@@ -271,6 +271,7 @@ export const EN_DICTIONARY = defineDictionary({
     bin: 'The bin',
     history: 'What changed',
     label: 'Tree',
+    more: 'More',
     print: 'Print',
     settings: 'Settings',
     share: 'Share'

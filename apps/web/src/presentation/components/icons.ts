@@ -11,6 +11,7 @@ export {
   ClipboardPaste as PasteIcon,
   Copy as CopyIcon,
   Download as DownloadIcon,
+  Ellipsis as MoreIcon,
   Expand as FitIcon,
   Eye as LookIcon,
   History as HistoryIcon,
