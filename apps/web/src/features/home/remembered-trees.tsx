@@ -9,9 +9,9 @@ import {
 } from '@/features/family-access/family-access'
 import { rememberedFamilyList } from '@/features/family-access/remembered-families'
 import { familyPathFor } from '@/infrastructure/router/navigation'
-import { AlbumGlyph } from '@/presentation/components/album-glyph'
 import { ButtonLink } from '@/presentation/components/button-link'
 import { ChevronIcon } from '@/presentation/components/icons'
+import { TreeMark } from '@/presentation/components/tree-mark'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import './remembered-trees.sass'
@@ -56,7 +56,7 @@ export const RememberedTrees: React.FC = () => {
               href={familyPathFor(familyId)}
               variant='quiet'
             >
-              <AlbumGlyph />
+              <TreeMark />
               <span className='tree-text'>
                 <span className='tree-name'>
                   {access.name ?? translate('common.unnamedTree')}

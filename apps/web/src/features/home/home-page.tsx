@@ -4,10 +4,10 @@ import { useId } from 'react'
 import { DEMO_FAMILY_ID } from '@arbor/protocol/demo-family'
 
 import { familyPathFor, paths } from '@/infrastructure/router/navigation'
-import { AlbumGlyph } from '@/presentation/components/album-glyph'
 import { ButtonLink } from '@/presentation/components/button-link'
 import { AddIcon, LookIcon, PasteIcon } from '@/presentation/components/icons'
 import { Main } from '@/presentation/components/main'
+import { TreeMark } from '@/presentation/components/tree-mark'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
@@ -29,7 +29,7 @@ export const HomePage: React.FC = () => {
       <RememberedTrees />
       <section aria-labelledby={titleId} className='album-cover'>
         <p className='cover-brand'>
-          <AlbumGlyph isOnCover />
+          <TreeMark isOnCover />
           {translate('app.name')}
         </p>
         <div className='cover-words'>

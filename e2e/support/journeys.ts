@@ -16,6 +16,26 @@ export const openHydrated = async (page: Page, url: string): Promise<void> => {
   await waitForHydration(page)
 }
 
+const isInViewport = async (page: Page, name: string): Promise<boolean> => {
+  const box = await treePage(page).person(name).boundingBox()
+  const viewport = page.viewportSize()
+  if (box === null || viewport === null) return false
+  return (
+    box.x >= 0 &&
+    box.y >= 0 &&
+    box.x + box.width <= viewport.width &&
+    box.y + box.height <= viewport.height
+  )
+}
+
+/** A phone shows three stickers across: someone off screen is found by name, as a visitor would rather than pan. */
+const bringIntoView = async (page: Page, name: string): Promise<void> => {
+  if (await isInViewport(page, name)) return
+  await treePage(page).find.fill(name)
+  await page.getByRole('option', { name }).click()
+  await expect(treePage(page).person(name)).toBeInViewport()
+}
+
 /**
  * Opens a person's sheet from the tree and raises it to its whole height, as a
  * swipe up does: half open, what lies under its fold is out of reach. The
@@ -25,6 +45,7 @@ export const openSheetFromTree = async (
   page: Page,
   name: string
 ): Promise<void> => {
+  await bringIntoView(page, name)
   await treePage(page).person(name).click()
   await expect(page.locator('.bottom-sheet-content')).toBeFocused()
   await page.keyboard.press('Tab')

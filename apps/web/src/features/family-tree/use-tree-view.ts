@@ -19,16 +19,19 @@ export const useTreeView = ({
   initialFocusId,
   isInTree,
   myPersonId,
-  shownPersonId
+  shownPersonId,
+  turnsToMe
 }: {
   /** Where the tree turns when the person in its middle leaves it, put in the bin. */
   fallbackFocusId: EntityId | null
   isInTree: (personId: EntityId) => boolean
   initialFocusId: EntityId
-  /** The person the visitor says they are: once they say it, the tree turns around them, unless a sheet holds it. */
+  /** The person the visitor says they are: once they say it, the tree turns around them when `turnsToMe` lets it. */
   myPersonId: EntityId | null
   /** The person whose sheet is open over the tree: the tree turns to them, so closing the sheet lands on their page. */
   shownPersonId: EntityId | null
+  /** Whether saying who they are turns the tree to the visitor: not while a sheet is open, nor when they answered before a change, which holds the tree on what they are changing. */
+  turnsToMe: boolean
 }): TreeViewControls => {
   const [view, setView] = useState<TreeView>({
     focusId: initialFocusId,
@@ -47,7 +50,7 @@ export const useTreeView = ({
 
   if (myPersonId !== followedMeId) {
     setFollowedMeId(myPersonId)
-    if (myPersonId !== null && shownPersonId === null && isInTree(myPersonId)) {
+    if (myPersonId !== null && turnsToMe && isInTree(myPersonId)) {
       setView((current) => ({ ...current, focusId: myPersonId }))
     }
   }

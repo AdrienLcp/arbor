@@ -20,6 +20,22 @@ const FALLBACK_FACES_WRITTEN_BY_HAND = new Set([
 
 const WORKER_ORIGIN = 'http://127.0.0.1:8790'
 
+/**
+ * The dev server injects styles by script, after the server markup has
+ * painted, and Chrome never swaps in an `optional` face once the page has
+ * painted: a page that paints early, like the print page, would keep the
+ * fallback for good. A build links its styles ahead of the first paint.
+ */
+const swapFontsWhileServing = {
+  apply: 'serve' as const,
+  enforce: 'post' as const,
+  name: 'arbor:swap-fonts-while-serving',
+  transform: (code: string, id: string) =>
+    /\.(sass|css)(\?|$)/.test(id)
+      ? code.replace(/font-display:\s*optional/g, 'font-display: swap')
+      : null
+}
+
 const SCREEN_SIZES_MODULE = new URL('arbor:screen-sizes')
 
 /** Hands `_layout.sass` the breakpoints the scripts' media queries read, from their one source. */
@@ -59,7 +75,8 @@ export default defineConfig({
       enforce: 'pre'
     },
     react({ compiler: { logDiagnostics: true } }),
-    themePreferencePlugin(themeStore)
+    themePreferencePlugin(themeStore),
+    swapFontsWhileServing
   ],
   resolve: {
     alias: {

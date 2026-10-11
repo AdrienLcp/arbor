@@ -2,8 +2,8 @@ import type React from 'react'
 
 import { paths } from '@/infrastructure/router/navigation'
 
-import { AlbumGlyph } from './components/album-glyph'
 import { ButtonLink } from './components/button-link'
+import { TreeMark } from './components/tree-mark'
 import { useTranslate } from './i18n/i18n-context'
 
 import './site-header.sass'
@@ -20,7 +20,7 @@ export const SiteHeader: React.FC = () => {
         href={paths.home}
         variant='quiet'
       >
-        <AlbumGlyph />
+        <TreeMark />
         {translate('app.name')}
       </ButtonLink>
     </header>

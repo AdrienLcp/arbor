@@ -72,6 +72,14 @@ describe('[tree-layout] around a person', () => {
     )
   })
 
+  it('[tree-layout] names the child whose other parent is unknown', () => {
+    const unknown = around(demoFamily(), 'rene-morel').cards.filter(
+      (card) => card.kind === 'unknown-parent'
+    )
+
+    expect(unknown).toMatchObject([{ childIds: ['rene-morel'] }])
+  })
+
   it('[tree-layout] centres a person’s parents above them', () => {
     const layout = around(demoFamily(), 'anne-morel')
     const descent = layout.connectors.find(

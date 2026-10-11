@@ -24,6 +24,28 @@ export const FR_DICTIONARY = defineDictionary({
       foster: 'Accueil',
       step: 'Élevé'
     },
+    existing: {
+      chooseFirst: 'Touchez une personne de la liste',
+      noMatch: 'Personne ne porte ce nom dans l’arbre.',
+      people: 'Les personnes de l’arbre',
+      refused: {
+        already_partners: 'Ce couple existe déjà.',
+        already_siblings: 'Déjà frère ou sœur, par les mêmes parents.',
+        ancestry_cycle:
+          'Impossible : quelqu’un deviendrait son propre ancêtre.',
+        duplicate_filiation: 'Ce lien existe déjà.',
+        no_known_parent: 'Ajoutez d’abord un de ses parents.',
+        other: 'Ce lien n’est pas possible.',
+        same_person: 'C’est la même personne.',
+        too_many_birth_parents: 'Cela ferait trois parents de naissance.'
+      },
+      save: 'Relier à {name}',
+      search: {
+        clear: 'Effacer',
+        label: 'Chercher par nom',
+        placeholder: 'Prénom ou nom'
+      }
+    },
     linkKind: 'Son lien avec {name}',
     open: 'Ajouter un enfant, un parent, un conjoint…',
     otherChoice: 'Choisir un autre lien',
@@ -64,6 +86,11 @@ export const FR_DICTIONARY = defineDictionary({
     save: 'Ajouter à l’arbre',
     siblingParents: 'Enfant de {names}, comme {name}.',
     title: 'Ajouter un proche de {name}',
+    who: {
+      existing: 'Quelqu’un déjà dans l’arbre',
+      label: 'Qui est-ce ?',
+      new: 'Une nouvelle personne'
+    },
     withPartner: 'Avec {name}',
     withWhom: 'Avec qui ?'
   },
@@ -104,18 +131,38 @@ export const FR_DICTIONARY = defineDictionary({
     unnamedTree: 'Arbre sans nom'
   },
   createFamily: {
-    givenNames: 'Votre prénom',
-    givenNamesMissing: 'Écrivez votre prénom.',
+    creatorName: {
+      field: 'Votre prénom et votre nom',
+      hint: 'Ils signeront vos modifications : la famille saura qui a fait quoi.',
+      missing: 'Écrivez votre prénom et votre nom.'
+    },
     intro:
-      'Commencez par vous : vous serez la première personne de l’arbre. Les autres suivront.',
+      'Une première personne, et les autres suivront : vous-même, ou un grand-parent, un ancêtre…',
+    me: {
+      givenNames: 'Votre prénom',
+      givenNamesMissing: 'Écrivez votre prénom.',
+      previewHint: 'vous',
+      previewLabel: 'Votre vignette',
+      surname: 'Votre nom de famille',
+      surnameHint: 'Celui que vous portez aujourd’hui.'
+    },
     preview: {
-      hint: 'vous',
-      label: 'Votre vignette',
       title: 'À coller'
     },
+    someoneElse: {
+      givenNames: 'Son prénom',
+      givenNamesMissing: 'Écrivez son prénom.',
+      previewHint: 'la première personne',
+      previewLabel: 'La première vignette',
+      surname: 'Son nom de famille',
+      surnameHint: 'Celui que la famille connaît.'
+    },
+    startsWith: {
+      label: 'Par qui commence l’arbre ?',
+      me: 'Par moi',
+      someoneElse: 'Par quelqu’un d’autre'
+    },
     submit: 'Créer l’arbre',
-    surname: 'Votre nom de famille',
-    surnameHint: 'Celui que vous portez aujourd’hui.',
     title: 'Créer l’arbre de votre famille',
     treeName: 'Nom de l’arbre',
     treeNameHint: 'Il s’affiche en haut de l’arbre et sur la feuille imprimée.',
@@ -527,8 +574,7 @@ export const FR_DICTIONARY = defineDictionary({
     spread: {
       eldest: 'l’aîné que vous connaissez',
       firstChild: 'leur premier enfant',
-      generation: 'Génération {number:number}',
-      hint: 'Chaque personne a sa place numérotée, même celles qu’on ne connaît pas encore.',
+      hint: 'Chaque personne a sa place, même celles qu’on ne connaît pas encore.',
       otherChild: 'un autre enfant',
       partner: 'son épouse ou son époux',
       slotTitle: 'À coller'
@@ -567,6 +613,44 @@ export const FR_DICTIONARY = defineDictionary({
     showInTree: 'Voir le chemin dans l’arbre',
     title: 'Lien de parenté',
     you: 'Vous'
+  },
+  link: {
+    banner: {
+      cancel: 'Annuler',
+      drag: 'ou tirez un trait d’une vignette à l’autre',
+      first: {
+        couple: 'Touchez la première personne du couple',
+        parentChild: 'Touchez le parent',
+        siblings: 'Touchez l’un des deux'
+      },
+      refused: '{name} : {reason}',
+      second: {
+        couple: 'Touchez la personne en couple avec {name}',
+        parentChild: 'Touchez l’enfant de {name}',
+        siblings: 'Touchez le frère ou la sœur de {name}'
+      }
+    },
+    choose: {
+      couple: { hint: 'mariage, PACS ou union libre', title: 'Couple' },
+      parentChild: {
+        hint: 'vous toucherez le parent, puis son enfant',
+        title: 'Parent → enfant'
+      },
+      siblings: {
+        hint: 'deux enfants des mêmes parents',
+        title: 'Frère / sœur'
+      },
+      title: 'Quel lien ajouter ?'
+    },
+    confirm: {
+      couple: '{first} et {second} forment un couple.',
+      other: 'Choisir une autre personne',
+      parentChild: '{child} devient l’enfant de {parent}.',
+      save: 'Oui, relier',
+      siblings: '{relative} devient l’enfant de {parents}, comme {anchor}.',
+      title: 'Ajouter ce lien ?'
+    },
+    open: 'Lien'
   },
   me: {
     change: 'Changer',
@@ -639,7 +723,7 @@ export const FR_DICTIONARY = defineDictionary({
       adoption: 'Enfant adopté : trait double',
       child: 'Enfant',
       deceased: 'Décès : vignette mate',
-      ended: 'Divorce ou séparation : le trait est coupé',
+      ended: 'Divorce ou séparation : marqués de deux barres',
       freeUnion: 'Union libre',
       marriage: 'Mariage ou PACS',
       step: 'Enfant du conjoint, enfant accueilli : pointillés',
@@ -702,7 +786,6 @@ export const FR_DICTIONARY = defineDictionary({
     close: 'Fermer',
     death: 'Décès',
     deathUnknown: 'Date et lieu inconnus',
-    generation: 'génération {number:number}',
     history: 'Historique de cette fiche',
     inPeriod: 'en {date}',
     missing: {
@@ -718,7 +801,30 @@ export const FR_DICTIONARY = defineDictionary({
     onDay: 'le {date}',
     open: 'Ouvrir la fiche de {name}',
     openShort: 'Sa fiche',
-    slot: 'n° {number}',
+    send: {
+      back: 'Revenir au message',
+      copied: 'Message et lien copiés',
+      copy: 'Copier le message et le lien',
+      copyHint: 'Pour le coller où vous voulez.',
+      copyRefused:
+        'L’appareil a refusé de copier. Le message est sélectionné : copiez-le à la main.',
+      message:
+        'Bonjour ! Je complète notre arbre de famille. Peux-tu ajouter ce que tu sais sur {name} ? Une date, une photo, un souvenir… Le lien ouvre directement sa fiche.',
+      messageLabel: 'Le message',
+      note: 'Avant sa première modification, l’arbre demandera à la personne qui elle est. Tout restera dans l’historique.',
+      open: 'Envoyer à compléter',
+      preview: 'Ce que la personne recevra',
+      qr: 'Montrer un QR code',
+      qrBody:
+        'L’autre personne ouvre l’appareil photo de son téléphone et vise le carré : la fiche de {name} s’ouvre chez elle.',
+      qrHint: 'À scanner par un téléphone posé à côté.',
+      qrLabel: 'QR code du lien vers la fiche de {name}',
+      share: 'Par WhatsApp, SMS ou mail',
+      shareHint: 'Votre appareil propose ses applications.',
+      shareTitle: 'La fiche de {name}',
+      title: 'Envoyer la fiche de {name} à compléter',
+      ways: 'Comment l’envoyer'
+    },
     title: 'Fiche de {name}',
     union: {
       start: {
@@ -896,7 +1002,10 @@ export const FR_DICTIONARY = defineDictionary({
       separation: 'séparés'
     },
     unknownParent: {
+      action: 'Compléter',
       hint: 'parent inconnu',
+      hintOf: 'parent de {name}',
+      label: 'Ajouter le parent inconnu de {name}',
       title: 'Inconnu'
     },
     years: '{first} – {last}',
@@ -933,7 +1042,7 @@ export const FR_DICTIONARY = defineDictionary({
   whoAmI: {
     beforeEdit: 'Avant de modifier : qui êtes-vous dans l’arbre ?',
     intro:
-      'Touchez votre nom. Vos modifications seront signées ainsi : la famille saura qui a fait quoi.',
+      'Pour que la famille sache qui a fait chaque modification, touchez votre nom : il les signera.',
     noMatch: 'Personne ne porte ce nom dans l’arbre.',
     notInTree: {
       action: 'Je ne suis pas dans l’arbre',

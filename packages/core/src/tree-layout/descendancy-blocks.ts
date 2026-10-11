@@ -101,7 +101,12 @@ export const descendancyBlocks = ({
 
     const slots = ordered.map((group): BlockSlot => {
       if (group === null) return { isRepeated: false, kind: 'person', personId }
-      if (group.partnerId === null) return { kind: 'unknown-parent' }
+      if (group.partnerId === null) {
+        return {
+          childIds: group.children.map(({ childId }) => childId),
+          kind: 'unknown-parent'
+        }
+      }
       const isRepeated = drawn.has(group.partnerId)
       drawn.add(group.partnerId)
       return { isRepeated, kind: 'person', personId: group.partnerId }

@@ -15,8 +15,6 @@ export type PersonFace = {
   /** The full name, or the word for someone recorded without one. */
   name: string
   sex: Person['sex']
-  /** The number printed above their slot, the same in every view. */
-  slotNumber: number
   surname: string
   /** "1932 – † 2019"; empty when nothing is known. */
   years: string

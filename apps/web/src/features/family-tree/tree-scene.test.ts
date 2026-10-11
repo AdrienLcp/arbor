@@ -96,6 +96,7 @@ describe('treeScene', () => {
           y: 280
         },
         {
+          childIds: ['anne'],
           generation: 2,
           key: 'unknown',
           kind: 'unknown-parent',

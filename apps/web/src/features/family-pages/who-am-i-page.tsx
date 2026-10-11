@@ -12,10 +12,10 @@ import {
   Redirect,
   useNavigateTo
 } from '@/infrastructure/router/navigation'
-import { AlbumGlyph } from '@/presentation/components/album-glyph'
 import { Button } from '@/presentation/components/button'
 import { LookIcon } from '@/presentation/components/icons'
 import { Main } from '@/presentation/components/main'
+import { TreeMark } from '@/presentation/components/tree-mark'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
@@ -49,7 +49,7 @@ export const WhoAmIPage: React.FC = () => {
       <DocumentTitle>{`${translate('whoAmI.title')} — ${family.settings.name}`}</DocumentTitle>
       <div className='who-am-i-head'>
         <p className='who-am-i-family'>
-          <AlbumGlyph />
+          <TreeMark />
           {family.settings.name}
         </p>
         <h1 className='who-am-i-title' id={titleId}>

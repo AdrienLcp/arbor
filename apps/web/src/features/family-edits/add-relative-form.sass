@@ -17,3 +17,13 @@
       border-top: var(--stroke-thin) solid var(--ghost-soft)
       color: var(--ink-soft)
       padding-top: var(--space-l)
+
+    .add-relative-fields
+      display: grid
+      gap: var(--space-l)
+
+    // A form that opens on a group needs no rule above it.
+    .add-relative-link, .add-relative-note
+      &:first-child
+        border-top: none
+        padding-top: 0

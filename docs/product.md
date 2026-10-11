@@ -44,7 +44,10 @@ shared photo album. What protects the family is that **nothing can be lost**,
 not that strangers are kept out by a login.
 
 - **Create a family** → the creator becomes the keeper and gets two links:
-  the **family link** (to share) and the **keeper link** (to keep).
+  the **family link** (to share) and the **keeper link** (to keep). The tree
+  starts with one person: the creator, or someone else (a grandparent, an
+  ancestor); a creator who starts with someone else types their own name,
+  which signs their changes until they pick themselves in the tree.
 - A link carries its secret in the fragment (`/f/<familyId>#<key>`): the
   fragment is never sent in requests, server logs or `Referer` headers. The app
   moves it to local storage on arrival and sends it as a header.
@@ -54,9 +57,10 @@ not that strangers are kept out by a login.
   (a leaked link is a one-tap fix). Several keepers are possible.
 - The link opens the tree, never a list of people. The app asks **"Who are you
   in this tree?"** before the visitor's first change, or when they offer to say
-  it, and the visitor taps their own person (or "not in the tree yet"). Every
-  change is signed with that choice — unverified, but enough to know who did
-  what.
+  it, and the visitor taps their own person (or "not in the tree yet" and
+  their name). The question says why it is asked, and the answer is kept on
+  the device, so it is asked once. Every change is signed with that choice —
+  unverified, but enough to know who did what.
 - Sharing: copy, the system share sheet (WhatsApp, SMS, mail) and a QR code.
 
 ## Nothing is ever lost

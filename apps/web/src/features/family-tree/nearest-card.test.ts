@@ -5,6 +5,7 @@ import type { TreeCard } from '@arbor/core/tree-layout/tree-layout'
 import { arrowDirectionOf, nearestCardToward } from './nearest-card'
 
 const card = (key: string, { x, y }: { x: number; y: number }): TreeCard => ({
+  childIds: [],
   generation: 1,
   key,
   kind: 'unknown-parent',

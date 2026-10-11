@@ -23,6 +23,28 @@ export const EN_DICTIONARY = defineDictionary({
       foster: 'Fostering',
       step: 'Raised'
     },
+    existing: {
+      chooseFirst: 'Tap a person in the list',
+      noMatch: 'Nobody in the tree has that name.',
+      people: 'The people in the tree',
+      refused: {
+        already_partners: 'This couple is already there.',
+        already_siblings:
+          'Already brother or sister, through the same parents.',
+        ancestry_cycle: 'Impossible: someone would become their own ancestor.',
+        duplicate_filiation: 'This link is already there.',
+        no_known_parent: 'Add one of their parents first.',
+        other: 'This link is not possible.',
+        same_person: 'This is the same person.',
+        too_many_birth_parents: 'That would make three birth parents.'
+      },
+      save: 'Link to {name}',
+      search: {
+        clear: 'Clear',
+        label: 'Search by name',
+        placeholder: 'First name or surname'
+      }
+    },
     linkKind: 'Their link to {name}',
     open: 'Add a child, a parent, a partner…',
     otherChoice: 'Choose another link',
@@ -63,6 +85,11 @@ export const EN_DICTIONARY = defineDictionary({
     save: 'Add to the tree',
     siblingParents: 'Child of {names}, like {name}.',
     title: 'Add a relative of {name}',
+    who: {
+      existing: 'Someone already in the tree',
+      label: 'Who is it?',
+      new: 'A new person'
+    },
     withPartner: 'With {name}',
     withWhom: 'With whom?'
   },
@@ -103,18 +130,38 @@ export const EN_DICTIONARY = defineDictionary({
     unnamedTree: 'Unnamed tree'
   },
   createFamily: {
-    givenNames: 'Your first name',
-    givenNamesMissing: 'Write your first name.',
+    creatorName: {
+      field: 'Your first and last name',
+      hint: 'They will sign your changes: the family will know who did what.',
+      missing: 'Write your first and last name.'
+    },
     intro:
-      'Start with yourself: you will be the first person in the tree. The others will follow.',
+      'One first person, and the others will follow: yourself, or a grandparent, an ancestor…',
+    me: {
+      givenNames: 'Your first name',
+      givenNamesMissing: 'Write your first name.',
+      previewHint: 'you',
+      previewLabel: 'Your sticker',
+      surname: 'Your last name',
+      surnameHint: 'The one you go by today.'
+    },
     preview: {
-      hint: 'you',
-      label: 'Your sticker',
       title: 'Stick here'
     },
+    someoneElse: {
+      givenNames: 'Their first name',
+      givenNamesMissing: 'Write their first name.',
+      previewHint: 'the first person',
+      previewLabel: 'The first sticker',
+      surname: 'Their last name',
+      surnameHint: 'The one the family knows.'
+    },
+    startsWith: {
+      label: 'Who does the tree start with?',
+      me: 'With me',
+      someoneElse: 'With someone else'
+    },
     submit: 'Create the tree',
-    surname: 'Your last name',
-    surnameHint: 'The one you go by today.',
     title: 'Create your family’s tree',
     treeName: 'Name of the tree',
     treeNameHint: 'It shows at the top of the tree and on the printed sheet.',
@@ -524,8 +571,7 @@ export const EN_DICTIONARY = defineDictionary({
     spread: {
       eldest: 'the eldest you know of',
       firstChild: 'their first child',
-      generation: 'Generation {number:number}',
-      hint: 'Every person has a numbered place, even those nobody knows yet.',
+      hint: 'Every person has a place, even those nobody knows yet.',
       otherChild: 'another child',
       partner: 'their wife or husband',
       slotTitle: 'Stick here'
@@ -564,6 +610,47 @@ export const EN_DICTIONARY = defineDictionary({
     showInTree: 'Show the path in the tree',
     title: 'Family relationship',
     you: 'You'
+  },
+  link: {
+    banner: {
+      cancel: 'Cancel',
+      drag: 'or draw a line from one sticker to the other',
+      first: {
+        couple: 'Touch the first person of the couple',
+        parentChild: 'Touch the parent',
+        siblings: 'Touch one of the two'
+      },
+      refused: '{name}: {reason}',
+      second: {
+        couple: 'Touch the person in a couple with {name}',
+        parentChild: 'Touch {name}’s child',
+        siblings: 'Touch {name}’s brother or sister'
+      }
+    },
+    choose: {
+      couple: {
+        hint: 'marriage, civil partnership or living together',
+        title: 'Couple'
+      },
+      parentChild: {
+        hint: 'you will touch the parent, then their child',
+        title: 'Parent → child'
+      },
+      siblings: {
+        hint: 'two children of the same parents',
+        title: 'Brother / sister'
+      },
+      title: 'Which link to add?'
+    },
+    confirm: {
+      couple: '{first} and {second} are a couple.',
+      other: 'Choose someone else',
+      parentChild: '{child} becomes {parent}’s child.',
+      save: 'Yes, link them',
+      siblings: '{relative} becomes the child of {parents}, like {anchor}.',
+      title: 'Add this link?'
+    },
+    open: 'Link'
   },
   me: {
     change: 'Change',
@@ -635,7 +722,7 @@ export const EN_DICTIONARY = defineDictionary({
       adoption: 'Adopted child: double line',
       child: 'Child',
       deceased: 'Death: matte sticker',
-      ended: 'Divorce or separation: the line is cut',
+      ended: 'Divorce or separation: marked with two slashes',
       freeUnion: 'Living together',
       marriage: 'Marriage or civil partnership',
       step: 'Partner’s child, foster child: dotted',
@@ -697,7 +784,6 @@ export const EN_DICTIONARY = defineDictionary({
     close: 'Close',
     death: 'Death',
     deathUnknown: 'Date and place unknown',
-    generation: 'generation {number:number}',
     history: 'History of this sheet',
     inPeriod: 'in {date}',
     missing: {
@@ -713,7 +799,30 @@ export const EN_DICTIONARY = defineDictionary({
     onDay: 'on {date}',
     open: 'Open {name}’s sheet',
     openShort: 'Their sheet',
-    slot: 'No. {number}',
+    send: {
+      back: 'Back to the message',
+      copied: 'Message and link copied',
+      copy: 'Copy the message and the link',
+      copyHint: 'To paste wherever you like.',
+      copyRefused:
+        'The device refused to copy. The message is selected: copy it by hand.',
+      message:
+        'Hello! I’m completing our family tree. Could you add what you know about {name}? A date, a photo, a memory… The link opens their sheet directly.',
+      messageLabel: 'The message',
+      note: 'Before their first change, the tree will ask who they are. Everything stays in the history.',
+      open: 'Send to be completed',
+      preview: 'What they will receive',
+      qr: 'Show a QR code',
+      qrBody:
+        'The other person opens their phone’s camera and points it at the square: {name}’s sheet opens on their phone.',
+      qrHint: 'For a phone sitting next to you.',
+      qrLabel: 'QR code of the link to {name}’s sheet',
+      share: 'By WhatsApp, text or email',
+      shareHint: 'Your device offers its apps.',
+      shareTitle: '{name}’s sheet',
+      title: 'Send {name}’s sheet to be completed',
+      ways: 'How to send it'
+    },
     title: '{name}’s sheet',
     union: {
       start: {
@@ -874,7 +983,10 @@ export const EN_DICTIONARY = defineDictionary({
       separation: 'separated'
     },
     unknownParent: {
+      action: 'Complete',
       hint: 'unknown parent',
+      hintOf: '{name}’s parent',
+      label: 'Add {name}’s unknown parent',
       title: 'Unknown'
     },
     years: '{first} – {last}',
@@ -911,7 +1023,7 @@ export const EN_DICTIONARY = defineDictionary({
   whoAmI: {
     beforeEdit: 'Before you change anything: who are you in this tree?',
     intro:
-      'Tap your name. Your changes will be signed with it: the family will know who did what.',
+      'So the family knows who made each change, tap your name: it will sign them.',
     noMatch: 'Nobody in the tree has that name.',
     notInTree: {
       action: 'I am not in the tree',

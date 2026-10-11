@@ -2,7 +2,6 @@ import { classNames } from '@adrienlcp/react'
 import type React from 'react'
 
 import { generationClass } from './generation-class'
-import { slotNumberText } from './slot-number'
 
 import './slot.sass'
 
@@ -13,40 +12,44 @@ type StickerProps = {
   givenNames: string
   /** A deceased person's sticker is matte, its art dulled, a rule over its caption (The Matte Means Gone Rule). */
   isDeceased?: boolean
+  /** The person whose sheet is open: a bookmark ribbon stands above the sticker. */
+  isOpen?: boolean
   /** The years printed under the name: "1932 – † 2019"; left out when none is known. */
   lifeYears?: string
   /** The initials drawn on the art. */
   monogram: string
   /** A picture laid over the monogram: the person's portrait, when they have one. */
   portrait?: React.ReactNode
-  /** The number printed above the slot. */
-  slotNumber: number
   /** Hands the slot its size, `--slot-width` and `--slot-height`. */
   style?: React.CSSProperties
   surname: string
 }
 
 /**
- * A person pressed into their numbered slot: the album's sticker, at full size. Phrasing content only, so a button may hold it.
- * Its words are spaced in the markup, where the layout drops the spaces: a name read from the content must not run "02MarieMorel".
+ * A person pressed into their slot: the album's sticker, at full size. Phrasing content only, so a button may hold it.
+ * Its words are spaced in the markup, where the layout drops the spaces: a name read from the content must not run "MarieMorel1932".
  */
 export const Sticker: React.FC<StickerProps> = ({
   className,
   generation,
   givenNames,
   isDeceased = false,
+  isOpen = false,
   lifeYears,
   monogram,
   portrait,
-  slotNumber,
   style,
   surname
 }) => (
   <span
-    className={classNames('slot', generationClass(generation), className)}
+    className={classNames(
+      'slot',
+      generationClass(generation),
+      isOpen && 'open',
+      className
+    )}
     style={style}
   >
-    <span className='slot-number'>{slotNumberText(slotNumber)}</span>{' '}
     <span className='slot-bed'>
       <span className={classNames('sticker', isDeceased && 'deceased')}>
         <span aria-hidden='true' className='sticker-art'>

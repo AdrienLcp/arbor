@@ -15,48 +15,75 @@
     @include layout.container-wide(68rem)
       rotate: -1.2deg
 
-    .spread-pages
+    .spread-tree
+      --place-width: 6.5rem
+      --place-height: 8.75rem
+      --partner-gap: 2.5rem
+      --row-gap: 3rem
+      --tree-line: var(--stroke-line-plain) solid var(--ghost)
       display: grid
+      justify-content: center
+      padding: var(--space-xl) var(--space-m) var(--space-l)
+      row-gap: var(--row-gap)
 
       @include layout.container-wide(34rem)
-        grid-template-columns: 1fr 1fr
+        --place-width: 7.5rem
+        --place-height: 10rem
+        --partner-gap: 4rem
+        padding: var(--space-xl) var(--space-xl) var(--space-l)
 
-        // The fold between the two pages.
-        &::after
-          background: linear-gradient(90deg, transparent, oklch(0 0 0 / 0.1) 45%, oklch(0 0 0 / 0.16) 50%, oklch(0 0 0 / 0.1) 55%, transparent)
-          content: ''
-          inset-block: 0
-          inset-inline-start: 50%
-          pointer-events: none
-          position: absolute
-          translate: -50% 0
-          width: 2.5rem
-
-    .spread-page
-      padding: var(--space-l) var(--space-m) var(--space-s)
-
-      @include layout.container-wide(34rem)
-        padding: var(--space-xl) var(--space-xl) var(--space-xl)
-
-    .spread-head
-      @include typography.title
-      background: var(--gc)
-      clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%)
-      color: var(--on-gc)
-      padding: var(--space-s) var(--space-xl) var(--space-s) var(--space-m)
-
-    .spread-slots
-      display: flex
-      flex-wrap: wrap
-      gap: var(--space-l)
-      margin-top: var(--space-l)
+    .spread-row
+      column-gap: var(--partner-gap)
+      display: grid
+      grid-template-columns: repeat(2, var(--place-width))
+      position: relative
 
       .slot
-        --slot-height: 8.75rem
-        --slot-width: 6.5rem
+        --slot-height: var(--place-height)
+        --slot-width: var(--place-width)
+
+    .spread-place
+      display: grid
+      position: relative
+
+    // The union line between the partners, and the descent line falling from its middle to the children's bar.
+    .spread-couple
+      &::before,
+      &::after
+        content: ''
+        position: absolute
+
+      &::before
+        border-block-start: var(--tree-line)
+        inset-block-start: 50%
+        inset-inline: calc(50% - var(--partner-gap) / 2)
+
+      &::after
+        border-inline-start: var(--tree-line)
+        height: calc(50% + var(--row-gap) / 2)
+        inset-block-start: 50%
+        inset-inline-start: calc(50% - var(--stroke-line-plain) / 2)
+
+    // The bar over the children, and the short drop to each of them.
+    .spread-children
+      &::before
+        border-block-start: var(--tree-line)
+        content: ''
+        inset-block-start: calc(var(--row-gap) / -2)
+        inset-inline: calc(var(--place-width) / 2)
+        position: absolute
+
+      .spread-place::before
+        border-inline-start: var(--tree-line)
+        content: ''
+        height: calc(var(--row-gap) / 2)
+        inset-block-start: calc(var(--row-gap) / -2)
+        inset-inline-start: calc(50% - var(--stroke-line-plain) / 2)
+        position: absolute
 
     .spread-hint
       @include typography.body-small
       color: var(--ink-soft)
       padding: 0 var(--space-xl) var(--space-l)
+      text-align: center
       text-wrap: pretty

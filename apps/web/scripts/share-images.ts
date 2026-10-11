@@ -15,9 +15,10 @@ import { SHARE_CARD_SIZE } from '../src/infrastructure/seo/share-card-size.ts'
 const WEB_DIR = join(import.meta.dirname, '..')
 const PUBLIC_DIR = join(WEB_DIR, 'public')
 
-/** iOS rounds the corners itself, so the square is full-bleed, on the album's paper. */
+/** iOS rounds the corners itself, so the square is full-bleed, on the album's paper, the mark kept clear of the rounded corners. */
 const IOS_TOUCH_ICON_SIZE = 180
 const IOS_TOUCH_ICON_BACKGROUND = '#f1f5f8'
+const IOS_TOUCH_ICON_MARK_SHARE = 0.7
 const LEGACY_ICO_SIZE = 48
 
 /** An ICO file holding one PNG image, which every browser reads since Vista. */
@@ -59,13 +60,15 @@ try {
   const favicon = await readFile(join(PUBLIC_DIR, 'favicon.svg'), 'utf8')
   const renderFavicon = async (
     size: number,
-    background: string
+    background: string,
+    markShare = 1
   ): Promise<Buffer> => {
+    const markSize = Math.round(size * markShare)
     await page.setViewportSize({ height: size, width: size })
     await page.setContent(
-      `<body style="margin:0;background:${background}">${favicon.replace(
+      `<body style="margin:0;height:100vh;display:grid;place-items:center;background:${background}">${favicon.replace(
         '<svg ',
-        `<svg width="${size}" height="${size}" `
+        `<svg width="${markSize}" height="${markSize}" `
       )}</body>`
     )
     return page.screenshot({ omitBackground: background === 'transparent' })
@@ -73,7 +76,11 @@ try {
 
   await writeFile(
     join(PUBLIC_DIR, 'apple-touch-icon.png'),
-    await renderFavicon(IOS_TOUCH_ICON_SIZE, IOS_TOUCH_ICON_BACKGROUND)
+    await renderFavicon(
+      IOS_TOUCH_ICON_SIZE,
+      IOS_TOUCH_ICON_BACKGROUND,
+      IOS_TOUCH_ICON_MARK_SHARE
+    )
   )
   await writeFile(
     join(PUBLIC_DIR, 'favicon.ico'),

@@ -1,0 +1,37 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  // The banner floats over the tree's top left while people are picked; on a phone the zoom holds the top right.
+  .tree-link-banner
+    left: max(var(--space-l), var(--safe-area-left))
+    position: absolute
+    top: var(--space-l)
+    align-items: center
+    background: var(--paper)
+    border: var(--stroke-bold) solid var(--ink)
+    border-radius: var(--radius-frame)
+    box-shadow: var(--shadow-card)
+    display: flex
+    flex-wrap: wrap
+    gap: var(--space-s) var(--space-l)
+    max-width: min(40rem, calc(100% - 2 * var(--space-l)))
+    padding: var(--space-s) var(--space-s) var(--space-s) var(--space-l)
+
+    @include layout.narrow
+      max-width: none
+      right: calc(var(--target) + 3 * var(--space-l))
+
+  .tree-link-banner-text
+    @include typography.body
+    @include typography.strong
+    display: grid
+    flex: 1 1 12rem
+    gap: var(--space-2xs)
+    margin: 0
+    min-width: 0
+
+  .tree-link-banner-hint
+    @include typography.body-small
+    @include typography.regular
+    color: var(--ink-soft)

@@ -6,8 +6,9 @@ export { copyText, selectContents } from '@adrienlcp/browser'
 export const canShareLinks = (): boolean =>
   typeof navigator.share === 'function'
 
-/** Opens the device's share sheet on a link; fails where there is none, or when the person closes it. */
+/** Opens the device's share sheet on a link, with the words to send it with; fails where there is none, or when the person closes it. */
 export const shareLink = async (link: {
+  text?: string
   title: string
   url: string
 }): Promise<Result<void, 'closed' | 'unavailable'>> => {

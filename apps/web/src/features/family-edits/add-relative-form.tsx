@@ -4,9 +4,10 @@ import { useState } from 'react'
 import type { EntityId } from '@arbor/protocol/entity-id'
 import type { FiliationKind } from '@arbor/protocol/filiation'
 import { SEXES } from '@arbor/protocol/person'
-import { UNION_KINDS, type Union } from '@arbor/protocol/union'
+import type { Union } from '@arbor/protocol/union'
 
 import type { CloseFamily } from '@arbor/core/relatives/close-family'
+import type { Relation } from '@arbor/core/relatives/relation'
 
 import type { PersonFace } from '@/features/family-tree/person-face'
 import { newEntityId } from '@/infrastructure/ids'
@@ -25,14 +26,16 @@ import {
   fuzzyDateOf
 } from './fuzzy-date-draft'
 import { FuzzyDateField } from './fuzzy-date-field'
+import { LinkKindControl } from './link-kind-control'
+import { firstParentKind } from './link-kinds'
 import { occurrenceOf } from './occurrence-fields'
-import type { Relation } from './relation'
 import {
   childAddition,
   parentAddition,
   partnerAddition,
   siblingAddition
 } from './relative-additions'
+import { UnionStartFields } from './union-start-fields'
 import type { FamilyEdit } from './use-family-edit'
 
 import './add-relative-form.sass'
@@ -47,14 +50,6 @@ type AddRelativeFormProps = {
   relation: Relation
 }
 
-/** The kinds of link a form offers; "unknown" is for imports, never a choice made by hand. */
-const LINK_KINDS = [
-  'birth',
-  'adoption',
-  'step',
-  'foster'
-] as const satisfies readonly FiliationKind[]
-
 /** "No other parent known": the child of a single parent. */
 const ALONE = 'alone'
 
@@ -62,12 +57,6 @@ const ALONE = 'alone'
 const latestPartnerOf = (close: CloseFamily): EntityId | typeof ALONE =>
   close.couples.findLast(({ partnerId }) => partnerId !== null)?.partnerId ??
   ALONE
-
-/** A child already has two parents by birth: a third one is most likely a step-parent. */
-const firstParentKind = (close: CloseFamily): FiliationKind =>
-  close.parentFiliations.filter(({ kind }) => kind === 'birth').length >= 2
-    ? 'step'
-    : 'birth'
 
 /** A new relative of the person: who they are, when they were born, and how they are tied to the person. */
 export const AddRelativeForm: React.FC<AddRelativeFormProps> = ({
@@ -188,56 +177,38 @@ export const AddRelativeForm: React.FC<AddRelativeFormProps> = ({
             ]}
             value={otherParent}
           />
-          <SegmentedControl
-            label={translate('add.linkKind', { name })}
+          <LinkKindControl
+            name={name}
             onChange={setLinkKind}
-            options={LINK_KINDS.map((value) => ({
-              label: translate(`add.childKind.${value}`),
-              value
-            }))}
+            relation='child'
             value={linkKind}
           />
         </div>
       ) : null}
       {relation === 'parent' ? (
         <div className='add-relative-link'>
-          <SegmentedControl
-            label={translate('add.linkKind', { name })}
+          <LinkKindControl
+            name={name}
             onChange={setLinkKind}
-            options={LINK_KINDS.map((value) => ({
-              label: translate(`add.parentKind.${value}`),
-              value
-            }))}
+            relation='parent'
             value={linkKind}
           />
         </div>
       ) : null}
       {relation === 'partner' ? (
         <div className='add-relative-link'>
-          <SegmentedControl
-            label={translate('union.kind.label')}
-            onChange={setUnionKind}
-            options={UNION_KINDS.map((value) => ({
-              label: translate(`union.kind.${value}`),
-              value
-            }))}
-            value={unionKind}
-          />
-          <FuzzyDateField
-            label={translate('union.date')}
-            onChange={setUnionDate}
-            problem={
+          <UnionStartFields
+            date={unionDate}
+            dateProblem={
               hasTriedSaving && unionStart.status === 'failure'
                 ? unionStart.error
                 : null
             }
-            value={unionDate}
-          />
-          <TextField
-            autoComplete='off'
-            label={translate('union.place')}
-            onChange={setUnionPlace}
-            value={unionPlace}
+            kind={unionKind}
+            onDateChange={setUnionDate}
+            onKindChange={setUnionKind}
+            onPlaceChange={setUnionPlace}
+            place={unionPlace}
           />
         </div>
       ) : null}

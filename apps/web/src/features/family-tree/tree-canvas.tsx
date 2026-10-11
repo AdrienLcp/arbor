@@ -21,6 +21,7 @@ import type { TreeCard } from '@arbor/core/tree-layout/tree-layout'
 import { CARD_HEIGHT, CARD_WIDTH } from '@arbor/core/tree-layout/tree-metrics'
 
 import { Button } from '@/presentation/components/button'
+import { FINE_POINTER } from '@/presentation/components/fine-pointer'
 import {
   FitIcon,
   RecenterIcon,
@@ -28,12 +29,17 @@ import {
   ZoomOutIcon
 } from '@/presentation/components/icons'
 import { Toolbar } from '@/presentation/components/toolbar'
+import { useMediaQuery } from '@/presentation/components/use-media-query'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
+import { type CanvasLinking, LINK_DRAG_START_CLASS } from './canvas-linking'
 import { GenerationRails } from './generation-rails'
 import { arrowDirectionOf, nearestCardToward } from './nearest-card'
+import { placementOf } from './scene-placement'
 import { TreePlane } from './tree-plane'
 import type { TreeScene } from './tree-scene'
+import { visibleBandOf } from './visible-band'
+import { isWalkableCard } from './walkable-card'
 
 import './tree-canvas.sass'
 
@@ -41,15 +47,14 @@ const MIN_SCALE = 0.15
 const MAX_SCALE = 2
 /** The stickers at their own size: the scale the canvas opens at, whatever it was left at. */
 const ARRIVAL_SCALE = 1
-/** Paper kept around a lit path when it is fitted on screen: room for the slot numbers and the focus card. */
+/** Paper kept around a lit path when it is fitted on screen: room for the focus card. */
 const LIT_PATH_MARGIN = 112
+/** Paper kept above and below the open person's sticker when a bottom sheet leaves little of the tree in sight: room for the bookmark ribbon. */
+const BAND_MARGIN = 16
 /** How long the canvas glides to the person the keyboard moved to. */
 const GLIDE_MS = 200
 
 type PersonCard = Extract<TreeCard, { kind: 'person' }>
-
-const isPersonCard = (card: TreeCard): card is PersonCard =>
-  card.kind === 'person'
 
 /** The key of the focus person's own card: the first one drawn for them, not a repeat. */
 const focusKeyIn = (scene: TreeScene, focusId: EntityId): string | null =>
@@ -64,10 +69,17 @@ type TreeCanvasProps = {
   label: string
   /** A kinship path to trace and fit on screen; `null` to centre on the focus person. */
   litPath: KinPath | null
+  /** The "+ Lien" mode, while it is on. */
+  linking?: CanvasLinking
+  /** A tool of the tree's own, set atop the zoom buttons: the "+ Lien" button. */
+  linkTool?: React.ReactNode
   onPressPerson: (personId: EntityId) => void
+  /** Opens the way to add the unknown other parent of this child; left out for a visitor who may not change the tree. */
+  onPressUnknownParent?: (childId: EntityId) => void
+  /** The person whose sheet is open, marked on their sticker; `null` when no sheet is. */
+  openPersonId: EntityId | null
   persons: ReadonlyMap<EntityId, Person>
   scene: TreeScene
-  slotNumbers: ReadonlyMap<string, number>
   today: Temporal.PlainDate
   /** The share of the window's height a bottom sheet hides, so the focus person is centred in what stays in sight. */
   coveredBottomShare?: number
@@ -78,13 +90,17 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   coveredBottomShare = 0,
   focusId,
   label,
+  linking,
+  linkTool,
   litPath,
   onPressPerson,
+  onPressUnknownParent,
+  openPersonId,
   persons,
   scene,
-  slotNumbers,
   today
 }) => {
+  const hasFinePointer = useMediaQuery(FINE_POINTER)
   const translate = useTranslate()
   const instructionsId = useId()
   const viewport = useRef<ReactZoomPanPinchRef>(null)
@@ -93,11 +109,17 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   const [activeKey, setActiveKey] = useState<string | null>(null)
   /** Whether the visitor panned or zoomed since the canvas last centred itself: from then on a resize leaves the view where they put it. */
   const hasVisitorMoved = useRef(false)
-  const centredScene = useRef<TreeScene | null>(null)
+  const centred = useRef<{ bottomShare: number; placement: string } | null>(
+    null
+  )
 
-  const personCards = scene.layout.cards.filter(isPersonCard)
+  const walkableCards = scene.layout.cards.filter((card) =>
+    isWalkableCard(card, {
+      canFillIn: onPressUnknownParent !== undefined && linking === undefined
+    })
+  )
   const focusKey = focusKeyIn(scene, focusId)
-  const currentKey = personCards.some((card) => card.key === activeKey)
+  const currentKey = walkableCards.some((card) => card.key === activeKey)
     ? activeKey
     : focusKey
 
@@ -111,12 +133,22 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   ) => {
     const element = key === null ? undefined : cardElements.current.get(key)
     const controls = viewport.current
-    if (element === undefined || controls === null) return
+    const wrapper = controls?.instance.wrapperComponent
+    if (element === undefined || controls == null || wrapper == null) return
+    const band = visibleBandOf({
+      canvas: wrapper.getBoundingClientRect(),
+      coveredBottomShare: bottomShare,
+      windowHeight: window.innerHeight
+    })
+    const fittingScale =
+      bottomShare === 0
+        ? Number.POSITIVE_INFINITY
+        : band.height / (CARD_HEIGHT + 2 * BAND_MARGIN)
     void controls.zoomToElement(
       element,
       {
-        offsetY: -(bottomShare * window.innerHeight) / 2,
-        scale: scale ?? controls.state.scale
+        offsetY: band.centreOffset,
+        scale: Math.min(scale ?? controls.state.scale, fittingScale)
       },
       animationMs
     )
@@ -161,8 +193,10 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   // A new scene jumps, inside the refocus transition, so the stickers slide from where they were to the centre; a phone's bottom sheet opening or closing glides, a computer's side sheet leaves the tree still.
   const centreOnFocusOf = useEffectEvent(
     (placed: TreeScene, bottomShare: number) => {
-      const isNewScene = placed !== centredScene.current
-      centredScene.current = placed
+      const placement = placementOf(placed, focusId)
+      const isNewScene = placement !== centred.current?.placement
+      if (!isNewScene && bottomShare === centred.current?.bottomShare) return
+      centred.current = { bottomShare, placement }
       hasVisitorMoved.current = false
       if (!showLitPath(placed)) {
         centreOn(focusKeyIn(placed, focusId), isNewScene ? 0 : GLIDE_MS, {
@@ -205,11 +239,11 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     }
   }
 
-  const walkWithArrows = (from: PersonCard, key: string): boolean => {
+  const walkWithArrows = (from: TreeCard, key: string): boolean => {
     const direction = arrowDirectionOf(key)
     if (direction === null) return false
 
-    const next = nearestCardToward({ cards: personCards, direction, from })
+    const next = nearestCardToward({ cards: walkableCards, direction, from })
     if (next !== null) {
       setActiveKey(next.key)
       cardElements.current.get(next.key)?.focus()
@@ -219,6 +253,10 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   }
 
   const pressPerson = (card: PersonCard) => {
+    if (linking !== undefined) {
+      linking.pick(card.personId)
+      return
+    }
     setActiveKey(null)
     onPressPerson(card.personId)
     if (card.personId === focusId) centreOn(focusKey, GLIDE_MS)
@@ -240,6 +278,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
         }}
         onWheelStart={noteVisitorMoved}
         onZoomStart={noteVisitorMoved}
+        panning={{ excluded: [LINK_DRAG_START_CLASS] }}
         ref={viewport}
       >
         {(controls) => (
@@ -247,16 +286,19 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
             <TransformComponent wrapperClass='tree-viewport'>
               <TreePlane
                 activeKey={currentKey}
+                canDrawLinks={hasFinePointer}
                 focusId={focusId}
                 instructionsId={instructionsId}
+                linking={linking}
                 litPath={litPath}
                 onArrowKey={walkWithArrows}
                 onFocusCard={(card) => setActiveKey(card.key)}
                 onPressPerson={pressPerson}
+                onPressUnknownParent={onPressUnknownParent}
+                openPersonId={openPersonId}
                 persons={persons}
                 registerCard={registerCard}
                 scene={scene}
-                slotNumbers={slotNumbers}
                 today={today}
               />
             </TransformComponent>
@@ -271,16 +313,23 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
               className='tree-zoom'
               orientation='vertical'
             >
+              {linkTool}
               <Button
                 aria-label={translate('tree.zoom.in')}
-                onPress={() => void controls.zoomIn()}
+                onPress={() => {
+                  noteVisitorMoved()
+                  void controls.zoomIn()
+                }}
                 variant='quiet'
               >
                 <ZoomInIcon aria-hidden='true' />
               </Button>
               <Button
                 aria-label={translate('tree.zoom.out')}
-                onPress={() => void controls.zoomOut()}
+                onPress={() => {
+                  noteVisitorMoved()
+                  void controls.zoomOut()
+                }}
                 variant='quiet'
               >
                 <ZoomOutIcon aria-hidden='true' />

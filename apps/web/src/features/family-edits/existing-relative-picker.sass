@@ -1,0 +1,73 @@
+@use '../../presentation/styles/focus'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .existing-relative-picker
+    display: grid
+    gap: var(--space-l)
+
+    .existing-relative-no-match
+      color: var(--ink-soft)
+      padding-block: var(--space-l)
+
+    .existing-relative-people
+      display: grid
+      gap: var(--space-s)
+
+      .field-label
+        @include typography.name
+
+    .existing-relative-person
+      @include focus.ring
+      align-items: center
+      border: var(--stroke-thin) solid var(--ghost-soft)
+      border-radius: var(--radius-frame)
+      cursor: pointer
+      display: flex
+      gap: var(--space-m)
+      min-height: 4.75rem
+      padding: var(--space-s) var(--space-m)
+      transition: border-color var(--transition-fast) var(--ease-out), background-color var(--transition-fast) var(--ease-out)
+
+      &[data-hovered]
+        background: var(--paper-2)
+
+      &[data-selected]
+        border-color: var(--ink)
+        box-shadow: inset 0 0 0 var(--stroke-thin) var(--ink)
+
+      // Still listed, so nobody wonders where the person went: the sticker fades, the reason says why.
+      &[data-disabled]
+        border-style: dashed
+        cursor: default
+
+        .person-line
+          opacity: 0.55
+
+    // The round mark a radio has always had: an empty ring, filled when chosen; none when the person cannot be chosen.
+    .existing-relative-mark
+      border: var(--stroke-bold) solid var(--ink)
+      border-radius: var(--radius-pill)
+      flex: none
+      height: 1.375rem
+      position: relative
+      width: 1.375rem
+
+    .existing-relative-person[data-selected] .existing-relative-mark::after
+      background: var(--ink)
+      border-radius: inherit
+      content: ''
+      inset: var(--space-xs)
+      position: absolute
+
+    .existing-relative-person[data-disabled] .existing-relative-mark
+      visibility: hidden
+
+    .existing-relative-who
+      display: grid
+      gap: var(--space-xs)
+      min-width: 0
+
+    .existing-relative-refusal
+      @include typography.body
+      color: var(--ink-soft)

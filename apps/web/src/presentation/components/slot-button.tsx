@@ -4,7 +4,7 @@ import { Button, type ButtonProps } from 'react-aria-components'
 
 import './slot-button.sass'
 
-/** A numbered slot that does something when touched: it holds a `Sticker` and lifts it under the pointer. */
+/** A slot that does something when touched: it holds a `Sticker`, lifted under the pointer, or a `GhostSlot`, its outline darkened. */
 export const SlotButton: React.FC<
   ButtonProps & React.RefAttributes<HTMLButtonElement>
 > = ({ className, ...props }) => (

@@ -1,0 +1,18 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .tree-link-confirm
+    display: grid
+    gap: var(--space-l)
+
+    .tree-link-sentence
+      @include typography.lead
+      margin: 0
+
+    .tree-link-refusal
+      @include typography.body
+      color: var(--warn)
+      margin: 0
+
+    .tree-link-other
+      justify-self: start

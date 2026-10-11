@@ -19,6 +19,7 @@ import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { useOccurrenceWords } from './occurrence-words'
 import { type PersonWarning, warningsAbout } from './person-warnings'
+import { SendSheetAction } from './send-sheet-action'
 import { SheetActions } from './sheet-actions'
 import { SheetRelatives } from './sheet-relatives'
 
@@ -80,10 +81,10 @@ export const PersonSheet: React.FC<PersonSheetProps> = ({
           generation={face.generation}
           givenNames={face.givenNames}
           isDeceased={face.isDeceased}
+          isOpen
           lifeYears={face.years}
           monogram={face.monogram}
           portrait={<PortraitImage photoId={face.portraitPhotoId} />}
-          slotNumber={face.slotNumber}
           surname={face.surname}
         />
         <div className='sheet-identity'>
@@ -95,14 +96,10 @@ export const PersonSheet: React.FC<PersonSheetProps> = ({
               {isNameless ? face.name : face.surname}
             </span>
           </h2>
-          <p className='sheet-life'>
-            {face.years === '' ? null : (
-              <span className='sheet-years'>{face.years}</span>
-            )}
-            <span className='sheet-generation'>
-              {translate('sheet.generation', { number: face.generation })}
-            </span>
-          </p>
+          {face.years === '' ? null : (
+            <p className='sheet-years'>{face.years}</p>
+          )}
+          <SendSheetAction face={face} />
         </div>
       </header>
       {warnings.length === 0 ? null : (

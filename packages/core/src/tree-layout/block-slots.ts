@@ -12,7 +12,11 @@ export type BlockSlot =
       kind: 'person'
       personId: EntityId
     }
-  | { kind: 'unknown-parent' }
+  | {
+      /** The children whose other parent is this unknown one, in the order they are drawn. */
+      childIds: readonly EntityId[]
+      kind: 'unknown-parent'
+    }
 
 /** The cards of a block whose first slot starts at `left`; `blockKey` keeps the keys of repeats and unknown parents unique. */
 export const slotCards = ({
@@ -34,6 +38,7 @@ export const slotCards = ({
     const x = slotLeft({ index, left })
     if (slot.kind === 'unknown-parent') {
       return {
+        childIds: slot.childIds,
         generation,
         key: `unknown-parent@${blockKey}#${index}`,
         kind: 'unknown-parent',

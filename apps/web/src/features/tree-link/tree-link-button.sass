@@ -1,0 +1,11 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  // An icon over its word, heading the zoom column: the one tool there that changes the family, so it says so.
+  .tree-canvas .tree-zoom .button.tree-link-open
+    @include typography.label-strong
+    display: grid
+    gap: var(--space-2xs)
+    justify-items: center
+    min-height: calc(var(--target) + var(--space-l))
+    padding-block: var(--space-xs)

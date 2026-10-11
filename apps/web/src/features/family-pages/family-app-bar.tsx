@@ -8,7 +8,6 @@ import {
   familySettingsPathFor,
   familySharePathFor
 } from '@/infrastructure/router/navigation'
-import { AlbumGlyph } from '@/presentation/components/album-glyph'
 import { ButtonLink } from '@/presentation/components/button-link'
 import {
   BinIcon,
@@ -17,6 +16,7 @@ import {
   SettingsIcon,
   ShareIcon
 } from '@/presentation/components/icons'
+import { TreeMark } from '@/presentation/components/tree-mark'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { useOpenFamily } from './family-loader'
@@ -35,7 +35,7 @@ export const FamilyAppBar: React.FC = () => {
         href={familyPathFor(familyId)}
         variant='quiet'
       >
-        <AlbumGlyph />
+        <TreeMark />
         <span className='family-bar-name-text'>{family.settings.name}</span>
       </ButtonLink>
       <nav

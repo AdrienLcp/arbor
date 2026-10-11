@@ -1,0 +1,12 @@
+// The person whose sheet is open: an ink bookmark tucked behind their sticker, its forked end standing above it (DESIGN.md, Bookmark ribbon).
+@mixin ribbon($width: 1.375rem, $height: 2.875rem, $rise: 1.875rem, $notch: 0.5rem, $inset-end: 0.875rem)
+  background: var(--ink)
+  clip-path: polygon(0 0, 50% $notch, 100% 0, 100% 100%, 0 100%)
+  content: ''
+  height: $height
+  inset-inline-end: $inset-end
+  pointer-events: none
+  position: absolute
+  top: calc(-1 * #{$rise})
+  width: $width
+  z-index: 0

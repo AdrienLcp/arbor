@@ -116,6 +116,14 @@ describe('[tree-layout] the whole family', () => {
     expect(unknownBeside[0]?.x).toBeGreaterThan(jeanne.x)
   })
 
+  it('[tree-layout] names the children an unknown other parent is missing for', () => {
+    const unknown = layoutWholeFamily(demoFamily()).cards.find(
+      (card) => card.kind === 'unknown-parent'
+    )
+
+    expect(unknown).toMatchObject({ childIds: ['rene-morel'] })
+  })
+
   it('[tree-layout] tells both filiations of a child adopted by a parent’s partner', () => {
     expect(descentTo(layoutWholeFamily(demoFamily()), 'lucie-morel')).toEqual([
       'anne-morel (birth)',

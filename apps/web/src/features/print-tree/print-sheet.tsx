@@ -33,7 +33,6 @@ export type PrintSheetProps = {
   /** Receives the SVG element, which the PDF is made from. */
   ref?: React.Ref<SVGSVGElement>
   scene: TreeScene
-  slotNumbers: ReadonlyMap<string, number>
   summary: string
 }
 
@@ -54,7 +53,6 @@ export const PrintSheet: React.FC<PrintSheetProps> = ({
   printedOn,
   ref,
   scene,
-  slotNumbers,
   summary
 }) => {
   const idPrefix = `print${useId().replaceAll(':', '')}`
@@ -102,7 +100,6 @@ export const PrintSheet: React.FC<PrintSheetProps> = ({
           places={places}
           portraits={portraits}
           scene={scene}
-          slotNumbers={slotNumbers}
         />
       </g>
       <PrintPanel

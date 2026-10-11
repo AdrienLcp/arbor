@@ -12,8 +12,8 @@ export const RAIL_WIDTH = 176
 /** Paper around the drawing, so nothing touches the edge of the plane. */
 const PLANE_MARGIN = 48
 
-/** How far a band reaches above its row of cards: room for the slot numbers. */
-const BAND_ABOVE_CARDS = 30
+/** How far a band reaches above its row of cards: room for the printed frame that peeks around each sticker. */
+const BAND_ABOVE_CARDS = 12
 /** How far a band reaches below its row of cards: room for the union words. */
 const BAND_BELOW_CARDS = 16
 

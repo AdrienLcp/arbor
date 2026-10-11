@@ -20,7 +20,6 @@ import { useFamilyEdit } from '@/features/family-edits/use-family-edit'
 import { FocusCard } from '@/features/family-tree/focus-card'
 import type { PersonFace } from '@/features/family-tree/person-face'
 import { PersonSearch } from '@/features/family-tree/person-search'
-import { slotNumbersOf } from '@/features/family-tree/slot-numbers'
 import { TreeCanvas } from '@/features/family-tree/tree-canvas'
 import { TreeOutline } from '@/features/family-tree/tree-outline'
 import { treeScene } from '@/features/family-tree/tree-scene'
@@ -34,6 +33,9 @@ import {
 import { useTreeView } from '@/features/family-tree/use-tree-view'
 import { familyKinship, kinPathOf } from '@/features/kinship/family-kinship'
 import { SIDE_SHEET_WIDTH } from '@/features/person-sheet/side-sheet'
+import { TreeLinkButton } from '@/features/tree-link/tree-link-button'
+import { TreeLinkControls } from '@/features/tree-link/tree-link-controls'
+import { useTreeLink } from '@/features/tree-link/use-tree-link'
 import { today } from '@/infrastructure/clock'
 import {
   familyTreePathFor,
@@ -148,23 +150,33 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   const isPhone = useMediaQuery(PHONE_SCREEN)
   const sheet = useChildPage()
   const sheetPersonId = useSheetPersonId()
+  const { answeredBeforeEdit } = useWhoAmI()
   const { setFocus, setScope, showAround, view } = useTreeView({
     fallbackFocusId,
     initialFocusId,
     isInTree: (personId) => isInTree(family, personId),
     myPersonId,
     // A computer's side sheet lies over the tree, which stays still beneath it; a phone's bottom sheet would hide the person touched, so the tree turns to them.
-    shownPersonId: isPhone ? sheetPersonId : null
+    shownPersonId: isPhone ? sheetPersonId : null,
+    turnsToMe: sheetPersonId === null && !answeredBeforeEdit
   })
-  const personIds = [...family.persons.keys()]
   const faces = usePersonFaces()
   const edit = useFamilyEdit()
+  const link = useTreeLink({ edit, family })
   const [adding, setAdding] = useState<Adding | null>(null)
+  /** Whom the add dialog adds to; `null` for the person in the middle of the tree. */
+  const [addingToId, setAddingToId] = useState<EntityId | null>(null)
+  const startAdding = (relation: Adding, personId: EntityId | null) =>
+    edit.signFirst(() => {
+      setAddingToId(personId)
+      setAdding(relation)
+    })
   const closeSheet = useGoBack(familyTreePathFor(familyId))
   const isSpread = isPhone && view.scope === 'spread'
   const lit = isSpread ? null : litKinship
   const focusId = lit?.relativeId ?? view.focusId
   const focus = faces.get(focusId)
+  const addingTo = faces.get(addingToId ?? focusId)
   const focusSheetPath = personSheetPathFor({ familyId, personId: focusId })
   /** Touching anyone on the canvas opens their sheet, every change at hand; the tree turns to them behind it. */
   const openSheetOf = (personId: EntityId) => {
@@ -185,6 +197,13 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     isPhone,
     scope: view.scope
   })
+  /** Links are drawn on the canvas: neither the list nor a page of the spread, nor a lit kinship. */
+  const canLink =
+    edit.canEdit &&
+    lit === null &&
+    shownScope !== 'list' &&
+    shownScope !== 'spread'
+
   const aroundTitle = translate('tree.titleAround', { name: focusName })
   const title =
     lit?.sentence ??
@@ -233,9 +252,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
           key={view.focusId}
           lineage={familyLineage(family)}
           onAdd={
-            edit.canEdit
-              ? (relation) => edit.signFirst(() => setAdding(relation))
-              : undefined
+            edit.canEdit ? (relation) => startAdding(relation, null) : undefined
           }
           onPressPerson={turnSpreadTo}
           sheetPath={focusSheetPath}
@@ -253,16 +270,31 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
           coveredBottomShare={sheet !== null && isPhone ? BOTTOM_SHEET_PEEK : 0}
           focusId={focusId}
           label={title}
+          linking={link.linking}
+          linkTool={canLink ? <TreeLinkButton link={link} /> : undefined}
           litPath={lit?.path ?? null}
           onPressPerson={openSheetOf}
+          onPressUnknownParent={
+            edit.canEdit
+              ? (childId) => startAdding('parent', childId)
+              : undefined
+          }
+          openPersonId={sheetPersonId}
           persons={family.persons}
           scene={scene}
-          slotNumbers={slotNumbersOf({ layout: scene.layout, personIds })}
           today={day}
         />
         {focus === undefined || sheet !== null ? null : (
           <FocusCard face={focus} sheetPath={focusSheetPath} />
         )}
+        {canLink ? (
+          <TreeLinkControls
+            edit={edit}
+            faces={faces}
+            family={family}
+            link={link}
+          />
+        ) : null}
       </>
     )
   }
@@ -318,10 +350,10 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
           {sheet}
         </BottomSheet>
       ) : null}
-      {focus === undefined ? null : (
+      {addingTo === undefined ? null : (
         <AddRelativeDialog
           adding={adding}
-          anchor={focus}
+          anchor={addingTo}
           onChange={setAdding}
         />
       )}

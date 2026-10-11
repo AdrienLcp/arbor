@@ -44,7 +44,6 @@ const FocusSticker: React.FC<{ focus: PersonFace }> = ({ focus }) => (
       lifeYears={focus.years}
       monogram={focus.monogram}
       portrait={<PortraitImage photoId={focus.portraitPhotoId} />}
-      slotNumber={focus.slotNumber}
       surname={focus.surname}
     />
   </ViewTransition>
@@ -115,10 +114,8 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
       <div className='focus-couples-partner' key={keyOf(couple)}>
         {partner === null ? (
           <GhostSlot
-            className='unnumbered'
             generation={focus.generation}
             hint={translate('tree.spread.unknownPartner.hint')}
-            slotNumber={0}
             title={translate('tree.spread.unknownPartner.title')}
           />
         ) : (
@@ -141,7 +138,6 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
                 lifeYears={partner.years}
                 monogram={partner.monogram}
                 portrait={<PortraitImage photoId={partner.portraitPhotoId} />}
-                slotNumber={partner.slotNumber}
                 surname={partner.surname}
               />
             </ViewTransition>

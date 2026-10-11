@@ -22,7 +22,11 @@ export type TreeCard = CardPlacement &
         kind: 'person'
         personId: EntityId
       }
-    | { kind: 'unknown-parent' }
+    | {
+        /** The children whose other parent is this unknown one, in the order they are drawn. */
+        childIds: readonly EntityId[]
+        kind: 'unknown-parent'
+      }
   )
 
 /** A line on the canvas, as a polyline of orthogonal segments. */

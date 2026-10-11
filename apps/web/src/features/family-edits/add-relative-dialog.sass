@@ -1,33 +1,7 @@
-@use '../../presentation/styles/typography'
-
 @layer components
-  .add-relative-choices
-    display: grid
-    gap: var(--space-s)
-    list-style: none
-    margin: 0
-    padding: 0
-
-    // A whole line per link, its kind in the album's label voice and who it means in words below.
-    .add-relative-choice
-      align-items: start
-      border: var(--stroke-thin) solid var(--ghost-soft)
-      display: grid
-      gap: var(--space-2xs)
-      justify-content: start
-      justify-items: start
-      min-height: var(--relative-row-height)
-      padding: var(--space-m) var(--space-l)
-      text-align: start
-
-    .add-relative-choice-title
-      @include typography.title
-
-    .add-relative-choice-hint
-      @include typography.body-small
-      color: var(--ink-soft)
-      @include typography.regular
-
   .add-relative-back
     justify-self: start
     margin-bottom: var(--space-l)
+
+  .add-relative-who
+    margin-bottom: var(--space-xl)

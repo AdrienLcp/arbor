@@ -6,6 +6,7 @@ import {
 } from '@/infrastructure/router/navigation'
 
 import {
+  type Creator,
   createFamilyWithFounder,
   type Founder
 } from './create-family-with-founder'
@@ -16,7 +17,11 @@ export const useCreateFamily = () => {
   const [isPending, startTransition] = useTransition()
   const [hasFailed, setHasFailed] = useState(false)
 
-  const create = (input: { founder: Founder; treeName: string }): void => {
+  const create = (input: {
+    creator: Creator
+    founder: Founder
+    treeName: string
+  }): void => {
     setHasFailed(false)
     startTransition(async () => {
       const created = await createFamilyWithFounder(input)

@@ -10,6 +10,12 @@
     padding: 0
     text-align: inherit
 
+    .ghost-slot
+      transition: border-color var(--transition-fast, 0s) var(--ease-out)
+
+    &[data-hovered] .ghost-slot
+      border-color: var(--ink)
+
     .sticker
       transition: translate var(--transition-fast, 0s) var(--ease-out), box-shadow var(--transition-fast, 0s) var(--ease-out)
 

@@ -28,6 +28,7 @@ export {
   RefreshCw as ReplaceIcon,
   RotateCw as RetryIcon,
   Search as SearchIcon,
+  Send as SendIcon,
   Settings as SettingsIcon,
   Share2 as ShareIcon,
   Trash2 as BinIcon,

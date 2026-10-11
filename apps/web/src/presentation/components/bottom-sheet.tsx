@@ -16,12 +16,17 @@ const SNAP_POINTS = [`${BOTTOM_SHEET_PEEK * 100}%`, '100%']
 /** The element react-aria scrolls to swipe the sheet: scrolled to its end, the sheet stands at its whole height. */
 const SWIPE_AREA = '[data-sheet-scroll]'
 
-/** A control the keyboard reaches under a half-open sheet's fold would be out of sight: the sheet rises to its whole height first. */
+const isBelowTheFold = (element: HTMLElement): boolean =>
+  element.getBoundingClientRect().bottom > window.innerHeight
+
+/** A control the keyboard reaches under a half-open sheet's fold would be out of sight: the sheet rises to its whole height first. Focus the sheet itself takes on opening, or that lands in sight, leaves it half open. */
 const riseToKeyboardFocusIn = (content: HTMLDivElement | null) => {
   if (content === null) return
   const rise = (event: FocusEvent) => {
     if (!(event.target instanceof HTMLElement)) return
+    if (event.target === content) return
     if (!event.target.matches(':focus-visible')) return
+    if (!isBelowTheFold(event.target)) return
     const swipeArea = content.closest(SWIPE_AREA)
     swipeArea?.scrollTo({ top: swipeArea.scrollHeight })
   }

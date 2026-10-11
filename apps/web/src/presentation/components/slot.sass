@@ -1,4 +1,5 @@
-// A style system: a numbered slot holds either a sticker or a ghost outline.
+// A style system: a slot holds either a sticker or a ghost outline.
+@use '../styles/bookmark-ribbon'
 @use '../styles/sticker-photo'
 @use '../styles/typography'
 
@@ -9,12 +10,6 @@
     display: block
     flex: none
     width: var(--slot-width)
-
-    .slot-number
-      @include typography.numeral
-      color: var(--gc-ink, var(--ink-soft))
-      display: block
-      height: 1.125rem
 
     .slot-bed
       display: block
@@ -136,14 +131,43 @@
       @include typography.body-small
       text-wrap: balance
 
-  // The focus person: the album's one foil sticker, ringed, its printed frame hidden.
+    .ghost-slot-action
+      @include typography.name
+      align-items: center
+      background: var(--action)
+      border-radius: var(--radius-pill)
+      color: var(--on-action)
+      display: inline-flex
+      gap: var(--space-2xs)
+      margin-top: var(--space-xs)
+      padding: var(--space-2xs) var(--space-s)
+
+      svg
+        flex: none
+        height: 1em
+        width: 1em
+
+  // The focus person: the album's one foil sticker, its ring inside the printed frame it hides, so it never covers a neighbour.
   .slot.focus
     .slot-bed::before
       display: none
 
     .sticker
       background: linear-gradient(128deg, var(--foil-a), var(--foil-b) 30%, var(--foil-c) 55%, var(--foil-d) 80%, var(--foil-a))
-      box-shadow: var(--shadow-sticker-edge), 0 0 0 4px var(--paper), 0 0 0 7px var(--ink), var(--shadow-sticker-lift)
+      box-shadow: var(--shadow-sticker-edge), 0 0 0 2px var(--paper), 0 0 0 4px var(--ink), var(--shadow-sticker-lift)
+
+  .slot.open
+    isolation: isolate
+    position: relative
+
+    &::before
+      @include bookmark-ribbon.ribbon
+
+    .slot-bed
+      z-index: 1
+
+      &::before
+        border-color: var(--ink)
 
   // A person drawn a second time: flattened back into the page, in a dashed frame.
   .slot.repeated

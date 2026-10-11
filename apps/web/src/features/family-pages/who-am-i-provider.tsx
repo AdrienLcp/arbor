@@ -22,6 +22,8 @@ import { WhoAmIChoices } from './who-am-i-choices'
 import './who-am-i-provider.sass'
 
 type WhoAmI = {
+  /** Whether the visitor's last answer came before a change they asked for, rather than on their own offer. */
+  answeredBeforeEdit: boolean
   /** Asks "Who are you in this tree?" over the page, when the visitor offers to say it. */
   ask: () => void
   /** Who signs the visitor's changes; `null` until they say who they are, or while they only look. */
@@ -52,6 +54,7 @@ export const WhoAmIProvider: React.FC<WhoAmIProviderProps> = ({ children }) => {
   const [me, setMe] = useState(() => rememberedMe(familyId))
   const [asking, setAsking] = useState<Asking>({ kind: 'offered' })
   const [isAsking, setIsAsking] = useState(false)
+  const [answeredBeforeEdit, setAnsweredBeforeEdit] = useState(false)
   const author = signingAuthor(me)
 
   const remember = (chosen: NonNullable<FamilyAccess['me']>) => {
@@ -73,6 +76,7 @@ export const WhoAmIProvider: React.FC<WhoAmIProviderProps> = ({ children }) => {
   }
 
   const answer = (chosen: Author) => {
+    setAnsweredBeforeEdit(asking.kind === 'before_edit')
     remember(chosen)
     setIsAsking(false)
     if (asking.kind === 'before_edit') asking.then()
@@ -81,6 +85,7 @@ export const WhoAmIProvider: React.FC<WhoAmIProviderProps> = ({ children }) => {
   return (
     <WhoAmIContext
       value={{
+        answeredBeforeEdit,
         ask: () => askFor({ kind: 'offered' }),
         author,
         me,

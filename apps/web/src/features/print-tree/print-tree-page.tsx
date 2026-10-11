@@ -13,7 +13,6 @@ import {
 import { FamilyAppBar } from '@/features/family-pages/family-app-bar'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
 import { usePersonFaces } from '@/features/family-pages/use-person-faces'
-import { slotNumbersOf } from '@/features/family-tree/slot-numbers'
 import { treeScene } from '@/features/family-tree/tree-scene'
 import { firstFocusId } from '@/features/family-tree/tree-view'
 import { pageOrigin, saveFile } from '@/infrastructure/browser'
@@ -134,7 +133,7 @@ export const PrintTreePage: React.FC = () => {
   const sheet = useRef<SVGSVGElement>(null)
   const familyName = response.settings.name
   const scene = treeScene({
-    hasGenerationBands: true,
+    hasGenerationBands: false,
     layout: layoutOfPrintScope(family, scopeOf(choices)),
     persons: family.persons
   })
@@ -285,10 +284,6 @@ export const PrintTreePage: React.FC = () => {
                     printedOn={today()}
                     ref={sheet}
                     scene={scene}
-                    slotNumbers={slotNumbersOf({
-                      layout: scene.layout,
-                      personIds: [...family.persons.keys()]
-                    })}
                     summary={summary}
                   />
                   <svg

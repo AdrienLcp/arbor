@@ -31,11 +31,6 @@
       position: absolute
       top: var(--y)
 
-      // The slot's number prints above the slot, outside the layout's card box.
-      .slot-number
-        bottom: 100%
-        position: absolute
-
       // Smaller than the phone floor: only the zoomable canvas prints them (The 16px Floor Rule).
       .sticker-surname
         font-size: var(--text-2xs)
@@ -45,6 +40,16 @@
 
       .sticker-given-names
         font-size: var(--text-s)
+
+      .ghost-slot
+        padding: var(--space-xs)
+
+      .ghost-slot-hint
+        font-size: var(--text-xs)
+
+      .ghost-slot-action
+        font-size: var(--text-xs)
+        padding-inline: var(--space-xs) var(--space-s)
 
     .relation-words
       @include typography.relation-word
@@ -64,6 +69,37 @@
 
       &.dashed
         border-style: dashed
+
+    .relation-words-cut
+      justify-self: center
+      overflow: visible
+
+    // The "+ Lien" mode: whoever the family would refuse steps back, the first person picked is circled in ink.
+    .tree-card.link-refused
+      cursor: not-allowed
+      opacity: 0.32
+
+    .tree-card.link-first .slot-bed
+      outline: var(--stroke-line-heavy) solid var(--ink)
+      outline-offset: var(--space-xs)
+
+    .tree-card.link-drag-start
+      cursor: crosshair
+
+    .link-drag-line
+      display: none
+      inset: 0
+      overflow: visible
+      pointer-events: none
+      position: absolute
+
+      &[data-drawn]
+        display: block
+
+      line
+        stroke: var(--ink)
+        stroke-linecap: round
+        stroke-width: var(--stroke-line-heavy)
 
     // A kinship path traced over the tree like a marker on paper, in the selection's ochre; everyone else steps back.
     .kin-marker-stroke

@@ -17,5 +17,7 @@ minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   - '@adrienlcp/*'
 
+patchedDependencies:
+  '@adrienlcp/i18n@0.5.2': patches/@adrienlcp__i18n@0.5.2.patch
 publicHoistPattern:
   - '@biomejs/*'

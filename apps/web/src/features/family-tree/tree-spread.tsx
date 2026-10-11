@@ -4,9 +4,9 @@ import type React from 'react'
 import type { EntityId } from '@arbor/protocol/entity-id'
 
 import { closeFamilyOf } from '@arbor/core/relatives/close-family'
+import type { Relation } from '@arbor/core/relatives/relation'
 import type { FamilyLineage } from '@arbor/core/tree-layout/family-lineage'
 
-import type { Relation } from '@/features/family-edits/relation'
 import { Button } from '@/presentation/components/button'
 import { ButtonLink } from '@/presentation/components/button-link'
 import { generationClass } from '@/presentation/components/generation-class'

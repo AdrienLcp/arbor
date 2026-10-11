@@ -44,7 +44,9 @@ const parentCouple = ({
     return { isRepeated, kind: 'person', personId }
   })
   const withUnknownParent: readonly BlockSlot[] =
-    slots.length === 1 ? [...slots, { kind: 'unknown-parent' }] : slots
+    slots.length === 1
+      ? [...slots, { childIds: [childId], kind: 'unknown-parent' }]
+      : slots
 
   return {
     childId,

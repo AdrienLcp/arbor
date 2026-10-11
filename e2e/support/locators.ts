@@ -56,6 +56,8 @@ export const linkRefusedScreen = (page: Page) => ({
 export const formDialog = (page: Page) => page.locator('.form-dialog')
 
 export const treePage = (page: Page) => ({
+  /** Finding someone by name turns the tree around them. */
+  find: page.getByRole('combobox', { name: 'Find someone' }),
   /** Touching a person on the tree opens their sheet. */
   person: (name: string) => page.getByRole('button', { name }).first(),
   /** The invitation of a visitor who has not said who they are yet. */
@@ -83,9 +85,11 @@ export const personSheet = (page: Page) => ({
   photo: (caption: string) => page.getByRole('button', { name: caption }),
   /** The `FileTrigger`'s own input: the button opens the phone's picker, which a journey cannot drive. */
   photoInput: page.locator('.person-photos input[type="file"]'),
-  /** Anchored: the tree under the sheet has its own buttons naming the same people ("Down to …"). */
+  /** Inside the sheet, anchored: the tree under it has its own buttons naming the same people, the stickers and "Down to …". */
   relative: (name: string) =>
-    page.getByRole('button', { name: new RegExp(`^${name}`) })
+    page
+      .locator('.person-sheet')
+      .getByRole('button', { name: new RegExp(`^${name}`) })
 })
 
 export const addRelativeDialog = (page: Page) => {

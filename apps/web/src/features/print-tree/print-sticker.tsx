@@ -3,7 +3,6 @@ import type React from 'react'
 import { CARD_HEIGHT, CARD_WIDTH } from '@arbor/core/tree-layout/tree-metrics'
 
 import type { PersonFace } from '@/features/family-tree/person-face'
-import { slotNumberText } from '@/presentation/components/slot-number'
 
 import { generationInks, mixColors, PRINT_PALETTE } from './print-palette'
 import { fittedSize } from './print-text'
@@ -17,8 +16,6 @@ const CAPTION_WIDTH = CARD_WIDTH - 2 * PADDING - 2
 const CENTRE = CARD_WIDTH / 2
 /** A deceased person's art, dulled toward grey (The Matte Means Gone Rule). */
 const MATTE_SHARE = 0.58
-/** The slot number, just above the slot. */
-const NUMBER_ABOVE = 8
 /** The caption's baselines from the sticker's top: three lines spread out, four drawn closer so the place fits. */
 const CAPTION_BASELINES = {
   four: [94, 109, 125, 141],
@@ -50,19 +47,7 @@ export const Halftone: React.FC<{ generation: number; prefix: string }> = ({
   </pattern>
 )
 
-type Spot = { generation: number; slotNumber: number; x: number; y: number }
-
-const SlotNumber: React.FC<Spot> = ({ generation, slotNumber, x, y }) => (
-  <text
-    fill={generationInks(generation).ink}
-    fontFamily={PRINT_VOICES.labelBold.family}
-    fontSize='15'
-    x={x}
-    y={y - NUMBER_ABOVE}
-  >
-    {slotNumberText(slotNumber)}
-  </text>
-)
+type Spot = { x: number; y: number }
 
 type CentredLine = {
   fill: string
@@ -109,6 +94,8 @@ const CaptionLine: React.FC<CentredLine & { x: number }> = ({
 export const PrintSticker: React.FC<
   Spot & {
     face: PersonFace
+    /** Counted from the oldest generation, 1 first: it picks the sticker's ink. */
+    generation: number
     hasDates: boolean
     /** Prefix of the sheet's pattern ids. */
     idPrefix: string
@@ -127,7 +114,6 @@ export const PrintSticker: React.FC<
   isRepeated,
   place,
   portrait,
-  slotNumber,
   x,
   y
 }) => {
@@ -145,7 +131,6 @@ export const PrintSticker: React.FC<
 
   return (
     <g>
-      <SlotNumber generation={generation} slotNumber={slotNumber} x={x} y={y} />
       <rect
         fill={PRINT_PALETTE.sticker}
         height={CARD_HEIGHT}
@@ -272,12 +257,11 @@ export const PrintSticker: React.FC<
   )
 }
 
-/** An unknown parent's empty slot on paper: a dashed outline, its number, and who belongs there. */
+/** An unknown parent's empty slot on paper: a dashed outline and who belongs there. */
 export const PrintGhostSlot: React.FC<
   Spot & { hint: string; title: string }
-> = ({ generation, hint, slotNumber, title, x, y }) => (
+> = ({ hint, title, x, y }) => (
   <g>
-    <SlotNumber generation={generation} slotNumber={slotNumber} x={x} y={y} />
     <rect
       fill={PRINT_PALETTE.paper2}
       height={CARD_HEIGHT}

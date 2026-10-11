@@ -37,7 +37,7 @@ const BASE: Stroke = {
 /** The paper core of an adoption's double line, and the gap under the slashes of an ended union. */
 const ADOPTION_CORE = 2.4
 const CUT_GAP = 7
-const CUT_WIDTH = 2.6
+export const CUT_WIDTH = 2.6
 
 /** One relation line on paper, stroked for its kind; an ended union is cut with two slashes. */
 export const PrintLine: React.FC<{

@@ -9,13 +9,17 @@
       border-bottom: var(--stroke-bold) solid color-mix(in oklab, var(--gc) 55%, var(--paper))
       display: flex
       gap: var(--space-l)
-      padding: var(--space-l) max(var(--space-l), var(--sheet-inset-end)) var(--space-m) max(var(--space-l), var(--sheet-inset-start))
+      // Room above the sticker for the bookmark ribbon standing out of it.
+      padding: var(--space-2xl) max(var(--space-l), var(--sheet-inset-end)) var(--space-m) max(var(--space-l), var(--sheet-inset-start))
 
       .slot
         --slot-height: 9.875rem
         --slot-width: 7.75rem
 
     .sheet-identity
+      display: grid
+      gap: var(--space-s)
+      justify-items: start
       min-width: 0
       padding-bottom: var(--space-xs)
 
@@ -31,18 +35,13 @@
       color: var(--ink-soft)
       font-size: var(--text-2xl)
 
-    .sheet-life
-      display: grid
-      gap: var(--space-xs)
-      margin-top: var(--space-s)
-
     .sheet-years
       @include typography.numeral
       font-size: var(--text-l)
 
-    .sheet-generation
-      @include typography.label
-      color: var(--gc-ink)
+    .send-sheet-open
+      background: var(--paper)
+      padding-inline: var(--space-m)
 
     .sheet-warnings
       display: grid
