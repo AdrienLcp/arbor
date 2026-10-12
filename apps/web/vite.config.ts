@@ -1,6 +1,7 @@
 import { resolve } from 'node:path'
 
 import { metricTwins } from '@adrienlcp/styles/metric-twins'
+import { sassValues } from '@adrienlcp/styles/sass-values'
 import { themePreferencePlugin } from '@adrienlcp/theme-preference/vite'
 import optimizeLocales from '@react-aria/optimize-locales-plugin'
 import react from '@vitejs/plugin-react'
@@ -36,21 +37,6 @@ const swapFontsWhileServing = {
       : null
 }
 
-const SCREEN_SIZES_MODULE = new URL('arbor:screen-sizes')
-
-/** Hands `_layout.sass` the breakpoints the scripts' media queries read, from their one source. */
-const screenSizesImporter = {
-  canonicalize: (url: string): URL | null =>
-    url === SCREEN_SIZES_MODULE.href ? SCREEN_SIZES_MODULE : null,
-  load: () => ({
-    contents: [
-      `$wide-screen: ${SCREEN_SIZES.wideScreen}`,
-      `$short-screen: ${SCREEN_SIZES.shortScreen}`
-    ].join('\n'),
-    syntax: 'indented' as const
-  })
-}
-
 export default defineConfig({
   css: {
     postcss: {
@@ -65,7 +51,9 @@ export default defineConfig({
       ]
     },
     preprocessorOptions: {
-      sass: { importers: [screenSizesImporter] }
+      sass: {
+        importers: [sassValues({ 'screen-sizes': SCREEN_SIZES })]
+      }
     }
   },
   plugins: [
