@@ -19,7 +19,8 @@ import desktopConfig from 'lighthouse/core/config/desktop-config.js'
  * fails. No performance score or LCP is gated: simulated throttling swings
  * them by ten points between two runs of one build, and Arbor is a family's
  * tool, not a page competing for visitors. The script budget moves only when
- * a module enters the first load.
+ * a module enters the first load. FCP, LCP and TBT are printed for every run,
+ * to read, not to judge.
  *
  * Lighthouse drives a Chromium launched here, through its debugging port:
  * `chrome-launcher` would make a profile it fails to delete on Windows. The
@@ -70,8 +71,14 @@ const AUDITED_PATHS = [
 const CATEGORIES = ['accessibility', 'best-practices', 'seo']
 const MIN_SCORE = 100
 
-/** 13% over the 349,033 bytes a person's sheet, the heaviest page, transfers today. */
-const SCRIPT_TRANSFER_BUDGET_BYTES = 395_000
+/**
+ * Lighthouse CI's assertion names, so a budget reads the same here as in any
+ * Lighthouse documentation. The script size is 13% over the 349,033 bytes a
+ * person's sheet, the heaviest page, transfers today.
+ */
+const BUDGETS_WITH_HEADROOM = {
+  'resource-summary:script:size': 395_000
+}
 
 /**
  * The quick pass: one screen, one theme. The full matrix stays in CI, since
@@ -160,6 +167,9 @@ const stopServerProcessTree = (server: ChildProcess): void => {
   }
 }
 
+const numericValueOf = (result: RunnerResult, audit: string): number =>
+  result.lhr.audits[audit]?.numericValue ?? 0
+
 const scriptBytesIn = (result: RunnerResult): number => {
   const details = result.lhr.audits['resource-summary']?.details
   const rows = details?.type === 'table' ? details.items : []
@@ -168,20 +178,26 @@ const scriptBytesIn = (result: RunnerResult): number => {
   return typeof scripts?.transferSize === 'number' ? scripts.transferSize : 0
 }
 
+type Measure = {
+  fcpMs: number
+  lcpMs: number
+  report: string
+  scores: Record<string, number>
+  scriptBytes: number
+  tbtMs: number
+}
+
+/** Throws on a run that measured nothing: a page that never painted is no score of 0. */
 const audit = async (
   url: string,
   formFactor: FormFactor,
   categories: string[],
   skipAudits: string[]
-): Promise<{
-  report: string
-  scores: Record<string, number>
-  scriptBytes: number
-}> => {
+): Promise<Measure> => {
   const flags: Flags = {
     logLevel: 'error',
     onlyAudits: ['resource-summary'],
-    onlyCategories: categories,
+    onlyCategories: ['performance', ...categories],
     output: 'html',
     port: PLAYWRIGHT_CHROMIUM_DEBUGGING_PORT,
     skipAudits
@@ -189,28 +205,52 @@ const audit = async (
   const result = await lighthouse(url, flags, configFor[formFactor])
 
   if (result === undefined) {
-    throw new Error(`Lighthouse returned nothing for ${url}`)
+    throw new Error(`Lighthouse returned nothing for ${url} (${formFactor})`)
   }
 
-  const runtimeError = result.lhr.runtimeError
+  const { runtimeError } = result.lhr
 
   if (runtimeError !== undefined) {
-    throw new Error(`${url}: ${runtimeError.code} ${runtimeError.message}`)
+    throw new Error(
+      `${url} (${formFactor}): ${runtimeError.code} ${runtimeError.message}`
+    )
   }
 
   const scores = Object.fromEntries(
-    categories.map((id) => [
-      id,
-      Math.round((result.lhr.categories[id]?.score ?? 0) * 100)
-    ])
+    categories.map((id) => {
+      const score = result.lhr.categories[id]?.score
+
+      if (typeof score !== 'number') {
+        throw new Error(
+          `${url} (${formFactor}): Lighthouse could not score ${id}`
+        )
+      }
+
+      return [id, Math.round(score * 100)]
+    })
   )
 
   return {
+    fcpMs: numericValueOf(result, 'first-contentful-paint'),
+    lcpMs: numericValueOf(result, 'largest-contentful-paint'),
     report: String(result.report),
     scores,
-    scriptBytes: scriptBytesIn(result)
+    scriptBytes: scriptBytesIn(result),
+    tbtMs: numericValueOf(result, 'total-blocking-time')
   }
 }
+
+const failuresOf = ({ scores, scriptBytes }: Measure): string[] => [
+  ...Object.entries(scores)
+    .filter(([, score]) => score < MIN_SCORE)
+    .map(([id, score]) => `${id} ${score}`),
+  ...(scriptBytes > BUDGETS_WITH_HEADROOM['resource-summary:script:size']
+    ? [`resource-summary:script:size ${Math.round(scriptBytes / 1000)} kB`]
+    : [])
+]
+
+const timingsOf = ({ fcpMs, lcpMs, tbtMs }: Measure): string =>
+  `FCP ${Math.round(fcpMs)} ms · LCP ${Math.round(lcpMs)} ms · TBT ${Math.round(tbtMs)} ms`
 
 const reportNameFor = (path: string, formFactor: FormFactor, scheme: Scheme) =>
   `${path.slice(1).replaceAll('/', '-') || 'home'}.${formFactor}.${scheme}.html`
@@ -254,6 +294,7 @@ try {
   for (const scheme of schemes) {
     const browser = await chromium.launch({
       args: [
+        '--mute-audio',
         `--remote-debugging-port=${PLAYWRIGHT_CHROMIUM_DEBUGGING_PORT}`,
         `--blink-settings=preferredColorScheme=${BLINK_PREFERRED_COLOR_SCHEME[scheme]}`
       ]
@@ -262,24 +303,17 @@ try {
     try {
       for (const formFactor of formFactors) {
         for (const path of paths) {
-          const { report, scores, scriptBytes } = await audit(
+          const reading = await audit(
             `${origin}${path}`,
             formFactor,
             categoriesFor(path),
             skippedAuditsFor(path)
           )
-          const broken = [
-            ...Object.entries(scores)
-              .filter(([, score]) => score < MIN_SCORE)
-              .map(([id, score]) => `${id} ${score}`),
-            ...(scriptBytes > SCRIPT_TRANSFER_BUDGET_BYTES
-              ? [`JS over ${SCRIPT_TRANSFER_BUDGET_BYTES} B`]
-              : [])
-          ]
+          const broken = failuresOf(reading)
           const label = `${path} ${formFactor} ${scheme}`
 
           console.info(
-            `${broken.length === 0 ? 'ok  ' : 'FAIL'} ${label} · JS ${scriptBytes} B${broken.length === 0 ? '' : ` · ${broken.join(', ')}`}`
+            `${broken.length === 0 ? 'ok  ' : 'FAIL'} ${label} · ${timingsOf(reading)} · JS ${reading.scriptBytes} B${broken.length === 0 ? '' : ` · ${broken.join(', ')}`}`
           )
 
           if (broken.length > 0) {
@@ -287,7 +321,7 @@ try {
           }
           await writeFile(
             join(REPORT_DIR, reportNameFor(path, formFactor, scheme)),
-            report
+            reading.report
           )
         }
       }
@@ -295,19 +329,21 @@ try {
       await browser.close()
     }
   }
+  if (failures.length > 0) {
+    console.error(
+      `\n${failures.length} audit(s) under 100 or over the script budget, reports in lighthouse-reports/:\n${failures.join('\n')}`
+    )
+    process.exitCode = 1
+  } else {
+    console.info(
+      '\nEvery page scores 100 in accessibility, best practices and SEO within the script budget, on both screens and in both themes.'
+    )
+  }
+} catch (error) {
+  console.error('\nThe Lighthouse gate could not measure:', error)
+  process.exitCode = 1
 } finally {
   if (local !== undefined) {
     stopServerProcessTree(local.server)
   }
 }
-
-if (failures.length > 0) {
-  console.error(
-    `\n${failures.length} audit(s) under 100 or over the script budget, reports in lighthouse-reports/:\n${failures.join('\n')}`
-  )
-  process.exit(1)
-}
-
-console.info(
-  '\nEvery page scores 100 in accessibility, best practices and SEO within the script budget, on both screens and in both themes.'
-)

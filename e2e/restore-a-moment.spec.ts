@@ -34,6 +34,9 @@ const RENAMES = [
   { after: 'Lewis', person: PARTNER }
 ]
 
+/** Two phones and eleven changes to the family: about 30 s alone, past 60 s beside three other journeys on a loaded machine. */
+const TWO_PHONES_ELEVEN_CHANGES_TIMEOUT_MS = 120_000
+
 /**
  * A contributor's bad afternoon: three people in the bin, two renamed. The
  * keeper puts the whole family back as it was before, in one action, and the
@@ -42,6 +45,7 @@ const RENAMES = [
 test('[e2e] the keeper puts the tree back as it was before a contributor binned three people and renamed two', async ({
   browser
 }) => {
+  test.setTimeout(TWO_PHONES_ELEVEN_CHANGES_TIMEOUT_MS)
   const keeper = await (await browser.newContext({ viewport: PHONE })).newPage()
   const contributor = await (
     await browser.newContext({ viewport: PHONE })
