@@ -32,6 +32,9 @@ const SECOND_SPOUSE_NAME = `${SECOND_SPOUSE.givenNames} ${SECOND_SPOUSE.surname}
 const CHILD_NAME = `Rose ${FOUNDER.surname}`
 const PHOTO_CAPTION = 'Jeanne at the seaside'
 
+/** Two phones, a dozen edits and a photo upload: about 25 s alone, past 60 s beside three other journeys on a loaded machine. */
+const TWO_PHONES_AND_A_PHOTO_TIMEOUT_MS = 120_000
+
 /** The smallest PNG a browser decodes: the photo is resized in the page before it is sent. */
 const ONE_PIXEL_PNG = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
@@ -45,6 +48,7 @@ const ONE_PIXEL_PNG = Buffer.from(
 test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate date and a photo, seen from a second phone', async ({
   browser
 }) => {
+  test.setTimeout(TWO_PHONES_AND_A_PHOTO_TIMEOUT_MS)
   const founder = await (
     await browser.newContext({ viewport: PHONE })
   ).newPage()
