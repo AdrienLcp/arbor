@@ -9,7 +9,7 @@ export default defineConfig({
     }
   },
   test: {
-    include: ['src/**/*.test.ts'],
+    include: ['scripts/**/*.test.ts', 'src/**/*.test.ts'],
     name: 'web'
   }
 })

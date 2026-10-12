@@ -1,7 +1,6 @@
 import { resolve } from 'node:path'
 
 import { metricTwins } from '@adrienlcp/styles/metric-twins'
-import { sassValues } from '@adrienlcp/styles/sass-values'
 import { themePreferencePlugin } from '@adrienlcp/theme-preference/vite'
 import optimizeLocales from '@react-aria/optimize-locales-plugin'
 import react from '@vitejs/plugin-react'
@@ -9,6 +8,7 @@ import fontaine from 'fontaine/postcss'
 import { defineConfig } from 'vite'
 
 import { API_PREFIX } from '../../packages/protocol/src/routes.ts'
+import { sassValues } from './scripts/sass-values.ts'
 import { REGIONAL_LOCALES } from './src/presentation/i18n/regional-locales.ts'
 import { SCREEN_SIZES } from './src/presentation/styles/screen-sizes.ts'
 import { themeStore } from './src/presentation/theme/theme-store.ts'
