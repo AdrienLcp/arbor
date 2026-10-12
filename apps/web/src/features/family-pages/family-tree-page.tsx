@@ -283,6 +283,11 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
           persons={family.persons}
           scene={scene}
           today={day}
+          wholeTreeView={
+            shownScope === 'whole' || shownScope === 'generations'
+              ? shownScope
+              : null
+          }
         />
         {focus === undefined || sheet !== null ? null : (
           <FocusCard face={focus} sheetPath={focusSheetPath} />

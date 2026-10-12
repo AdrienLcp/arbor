@@ -84,6 +84,8 @@ type TreeCanvasProps = {
   today: Temporal.PlainDate
   /** The share of the window's height a bottom sheet hides, so the focus person is centred in what stays in sight. */
   coveredBottomShare?: number
+  /** The whole-family view the canvas opens on with every card fitted in sight, never past the stickers' own size, unless a sheet is open; `null` opens on the focus person. Switching to another such view fits the tree again. */
+  wholeTreeView?: string | null
 }
 
 /** The tree on a canvas to pan, pinch and zoom, and to walk through person by person with the arrow keys. */
@@ -99,7 +101,8 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   openPersonId,
   persons,
   scene,
-  today
+  today,
+  wholeTreeView = null
 }) => {
   const hasFinePointer = useMediaQuery(FINE_POINTER)
   const translate = useTranslate()
@@ -111,9 +114,11 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   const [activeKey, setActiveKey] = useState<string | null>(null)
   /** Whether the visitor panned or zoomed since the canvas last centred itself: from then on a resize leaves the view where they put it. */
   const hasVisitorMoved = useRef(false)
-  const centred = useRef<{ bottomShare: number; placement: string } | null>(
-    null
-  )
+  const centred = useRef<{
+    bottomShare: number
+    placement: string
+    wholeTreeView: string | null
+  } | null>(null)
 
   const walkableCards = scene.layout.cards.filter((card) =>
     isWalkableCard(card, {
@@ -187,8 +192,14 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     return true
   }
 
-  /** Fits every card in the part of the canvas left in sight by the zoom column, the focus card and a phone's sheet. */
-  const showWholeTree = () => {
+  /** Fits every card in the part of the canvas left in sight by the generation rails, the zoom column, the focus card and a phone's sheet. */
+  const showWholeTree = ({
+    animationMs,
+    maxScale
+  }: {
+    animationMs: number
+    maxScale: number
+  }) => {
     const controls = viewport.current
     const wrapper = controls?.instance.wrapperComponent
     if (controls == null || wrapper == null) return
@@ -203,6 +214,12 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     })
     const bandTop = canvas.height / 2 + band.centreOffset - band.height / 2
     const toolsLeft = zoomTools.current?.getBoundingClientRect().left
+    const railsRight = Math.max(
+      canvas.left,
+      ...[...(rails.current?.children ?? [])].map(
+        (rail) => rail.getBoundingClientRect().right
+      )
+    )
     const focusCardTop = document
       .querySelector('.focus-card')
       ?.getBoundingClientRect().top
@@ -216,7 +233,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
         top: Math.min(...cards.map(({ y }) => y)) - scene.origin.y
       },
       margin: BAND_MARGIN,
-      maxScale: MAX_SCALE,
+      maxScale,
       minScale: MIN_SCALE,
       view: {
         bottom: Math.min(
@@ -225,7 +242,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
             ? Number.POSITIVE_INFINITY
             : focusCardTop - canvas.top
         ),
-        left: 0,
+        left: railsRight - canvas.left,
         right:
           toolsLeft === undefined
             ? canvas.width
@@ -233,12 +250,23 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
         top: bandTop
       }
     })
-    controls.setTransform(fitted.x, fitted.y, fitted.scale, GLIDE_MS)
+    controls.setTransform(fitted.x, fitted.y, fitted.scale, animationMs)
   }
+
+  /** A sheet open on arrival is about its person, kept in sight beside it. */
+  const opensOnWholeTree = wholeTreeView !== null && openPersonId === null
+
+  const showWholeTreeOnArrival = () =>
+    showWholeTree({ animationMs: 0, maxScale: ARRIVAL_SCALE })
 
   const centreOnArrival = () => {
     hasVisitorMoved.current = false
-    if (!showLitPath(scene)) centreOn(focusKey, 0, { scale: ARRIVAL_SCALE })
+    if (showLitPath(scene)) return
+    if (opensOnWholeTree) {
+      showWholeTreeOnArrival()
+    } else {
+      centreOn(focusKey, 0, { scale: ARRIVAL_SCALE })
+    }
   }
 
   // A new scene jumps, inside the refocus transition, so the stickers slide from where they were to the centre; a phone's bottom sheet opening or closing glides, a computer's side sheet leaves the tree still.
@@ -247,9 +275,14 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
       const placement = placementOf(placed, focusId)
       const isNewScene = placement !== centred.current?.placement
       if (!isNewScene && bottomShare === centred.current?.bottomShare) return
-      centred.current = { bottomShare, placement }
+      const isNewWholeTreeView =
+        opensOnWholeTree && wholeTreeView !== centred.current?.wholeTreeView
+      centred.current = { bottomShare, placement, wholeTreeView }
       hasVisitorMoved.current = false
-      if (!showLitPath(placed)) {
+      if (showLitPath(placed)) return
+      if (isNewWholeTreeView) {
+        showWholeTreeOnArrival()
+      } else {
         centreOn(focusKeyIn(placed, focusId), isNewScene ? 0 : GLIDE_MS, {
           bottomShare
         })
@@ -397,7 +430,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
                 aria-label={translate('tree.zoom.fit')}
                 onPress={() => {
                   noteVisitorMoved()
-                  showWholeTree()
+                  showWholeTree({ animationMs: GLIDE_MS, maxScale: MAX_SCALE })
                 }}
                 variant='quiet'
               >
