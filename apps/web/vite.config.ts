@@ -7,7 +7,8 @@ import react from '@vitejs/plugin-react'
 import fontaine from 'fontaine/postcss'
 import { defineConfig } from 'vite'
 
-import { API_PREFIX } from '../../packages/protocol/src/routes.ts'
+import { API_PREFIX } from '@arbor/protocol/routes'
+
 import { sassValues } from './scripts/sass-values.ts'
 import { REGIONAL_LOCALES } from './src/presentation/i18n/regional-locales.ts'
 import { SCREEN_SIZES } from './src/presentation/styles/screen-sizes.ts'
