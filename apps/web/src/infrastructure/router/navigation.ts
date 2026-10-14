@@ -144,6 +144,8 @@ export const useRefreshRouteData = (): (() => Promise<void>) => {
 type NavigateToOptions = {
   /** Replaces the current history entry, so Back skips the page left behind. */
   replace?: boolean
+  /** What the next page is told about how it was reached, kept out of its address. */
+  state?: unknown
 }
 
 /** The person whose sheet the address opens, `null` on any other page. Read from the address, so the tree page above the sheet's route sees it too. */
@@ -189,6 +191,9 @@ export const useNavigateTo = (): ((
     )
   }
 }
+
+/** What the page that sent the visitor here told it, `null` when it was opened from its address. */
+export const useNavigationState = (): unknown => useLocation().state ?? null
 
 /** The family a family page's address names, `null` for any other address. */
 export const familyIdInPath = (pathname: string): FamilyId | null => {

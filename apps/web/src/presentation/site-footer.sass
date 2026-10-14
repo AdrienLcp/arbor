@@ -1,0 +1,16 @@
+@use 'styles/typography'
+
+@layer components
+  .site-footer
+    @include typography.body-small
+    border-top: var(--hairline)
+    color: var(--ink-soft)
+    margin-top: auto
+    padding: var(--space-m) var(--gutter-right) max(var(--space-m), var(--safe-area-bottom)) var(--gutter-left)
+
+    // Under the tree's canvas the line stays thin, so the drawing keeps the height.
+    :root:has(.family-tree-screen) &
+      padding-block: var(--space-xs) max(var(--space-xs), var(--safe-area-bottom))
+
+    @media print
+      display: none

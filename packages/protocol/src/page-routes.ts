@@ -9,6 +9,7 @@ export const PAGE_ROUTES = {
   familyShare: '/f/:familyId/share',
   familyTree: '/f/:familyId/tree',
   home: '/',
+  legal: '/legal',
   openLink: '/link',
   personSheet: '/f/:familyId/tree/:personId',
   whoAmI: '/f/:familyId/me'

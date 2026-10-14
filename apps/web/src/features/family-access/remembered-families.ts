@@ -108,3 +108,13 @@ export const forgetKey = (familyId: FamilyId, role: Role): void => {
     )
   }))
 }
+
+/** Forgets a family entirely — keys, name, who the visitor is — once it has been deleted. */
+export const forgetFamily = (familyId: FamilyId): void => {
+  const { [familyId]: _forgotten, ...kept } = rememberedFamilies()
+  familiesInThisTab = kept
+  warnOnFailure(
+    writeStoredFamilies(familiesInThisTab),
+    'Forgetting the deleted family on this device'
+  )
+}

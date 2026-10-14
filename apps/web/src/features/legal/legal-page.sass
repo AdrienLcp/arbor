@@ -1,0 +1,67 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .legal-page
+    @include layout.column
+    padding-block: var(--space-2xl) var(--space-section)
+
+    .legal-document
+      display: grid
+      text-wrap: pretty
+
+    .legal-title
+      @include typography.headline
+      text-wrap: balance
+
+    .legal-intro
+      @include typography.lead
+      color: var(--ink-soft)
+      margin-top: var(--space-m)
+
+    .legal-section
+      border-top: var(--hairline)
+      display: grid
+      gap: var(--space-s)
+      margin-top: var(--space-2xl)
+      padding-top: var(--space-l)
+
+    .legal-heading
+      @include typography.title
+      margin-bottom: var(--space-2xs)
+      text-wrap: balance
+
+    .legal-list
+      display: grid
+      gap: var(--space-2xs)
+      list-style: disc
+      margin: 0
+      padding-inline-start: var(--space-l)
+
+      li::marker
+        color: var(--ink-soft)
+
+    .host-address
+      display: grid
+      font-style: normal
+
+    .stored-keys
+      display: grid
+      gap: var(--space-xs) var(--space-m)
+      grid-template-columns: max-content minmax(0, 1fr)
+      margin: 0
+
+      dt
+        @include typography.strong
+
+      dd
+        margin: 0
+
+      code
+        font-family: inherit
+
+      @include layout.narrow
+        grid-template-columns: minmax(0, 1fr)
+
+        dd + dt
+          margin-top: var(--space-s)

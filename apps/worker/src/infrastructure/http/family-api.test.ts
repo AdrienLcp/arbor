@@ -637,6 +637,94 @@ describe('[settings] the keeper settings', () => {
   })
 })
 
+describe('[deletion] deleting the family', () => {
+  const deleteFamily = (
+    family: { familyId: string; keeperKey: string },
+    confirmedName: string,
+    key = family.keeperKey
+  ) =>
+    api.call(familyPath(family.familyId), {
+      body: { confirmedName },
+      key,
+      method: 'DELETE'
+    })
+
+  it('[deletion] erases the people, the photos, the log and every key once the keeper types the name', async () => {
+    const { family, record } = await familyWithOneEdit()
+    await record(
+      [
+        { person: personNamed('lucie'), type: 'person.create' },
+        {
+          photo: {
+            caption: 'Lucie',
+            date: null,
+            id: 'lucie-photo',
+            personId: 'lucie'
+          },
+          type: 'photo.create'
+        }
+      ],
+      0
+    )
+    const photoPath = pathFor(API_ROUTES.photo, {
+      familyId: family.familyId,
+      photoId: 'lucie-photo'
+    })
+    const form = new FormData()
+    form.set('full', new File([TEST_JPEG], 'full.jpg'))
+    form.set('thumbnail', new File([TEST_JPEG], 'thumbnail.jpg'))
+    await api.call(photoPath, {
+      body: form,
+      key: family.familyKey,
+      method: 'POST'
+    })
+
+    const deleted = await deleteFamily(family, '  famille MOREL ')
+    const byKeeper = await api.call(familyPath(family.familyId), {
+      key: family.keeperKey
+    })
+    const byFamily = await api.call(familyPath(family.familyId), {
+      key: family.familyKey
+    })
+    const photo = await api.call(`${photoPath}/full`, { key: family.familyKey })
+    const log = await api.call(familyPath(family.familyId, 'operations'), {
+      key: family.keeperKey
+    })
+
+    expect(deleted.status).toBe(200)
+    expect(await deleted.json()).toEqual({ familyId: family.familyId })
+    for (const gone of [byKeeper, byFamily, photo, log]) {
+      expect(gone.status).toBe(404)
+      expect(await errorCodeOf(gone)).toBe('not_found')
+    }
+  })
+
+  it('[deletion] keeps everything when the typed name is not the family’s', async () => {
+    const family = await api.createFamily()
+
+    const refused = await deleteFamily(family, 'Famille Durand')
+    const still = await api.call(familyPath(family.familyId), {
+      key: family.keeperKey
+    })
+
+    expect(await errorCodeOf(refused)).toBe('name_mismatch')
+    expect(still.status).toBe(200)
+  })
+
+  it('[deletion] keeps a contributor key from deleting the family', async () => {
+    const family = await api.createFamily()
+
+    const refused = await deleteFamily(
+      family,
+      'Famille Morel',
+      family.familyKey
+    )
+
+    expect(refused.status).toBe(403)
+    expect(await errorCodeOf(refused)).toBe('forbidden')
+  })
+})
+
 describe('[demo] the public demo', () => {
   it('[demo] opens the fixture family with the public key, its photos behind it', async () => {
     const response = await api.call(familyPath(DEMO_FAMILY_ID), {

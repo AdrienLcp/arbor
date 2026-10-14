@@ -2,7 +2,13 @@ import type { Page } from '@playwright/test'
 
 /** Roles and accessible names in one place: a renamed button breaks one line instead of every spec. */
 export const homePage = (page: Page) => ({
-  createTree: page.getByRole('link', { name: 'Create your family’s tree' })
+  createTree: page.getByRole('link', { name: 'Create your family’s tree' }),
+  deleted: (familyName: string) =>
+    page
+      .getByRole('status')
+      .filter({ hasText: `“${familyName}” has been deleted.` }),
+  rememberedTree: (familyName: string) =>
+    page.getByRole('link', { name: new RegExp(familyName) })
 })
 
 export const createFamilyPage = (page: Page) => ({
@@ -40,10 +46,15 @@ export const whoAmIDialog = (page: Page) => {
 }
 
 export const familySettingsPage = (page: Page) => ({
+  confirmDelete: formDialog(page).getByRole('button', {
+    name: 'Delete for good'
+  }),
   /** The dialog repeats the button's name, so the confirmation is found inside it. */
   confirmReplace: page
     .getByRole('alertdialog')
     .getByRole('button', { name: 'Replace the link' }),
+  deleteFamily: page.getByRole('button', { name: 'Delete the family…' }),
+  deleteName: formDialog(page).getByLabel('The family’s name'),
   replaced: page.getByText('The new link is ready. Send it to the family.'),
   replaceLink: page.getByRole('button', { name: 'Replace the link' })
 })

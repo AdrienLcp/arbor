@@ -24,6 +24,7 @@ const API_ERROR_STATUS = {
   invalid_input: 400,
   last_keeper_key: 409,
   later_changes_depend: 409,
+  name_mismatch: 422,
   not_found: 404,
   nothing_to_restore: 409,
   photo_file_exists: 409,

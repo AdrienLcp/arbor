@@ -79,6 +79,17 @@ not that strangers are kept out by a login.
 - Living people's details (exact birth date, photos) can be hidden from the
   reader link — a keeper setting, on by default for the read-only link.
 - The public demo (portfolio) is a fictional family, reset every night.
+- A family's data is kept as long as the family exists. A keeper can delete
+  the whole family from its settings, after typing its name: the object's
+  storage is erased — people, photos, change log, keys — and the device
+  forgets it. It is the one action that cannot be undone. A binned person, or
+  a removed photo, stays in the storage (restorable, in the log) until then.
+- No inactivity expiry: a tree is an archive some relatives open once a year,
+  and without accounts there is no way to warn a keeper before erasing it.
+- `/legal`, linked from every screen's footer, says all of this: publisher,
+  host, what the server and the device keep, the keepers' responsibility for
+  the people they add, how a person asks to be removed, no audience
+  measurement, GDPR rights.
 
 ## Out of scope
 

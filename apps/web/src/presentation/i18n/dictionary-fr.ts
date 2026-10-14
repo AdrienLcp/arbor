@@ -280,6 +280,21 @@ export const FR_DICTIONARY = defineDictionary({
     settings: 'Réglages',
     share: 'Partager'
   },
+  familyDeletion: {
+    body: 'Efface l’arbre pour toute la famille : les personnes, leurs photos, l’historique des modifications et tous les liens. Pour en garder une trace, imprimez-le d’abord.',
+    dialog: {
+      body: 'Tout ce que la famille a mis dans l’arbre sera effacé, pour tout le monde : les personnes, leurs photos, l’historique des modifications et tous les liens, qui n’ouvriront plus rien.',
+      cancel: 'Garder la famille',
+      confirm: 'Supprimer définitivement',
+      field: 'Le nom de la famille',
+      fieldHint: 'Pour confirmer, tapez « {name} ».',
+      final: 'Personne, pas même vous, ne pourra la récupérer.',
+      title: 'Supprimer la famille ?'
+    },
+    done: '« {name} » a été supprimée. Plus rien n’en est gardé.',
+    open: 'Supprimer la famille…',
+    title: 'Supprimer la famille'
+  },
   familySettings: {
     device: {
       title: 'Sur ce téléphone',
@@ -363,6 +378,9 @@ export const FR_DICTIONARY = defineDictionary({
     send: 'Envoyer',
     sendTitle: 'L’arbre {name}',
     title: 'Partager l’arbre'
+  },
+  footer: {
+    legal: 'Mentions légales et confidentialité'
   },
   history: {
     allHistory: 'Voir tout l’historique',
@@ -614,6 +632,73 @@ export const FR_DICTIONARY = defineDictionary({
     showInTree: 'Voir le chemin dans l’arbre',
     title: 'Lien de parenté',
     you: 'Vous'
+  },
+  legal: {
+    device: {
+      body: 'Arbor ne dépose aucun cookie. Ce dont il se souvient reste dans votre navigateur, pour ce site seulement, jusqu’à ce que vous l’effaciez :',
+      families:
+        'Les familles ouvertes sur cet appareil : leur nom, les liens qui les ouvrent et la personne que vous avez dit être dans chacune.',
+      heading: 'Ce que garde votre appareil',
+      theme: 'Le thème choisi, clair ou sombre.'
+    },
+    host: {
+      body: 'Le site et les données de chaque famille sont hébergés par :',
+      heading: 'Hébergeur'
+    },
+    intro:
+      'Qui publie Arbor, ce qu’il garde sur les personnes d’un arbre, combien de temps, et comment le faire effacer.',
+    measurement: {
+      body: 'Ce site ne mesure aucune audience : pas de compteur de visites, pas de traceur, pas de cookie.',
+      heading: 'Mesure d’audience'
+    },
+    people: {
+      deletion:
+        'Un gardien peut aussi supprimer toute la famille, dans les réglages de l’arbre : tout est effacé aussitôt, pour tout le monde.',
+      heading: 'Les personnes d’un arbre',
+      readers:
+        'Le lien en lecture seule cache par défaut la date de naissance exacte, les notes et les photos des personnes vivantes.',
+      removal:
+        'Pour ne plus figurer dans un arbre, demandez-le à l’un de ses gardiens : il peut corriger ce qui vous concerne ou vous mettre à la corbeille. Si aucun gardien ne vous répond, écrivez-moi par <contact>la page de contact</contact> avec le lien de l’arbre : je ferai effacer ce qui vous concerne.',
+      responsibility:
+        'Les personnes d’un arbre n’ont pas toutes choisi d’y être. Le gardien qui crée une famille, et chaque proche qui y ajoute quelqu’un, est responsable des personnes qu’il ajoute, surtout des vivantes : n’y mettez que ce que la famille partagerait entre elle, et gardez le lien dans la famille.'
+    },
+    publisher: {
+      address:
+        'Éditeur non professionnel, je donne l’identité de l’hébergeur à la place d’une adresse postale (LCEN, article 6-III-2).',
+      body: 'Arbor est publié par {name}, un particulier, pas une entreprise. Vous pouvez m’écrire par <contact>cette page de contact</contact>.',
+      heading: 'Éditeur'
+    },
+    rights: {
+      body: 'Selon le RGPD, vous pouvez accéder à ce qui vous concerne, le faire corriger ou effacer, ou vous opposer à son usage. Demandez-le à un gardien de l’arbre, ou écrivez-moi par <contact>la page de contact</contact> : je réponds sous un mois.',
+      complaint:
+        'Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la <authority>CNIL</authority>.',
+      heading: 'Vos droits'
+    },
+    server: {
+      bin: 'Une personne mise à la corbeille est cachée de l’arbre mais reste récupérable, et ses informations restent dans l’historique, jusqu’à la suppression de la famille.',
+      body: 'Chaque famille a son propre espace de stockage, que personne d’autre ne peut lire. Il contient ce que ses proches y ont mis :',
+      demo: 'La famille d’exemple est inventée, et repart de zéro chaque nuit : ce que les visiteurs y changent est effacé dans la journée.',
+      heading: 'Ce que garde le serveur',
+      history:
+        'l’historique de chaque modification, avec le nom de la personne qui l’a faite ;',
+      links:
+        'les liens de la famille, gardés sous une forme qui ne permet pas de les retrouver.',
+      logs: 'Pour repérer les pannes, Cloudflare garde {days} jours une ligne par requête : l’adresse demandée, la réponse, l’adresse IP et le navigateur. Elle ne contient jamais un nom, une note ou une photo.',
+      noExpiry:
+        'Une famille n’est pas effacée faute de visites : un arbre est une archive que l’on rouvre parfois une fois par an, et Arbor n’a aucun moyen de prévenir son gardien avant.',
+      people:
+        'les personnes : prénoms, nom, nom de naissance, sexe, dates et lieux de naissance, de décès et d’autres événements, unions, filiations, notes ;',
+      photos: 'leurs photos et leurs légendes ;',
+      retention:
+        'Tout cela est gardé tant que la famille existe, et effacé quand un gardien la supprime.'
+    },
+    thirdParties: {
+      body: 'Votre navigateur ne parle qu’à ce site : le code, les polices et les images viennent de lui. Son hébergeur, Cloudflare, reçoit votre adresse IP à chaque requête, pour vous servir les pages et protéger le site des abus.',
+      heading: 'Qui d’autre reçoit vos données',
+      sharing:
+        'Quand vous envoyez un lien par WhatsApp, SMS ou mail, c’est votre téléphone qui le transmet, par l’application que vous choisissez.'
+    },
+    title: 'Mentions légales et confidentialité'
   },
   link: {
     banner: {
