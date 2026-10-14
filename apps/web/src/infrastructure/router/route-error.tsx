@@ -17,10 +17,10 @@ export const ErrorScreen: React.FC = () => {
   const translate = useTranslate()
 
   return (
-    <main className='route-error'>
+    <Main className='route-error'>
       <h1>{translate('error.screen.title')}</h1>
       <a href={paths.home}>{translate('error.screen.home')}</a>
-    </main>
+    </Main>
   )
 }
 
