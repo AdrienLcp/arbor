@@ -86,6 +86,13 @@ const BUDGETS_WITH_HEADROOM = {
  */
 const QUICK_FLAG = '--quick'
 
+/**
+ * Every page is measured three times and judged on the median, the way
+ * Lighthouse CI does: one simulated run swings between two runs of one build,
+ * so a single run that passes proves as little as one that fails.
+ */
+const RUNS_PER_AUDIT = 3
+
 type FormFactor = 'desktop' | 'mobile'
 type Scheme = 'dark' | 'light'
 
@@ -252,6 +259,23 @@ const failuresOf = ({ scores, scriptBytes }: Measure): string[] => [
 const timingsOf = ({ fcpMs, lcpMs, tbtMs }: Measure): string =>
   `FCP ${Math.round(fcpMs)} ms · LCP ${Math.round(lcpMs)} ms · TBT ${Math.round(tbtMs)} ms`
 
+const median = (values: number[]): number =>
+  [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)] ?? 0
+
+const medianOf = (readings: Measure[]): Measure => ({
+  fcpMs: median(readings.map(({ fcpMs }) => fcpMs)),
+  lcpMs: median(readings.map(({ lcpMs }) => lcpMs)),
+  report: readings.at(-1)?.report ?? '',
+  scores: Object.fromEntries(
+    Object.keys(readings[0]?.scores ?? {}).map((id) => [
+      id,
+      median(readings.map(({ scores }) => scores[id] ?? 0))
+    ])
+  ),
+  scriptBytes: median(readings.map(({ scriptBytes }) => scriptBytes)),
+  tbtMs: median(readings.map(({ tbtMs }) => tbtMs))
+})
+
 const reportNameFor = (path: string, formFactor: FormFactor, scheme: Scheme) =>
   `${path.slice(1).replaceAll('/', '-') || 'home'}.${formFactor}.${scheme}.html`
 
@@ -303,14 +327,24 @@ try {
     try {
       for (const formFactor of formFactors) {
         for (const path of paths) {
-          const reading = await audit(
-            `${origin}${path}`,
-            formFactor,
-            categoriesFor(path),
-            skippedAuditsFor(path)
-          )
-          const broken = failuresOf(reading)
           const label = `${path} ${formFactor} ${scheme}`
+          const readings: Measure[] = []
+
+          while (readings.length < RUNS_PER_AUDIT) {
+            const run = await audit(
+              `${origin}${path}`,
+              formFactor,
+              categoriesFor(path),
+              skippedAuditsFor(path)
+            )
+            readings.push(run)
+            console.info(
+              `     ${label} · run ${readings.length}: ${timingsOf(run)}`
+            )
+          }
+
+          const reading = medianOf(readings)
+          const broken = failuresOf(reading)
 
           console.info(
             `${broken.length === 0 ? 'ok  ' : 'FAIL'} ${label} · ${timingsOf(reading)} · JS ${reading.scriptBytes} B${broken.length === 0 ? '' : ` · ${broken.join(', ')}`}`
