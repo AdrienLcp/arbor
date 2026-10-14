@@ -1,6 +1,7 @@
 import type React from 'react'
 import { useId, useState } from 'react'
 
+import { DeleteFamilySettings } from '@/features/family-deletion/delete-family-settings'
 import { FailureNotice } from '@/presentation/components/failure-notice'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
@@ -41,7 +42,7 @@ const OverviewSettings: React.FC<{ onChanged: () => void }> = ({
   )
 }
 
-/** What only a keeper can do: replace the family link, hand out other links, watch the room the family takes. */
+/** What only a keeper can do: replace the family link, hand out other links, watch the room the family takes, delete it. */
 export const KeeperSettings: React.FC = () => {
   const translate = useTranslate()
   const titleId = useId()
@@ -58,6 +59,7 @@ export const KeeperSettings: React.FC = () => {
         onChanged={() => setOverviewRevision((revision) => revision + 1)}
       />
       <NewKeeperSettings />
+      <DeleteFamilySettings />
     </section>
   )
 }

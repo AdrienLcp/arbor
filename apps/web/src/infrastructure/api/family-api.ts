@@ -29,6 +29,9 @@ import {
   type CreateFamilyInput,
   changeLogPageSchema,
   createdFamilySchema,
+  type DeletedFamily,
+  type DeleteFamilyInput,
+  deletedFamilySchema,
   keyListSchema,
   pathFor,
   type RecordedOperations,
@@ -288,6 +291,23 @@ export const updateSettings = ({
     method: 'PATCH',
     path: pathFor(API_ROUTES.settings, { familyId }),
     schema: familySettingsSchema,
+    signal
+  })
+
+/** Erases the whole family for every device; the server checks the name the keeper typed. */
+export const deleteFamily = ({
+  confirmedName,
+  familyId,
+  key,
+  signal
+}: FamilyAccess &
+  DeleteFamilyInput & { signal?: AbortSignal }): ApiResult<DeletedFamily> =>
+  callApi({
+    access: key,
+    body: { confirmedName } satisfies DeleteFamilyInput,
+    method: 'DELETE',
+    path: pathFor(API_ROUTES.family, { familyId }),
+    schema: deletedFamilySchema,
     signal
   })
 

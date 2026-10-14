@@ -1,0 +1,22 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .delete-family-form
+    display: grid
+    gap: var(--space-xl)
+
+    .delete-family-words
+      display: grid
+      gap: var(--space-s)
+      max-width: var(--measure)
+      text-wrap: pretty
+
+    .delete-family-final
+      @include typography.strong
+
+    .text-field
+      width: 100%
+
+    .delete-family-actions
+      display: grid
+      gap: var(--space-m)

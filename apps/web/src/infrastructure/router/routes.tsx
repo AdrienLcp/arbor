@@ -42,6 +42,9 @@ const pageFor = {
   [paths.home]: async () => ({
     Component: (await import('@/features/home/home-page')).HomePage
   }),
+  [paths.legal]: async () => ({
+    Component: (await import('@/features/legal/legal-page')).LegalPage
+  }),
   [paths.openLink]: async () => ({
     Component: (await import('@/features/open-link/open-link-page'))
       .OpenLinkPage
@@ -97,6 +100,7 @@ const familyRoute: RouteObject = {
 const OUTSIDE_A_FAMILY = [
   paths.home,
   paths.createFamily,
+  paths.legal,
   paths.openLink
 ] as const satisfies readonly RoutedPath[]
 

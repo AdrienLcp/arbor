@@ -7,10 +7,15 @@
   :root:has(.family-tree-screen)
     scrollbar-gutter: auto
 
+    #root
+      block-size: 100dvh
+
+  // The viewport's height less the footer's line under it.
   .family-tree-screen
     display: grid
+    flex: 1 1 auto
     grid-template-rows: auto minmax(0, 1fr)
-    height: 100dvh
+    min-height: 0
 
   .family-tree-page
     display: grid

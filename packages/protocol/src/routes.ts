@@ -106,6 +106,18 @@ export const changeLogPageSchema = z.object({
 })
 export type ChangeLogPage = z.infer<typeof changeLogPageSchema>
 
+/**
+ * A keeper's erasure of the whole family — people, photos, change log and
+ * links — confirmed by typing the family's name.
+ */
+export const deleteFamilyInputSchema = z.object({
+  confirmedName: z.string().max(200)
+})
+export type DeleteFamilyInput = z.infer<typeof deleteFamilyInputSchema>
+
+export const deletedFamilySchema = z.object({ familyId: familyIdSchema })
+export type DeletedFamily = z.infer<typeof deletedFamilySchema>
+
 /** Extra links a keeper hands out: a read-only one, or one for another keeper. The family link is replaced, not added. */
 export const issueKeyInputSchema = z.object({
   role: z.enum(['reader', 'keeper'])
@@ -142,6 +154,7 @@ export const apiErrorCodes = [
   'internal_error',
   'invalid_input',
   'last_keeper_key',
+  'name_mismatch',
   'not_found',
   'photo_file_exists',
   'photo_too_large',

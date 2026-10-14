@@ -3,6 +3,7 @@ import { useId } from 'react'
 
 import { DEMO_FAMILY_ID } from '@arbor/protocol/demo-family'
 
+import { DeletedFamilyNotice } from '@/features/family-deletion/deleted-family-notice'
 import { familyPathFor, paths } from '@/infrastructure/router/navigation'
 import { ButtonLink } from '@/presentation/components/button-link'
 import { AddIcon, LookIcon, PasteIcon } from '@/presentation/components/icons'
@@ -26,6 +27,7 @@ export const HomePage: React.FC = () => {
   return (
     <Main className='home-page'>
       <DocumentTitle>{`${translate('app.name')} — ${translate('home.title')}`}</DocumentTitle>
+      <DeletedFamilyNotice />
       <RememberedTrees />
       <section aria-labelledby={titleId} className='album-cover'>
         <p className='cover-brand'>

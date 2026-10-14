@@ -29,6 +29,7 @@ import { newKeyId } from '@/infrastructure/ids'
 
 import { registerAccessRoutes } from './access-routes'
 import { answerUnexpected, apiError } from './api-response'
+import { registerDeletionRoutes } from './deletion-routes'
 import { registerFamilyRoutes } from './family-routes'
 import { registerPhotoRoutes } from './photo-routes'
 import type { RoomApp, RoomStores } from './room-context'
@@ -52,8 +53,15 @@ export type FamilyRoomApp = {
 /**
  * One family's object, as plain code over its database so tests run it on any
  * SQLite. An object that holds no family answers 404 without writing anything.
+ * `eraseStorage` empties the whole object, the database and anything beside it.
  */
-export const familyRoomApp = (database: SqlDatabase): FamilyRoomApp => {
+export const familyRoomApp = ({
+  database,
+  eraseStorage
+}: {
+  database: SqlDatabase
+  eraseStorage: () => Promise<void>
+}): FamilyRoomApp => {
   let isOpen = hasFamilySchema(database)
   if (isOpen) migrateFamilySchema(database)
 
@@ -79,6 +87,10 @@ export const familyRoomApp = (database: SqlDatabase): FamilyRoomApp => {
   registerPhotoRoutes(app)
   registerAccessRoutes(app)
   registerSettingsRoutes(app)
+  registerDeletionRoutes(app, async () => {
+    isOpen = false
+    await eraseStorage()
+  })
 
   app.notFound(() => apiError('not_found', 'No route behind this address'))
   app.onError(answerUnexpected)

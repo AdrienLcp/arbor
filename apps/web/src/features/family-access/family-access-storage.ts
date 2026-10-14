@@ -11,7 +11,8 @@ import { familyIdSchema } from '@arbor/protocol/access'
 
 import { familyAccessSchema } from './family-access'
 
-const FAMILIES_STORAGE_KEY = 'arbor:families'
+/** Named on the legal page, which lists what the device keeps. */
+export const FAMILIES_STORAGE_KEY = 'arbor:families'
 
 const storedFamiliesSchema = z.record(familyIdSchema, familyAccessSchema)
 export type StoredFamilies = z.infer<typeof storedFamiliesSchema>

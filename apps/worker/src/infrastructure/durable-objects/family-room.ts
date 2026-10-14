@@ -20,7 +20,20 @@ export class FamilyRoom extends DurableObject<Env> {
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env)
-    this.app = familyRoomApp(sqlDatabaseOf(ctx.storage))
+    this.app = this.openApp()
+  }
+
+  private openApp(): FamilyRoomApp {
+    return familyRoomApp({
+      database: sqlDatabaseOf(this.ctx.storage),
+      eraseStorage: () => this.eraseStorage()
+    })
+  }
+
+  /** Everything the object holds, its alarm included: what is left answers 404 like a family never created. */
+  private async eraseStorage(): Promise<void> {
+    await this.ctx.storage.deleteAlarm()
+    await this.ctx.storage.deleteAll()
   }
 
   /** The public demo: built on its first visit, then started over every night by the alarm. */
@@ -35,7 +48,7 @@ export class FamilyRoom extends DurableObject<Env> {
   /** Only the demo's object ever sets an alarm: it wipes the family and builds it again. */
   override async alarm(): Promise<void> {
     await this.ctx.storage.deleteAll()
-    this.app = familyRoomApp(sqlDatabaseOf(this.ctx.storage))
+    this.app = this.openApp()
     await this.app.openDemo(DEMO_PHOTO_FILES)
     await this.scheduleDemoReset()
   }

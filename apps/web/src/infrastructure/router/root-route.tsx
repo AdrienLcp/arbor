@@ -5,6 +5,7 @@ import { Outlet, ScrollRestoration, useLocation } from 'react-router'
 
 import { markAppHydrated } from '@/infrastructure/browser'
 import { focusMain } from '@/presentation/components/main'
+import { SiteFooter } from '@/presentation/site-footer'
 
 import { pageUnderneath } from './navigation'
 
@@ -22,7 +23,7 @@ const useFocusMainOnNavigation = (pathname: string): void => {
   }, [pathname])
 }
 
-/** The layout every page sits in: client-side links, a cross-fade between pages, focus and scroll. */
+/** The layout every page sits in: client-side links, a cross-fade between pages, the footer, focus and scroll. */
 export const RootRoute: React.FC = () => {
   const { pathname } = useLocation()
   useFocusMainOnNavigation(pathname)
@@ -41,6 +42,7 @@ export const RootRoute: React.FC = () => {
       >
         <Outlet />
       </ViewTransition>
+      <SiteFooter />
       <ScrollRestoration />
     </AriaRouterProvider>
   )

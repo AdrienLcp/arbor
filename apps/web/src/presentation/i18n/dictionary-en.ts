@@ -276,6 +276,21 @@ export const EN_DICTIONARY = defineDictionary({
     settings: 'Settings',
     share: 'Share'
   },
+  familyDeletion: {
+    body: 'Erases the tree for the whole family: the people, their photos, the history of changes and every link. To keep a record of it, print it first.',
+    dialog: {
+      body: 'Everything the family put in the tree will be erased, for everyone: the people, their photos, the history of changes and every link, which will open nothing any more.',
+      cancel: 'Keep the family',
+      confirm: 'Delete for good',
+      field: 'The family’s name',
+      fieldHint: 'To confirm, type “{name}”.',
+      final: 'Nobody, not even you, will be able to bring it back.',
+      title: 'Delete the family?'
+    },
+    done: '“{name}” has been deleted. Nothing of it is kept.',
+    open: 'Delete the family…',
+    title: 'Delete the family'
+  },
   familySettings: {
     device: {
       title: 'On this phone',
@@ -358,6 +373,9 @@ export const EN_DICTIONARY = defineDictionary({
     send: 'Send',
     sendTitle: 'The {name} tree',
     title: 'Share the tree'
+  },
+  footer: {
+    legal: 'Legal notice and privacy'
   },
   history: {
     allHistory: 'See the whole history',
@@ -611,6 +629,72 @@ export const EN_DICTIONARY = defineDictionary({
     showInTree: 'Show the path in the tree',
     title: 'Family relationship',
     you: 'You'
+  },
+  legal: {
+    device: {
+      body: 'Arbor sets no cookies. What it remembers stays in your browser, for this site only, until you clear it:',
+      families:
+        'The families opened on this device: their name, the links that open them, and who you said you are in each.',
+      heading: 'What your device keeps',
+      theme: 'The theme you picked, light or dark.'
+    },
+    host: {
+      body: 'The site and every family’s data are hosted by:',
+      heading: 'Host'
+    },
+    intro:
+      'Who publishes Arbor, what it keeps about the people in a tree, for how long, and how to have it erased.',
+    measurement: {
+      body: 'This site measures no audience: no visit counter, no tracker, no cookie.',
+      heading: 'Audience measurement'
+    },
+    people: {
+      deletion:
+        'A keeper can also delete the whole family, from the tree’s settings: everything is erased at once, for everyone.',
+      heading: 'The people in a tree',
+      readers:
+        'The read-only link hides the exact birth date, notes and photos of living people by default.',
+      removal:
+        'To be taken out of a tree, ask one of its keepers: they can correct what concerns you or put you in the bin. If no keeper answers, write to me through <contact>the contact page</contact> with the tree’s link: I will have what concerns you erased.',
+      responsibility:
+        'The people in a tree did not all choose to be there. The keeper who creates a family, and each relative who adds someone to it, is responsible for the people they add, living ones above all: put in only what the family would share among itself, and keep the link within the family.'
+    },
+    publisher: {
+      address:
+        'As a non-professional publisher, I give the host’s identity in place of a postal address (LCEN, article 6-III-2).',
+      body: 'Arbor is published by {name}, a private individual, not a business. You can write to me through <contact>this contact page</contact>.',
+      heading: 'Publisher'
+    },
+    rights: {
+      body: 'Under the GDPR, you may access what concerns you, have it corrected or erased, or object to its use. Ask a keeper of the tree, or write to me through <contact>the contact page</contact>; I answer within a month.',
+      complaint:
+        'If you believe your rights are not respected, you may lodge a complaint with the <authority>CNIL</authority>.',
+      heading: 'Your rights'
+    },
+    server: {
+      bin: 'A person put in the bin is hidden from the tree but can be brought back, and their details stay in the history, until the family is deleted.',
+      body: 'Each family has its own storage, which nobody else can read. It holds what the relatives put in:',
+      demo: 'The example family is made up, and starts over every night: what visitors change in it is erased within the day.',
+      heading: 'What the server keeps',
+      history: 'the history of every change, with the name of who made it;',
+      links:
+        'the family’s links, kept in a form they cannot be recovered from.',
+      logs: 'To spot faults, Cloudflare keeps one line per request for {days} days: the address asked for, the answer, the IP address and the browser. It never holds a name, a note or a photo.',
+      noExpiry:
+        'A family is not erased for lack of visits: a tree is an archive some open once a year, and Arbor has no way to warn its keeper first.',
+      people:
+        'the people: given names, surname, birth surname, sex, dates and places of birth, death and other events, unions, parents, notes;',
+      photos: 'their photos and captions;',
+      retention:
+        'All of it is kept as long as the family exists, and erased when a keeper deletes it.'
+    },
+    thirdParties: {
+      body: 'Your browser talks to this site only: the code, the fonts and the images come from it. Its host, Cloudflare, receives your IP address with each request, to serve the pages and protect the site from abuse.',
+      heading: 'Who else receives your data',
+      sharing:
+        'When you send a link by WhatsApp, text message or email, your phone sends it, through the app you pick.'
+    },
+    title: 'Legal notice and privacy'
   },
   link: {
     banner: {

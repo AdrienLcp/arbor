@@ -65,7 +65,8 @@ const HOME_PATH = '/'
 const AUDITED_PATHS = [
   HOME_PATH,
   `${DEMO_FAMILY_PATH}/tree`,
-  `${DEMO_FAMILY_PATH}/tree/auguste-morel`
+  `${DEMO_FAMILY_PATH}/tree/auguste-morel`,
+  '/legal'
 ]
 
 const CATEGORIES = ['accessibility', 'best-practices', 'seo']
