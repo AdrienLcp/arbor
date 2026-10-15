@@ -145,9 +145,14 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   ).toBeVisible()
   await expect(relative.getByText(/about 1947/i).first()).toBeVisible()
 
-  await relativeSheet.relative(SECOND_SPOUSE_NAME).click()
+  for (const page of [relative, founder]) {
+    await personSheet(page).relative(SECOND_SPOUSE_NAME).click()
+    await expect(
+      page.getByRole('heading', { exact: true, name: SECOND_SPOUSE_NAME }),
+      'the sheet has turned to the second partner before anything on it is pressed'
+    ).toBeVisible()
+  }
   await relativeSheet.editPerson.click()
-  await sheet.relative(SECOND_SPOUSE_NAME).click()
   await sheet.bin.click()
   await sheet.confirmBin.click()
   await expect(founder.getByRole('alertdialog')).toBeHidden()
