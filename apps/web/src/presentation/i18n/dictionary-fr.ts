@@ -124,7 +124,7 @@ export const FR_DICTIONARY = defineDictionary({
   },
   common: {
     failed:
-      'Ça n’a pas marché. Vérifiez que le téléphone est connecté à Internet, puis réessayez.',
+      'Ça n’a pas marché. Vérifiez votre connexion à Internet, puis réessayez.',
     home: 'Revenir à l’accueil',
     openTree: 'Ouvrir l’arbre',
     unnamedPerson: 'Sans nom',
@@ -243,12 +243,12 @@ export const FR_DICTIONARY = defineDictionary({
       newLink: 'J’ai reçu un nouveau lien',
       title: 'Ce lien ne fonctionne plus',
       what: 'Demandez le nouveau lien à quelqu’un de la famille, puis ouvrez-le ou collez-le ici.',
-      why: 'La famille a remplacé le lien de l’arbre, ou ce téléphone ne l’a jamais reçu. Rien n’est perdu : l’arbre est toujours là.'
+      why: 'La famille a remplacé le lien de l’arbre, ou cet appareil ne l’a jamais reçu. Rien n’est perdu : l’arbre est toujours là.'
     },
     unreachable: {
       retry: 'Réessayer',
       title: 'L’arbre ne répond pas',
-      what: 'Vérifiez que le téléphone est connecté à Internet, puis réessayez.'
+      what: 'Vérifiez votre connexion à Internet, puis réessayez.'
     }
   },
   familyBar: {
@@ -277,7 +277,7 @@ export const FR_DICTIONARY = defineDictionary({
   },
   familySettings: {
     device: {
-      title: 'Sur ce téléphone',
+      title: 'Pour vous',
       trees: 'Voir tous mes arbres'
     },
     familyLink: {
@@ -341,7 +341,7 @@ export const FR_DICTIONARY = defineDictionary({
     copied: 'Lien copié',
     copy: 'Copier le lien',
     copyRefused:
-      'Le téléphone a refusé de copier. Le lien est sélectionné : copiez-le à la main.',
+      'La copie a été refusée. Le lien est sélectionné : copiez-le à la main.',
     familyLink: {
       description:
         'À envoyer à toute la famille. En l’ouvrant, chacun voit l’arbre et peut le compléter.',
@@ -388,7 +388,7 @@ export const FR_DICTIONARY = defineDictionary({
       other: 'un événement'
     },
     failed:
-      'L’historique n’a pas pu être chargé. Vérifiez que le téléphone est connecté à Internet.',
+      'L’historique n’a pas pu être chargé. Vérifiez votre connexion à Internet.',
     field: {
       birth: 'la naissance',
       birthSurname: 'le nom de naissance',
@@ -547,7 +547,7 @@ export const FR_DICTIONARY = defineDictionary({
         later_changes_depend:
           'Quelqu’un vient de faire un changement qui en dépend. L’historique est à jour : regardez, puis réessayez.',
         not_sent:
-          'Ça n’a pas marché. Vérifiez que le téléphone est connecté à Internet, puis réessayez.',
+          'Ça n’a pas marché. Vérifiez votre connexion à Internet, puis réessayez.',
         nothing_to_restore: 'L’arbre est déjà dans cet état.',
         revision_conflict:
           'Quelqu’un vient de modifier l’arbre. L’aperçu est à jour : regardez, puis réessayez.',
@@ -684,7 +684,7 @@ export const FR_DICTIONARY = defineDictionary({
       body: 'Votre navigateur ne parle qu’à ce site : le code, les polices et les images viennent de lui. Son hébergeur, Cloudflare, reçoit votre adresse IP à chaque requête, pour vous servir les pages et protéger le site des abus.',
       heading: 'Qui d’autre reçoit vos données',
       sharing:
-        'Quand vous envoyez un lien par WhatsApp, SMS ou mail, c’est votre téléphone qui le transmet, par l’application que vous choisissez.'
+        'Quand vous envoyez un lien par WhatsApp, SMS ou mail, c’est votre appareil qui le transmet, par l’application que vous choisissez.'
     },
     title: 'Mentions légales et confidentialité'
   },
@@ -746,7 +746,7 @@ export const FR_DICTIONARY = defineDictionary({
     notALink:
       'Ce texte ne contient pas de lien d’arbre. Copiez le lien en entier depuis le message reçu, puis collez-le ici.',
     qr: {
-      body: 'Ouvrez l’appareil photo du téléphone et visez le code : l’arbre s’ouvre tout seul.',
+      body: 'Ouvrez l’appareil photo d’un téléphone et visez le code : l’arbre s’ouvre tout seul.',
       title: 'Vous avez un QR code ?'
     },
     submit: 'Ouvrir l’arbre',
@@ -768,7 +768,7 @@ export const FR_DICTIONARY = defineDictionary({
       too_large:
         'Cette image reste trop lourde, même réduite. Choisissez-en une autre.',
       unreadable:
-        'Ce fichier n’est pas une photo que le téléphone sait lire. Choisissez une photo.'
+        'Ce fichier n’est pas une photo que l’appareil sait lire. Choisissez une photo.'
     },
     save: 'Ajouter la photo',
     title: 'Photos',
@@ -806,7 +806,7 @@ export const FR_DICTIONARY = defineDictionary({
       unknownPerson: 'Personne inconnue : case à compléter'
     },
     live: {
-      text: 'Scannez avec l’appareil photo du téléphone : l’arbre à jour, à consulter.',
+      text: 'Scannez avec l’appareil photo d’un téléphone : l’arbre à jour, à consulter.',
       title: 'L’arbre vivant'
     },
     loading: 'L’aperçu arrive…',

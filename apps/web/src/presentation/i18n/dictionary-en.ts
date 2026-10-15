@@ -123,7 +123,7 @@ export const EN_DICTIONARY = defineDictionary({
   },
   common: {
     failed:
-      'That did not work. Check that the phone is connected to the Internet, then try again.',
+      'That did not work. Check your Internet connection, then try again.',
     home: 'Back to the home page',
     openTree: 'Open the tree',
     unnamedPerson: 'No name',
@@ -239,12 +239,12 @@ export const EN_DICTIONARY = defineDictionary({
       newLink: 'I received a new link',
       title: 'This link no longer works',
       what: 'Ask someone in the family for the new link, then open it or paste it here.',
-      why: 'The family replaced the tree’s link, or this phone never received it. Nothing is lost: the tree is still there.'
+      why: 'The family replaced the tree’s link, or this device never received it. Nothing is lost: the tree is still there.'
     },
     unreachable: {
       retry: 'Try again',
       title: 'The tree is not answering',
-      what: 'Check that the phone is connected to the Internet, then try again.'
+      what: 'Check your Internet connection, then try again.'
     }
   },
   familyBar: {
@@ -273,7 +273,7 @@ export const EN_DICTIONARY = defineDictionary({
   },
   familySettings: {
     device: {
-      title: 'On this phone',
+      title: 'For you',
       trees: 'See all my trees'
     },
     familyLink: {
@@ -335,8 +335,7 @@ export const EN_DICTIONARY = defineDictionary({
   familyShare: {
     copied: 'Link copied',
     copy: 'Copy the link',
-    copyRefused:
-      'The phone refused to copy. The link is selected: copy it by hand.',
+    copyRefused: 'Copying was refused. The link is selected: copy it by hand.',
     familyLink: {
       description:
         'Send it to the whole family. Whoever opens it sees the tree and can add to it.',
@@ -382,8 +381,7 @@ export const EN_DICTIONARY = defineDictionary({
       labelled: '“{label}”',
       other: 'an event'
     },
-    failed:
-      'The history could not be loaded. Check that the phone is connected to the Internet.',
+    failed: 'The history could not be loaded. Check your Internet connection.',
     field: {
       birth: 'the birth',
       birthSurname: 'the birth surname',
@@ -544,7 +542,7 @@ export const EN_DICTIONARY = defineDictionary({
         later_changes_depend:
           'Someone has just made a change that depends on it. The history is up to date: have a look, then try again.',
         not_sent:
-          'That did not work. Check that the phone is connected to the Internet, then try again.',
+          'That did not work. Check your Internet connection, then try again.',
         nothing_to_restore: 'The tree is already in that state.',
         revision_conflict:
           'Someone has just changed the tree. The preview is up to date: have a look, then try again.',
@@ -680,7 +678,7 @@ export const EN_DICTIONARY = defineDictionary({
       body: 'Your browser talks to this site only: the code, the fonts and the images come from it. Its host, Cloudflare, receives your IP address with each request, to serve the pages and protect the site from abuse.',
       heading: 'Who else receives your data',
       sharing:
-        'When you send a link by WhatsApp, text message or email, your phone sends it, through the app you pick.'
+        'When you send a link by WhatsApp, text message or email, your device sends it, through the app you pick.'
     },
     title: 'Legal notice and privacy'
   },
@@ -745,7 +743,7 @@ export const EN_DICTIONARY = defineDictionary({
     notALink:
       'This text holds no tree link. Copy the whole link from the message you received, then paste it here.',
     qr: {
-      body: 'Open the phone’s camera and aim at the code: the tree opens by itself.',
+      body: 'Open a phone’s camera and aim at the code: the tree opens by itself.',
       title: 'Have a QR code?'
     },
     submit: 'Open the tree',
@@ -766,7 +764,7 @@ export const EN_DICTIONARY = defineDictionary({
     problem: {
       too_large:
         'This image is still too heavy once reduced. Pick another one.',
-      unreadable: 'This file is not a photo the phone can read. Pick a photo.'
+      unreadable: 'This file is not a photo the device can read. Pick a photo.'
     },
     save: 'Add the photo',
     title: 'Photos',
@@ -804,7 +802,7 @@ export const EN_DICTIONARY = defineDictionary({
       unknownPerson: 'Unknown person: a slot to fill'
     },
     live: {
-      text: 'Scan with the phone’s camera: the up-to-date tree, to look at.',
+      text: 'Scan with a phone’s camera: the up-to-date tree, to look at.',
       title: 'The living tree'
     },
     loading: 'The preview is coming…',
