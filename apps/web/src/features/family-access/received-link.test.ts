@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest'
 
 import { receivedLinkInText } from './received-link'
 
-const FAMILY_ID = 'family-id-aaaaaaaaaaaa'
-const KEY = 'family-key-aaaaaaaaaaa'
+const FAMILY_ID = '1111222233334444'
+const KEY = '11112222333344445555666677'
 const LINK = `https://arbor.adrienlcp.com/f/${FAMILY_ID}#${KEY}`
 
 describe('received link', () => {

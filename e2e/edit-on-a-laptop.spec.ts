@@ -11,7 +11,7 @@ import {
 /** A common laptop screen: shorter than the person form, which must scroll inside its floating panel. */
 const LAPTOP = { height: 768, width: 1366 }
 
-const DEMO_FAMILY_PATH = '/f/demo-famille-morel-001'
+const DEMO_FAMILY_PATH = '/f/dem0fam1ym0re100'
 const VISITOR_NAME = 'Michel Morel'
 const RENAMED_GIVEN_NAMES = 'Auguste Jean'
 

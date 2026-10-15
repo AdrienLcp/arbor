@@ -26,7 +26,13 @@
   },
   "main": "src/index.ts",
   // The free plan only offers Durable Objects backed by SQLite.
-  "migrations": [{ "new_sqlite_classes": ["FamilyRoom"], "tag": "v1" }],
+  // v2 erased every family when ids changed format; Cloudflare applied it from a
+  // deploy that had no FamilyRoom, as a class still bound cannot be deleted.
+  "migrations": [
+    { "new_sqlite_classes": ["FamilyRoom"], "tag": "v1" },
+    { "deleted_classes": ["FamilyRoom"], "tag": "v2" },
+    { "new_sqlite_classes": ["FamilyRoom"], "tag": "v3" }
+  ],
   "name": "arbor",
   "observability": { "enabled": true },
   "routes": [{ "custom_domain": true, "pattern": "arbor.adrienlcp.com" }],

@@ -2,7 +2,7 @@ import { expect, type Page, test } from '@playwright/test'
 
 import { openHydrated } from './support/journeys'
 
-const DEMO_TREE_PATH = '/f/demo-famille-morel-001/tree'
+const DEMO_TREE_PATH = '/f/dem0fam1ym0re100/tree'
 
 const COMPUTERS = [
   { height: 800, width: 1280 },

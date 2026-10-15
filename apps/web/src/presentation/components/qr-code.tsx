@@ -1,6 +1,8 @@
 import { QRCodeSVG } from 'qrcode.react'
 import type React from 'react'
 
+import { scannableSegmentsOf } from '@/infrastructure/scannable-link'
+
 import './qr-code.sass'
 
 type QrCodeProps = {
@@ -22,7 +24,7 @@ export const QrCode: React.FC<QrCodeProps> = ({ label, value }) => (
       marginSize={0}
       size={DRAWN_SIZE}
       title={label}
-      value={value}
+      value={scannableSegmentsOf(value)}
     />
   </span>
 )

@@ -58,8 +58,8 @@ const PLAYWRIGHT_CHROMIUM_DEBUGGING_PORT =
   Number(process.env.LIGHTHOUSE_DEBUGGING_PORT) || (await freePort())
 
 const SITE_ORIGIN = 'https://arbor.adrienlcp.com'
-const DEMO_FAMILY_ID = 'demo-famille-morel-001'
-const DEMO_FAMILY_KEY = 'public-demo-key-morel1'
+const DEMO_FAMILY_ID = 'dem0fam1ym0re100'
+const DEMO_FAMILY_KEY = '0pen0dem0key0f0r0the0m0re1'
 const DEMO_FAMILY_PATH = `/f/${DEMO_FAMILY_ID}`
 const HOME_PATH = '/'
 const AUDITED_PATHS = [
