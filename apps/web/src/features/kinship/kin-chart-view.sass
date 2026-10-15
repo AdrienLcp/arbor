@@ -1,3 +1,4 @@
+@use '../../presentation/styles/focus'
 @use '../../presentation/styles/typography'
 @use '../family-tree/line-strokes'
 
@@ -49,9 +50,7 @@
     &[data-hovered] .kin-chart-name
       text-decoration: underline
 
-    &[data-focus-visible]
-      outline: var(--ring)
-      outline-offset: var(--ring-offset)
+    @include focus.ring
 
   // The name covers the lines that run under it, so they seem to leave from the sticker.
   .kin-chart-name

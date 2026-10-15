@@ -1,6 +1,7 @@
 import { QRCodeSVG } from 'qrcode.react'
 import type React from 'react'
 
+import { scannableSegmentsOf } from '@/infrastructure/scannable-link'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { type LiveLinkBlock, QR_SIZE } from './live-link-block'
@@ -38,7 +39,7 @@ export const PrintLiveLink: React.FC<PrintLiveLinkProps> = ({
         level='M'
         marginSize={0}
         size={QR_SIZE}
-        value={link}
+        value={scannableSegmentsOf(link)}
         x={x}
         y={y}
       />

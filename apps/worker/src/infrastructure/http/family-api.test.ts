@@ -110,7 +110,7 @@ describe('[access] keys', () => {
     expect((await api.call(familyPath(family.familyId))).status).toBe(401)
     expect(
       (
-        await api.call(familyPath('AAAAAAAAAAAAAAAAAAAAAA'), {
+        await api.call(familyPath('aaaaaaaaaaaaaaaa'), {
           key: family.keeperKey
         })
       ).status
@@ -206,7 +206,7 @@ describe('[access] keys', () => {
     const path = familyPath(family.familyId)
 
     for (let attempt = 0; attempt < MAX_FAILED_KEY_CHECKS; attempt++) {
-      await api.call(path, { key: 'wrong-key-wrong-key-00' })
+      await api.call(path, { key: '00000000000000000000000000' })
     }
     const lockedOut = await api.call(path, { key: family.keeperKey })
 

@@ -13,7 +13,6 @@
     "@arbor/protocol": "workspace:*",
     "jspdf": "^4.2.1",
     "lucide-react": "^1.52.0",
-    "nanoid": "^6.0.2",
     "qrcode.react": "^4.2.0",
     "react": "19.3.0",
     "react-aria-components": "1.22.0",

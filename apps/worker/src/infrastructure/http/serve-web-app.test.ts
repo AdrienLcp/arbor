@@ -19,7 +19,7 @@ describe('serveWebApp', () => {
   })
 
   it('serves a family page, whatever the family, with a 200 kept out of search results', async () => {
-    const response = await serve('/f/abcdefghijklmnopqrstuv/share/')
+    const response = await serve('/f/0123456789012345/share/')
 
     expect(response.status).toBe(200)
     expect(response.headers.get('X-Robots-Tag')).toBe('noindex')
@@ -31,5 +31,14 @@ describe('serveWebApp', () => {
     expect(response.status).toBe(404)
     expect(response.headers.get('X-Robots-Tag')).toBe('noindex')
     expect(await response.text()).toBe(APP_DOCUMENT)
+  })
+
+  it('sends an address a QR code wrote in capitals to its page in lower case', async () => {
+    const response = await serve('/F/01234567AB89CD45/TREE?FROM=X')
+
+    expect(response.status).toBe(301)
+    expect(response.headers.get('Location')).toBe(
+      'https://arbor.adrienlcp.com/f/01234567ab89cd45/tree?FROM=X'
+    )
   })
 })

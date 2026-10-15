@@ -243,7 +243,9 @@ Built in step 09, closed 2026-10-08.
 
 ## Security notes
 
-- Keys: 128-bit random, base64url, sent in an `Authorization` header; only
+- Ids and keys: lower-case Crockford base32 (no i, l, o, u), read in any
+  case so a QR code can carry a link in capitals. A family id carries 80
+  random bits, a key 130. Keys are sent in an `Authorization` header; only
   their SHA-256 is stored. Compare in constant time.
 - Rate-limit failed key checks per family id (Durable Object state) to make
   guessing pointless; family ids are random too (no enumeration). After 20

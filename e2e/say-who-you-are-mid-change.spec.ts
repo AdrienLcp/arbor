@@ -5,7 +5,7 @@ import { personSheet, whoAmIDialog } from './support/locators'
 
 const LAPTOP = { height: 800, width: 1280 }
 
-const DEMO_FAMILY_PATH = '/f/demo-famille-morel-001'
+const DEMO_FAMILY_PATH = '/f/dem0fam1ym0re100'
 /** Far from Emma on the tree: were the tree to turn to the visitor, Emma would leave the screen. */
 const VISITOR_NAME = 'Noah Morel'
 

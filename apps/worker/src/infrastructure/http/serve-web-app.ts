@@ -18,6 +18,16 @@ const isPagePath = (pathname: string): boolean =>
   )
 
 /**
+ * The page path in lower case, for an address a QR code wrote in capitals:
+ * `null` when the path is already a page's, or names none in any case.
+ */
+const lowerCasePagePath = (pathname: string): string | null => {
+  const lowerCase = pathname.toLowerCase()
+
+  return !isPagePath(pathname) && isPagePath(lowerCase) ? lowerCase : null
+}
+
+/**
  * Only the landing page on the published host belongs in search results: a
  * family's pages never leave the family, and any other host mirrors the site.
  */
@@ -47,6 +57,16 @@ export const serveWebApp = async (
   assets: AssetFetcher
 ): Promise<Response> => {
   const url = new URL(request.url)
+  const lowerCasePath = lowerCasePagePath(url.pathname)
+
+  if (lowerCasePath !== null) {
+    // The browser carries the fragment, and the family key in it, over to the new address.
+    return Response.redirect(
+      new URL(`${lowerCasePath}${url.search}`, url).href,
+      301
+    )
+  }
+
   const app = await appDocument(url, request, assets)
 
   if (isIndexable(url)) {
