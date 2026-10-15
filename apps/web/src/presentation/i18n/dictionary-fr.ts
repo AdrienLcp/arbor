@@ -131,38 +131,18 @@ export const FR_DICTIONARY = defineDictionary({
     unnamedTree: 'Arbre sans nom'
   },
   createFamily: {
-    creatorName: {
-      field: 'Votre prénom et votre nom',
-      hint: 'Ils signeront vos modifications : la famille saura qui a fait quoi.',
-      missing: 'Écrivez votre prénom et votre nom.'
-    },
+    givenNames: 'Votre prénom',
+    givenNamesMissing: 'Écrivez votre prénom.',
     intro:
-      'Une première personne, et les autres suivront : vous-même, ou un grand-parent, un ancêtre…',
-    me: {
-      givenNames: 'Votre prénom',
-      givenNamesMissing: 'Écrivez votre prénom.',
-      previewHint: 'vous',
-      previewLabel: 'Votre vignette',
-      surname: 'Votre nom de famille',
-      surnameHint: 'Celui que vous portez aujourd’hui.'
-    },
+      'Vous d’abord : vos parents, vos grands-parents et le reste de la famille suivront.',
     preview: {
       title: 'À coller'
     },
-    someoneElse: {
-      givenNames: 'Son prénom',
-      givenNamesMissing: 'Écrivez son prénom.',
-      previewHint: 'la première personne',
-      previewLabel: 'La première vignette',
-      surname: 'Son nom de famille',
-      surnameHint: 'Celui que la famille connaît.'
-    },
-    startsWith: {
-      label: 'Par qui commence l’arbre ?',
-      me: 'Par moi',
-      someoneElse: 'Par quelqu’un d’autre'
-    },
+    previewHint: 'vous',
+    previewLabel: 'Votre vignette',
     submit: 'Créer l’arbre',
+    surname: 'Votre nom de famille',
+    surnameHint: 'Celui que vous portez aujourd’hui.',
     title: 'Créer l’arbre de votre famille',
     treeName: 'Nom de l’arbre',
     treeNameHint: 'Il s’affiche en haut de l’arbre et sur la feuille imprimée.',

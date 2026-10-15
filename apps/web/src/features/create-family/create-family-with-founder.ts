@@ -18,9 +18,6 @@ export type Founder = {
   surname: string
 }
 
-/** Who creates the family: the founder themselves, or someone who starts the tree with another person and signs with their own name. */
-export type Creator = { kind: 'founder' } | { kind: 'named'; name: string }
-
 /** A brand-new family's log starts empty: the founder is its first entry. */
 const EMPTY_LOG_REVISION = 0
 
@@ -38,17 +35,15 @@ const founderPerson = ({ givenNames, surname }: Founder): Person => ({
 })
 
 /**
- * Creates the family, puts its founder in it as its first person and
- * remembers both links on this device, with who the creator is. Once the
- * family exists it is never reported as failed: a founder who could not be
- * recorded picks themselves on "Who are you?" instead.
+ * Creates the family, puts its creator in it as its first person and
+ * remembers both links on this device, with the creator as who this device
+ * is. Once the family exists it is never reported as failed: a founder who
+ * could not be recorded picks themselves on "Who are you?" instead.
  */
 export const createFamilyWithFounder = async ({
-  creator,
   founder,
   treeName
 }: {
-  creator: Creator
   founder: Founder
   treeName: string
 }): Promise<Result<FamilyId, ApiFailure>> => {
@@ -60,10 +55,7 @@ export const createFamilyWithFounder = async ({
 
   const { familyId, familyKey, keeperKey } = created.data
   const person = founderPerson(founder)
-  const author: Author =
-    creator.kind === 'founder'
-      ? { kind: 'person', personId: person.id }
-      : creator
+  const author: Author = { kind: 'person', personId: person.id }
   const recorded = await recordOperations({
     familyId,
     input: {
@@ -78,8 +70,7 @@ export const createFamilyWithFounder = async ({
   rememberFamily(familyId, (access) => ({
     ...access,
     keys: { contributor: familyKey, keeper: keeperKey },
-    me:
-      recorded.status === 'success' || author.kind === 'named' ? author : null,
+    me: recorded.status === 'success' ? author : null,
     name: treeName
   }))
 

@@ -2,8 +2,12 @@ import { expect, type Page } from '@playwright/test'
 
 import {
   addRelativeDialog,
+  createFamilyPage,
+  familyAppBar,
   formDialog,
+  homePage,
   personSheet,
+  sharePage,
   treePage
 } from './locators'
 
@@ -14,6 +18,37 @@ export const waitForHydration = (page: Page) =>
 export const openHydrated = async (page: Page, url: string): Promise<void> => {
   await page.goto(url)
   await waitForHydration(page)
+}
+
+/**
+ * Creates a family from the home page, lands on its tree with the creator as
+ * its first person, and reads the family link from the share page the app bar
+ * opens, then goes back to the tree. Returns the family link.
+ */
+export const createFamilyFromHome = async (
+  page: Page,
+  creator: { givenNames: string; surname: string }
+): Promise<string> => {
+  await openHydrated(page, '/')
+  await homePage(page).createTree.click()
+  const form = createFamilyPage(page)
+  await form.givenNames.fill(creator.givenNames)
+  await form.surname.fill(creator.surname)
+  await form.submit.click()
+  await expect(
+    treePage(page).person(`${creator.givenNames} ${creator.surname}`),
+    'the creator lands on the tree, holding their own sticker'
+  ).toBeVisible()
+
+  await familyAppBar(page).share.click()
+  const familyLink = sharePage(page).familyLink
+  await expect(
+    familyLink,
+    'the share page shows the family link once the tree exists'
+  ).toHaveText(/#/)
+  const link = await familyLink.innerText()
+  await sharePage(page).openTree.click()
+  return link
 }
 
 const isInViewport = async (page: Page, name: string): Promise<boolean> => {

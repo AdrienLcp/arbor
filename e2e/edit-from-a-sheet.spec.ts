@@ -2,18 +2,16 @@ import { expect, test } from '@playwright/test'
 
 import {
   addRelative,
+  createFamilyFromHome,
   openHydrated,
   openSheetFromTree,
   waitForHydration
 } from './support/journeys'
 import {
   addPhotoDialog,
-  createFamilyPage,
   editPersonDialog,
   formDialog,
-  homePage,
   personSheet,
-  sharePage,
   treePage,
   whoAmIDialog
 } from './support/locators'
@@ -56,15 +54,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
     await browser.newContext({ viewport: PHONE })
   ).newPage()
 
-  await openHydrated(founder, '/')
-  await homePage(founder).createTree.click()
-  const form = createFamilyPage(founder)
-  await form.givenNames.fill(FOUNDER.givenNames)
-  await form.surname.fill(FOUNDER.surname)
-  await form.submit.click()
-  const link = await sharePage(founder).familyLink.innerText()
-
-  await sharePage(founder).openTree.click()
+  const link = await createFamilyFromHome(founder, FOUNDER)
   await openSheetFromTree(founder, FOUNDER_NAME)
   const sheet = personSheet(founder)
 

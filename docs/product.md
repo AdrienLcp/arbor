@@ -44,10 +44,10 @@ shared photo album. What protects the family is that **nothing can be lost**,
 not that strangers are kept out by a login.
 
 - **Create a family** → the creator becomes the keeper and gets two links:
-  the **family link** (to share) and the **keeper link** (to keep). The tree
-  starts with one person: the creator, or someone else (a grandparent, an
-  ancestor); a creator who starts with someone else types their own name,
-  which signs their changes until they pick themselves in the tree.
+  the **family link** (to share) and the **keeper link** (to keep), both on
+  the share page the app bar opens. The tree starts with one person, the
+  creator, and opens right away: they add their parents and ancestors from
+  there.
 - A link carries its secret in the fragment (`/f/<familyId>#<key>`): the
   fragment is never sent in requests, server logs or `Referer` headers. The app
   moves it to local storage on arrival and sends it as a header.

@@ -2,18 +2,16 @@ import { expect, test } from '@playwright/test'
 
 import {
   addRelative,
+  createFamilyFromHome,
   openHydrated,
   openSheetFromTree
 } from './support/journeys'
 import {
-  createFamilyPage,
   editPersonDialog,
   formDialog,
   historyPage,
-  homePage,
   personSheet,
   restoreDialog,
-  sharePage,
   treePage,
   whoAmIDialog
 } from './support/locators'
@@ -51,14 +49,7 @@ test('[e2e] the keeper puts the tree back as it was before a contributor binned 
     await browser.newContext({ viewport: PHONE })
   ).newPage()
 
-  await openHydrated(keeper, '/')
-  await homePage(keeper).createTree.click()
-  const form = createFamilyPage(keeper)
-  await form.givenNames.fill(KEEPER.givenNames)
-  await form.surname.fill(KEEPER.surname)
-  await form.submit.click()
-  const link = await sharePage(keeper).familyLink.innerText()
-  await sharePage(keeper).openTree.click()
+  const link = await createFamilyFromHome(keeper, KEEPER)
   await openSheetFromTree(keeper, KEEPER_NAME)
   await addRelative(keeper, 'A partner', PARTNER)
   for (const { givenNames } of CHILDREN) {

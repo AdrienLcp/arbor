@@ -1,13 +1,14 @@
 import { expect, test } from '@playwright/test'
 
-import { openHydrated, waitForHydration } from './support/journeys'
 import {
-  createFamilyPage,
+  createFamilyFromHome,
+  openHydrated,
+  waitForHydration
+} from './support/journeys'
+import {
   familyAppBar,
   familySettingsPage,
-  homePage,
   linkRefusedScreen,
-  sharePage,
   treePage,
   whoAmIDialog
 } from './support/locators'
@@ -27,19 +28,7 @@ test('[e2e] a family is created, joined through its link, and locked out once th
   const founder = await (await browser.newContext()).newPage()
   const relative = await (await browser.newContext()).newPage()
 
-  await openHydrated(founder, '/')
-  await homePage(founder).createTree.click()
-  const form = createFamilyPage(founder)
-  await form.givenNames.fill(FOUNDER.givenNames)
-  await form.surname.fill(FOUNDER.surname)
-  await form.submit.click()
-
-  const familyLink = sharePage(founder).familyLink
-  await expect(
-    familyLink,
-    'the share page shows the family link once the tree exists'
-  ).toHaveText(/#/)
-  const link = await familyLink.innerText()
+  const link = await createFamilyFromHome(founder, FOUNDER)
 
   await openHydrated(relative, link)
   await expect(

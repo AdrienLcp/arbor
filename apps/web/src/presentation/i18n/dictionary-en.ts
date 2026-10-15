@@ -130,38 +130,18 @@ export const EN_DICTIONARY = defineDictionary({
     unnamedTree: 'Unnamed tree'
   },
   createFamily: {
-    creatorName: {
-      field: 'Your first and last name',
-      hint: 'They will sign your changes: the family will know who did what.',
-      missing: 'Write your first and last name.'
-    },
+    givenNames: 'Your first name',
+    givenNamesMissing: 'Write your first name.',
     intro:
-      'One first person, and the others will follow: yourself, or a grandparent, an ancestor…',
-    me: {
-      givenNames: 'Your first name',
-      givenNamesMissing: 'Write your first name.',
-      previewHint: 'you',
-      previewLabel: 'Your sticker',
-      surname: 'Your last name',
-      surnameHint: 'The one you go by today.'
-    },
+      'You first: your parents, your grandparents and the rest of the family will follow.',
     preview: {
       title: 'Stick here'
     },
-    someoneElse: {
-      givenNames: 'Their first name',
-      givenNamesMissing: 'Write their first name.',
-      previewHint: 'the first person',
-      previewLabel: 'The first sticker',
-      surname: 'Their last name',
-      surnameHint: 'The one the family knows.'
-    },
-    startsWith: {
-      label: 'Who does the tree start with?',
-      me: 'With me',
-      someoneElse: 'With someone else'
-    },
+    previewHint: 'you',
+    previewLabel: 'Your sticker',
     submit: 'Create the tree',
+    surname: 'Your last name',
+    surnameHint: 'The one you go by today.',
     title: 'Create your family’s tree',
     treeName: 'Name of the tree',
     treeNameHint: 'It shows at the top of the tree and on the printed sheet.',

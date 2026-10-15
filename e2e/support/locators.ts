@@ -31,7 +31,8 @@ export const sharePage = (page: Page) => ({
 export const familyAppBar = (page: Page) => ({
   familyName: (treeName: string) =>
     page.getByRole('banner').getByRole('link', { name: treeName }),
-  settings: page.getByRole('link', { name: 'Settings' })
+  settings: page.getByRole('link', { name: 'Settings' }),
+  share: page.getByRole('banner').getByRole('link', { name: 'Share' })
 })
 
 /** "Who are you?" over the tree: asked before the first change, or when the visitor offers to say it. */

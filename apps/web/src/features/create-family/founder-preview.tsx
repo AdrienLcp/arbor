@@ -11,20 +11,16 @@ const FOUNDER_GENERATION = 1
 
 type FounderPreviewProps = {
   givenNames: string
-  /** Whether the tree starts with its creator: the slot then says "you". */
-  isCreator: boolean
   surname: string
 }
 
-/** The album's first slot, waiting, then holding the founder's sticker once their name is being typed. */
+/** The album's first slot, the creator's, waiting, then holding their sticker once their name is being typed. */
 export const FounderPreview: React.FC<FounderPreviewProps> = ({
   givenNames,
-  isCreator,
   surname
 }) => {
   const translate = useTranslate()
   const hasName = `${givenNames}${surname}`.trim() !== ''
-  const founder = isCreator ? 'me' : 'someoneElse'
 
   return (
     <figure className='founder-preview'>
@@ -39,12 +35,12 @@ export const FounderPreview: React.FC<FounderPreviewProps> = ({
       ) : (
         <GhostSlot
           generation={FOUNDER_GENERATION}
-          hint={translate(`createFamily.${founder}.previewHint`)}
+          hint={translate('createFamily.previewHint')}
           title={translate('createFamily.preview.title')}
         />
       )}
       <figcaption className='founder-preview-label'>
-        {translate(`createFamily.${founder}.previewLabel`)}
+        {translate('createFamily.previewLabel')}
       </figcaption>
     </figure>
   )

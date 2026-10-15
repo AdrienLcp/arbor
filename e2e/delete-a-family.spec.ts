@@ -1,13 +1,15 @@
 import { expect, test } from '@playwright/test'
 
-import { openHydrated, waitForHydration } from './support/journeys'
 import {
-  createFamilyPage,
+  createFamilyFromHome,
+  openHydrated,
+  waitForHydration
+} from './support/journeys'
+import {
   familyAppBar,
   familySettingsPage,
   homePage,
-  linkRefusedScreen,
-  sharePage
+  linkRefusedScreen
 } from './support/locators'
 
 const FOUNDER = { givenNames: 'Paul', surname: 'Vernier' }
@@ -24,15 +26,8 @@ test('[e2e] a keeper deletes the family after typing its name, and its link open
   const keeper = await (await browser.newContext()).newPage()
   const relative = await (await browser.newContext()).newPage()
 
-  await openHydrated(keeper, '/')
-  await homePage(keeper).createTree.click()
-  const form = createFamilyPage(keeper)
-  await form.givenNames.fill(FOUNDER.givenNames)
-  await form.surname.fill(FOUNDER.surname)
-  await form.submit.click()
-  const familyLink = sharePage(keeper).familyLink
-  await expect(familyLink).toHaveText(/#/)
-  await openHydrated(relative, await familyLink.innerText())
+  const link = await createFamilyFromHome(keeper, FOUNDER)
+  await openHydrated(relative, link)
   await expect(familyAppBar(relative).familyName(TREE_NAME)).toBeVisible()
 
   await familyAppBar(keeper).settings.click()
