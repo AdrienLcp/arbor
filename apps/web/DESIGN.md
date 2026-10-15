@@ -332,7 +332,7 @@ Two people already in the tree are tied on the canvas itself. A ghost "+ Lien" b
 52 by 30px track in `ghost-soft` with a `ghost` border and an `ink` knob; checked fills Generation Ochre and slides the knob 22px over 200ms.
 
 ### Navigation
-- **Tree app bar:** the tree mark in vermilion, family name in Barlow 800 uppercase, search field, then actions and "who am I" on the right, divided by a `ghost-soft` rule. Below a 30rem bar, "what changed" and "share" stay as icons and the bin, print and settings fold into one "Plus" menu (labelled rows, 44px), so the family name and its mark keep their full width on a phone.
+- **Tree app bar:** the tree mark in vermilion, family name in Barlow 800 uppercase, search field, then actions and "who am I" on the right, divided by a `ghost-soft` rule. It sticks to the top of every family page on paper of its own, so a long page scrolls under it and its actions stay in reach. Below a 30rem bar, "what changed" and "share" stay as icons and the bin, print and settings fold into one "Plus" menu (labelled rows, 44px), so the family name and its mark keep their full width on a phone.
 - **View switcher:** a segmented group (1.5px `ghost` border, 10px radius, 4px inset); tabs in Barlow 700 uppercase `ink-soft`, the current one filled with Generation Pine.
 - **Phone spread bar:** Generation Pine bar with previous / next icon buttons and the generation title in Barlow 800.
 

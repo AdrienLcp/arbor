@@ -4,16 +4,26 @@
 @use '../../presentation/styles/typography'
 
 @layer components
+  :root:has(.family-app-bar)
+    --header-padding-block: var(--space-s)
+    --header-height: calc(max(var(--header-padding-block), var(--safe-area-top)) + var(--control-height) + var(--header-padding-block) + var(--stroke-hair))
+    --scroll-offset: calc(var(--header-height) + var(--space-s))
+
+    @include layout.short
+      --header-padding-block: var(--space-xs)
+
+  // Stuck to the top while the page scrolls under it: the family's name and its actions stay in reach.
   .family-app-bar
     @include layout.container
     align-items: center
+    background: var(--paper)
     border-bottom: var(--hairline)
     display: flex
     gap: var(--space-xs)
-    padding: max(var(--space-s), var(--safe-area-top)) var(--gutter-right) var(--space-s) var(--gutter-left)
-
-    @include layout.short
-      padding-block: max(var(--space-xs), var(--safe-area-top)) var(--space-xs)
+    inset-block-start: 0
+    padding: max(var(--header-padding-block), var(--safe-area-top)) var(--gutter-right) var(--header-padding-block) var(--gutter-left)
+    position: sticky
+    z-index: 3
 
     .button.family-bar-name
       @include typography.bar-name
