@@ -17,6 +17,8 @@
     outline: none
     // Clip, not hidden: a scroll container here would capture the snap markers the swipe rests on.
     overflow: clip
+    // The handle's strip sits above the content, so what scrolls never slides under the handle.
+    padding-top: var(--space-l)
     position: relative
     width: 100%
 
@@ -31,11 +33,10 @@
     width: 2.75rem
     z-index: 2
 
+  // No overscroll containment: a swipe the content cannot take passes on to react-aria's swipe area, which moves the sheet and already keeps the page behind still.
   .bottom-sheet-content
     outline: none
     overflow-y: auto
-    overscroll-behavior: contain
-    padding-top: var(--space-l)
     scrollbar-width: thin
 
   // Half open, a swipe on the content raises the sheet rather than scrolling inside it.
