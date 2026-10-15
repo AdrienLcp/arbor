@@ -1,3 +1,4 @@
+@use '../styles/focus'
 @use '../styles/typography'
 
 @layer components
@@ -35,9 +36,7 @@
       .checkbox-mark
         opacity: 1
 
-    &[data-focus-visible] .checkbox-box
-      outline: var(--ring)
-      outline-offset: var(--ring-offset)
+    @include focus.ring('.checkbox-box')
 
     &[data-pressed] .checkbox-box
       scale: 0.94

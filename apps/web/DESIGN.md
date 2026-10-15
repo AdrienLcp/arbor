@@ -217,7 +217,7 @@ A sixth or later generation cycles back to `g1`.
 - **Printed Outline** (`ghost`) and **Faint Outline** (`ghost-soft`): dashed ghost slots, control borders, dividers and the printed slot frames.
 - **Matte Grey** (`matte`): mixed 58% into a generation ink to dull a deceased person's sticker art.
 - **Shadow Ink** (`shadow-ink`): the base of every shadow, always applied through `color-mix` at a stated strength.
-- **Focus Blue** (`focus`): the 3px focus outline; ochre in dark theme.
+- **Focus Blue** (`focus`): the 3px focus outline, which closes in on the control it lands on; ochre in dark theme.
 
 Dark theme (`prefers-color-scheme: dark` unless `data-theme="light"`, or `data-theme="dark"`): the paper becomes deep navy (`oklch(0.205 0.028 262)`), stickers become a raised navy (`oklch(0.300 0.030 262)`), inks lighten to around L 0.73 with dark navy text on them. The printed sheet (`.paper-light`) forces the light palette with pure-white paper whatever the screen theme.
 
@@ -298,7 +298,7 @@ Arbor's mark is an hourglass tree drawn in one 3-unit round stroke on a 32-unit 
 Solid, tall, plain-spoken.
 - **Shape:** gently rounded (8px), 52px tall, 22px side padding, Atkinson 700 18px, optional 24px leading icon.
 - **Primary:** `action` fill with `on-action` text; one per view. On the cover, inverted: `on-cover` fill with vermilion text, 60px tall, 20px label.
-- **Hover / Focus:** primary lifts 1px with a deeper drop; active presses 1px down. All transitions 160ms on the ease-out curve. Focus is the global 3px `focus` outline, offset 3px.
+- **Hover / Focus:** primary lifts 1px with a deeper drop; active presses 1px down. All transitions 160ms on the ease-out curve. Focus is the global 3px `focus` outline, offset 3px; it closes in on each control from a faded 14px loop over 200ms, so the eye follows it from one control to the next.
 - **Ghost:** transparent with a 2px `currentColor` border; hover fills 8% of `currentColor`.
 - **Link button:** underlined 700 text with an icon, 44px tall, for secondary paths ("J'ai déjà un arbre dans un logiciel").
 - **Icon button:** 44px square, transparent, `paper-2` on hover.
@@ -340,7 +340,7 @@ Two people already in the tree are tied on the canvas itself. A ghost "+ Lien" b
 A 68px row in the person sheet: a mini sticker (48 by 60), the name in Atkinson 700 18px, the relation in `ink-soft` 16px, a 40px line sample showing the relation kind, a chevron. Unions group their rows in a 10px rounded `ghost-soft` box headed by the union line and its dates.
 
 ### Motion
-One motion: when a person is added, their sticker presses into its slot (starts lifted 16px, tilted -3.5deg, scaled 1.07 with a deep shadow; overshoots to 0.985; settles), 560ms on `cubic-bezier(0.16, 1, 0.3, 1)`. It is switched off under `prefers-reduced-motion`. Everything else is a 160 to 200ms state transition.
+One motion: when a person is added, their sticker presses into its slot (starts lifted 16px, tilted -3.5deg, scaled 1.07 with a deep shadow; overshoots to 0.985; settles), 560ms on `cubic-bezier(0.16, 1, 0.3, 1)`. It is switched off under `prefers-reduced-motion`. Everything else is a 160 to 200ms state transition, the focus ring's arrival included.
 
 ## Do's and Don'ts
 
