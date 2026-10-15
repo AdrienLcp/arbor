@@ -302,8 +302,7 @@ export const FR_DICTIONARY = defineDictionary({
       hint: 'Il s’affiche en haut de l’arbre et sur la feuille imprimée.',
       missing: 'Donnez un nom à l’arbre.',
       save: 'Enregistrer le nom',
-      saved: 'Le nouveau nom est enregistré.',
-      title: 'Le nom de l’arbre'
+      saved: 'Le nouveau nom est enregistré.'
     },
     newKeeper: {
       body: 'Un gardien peut tout régler, comme vous. Créez un lien de gardien et envoyez-le à la personne choisie.',

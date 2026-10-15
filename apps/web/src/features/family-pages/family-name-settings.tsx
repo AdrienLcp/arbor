@@ -39,9 +39,6 @@ export const FamilyNameSettings: React.FC = () => {
 
   return (
     <div className='settings-item'>
-      <h3 className='settings-item-title'>
-        {translate('familySettings.name.title')}
-      </h3>
       <Form className='settings-item-form' onSubmit={save}>
         <TextField
           description={translate('familySettings.name.hint')}
