@@ -340,7 +340,7 @@ Two people already in the tree are tied on the canvas itself. A ghost "+ Lien" b
 A 68px row in the person sheet: a mini sticker (48 by 60), the name in Atkinson 700 18px, the relation in `ink-soft` 16px, a 40px line sample showing the relation kind, a chevron. Unions group their rows in a 10px rounded `ghost-soft` box headed by the union line and its dates.
 
 ### Motion
-One motion: when a person is added, their sticker presses into its slot (starts lifted 16px, tilted -3.5deg, scaled 1.07 with a deep shadow; overshoots to 0.985; settles), 560ms on `cubic-bezier(0.16, 1, 0.3, 1)`. It is switched off under `prefers-reduced-motion`. Everything else is a 160 to 200ms state transition, the focus ring's arrival included.
+One motion: when a person is added, their sticker presses into its slot (starts lifted 16px, tilted -3.5deg, scaled 1.07 with a deep shadow; overshoots to 0.985; settles), 560ms on `cubic-bezier(0.16, 1, 0.3, 1)`. It is switched off under `prefers-reduced-motion`. Everything else is a 160 to 200ms state transition, the focus ring's arrival included: on a computer a person's sheet slides in from the right as it opens, 200ms on `--ease-out` (it disappears at once when closed: it is a page of the address, gone with it), and on a phone the bottom sheet rises and leaves by its own scroll, the swipe it answers to.
 
 ## Do's and Don'ts
 

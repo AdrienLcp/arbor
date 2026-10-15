@@ -11,6 +11,8 @@
 
     @include layout.canvas-screen
       --sheet-inset-start: 0px
+      // Slides in over the canvas's right side once, as the sheet opens; moving on to another person keeps it in place.
+      animation: side-sheet-arrival var(--transition-base) var(--ease-out)
       border-left: var(--stroke-thin) solid var(--ghost-soft)
       bottom: 0
       box-shadow: var(--shadow-sheet)
@@ -38,3 +40,7 @@
 
     .sheet-missing-title
       @include typography.title
+
+  @keyframes side-sheet-arrival
+    from
+      translate: 100% 0
