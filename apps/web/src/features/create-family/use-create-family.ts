@@ -1,5 +1,6 @@
 import { useState, useTransition } from 'react'
 
+import { scrollPageToTop } from '@/infrastructure/browser'
 import {
   familyTreePathFor,
   useNavigateTo
@@ -27,6 +28,7 @@ export const useCreateFamily = () => {
           return
         }
 
+        scrollPageToTop()
         navigateTo(familyTreePathFor(created.data), { replace: true })
       })
     })

@@ -3,14 +3,12 @@
 @use '../../presentation/styles/typography'
 
 @layer components
-  // Held to the viewport, the screen never scrolls the document.
+  // Held to the viewport, the screen never scrolls the document: a reserved scrollbar gutter would be an empty strip.
   :root:has(.family-tree-screen)
+    scrollbar-gutter: auto
+
     #root
       block-size: 100dvh
-
-  // A reserved scrollbar gutter would be an empty strip; it stays through the cross-fade from another page, as Chromium's GPU process crashes when a scrolled page loses its gutter mid-transition.
-  :root:has(.family-tree-screen):not(:active-view-transition)
-    scrollbar-gutter: auto
 
   // The viewport's height less the footer's line under it.
   .family-tree-screen

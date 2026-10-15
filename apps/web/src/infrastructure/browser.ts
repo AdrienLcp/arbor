@@ -35,6 +35,15 @@ export const setDocumentLanguage = (locale: string): void => {
   document.documentElement.lang = locale
 }
 
+/**
+ * Brings the page back to its top at once. Before the cross-fade into the tree:
+ * Chromium's GPU process crashes when a page scrolled down fades into one held
+ * to the viewport, which gives up its scrollbar gutter.
+ */
+export const scrollPageToTop = (): void => {
+  window.scrollTo(0, 0)
+}
+
 /** The mark an end-to-end journey waits for before it acts: React has taken over the page. */
 export const markAppHydrated = (): void => {
   document.documentElement.dataset.hydrated = ''
