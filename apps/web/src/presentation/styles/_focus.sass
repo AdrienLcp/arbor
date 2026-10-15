@@ -5,11 +5,13 @@
 $_arrival-offset: 14px
 
 /// The ring closes in on each control the keyboard reaches, from a wider loop, so the eye follows it from one to the next. Included once, beside `ring-focusables`; a component's own animation wins.
+///
+/// Controls only, never a `tabindex='-1'` box the app focuses by script: a dialog or a popover waits for its own animations before it unmounts, and one cut short when the focus leaves would hold it open.
 @mixin ring-arrival
   @keyframes focus-ring-arrival
     from
       outline-color: transparent
       outline-offset: $_arrival-offset
 
-  :where([data-focus-visible], :focus-visible)
+  :where(a[href], button, input, select, textarea, summary, [tabindex]:not([tabindex='-1']), [contenteditable]):where([data-focus-visible], :focus-visible)
     animation: focus-ring-arrival var(--transition-base) var(--ease-out)
