@@ -7,6 +7,7 @@ import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { FamilyLinkSettings } from './family-link-settings'
 import { useOpenFamily } from './family-loader'
+import { FamilyNameSettings } from './family-name-settings'
 import { NewKeeperSettings } from './new-keeper-settings'
 import { ReaderLinkSettings } from './reader-link-settings'
 import { StorageUsageSettings } from './storage-usage-settings'
@@ -42,7 +43,7 @@ const OverviewSettings: React.FC<{ onChanged: () => void }> = ({
   )
 }
 
-/** What only a keeper can do: replace the family link, hand out other links, watch the room the family takes, delete it. */
+/** What only a keeper can do: rename the family, replace the family link, hand out other links, watch the room the family takes, delete it. */
 export const KeeperSettings: React.FC = () => {
   const translate = useTranslate()
   const titleId = useId()
@@ -53,6 +54,7 @@ export const KeeperSettings: React.FC = () => {
       <h2 className='settings-group-title' id={titleId}>
         {translate('familySettings.keeper.title')}
       </h2>
+      <FamilyNameSettings />
       <FamilyLinkSettings />
       <OverviewSettings
         key={overviewRevision}

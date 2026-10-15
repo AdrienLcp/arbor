@@ -293,6 +293,14 @@ export const EN_DICTIONARY = defineDictionary({
       title: 'Keeper of the tree'
     },
     loading: 'Loading…',
+    name: {
+      field: 'Name of the tree',
+      hint: 'It shows at the top of the tree and on the printed sheet.',
+      missing: 'Give the tree a name.',
+      save: 'Save the name',
+      saved: 'The new name is saved.',
+      title: 'The tree’s name'
+    },
     newKeeper: {
       body: 'A keeper can set everything up, as you can. Create a keeper link and send it to the person you chose.',
       create: 'Create a keeper link',

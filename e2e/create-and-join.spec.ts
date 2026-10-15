@@ -17,12 +17,13 @@ const FOUNDER = { givenNames: 'Jeanne', surname: 'Delorme' }
 const FOUNDER_NAME = `${FOUNDER.givenNames} ${FOUNDER.surname}`
 /** What the create form suggests from the surname while the tree name is left alone. */
 const TREE_NAME = `The ${FOUNDER.surname} family`
+const RENAMED_TREE_NAME = `The ${FOUNDER.surname} tree`
 
 /**
  * Two phones: the founder's, and a relative's that only ever receives the link.
  * Separate browser contexts, so nothing the founder's device remembers leaks to the relative's.
  */
-test('[e2e] a family is created, joined through its link, and locked out once the link is replaced', async ({
+test('[e2e] a family is created, joined through its link, renamed, and locked out once the link is replaced', async ({
   browser
 }) => {
   const founder = await (await browser.newContext()).newPage()
@@ -48,6 +49,13 @@ test('[e2e] a family is created, joined through its link, and locked out once th
 
   await familyAppBar(founder).settings.click()
   const settings = familySettingsPage(founder)
+  await settings.familyName.fill(RENAMED_TREE_NAME)
+  await settings.saveName.click()
+  await expect(
+    familyAppBar(founder).familyName(RENAMED_TREE_NAME),
+    'the keeper renames the family, and the bar shows the new name'
+  ).toBeVisible()
+
   await settings.replaceLink.click()
   await settings.confirmReplace.click()
   await expect(

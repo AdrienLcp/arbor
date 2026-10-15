@@ -56,8 +56,10 @@ export const familySettingsPage = (page: Page) => ({
     .getByRole('button', { name: 'Replace the link' }),
   deleteFamily: page.getByRole('button', { name: 'Delete the family…' }),
   deleteName: formDialog(page).getByLabel('The family’s name'),
+  familyName: page.getByLabel('Name of the tree'),
   replaced: page.getByText('The new link is ready. Send it to the family.'),
-  replaceLink: page.getByRole('button', { name: 'Replace the link' })
+  replaceLink: page.getByRole('button', { name: 'Replace the link' }),
+  saveName: page.getByRole('button', { name: 'Save the name' })
 })
 
 export const linkRefusedScreen = (page: Page) => ({
