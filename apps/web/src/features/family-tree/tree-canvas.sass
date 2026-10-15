@@ -33,6 +33,22 @@
         padding: 0
         width: var(--target)
 
+    // A phone held upright: the canvas's tools are one toolbar pinned under it, the drawing taking the height above.
+    @include layout.folded-bar
+      display: grid
+      grid-template-rows: minmax(0, 1fr) auto
+
+      .tree-zoom
+        align-items: center
+        block-size: var(--tree-toolbar-height)
+        border: 0
+        border-radius: 0
+        border-top: var(--hairline)
+        display: flex
+        justify-content: space-around
+        padding: var(--space-xs) var(--gutter-right) max(var(--space-xs), var(--safe-area-bottom)) var(--gutter-left)
+        position: static
+
 // Outside the layers: react-zoom-pan-pinch injects its `fit-content` size outside any layer, and that beats every layered rule.
 // Inherited values stay put while panning: the library sets `user-select` inline on every pan, and a changed inherited value (that or a `grabbing` cursor) restyles the whole drawing — 300 ms on a slow phone.
 .tree-canvas .tree-viewport

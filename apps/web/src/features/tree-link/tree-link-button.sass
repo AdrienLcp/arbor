@@ -1,3 +1,4 @@
+@use '../../presentation/styles/layout'
 @use '../../presentation/styles/typography'
 
 @layer components
@@ -9,3 +10,10 @@
     justify-items: center
     min-height: calc(var(--target) + var(--space-l))
     padding-block: var(--space-xs)
+
+    // In the phone's bottom toolbar: the icon beside its word, one row high.
+    @include layout.folded-bar
+      display: inline-flex
+      min-height: var(--target)
+      padding-inline: var(--space-m)
+      width: auto

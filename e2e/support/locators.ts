@@ -31,6 +31,8 @@ export const sharePage = (page: Page) => ({
 export const familyAppBar = (page: Page) => ({
   familyName: (treeName: string) =>
     page.getByRole('banner').getByRole('link', { name: treeName }),
+  /** On a phone held upright, what the bar and the tree's head cannot hold. */
+  more: page.getByRole('banner').getByRole('button', { name: 'More' }),
   settings: page.getByRole('link', { name: 'Settings' }),
   share: page.getByRole('banner').getByRole('link', { name: 'Share' })
 })
@@ -76,6 +78,8 @@ export const treePage = (page: Page) => ({
   person: (name: string) => page.getByRole('button', { name }).first(),
   /** The invitation of a visitor who has not said who they are yet. */
   sayWhoYouAre: page.getByRole('button', { name: 'Say who you are' }),
+  /** The same invitation on a phone held upright, a row of the bar's "More" menu. */
+  sayWhoYouAreInMenu: page.getByRole('menuitem', { name: /Say who you are/ }),
   title: (focusName: string) =>
     page.getByRole('heading', {
       level: 1,

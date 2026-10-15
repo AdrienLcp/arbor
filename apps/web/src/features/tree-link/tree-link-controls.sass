@@ -22,6 +22,10 @@
       max-width: none
       right: calc(var(--target) + 3 * var(--space-l))
 
+    // A phone held upright: the zoom went to the bottom toolbar, the banner takes the top's whole width.
+    @include layout.folded-bar
+      right: var(--gutter-right)
+
   .tree-link-banner-text
     @include typography.body
     @include typography.strong

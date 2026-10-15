@@ -28,6 +28,7 @@ import {
   ZoomInIcon,
   ZoomOutIcon
 } from '@/presentation/components/icons'
+import { FOLDED_BAR_SCREEN } from '@/presentation/components/phone-screen'
 import { Toolbar } from '@/presentation/components/toolbar'
 import { useMediaQuery } from '@/presentation/components/use-media-query'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
@@ -105,6 +106,8 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   wholeTreeView = null
 }) => {
   const hasFinePointer = useMediaQuery(FINE_POINTER)
+  /** A phone held upright lays the tools in one row under the canvas. */
+  const isToolbarRow = useMediaQuery(FOLDED_BAR_SCREEN)
   const translate = useTranslate()
   const instructionsId = useId()
   const viewport = useRef<ReactZoomPanPinchRef>(null)
@@ -213,7 +216,10 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
       windowHeight: window.innerHeight
     })
     const bandTop = canvas.height / 2 + band.centreOffset - band.height / 2
-    const toolsLeft = zoomTools.current?.getBoundingClientRect().left
+    // A column of tools stands over the canvas's right; a phone's toolbar lies under it and hides nothing.
+    const toolsLeft = isToolbarRow
+      ? undefined
+      : zoomTools.current?.getBoundingClientRect().left
     const railsRight = Math.max(
       canvas.left,
       ...[...(rails.current?.children ?? [])].map(
@@ -395,7 +401,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
             <Toolbar
               aria-label={translate('tree.zoom.label')}
               className='tree-zoom'
-              orientation='vertical'
+              orientation={isToolbarRow ? 'horizontal' : 'vertical'}
               ref={zoomTools}
             >
               {linkTool}

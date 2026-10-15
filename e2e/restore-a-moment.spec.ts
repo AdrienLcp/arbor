@@ -8,6 +8,7 @@ import {
 } from './support/journeys'
 import {
   editPersonDialog,
+  familyAppBar,
   formDialog,
   historyPage,
   personSheet,
@@ -57,7 +58,8 @@ test('[e2e] the keeper puts the tree back as it was before a contributor binned 
   }
 
   await openHydrated(contributor, link)
-  await treePage(contributor).sayWhoYouAre.click()
+  await familyAppBar(contributor).more.click()
+  await treePage(contributor).sayWhoYouAreInMenu.click()
   await whoAmIDialog(contributor).person(PARTNER_NAME).click()
   await expect(treePage(contributor).title(PARTNER_NAME)).toBeAttached()
   const sheet = personSheet(contributor)

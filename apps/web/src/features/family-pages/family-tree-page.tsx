@@ -62,6 +62,7 @@ import { useLocale, useTranslate } from '@/presentation/i18n/i18n-context'
 import { FamilyAppBar } from './family-app-bar'
 import { useOpenFamily } from './family-loader'
 import { MeSummary } from './me-summary'
+import { TreeMenuSections } from './tree-menu-sections'
 import { usePersonFaces } from './use-person-faces'
 import { useWhoAmI } from './who-am-i-provider'
 
@@ -305,64 +306,78 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   }
 
   return (
-    <Main className='family-tree-page'>
-      {sheet === null ? (
-        <DocumentTitle>{`${title} — ${response.settings.name}`}</DocumentTitle>
-      ) : null}
-      <div className='family-tree-head'>
-        <div className='family-tree-heading'>
-          <h1 className={classNames('family-tree-title', lit && 'is-sentence')}>
-            {title}
-          </h1>
-          <div className='family-tree-notes'>
-            <DemoNotice familyId={familyId} />
-            <MeSummary />
+    <>
+      <FamilyAppBar
+        menuSections={
+          <TreeMenuSections
+            onViewChange={setScope}
+            view={shownScope}
+            // A lit kinship path is drawn on the whole family: its head offers only to clear it.
+            viewOptions={lit === null ? scopeOptions : []}
+          />
+        }
+      />
+      <Main className='family-tree-page'>
+        {sheet === null ? (
+          <DocumentTitle>{`${title} — ${response.settings.name}`}</DocumentTitle>
+        ) : null}
+        <div className='family-tree-head'>
+          <div className='family-tree-heading'>
+            <h1
+              className={classNames('family-tree-title', lit && 'is-sentence')}
+            >
+              {title}
+            </h1>
+            <div className='family-tree-notes'>
+              <DemoNotice familyId={familyId} />
+              <MeSummary />
+            </div>
+          </div>
+          <div className='family-tree-controls'>
+            {lit === null ? null : (
+              <Button
+                onPress={() => navigateTo(familyTreePathFor(familyId))}
+                variant='ghost'
+              >
+                {translate('kinship.clear')}
+              </Button>
+            )}
+            {lit !== null ? null : (
+              <SegmentedControl<TreeScope>
+                label={translate('tree.scope.label')}
+                onChange={setScope}
+                options={scopeOptions}
+                value={shownScope}
+              />
+            )}
+            <PersonSearch onPick={showAround} people={[...faces.values()]} />
           </div>
         </div>
-        <div className='family-tree-controls'>
-          {lit === null ? null : (
-            <Button
-              onPress={() => navigateTo(familyTreePathFor(familyId))}
-              variant='ghost'
-            >
-              {translate('kinship.clear')}
-            </Button>
-          )}
-          {lit !== null ? null : (
-            <SegmentedControl<TreeScope>
-              label={translate('tree.scope.label')}
-              onChange={setScope}
-              options={scopeOptions}
-              value={shownScope}
-            />
-          )}
-          <PersonSearch onPick={showAround} people={[...faces.values()]} />
-        </div>
-      </div>
-      <div
-        className='family-tree-stage'
-        style={{ '--side-sheet-width': `${SIDE_SHEET_WIDTH}px` }}
-      >
-        <div className='family-tree-drawing'>{drawing()}</div>
-        {isPhone ? null : sheet}
-      </div>
-      {isPhone ? (
-        <BottomSheet
-          isOpen={sheet !== null}
-          label={translate('sheet.title', { name: sheetName })}
-          onClose={closeSheet}
+        <div
+          className='family-tree-stage'
+          style={{ '--side-sheet-width': `${SIDE_SHEET_WIDTH}px` }}
         >
-          {sheet}
-        </BottomSheet>
-      ) : null}
-      {addingTo === undefined ? null : (
-        <AddRelativeDialog
-          adding={adding}
-          anchor={addingTo}
-          onChange={setAdding}
-        />
-      )}
-    </Main>
+          <div className='family-tree-drawing'>{drawing()}</div>
+          {isPhone ? null : sheet}
+        </div>
+        {isPhone ? (
+          <BottomSheet
+            isOpen={sheet !== null}
+            label={translate('sheet.title', { name: sheetName })}
+            onClose={closeSheet}
+          >
+            {sheet}
+          </BottomSheet>
+        ) : null}
+        {addingTo === undefined ? null : (
+          <AddRelativeDialog
+            adding={adding}
+            anchor={addingTo}
+            onChange={setAdding}
+          />
+        )}
+      </Main>
+    </>
   )
 }
 
@@ -384,12 +399,14 @@ export const FamilyTreePage: React.FC = () => {
 
   return (
     <div className='family-tree-screen'>
-      <FamilyAppBar />
       {focusId === null ? (
-        <Main className='family-tree-empty'>
-          <DocumentTitle>{`${translate('tree.titleWhole')} — ${response.settings.name}`}</DocumentTitle>
-          <p>{translate('tree.empty')}</p>
-        </Main>
+        <>
+          <FamilyAppBar />
+          <Main className='family-tree-empty'>
+            <DocumentTitle>{`${translate('tree.titleWhole')} — ${response.settings.name}`}</DocumentTitle>
+            <p>{translate('tree.empty')}</p>
+          </Main>
+        </>
       ) : (
         <FamilyTree
           fallbackFocusId={arrivalFocusId}

@@ -1,3 +1,4 @@
+@use 'styles/layout'
 @use 'styles/typography'
 
 @layer components
@@ -11,6 +12,11 @@
     // Under the tree's canvas the line stays thin, so the drawing keeps the height.
     :root:has(.family-tree-screen) &
       padding-block: var(--space-xs) max(var(--space-xs), var(--safe-area-bottom))
+
+    // A phone held upright gives the tree the whole screen: the legal notice is a row of the app bar's "More" menu.
+    @include layout.folded-bar
+      :root:has(.family-tree-screen) &
+        display: none
 
     @media print
       display: none

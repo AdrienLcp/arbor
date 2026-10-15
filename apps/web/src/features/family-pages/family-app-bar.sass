@@ -44,7 +44,7 @@
       white-space: nowrap
 
       // A family name too long for a phone's bar takes two lines rather than an ellipsis.
-      @include layout.container-narrow(30rem)
+      @include layout.folded-bar
         -webkit-box-orient: vertical
         display: -webkit-box
         font-size: var(--text-m)
@@ -62,13 +62,13 @@
         @include accessibility.visually-hidden
 
     .family-bar-folded
-      @include layout.container-narrow(30rem)
+      @include layout.folded-bar
         display: none
 
     .button.family-bar-more
       display: none
 
-      @include layout.container-narrow(30rem)
+      @include layout.folded-bar
         display: inline-flex
 
   .family-bar-menu-popover
@@ -86,6 +86,19 @@
   .family-bar-menu
     display: grid
     outline: none
+
+  .family-bar-menu-section
+    display: grid
+
+    & + .family-bar-menu-section
+      border-top: var(--hairline)
+      margin-top: var(--space-xs)
+      padding-top: var(--space-xs)
+
+  .family-bar-menu-header
+    @include typography.label
+    color: var(--ink-soft)
+    padding: var(--space-s) var(--space-l) var(--space-2xs) var(--space-m)
 
   .family-bar-menu-item
     @include typography.body
@@ -107,5 +120,23 @@
 
     &[data-focused]
       background: var(--paper-2)
+
+    // The current view: a tick before it and the sentence's weight, so it reads without colour.
+    &[data-selected]
+      @include typography.strong
+
+    .family-bar-menu-tick
+      visibility: hidden
+
+    &[data-selected] .family-bar-menu-tick
+      visibility: visible
+
+    .family-bar-menu-item-text
+      display: grid
+      min-width: 0
+
+    .family-bar-menu-item-hint
+      @include typography.body-small
+      color: var(--ink-soft)
 
     @include focus.ring-inset

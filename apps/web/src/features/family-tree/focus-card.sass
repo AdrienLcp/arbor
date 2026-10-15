@@ -22,6 +22,10 @@
       max-width: none
       right: var(--space-l)
 
+    // A phone held upright: the card sits above the bottom toolbar, which pays the home indicator.
+    @include layout.folded-bar
+      bottom: calc(var(--tree-toolbar-height) + var(--space-l))
+
     .focus-card-text
       display: grid
       gap: var(--space-2xs)
@@ -36,3 +40,8 @@
     .focus-card-facts
       @include typography.numeral
       color: var(--ink-soft)
+
+    // The name gives way to an ellipsis; the action keeps its words on one line.
+    .button
+      flex: none
+      white-space: nowrap

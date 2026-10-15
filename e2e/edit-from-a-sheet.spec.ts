@@ -65,7 +65,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   ).toBeVisible()
 
   await openHydrated(relative, link)
-  await expect(treePage(relative).sayWhoYouAre).toBeAttached()
+  await expect(treePage(relative).find).toBeVisible()
 
   await addRelative(founder, 'A child', { givenNames: 'Rose' })
   await expect(

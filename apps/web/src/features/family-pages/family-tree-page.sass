@@ -12,7 +12,6 @@
   :root:has(.family-tree-screen):not(:active-view-transition)
     scrollbar-gutter: auto
 
-
   // The viewport's height less the footer's line under it.
   .family-tree-screen
     display: grid
@@ -94,6 +93,8 @@
 
     // The drawing fills the stage; a person's sheet slides over its right side, the album still in sight.
     .family-tree-stage
+      // The phone's bottom toolbar: one row of targets, over the home indicator.
+      --tree-toolbar-height: calc(var(--stroke-hair) + var(--space-xs) + var(--target) + max(var(--space-xs), var(--safe-area-bottom)))
       display: grid
       min-height: 0
       position: relative
@@ -120,6 +121,15 @@
 
       .person-search
         width: 100%
+
+    // A phone held upright: the view and who the visitor is fold into the app bar's "More" menu, the canvas takes the height.
+    @include layout.folded-bar
+      .family-tree-controls .segmented-control,
+      .family-tree-notes .me-summary
+        display: none
+
+      .family-tree-controls
+        flex: 1 1 100%
 
     // A phone held sideways: the controls on one row under the bar, the rest of the height for the page.
     @include layout.short

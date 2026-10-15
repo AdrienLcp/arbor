@@ -3,6 +3,7 @@ import {
   Button,
   Menu,
   MenuItem,
+  MenuSection,
   MenuTrigger,
   Popover
 } from 'react-aria-components'
@@ -13,11 +14,13 @@ import {
   familyPathFor,
   familyPrintPathFor,
   familySettingsPathFor,
-  familySharePathFor
+  familySharePathFor,
+  paths
 } from '@/infrastructure/router/navigation'
 import { ButtonLink } from '@/presentation/components/button-link'
 import {
   BinIcon,
+  BookIcon,
   HistoryIcon,
   MoreIcon,
   PrintIcon,
@@ -39,8 +42,13 @@ type BarAction = {
   key: 'bin' | 'history' | 'print' | 'settings' | 'share'
 }
 
-/** The bar over every page of an open family: its name, back to its tree, what changed and the bin, and the ways to share and set it up. */
-export const FamilyAppBar: React.FC = () => {
+type FamilyAppBarProps = {
+  /** Sections the page folds into the phone's "More" menu, above the bar's own: the tree's view and who the visitor is. */
+  menuSections?: React.ReactNode
+}
+
+/** The bar over every page of an open family: its name, back to its tree, what changed and the bin, and the ways to share and set it up. On a phone, "More" also holds the legal notice. */
+export const FamilyAppBar: React.FC<FamilyAppBarProps> = ({ menuSections }) => {
   const translate = useTranslate()
   const { family, familyId } = useOpenFamily()
 
@@ -120,17 +128,30 @@ export const FamilyAppBar: React.FC = () => {
           </Button>
           <Popover className='family-bar-menu-popover' placement='bottom end'>
             <Menu className='family-bar-menu'>
-              {foldedActions.map(({ href, Icon, key }) => (
+              {menuSections}
+              <MenuSection className='family-bar-menu-section'>
+                {foldedActions.map(({ href, Icon, key }) => (
+                  <MenuItem
+                    className='family-bar-menu-item'
+                    href={href}
+                    id={key}
+                    key={key}
+                  >
+                    <Icon aria-hidden='true' />
+                    {translate(`familyBar.${key}`)}
+                  </MenuItem>
+                ))}
+              </MenuSection>
+              <MenuSection className='family-bar-menu-section'>
                 <MenuItem
                   className='family-bar-menu-item'
-                  href={href}
-                  id={key}
-                  key={key}
+                  href={paths.legal}
+                  id='legal'
                 >
-                  <Icon aria-hidden='true' />
-                  {translate(`familyBar.${key}`)}
+                  <BookIcon aria-hidden='true' />
+                  {translate('footer.legal')}
                 </MenuItem>
-              ))}
+              </MenuSection>
             </Menu>
           </Popover>
         </MenuTrigger>

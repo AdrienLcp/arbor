@@ -1,6 +1,7 @@
 @use 'values:screen-sizes'
 @forward '@adrienlcp/styles/breakpoints' with ($wide-screen: screen-sizes.$wide-screen)
 @forward '@adrienlcp/styles/containers'
+@use '@adrienlcp/styles/containers'
 
 /// A page's reading column, centred, kept off the screen's edges by the gutter or the safe area, the larger.
 @mixin column($width: var(--measure))
@@ -8,6 +9,11 @@
   max-width: calc($width + var(--gutter-left) + var(--gutter-right))
   padding-inline: var(--gutter-left) var(--gutter-right)
   width: 100%
+
+/// A phone held upright, read off the nearest container: the app bar folds its actions into "More", and the tree gives the canvas the whole screen.
+@mixin folded-bar
+  @include containers.container-narrow(screen-sizes.$folded-bar)
+    @content
 
 /// A screen too short for a page's controls and its content side by side in height: a phone held sideways.
 @mixin short

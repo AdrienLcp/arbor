@@ -38,7 +38,13 @@ const spillOfTree = async (page: Page): Promise<Box> => {
   const sight = {
     bottom: Math.min(canvas.bottom, focusCard?.top ?? Infinity),
     left: Math.max(canvas.left, ...rails.map((rail) => rail.right)),
-    right: Math.min(canvas.right, zoomTools?.left ?? Infinity),
+    // A column of zoom tools hides the canvas's right; a phone's toolbar row lies under the canvas.
+    right: Math.min(
+      canvas.right,
+      zoomTools !== undefined && zoomTools.top < canvas.bottom - 1
+        ? zoomTools.left
+        : Infinity
+    ),
     top: canvas.top
   }
   const spill = (overrun: number) => Math.max(Math.round(overrun), 0)

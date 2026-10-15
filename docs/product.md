@@ -86,7 +86,9 @@ not that strangers are kept out by a login.
   a removed photo, stays in the storage (restorable, in the log) until then.
 - No inactivity expiry: a tree is an archive some relatives open once a year,
   and without accounts there is no way to warn a keeper before erasing it.
-- `/legal`, linked from every screen's footer, says all of this: publisher,
+- `/legal`, linked from every screen's footer (on a phone held upright, the
+  tree gives the screen to the canvas and links it from the app bar's "More"
+  menu instead), says all of this: publisher,
   host, what the server and the device keep, the keepers' responsibility for
   the people they add, how a person asks to be removed, no audience
   measurement, GDPR rights.
