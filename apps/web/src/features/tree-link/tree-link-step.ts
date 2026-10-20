@@ -10,7 +10,7 @@ export type TreeLinkKind = (typeof TREE_LINK_KINDS)[number]
 export type RefusedPick = { personId: EntityId; refusal: LinkRefusal }
 
 /**
- * Where the "+ Ajouter" mode stands:
+ * Where the tree's add mode stands:
  * - `'off'` — the tree acts as usual: touching someone opens their sheet
  * - `'choosing'` — someone new, or the kind of link between two people already in the tree, is asked
  * - `'anchor'` — the person to add someone new to is awaited
@@ -79,7 +79,7 @@ const pick = (
   }
 }
 
-/** The next step of the "+ Ajouter" mode; touching the first person again lets go of them. */
+/** The next step of the tree's add mode; touching the first person again lets go of them. */
 export const nextTreeLinkStep = (
   current: TreeLinkStep,
   event: TreeLinkEvent

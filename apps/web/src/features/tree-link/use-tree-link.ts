@@ -24,7 +24,7 @@ const isPicking = (
   current.step === 'second'
 
 /**
- * The "+ Ajouter" mode of the tree: its step, and what the canvas needs while
+ * The tree's add mode: its step, and what the canvas needs while
  * people are being picked. A second person is checked against the family's
  * rules with the link's default details, a marriage or a birth; the
  * confirmation checks the details chosen there again.
@@ -142,5 +142,5 @@ export const useTreeLink = ({
   }
 }
 
-/** The "+ Ajouter" mode, as the page holds it. */
+/** The tree's add mode, as the page holds it. */
 export type TreeLink = ReturnType<typeof useTreeLink>

@@ -28,7 +28,7 @@ type TreeLinkControlsProps = {
 }
 
 /**
- * The "+ Ajouter" mode over the tree: the choice between someone new and a
+ * The tree's add mode on screen: the choice between someone new and a
  * kind of link, the banner that says whom to touch next, and the
  * confirmation that saves a link.
  */
