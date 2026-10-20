@@ -89,6 +89,20 @@ describe('nextTreeLinkStep', () => {
     expect(run([{ type: 'start' }, touch])).toEqual({ step: 'choosing' })
   })
 
+  it('awaits the person to add someone new to, then turns off once they are touched', () => {
+    const newChosen: TreeLinkEvent[] = [
+      { type: 'start' },
+      { type: 'chooseNew' }
+    ]
+    expect(run(newChosen)).toEqual({ step: 'anchor' })
+    expect(
+      run([
+        ...newChosen,
+        { personId: 'pierre-morel', refusal: null, type: 'pick' }
+      ])
+    ).toEqual(TREE_LINK_OFF)
+  })
+
   it('turns off from any step on cancel', () => {
     expect(
       run([

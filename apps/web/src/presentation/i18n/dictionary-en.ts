@@ -683,6 +683,7 @@ export const EN_DICTIONARY = defineDictionary({
   },
   link: {
     banner: {
+      anchor: 'Touch the person to add someone to',
       cancel: 'Cancel',
       drag: 'or draw a line from one sticker to the other',
       first: {
@@ -702,6 +703,11 @@ export const EN_DICTIONARY = defineDictionary({
         hint: 'marriage, civil partnership or living together',
         title: 'Couple'
       },
+      existing: 'Or link two people already in the tree',
+      newPerson: {
+        hint: 'a child, a parent, a partner, a brother or sister',
+        title: 'Someone new'
+      },
       parentChild: {
         hint: 'you will touch the parent, then their child',
         title: 'Parent → child'
@@ -710,7 +716,7 @@ export const EN_DICTIONARY = defineDictionary({
         hint: 'two children of the same parents',
         title: 'Brother / sister'
       },
-      title: 'Which link to add?'
+      title: 'What would you like to add?'
     },
     confirm: {
       couple: '{first} and {second} are a couple.',
@@ -720,7 +726,7 @@ export const EN_DICTIONARY = defineDictionary({
       siblings: '{relative} becomes the child of {parents}, like {anchor}.',
       title: 'Add this link?'
     },
-    open: 'Link'
+    open: 'Add'
   },
   me: {
     change: 'Change',

@@ -163,7 +163,6 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   })
   const faces = usePersonFaces()
   const edit = useFamilyEdit()
-  const link = useTreeLink({ edit, family })
   const [adding, setAdding] = useState<Adding | null>(null)
   /** Whom the add dialog adds to; `null` for the person in the middle of the tree. */
   const [addingToId, setAddingToId] = useState<EntityId | null>(null)
@@ -172,6 +171,11 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
       setAddingToId(personId)
       setAdding(relation)
     })
+  const link = useTreeLink({
+    edit,
+    family,
+    onAddTo: (personId) => startAdding('choose', personId)
+  })
   const closeSheet = useGoBack(familyTreePathFor(familyId))
   const isSpread = isPhone && view.scope === 'spread'
   const lit = isSpread ? null : litKinship

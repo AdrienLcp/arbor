@@ -18,21 +18,26 @@ import {
 
 const isPicking = (
   current: TreeLinkStep
-): current is Extract<TreeLinkStep, { step: 'first' | 'second' }> =>
-  current.step === 'first' || current.step === 'second'
+): current is Extract<TreeLinkStep, { step: 'anchor' | 'first' | 'second' }> =>
+  current.step === 'anchor' ||
+  current.step === 'first' ||
+  current.step === 'second'
 
 /**
- * The "+ Lien" mode of the tree: its step, and what the canvas needs while
+ * The "+ Ajouter" mode of the tree: its step, and what the canvas needs while
  * people are being picked. A second person is checked against the family's
  * rules with the link's default details, a marriage or a birth; the
  * confirmation checks the details chosen there again.
  */
 export const useTreeLink = ({
   edit,
-  family
+  family,
+  onAddTo
 }: {
   edit: FamilyEdit
   family: FamilyState
+  /** Opens the way to add someone new to the person touched. */
+  onAddTo: (personId: EntityId) => void
 }) => {
   const [current, dispatch] = useReducer(nextTreeLinkStep, TREE_LINK_OFF)
 
@@ -69,7 +74,8 @@ export const useTreeLink = ({
         )
       : new Set<EntityId>()
 
-  const pick = (personId: EntityId) =>
+  const pick = (personId: EntityId) => {
+    if (current.step === 'anchor') onAddTo(personId)
     dispatch({
       personId,
       refusal:
@@ -78,6 +84,7 @@ export const useTreeLink = ({
           : null,
       type: 'pick'
     })
+  }
 
   const pickPair = ({
     firstId,
@@ -86,7 +93,7 @@ export const useTreeLink = ({
     firstId: EntityId
     secondId: EntityId
   }) => {
-    if (!isPicking(current)) return
+    if (!isPicking(current) || current.step === 'anchor') return
     if (current.step === 'first') {
       dispatch({ personId: firstId, refusal: null, type: 'pick' })
     } else if (current.firstId !== firstId) {
@@ -124,6 +131,7 @@ export const useTreeLink = ({
       dispatch({ type: 'cancel' })
     },
     choose: (kind: TreeLinkKind) => dispatch({ kind, type: 'choose' }),
+    chooseNew: () => dispatch({ type: 'chooseNew' }),
     chooseOther: () => {
       edit.dismissFailure()
       dispatch({ type: 'chooseOther' })
@@ -134,5 +142,5 @@ export const useTreeLink = ({
   }
 }
 
-/** The "+ Lien" mode, as the page holds it. */
+/** The "+ Ajouter" mode, as the page holds it. */
 export type TreeLink = ReturnType<typeof useTreeLink>

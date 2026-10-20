@@ -28,8 +28,9 @@ type TreeLinkControlsProps = {
 }
 
 /**
- * The "+ Lien" mode over the tree: the choice of a kind of link, the banner
- * that says whom to touch next, and the confirmation that saves.
+ * The "+ Ajouter" mode over the tree: the choice between someone new and a
+ * kind of link, the banner that says whom to touch next, and the
+ * confirmation that saves a link.
  */
 export const TreeLinkControls: React.FC<TreeLinkControlsProps> = ({
   edit,
@@ -49,6 +50,8 @@ export const TreeLinkControls: React.FC<TreeLinkControlsProps> = ({
 
   const banner = () => {
     switch (current.step) {
+      case 'anchor':
+        return translate('link.banner.anchor')
       case 'first':
         return translate(`link.banner.first.${current.kind}`)
       case 'second':
@@ -89,6 +92,19 @@ export const TreeLinkControls: React.FC<TreeLinkControlsProps> = ({
         onClose={link.cancel}
         title={translate('link.choose.title')}
       >
+        <ChoiceButtons
+          choices={[
+            {
+              hint: translate('link.choose.newPerson.hint'),
+              id: 'newPerson',
+              onPress: link.chooseNew,
+              title: translate('link.choose.newPerson.title')
+            }
+          ]}
+        />
+        <p className='tree-link-choose-existing'>
+          {translate('link.choose.existing')}
+        </p>
         <ChoiceButtons
           choices={TREE_LINK_KINDS.map((kind) => ({
             hint: translate(`link.choose.${kind}.hint`),

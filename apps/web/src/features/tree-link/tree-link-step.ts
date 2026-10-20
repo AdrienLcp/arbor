@@ -10,9 +10,10 @@ export type TreeLinkKind = (typeof TREE_LINK_KINDS)[number]
 export type RefusedPick = { personId: EntityId; refusal: LinkRefusal }
 
 /**
- * Where the "+ Lien" mode stands:
+ * Where the "+ Ajouter" mode stands:
  * - `'off'` — the tree acts as usual: touching someone opens their sheet
- * - `'choosing'` — the kind of link is asked
+ * - `'choosing'` — someone new, or the kind of link between two people already in the tree, is asked
+ * - `'anchor'` — the person to add someone new to is awaited
  * - `'first'` — the first person is awaited (the parent, for a parent and a child)
  * - `'second'` — the second person is awaited; `refused` is the last refused touch
  * - `'confirming'` — both are picked: the link is spelled out before it is saved
@@ -20,6 +21,7 @@ export type RefusedPick = { personId: EntityId; refusal: LinkRefusal }
 export type TreeLinkStep =
   | { step: 'off' }
   | { step: 'choosing' }
+  | { step: 'anchor' }
   | { kind: TreeLinkKind; step: 'first' }
   | {
       firstId: EntityId
@@ -37,6 +39,8 @@ export type TreeLinkStep =
 export type TreeLinkEvent =
   | { type: 'start' }
   | { kind: TreeLinkKind; type: 'choose' }
+  /** Someone new is to be added: the person they are added to is touched next. */
+  | { type: 'chooseNew' }
   /** A person touched or dropped on; `refusal` is why the family would refuse them as the second person. */
   | { personId: EntityId; refusal: LinkRefusal | null; type: 'pick' }
   /** Back from the confirmation, to touch another second person. */
@@ -50,6 +54,8 @@ const pick = (
   { personId, refusal }: { personId: EntityId; refusal: LinkRefusal | null }
 ): TreeLinkStep => {
   switch (current.step) {
+    case 'anchor':
+      return TREE_LINK_OFF
     case 'first':
       return {
         firstId: personId,
@@ -73,7 +79,7 @@ const pick = (
   }
 }
 
-/** The next step of the "+ Lien" mode; touching the first person again lets go of them. */
+/** The next step of the "+ Ajouter" mode; touching the first person again lets go of them. */
 export const nextTreeLinkStep = (
   current: TreeLinkStep,
   event: TreeLinkEvent
@@ -85,6 +91,8 @@ export const nextTreeLinkStep = (
       return current.step === 'choosing'
         ? { kind: event.kind, step: 'first' }
         : current
+    case 'chooseNew':
+      return current.step === 'choosing' ? { step: 'anchor' } : current
     case 'pick':
       return pick(current, event)
     case 'chooseOther':

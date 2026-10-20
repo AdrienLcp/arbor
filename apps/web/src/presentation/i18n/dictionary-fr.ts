@@ -689,6 +689,7 @@ export const FR_DICTIONARY = defineDictionary({
   },
   link: {
     banner: {
+      anchor: 'Touchez la personne à qui ajouter quelqu’un',
       cancel: 'Annuler',
       drag: 'ou tirez un trait d’une vignette à l’autre',
       first: {
@@ -705,6 +706,11 @@ export const FR_DICTIONARY = defineDictionary({
     },
     choose: {
       couple: { hint: 'mariage, PACS ou union libre', title: 'Couple' },
+      existing: 'Ou relier deux personnes déjà dans l’arbre',
+      newPerson: {
+        hint: 'un enfant, un parent, un conjoint, un frère ou une sœur',
+        title: 'Une nouvelle personne'
+      },
       parentChild: {
         hint: 'vous toucherez le parent, puis son enfant',
         title: 'Parent → enfant'
@@ -713,7 +719,7 @@ export const FR_DICTIONARY = defineDictionary({
         hint: 'deux enfants des mêmes parents',
         title: 'Frère / sœur'
       },
-      title: 'Quel lien ajouter ?'
+      title: 'Que voulez-vous ajouter ?'
     },
     confirm: {
       couple: '{first} et {second} forment un couple.',
@@ -723,7 +729,7 @@ export const FR_DICTIONARY = defineDictionary({
       siblings: '{relative} devient l’enfant de {parents}, comme {anchor}.',
       title: 'Ajouter ce lien ?'
     },
-    open: 'Lien'
+    open: 'Ajouter'
   },
   me: {
     change: 'Changer',
