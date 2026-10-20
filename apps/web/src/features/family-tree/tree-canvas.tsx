@@ -40,11 +40,13 @@ import { arrowDirectionOf, nearestCardToward } from './nearest-card'
 import { placementOf } from './scene-placement'
 import { TreePlane } from './tree-plane'
 import type { TreeScene } from './tree-scene'
+import { keepTreeInSight, treeBoxOf } from './tree-sight'
 import { visibleBandOf } from './visible-band'
 import { isWalkableCard } from './walkable-card'
 
 import './tree-canvas.sass'
 
+/** The farthest a large tree zooms out; a smaller one stops once it fits whole in sight. */
 const MIN_SCALE = 0.15
 const MAX_SCALE = 2
 /** The stickers at their own size: the scale the canvas opens at, whatever it was left at. */
@@ -115,6 +117,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   const rails = useRef<HTMLDivElement>(null)
   const zoomTools = useRef<HTMLDivElement>(null)
   const [activeKey, setActiveKey] = useState<string | null>(null)
+  const [minScale, setMinScale] = useState(MIN_SCALE)
   /** Whether the visitor panned or zoomed since the canvas last centred itself: from then on a resize leaves the view where they put it. */
   const hasVisitorMoved = useRef(false)
   const centred = useRef<{
@@ -195,19 +198,11 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     return true
   }
 
-  /** Fits every card in the part of the canvas left in sight by the generation rails, the zoom column, the focus card and a phone's sheet. */
-  const showWholeTree = ({
-    animationMs,
-    maxScale
-  }: {
-    animationMs: number
-    maxScale: number
-  }) => {
-    const controls = viewport.current
-    const wrapper = controls?.instance.wrapperComponent
-    if (controls == null || wrapper == null) return
-    const { cards } = scene.layout
-    if (cards.length === 0) return
+  /** Where every card fits in the part of the canvas left in sight by the generation rails, the zoom column, the focus card and a phone's sheet. */
+  const wholeTreeFit = (maxScale: number) => {
+    const wrapper = viewport.current?.instance.wrapperComponent
+    const tree = treeBoxOf(scene)
+    if (wrapper == null || tree === null) return null
 
     const canvas = wrapper.getBoundingClientRect()
     const band = visibleBandOf({
@@ -229,15 +224,8 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     const focusCardTop = document
       .querySelector('.focus-card')
       ?.getBoundingClientRect().top
-    const fitted = fitView({
-      content: {
-        bottom:
-          Math.max(...cards.map(({ y }) => y + CARD_HEIGHT)) - scene.origin.y,
-        left: Math.min(...cards.map(({ x }) => x)) - scene.origin.x,
-        right:
-          Math.max(...cards.map(({ x }) => x + CARD_WIDTH)) - scene.origin.x,
-        top: Math.min(...cards.map(({ y }) => y)) - scene.origin.y
-      },
+    return fitView({
+      content: tree,
       margin: BAND_MARGIN,
       maxScale,
       minScale: MIN_SCALE,
@@ -256,7 +244,60 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
         top: bandTop
       }
     })
-    controls.setTransform(fitted.x, fitted.y, fitted.scale, animationMs)
+  }
+
+  const showWholeTree = ({
+    animationMs,
+    maxScale
+  }: {
+    animationMs: number
+    maxScale: number
+  }) => {
+    const fitted = wholeTreeFit(maxScale)
+    if (fitted !== null)
+      viewport.current?.setTransform(
+        fitted.x,
+        fitted.y,
+        fitted.scale,
+        animationMs
+      )
+  }
+
+  const settleMinScale = useEffectEvent(() => {
+    setMinScale(
+      Math.min(ARRIVAL_SCALE, wholeTreeFit(MAX_SCALE)?.scale ?? MIN_SCALE)
+    )
+  })
+
+  /** Once the visitor moves the tree, it may not leave the middle of what is in sight. */
+  const holdTreeInSight = (
+    controls: ReactZoomPanPinchRef,
+    {
+      positionX,
+      positionY,
+      scale
+    }: { positionX: number; positionY: number; scale: number }
+  ) => {
+    const wrapper = controls.instance.wrapperComponent
+    const tree = treeBoxOf(scene)
+    if (!hasVisitorMoved.current || wrapper == null || tree === null) return
+    const canvas = wrapper.getBoundingClientRect()
+    const band = visibleBandOf({
+      canvas,
+      coveredBottomShare,
+      windowHeight: window.innerHeight
+    })
+    const kept = keepTreeInSight({
+      position: { x: positionX, y: positionY },
+      scale,
+      sightCentre: {
+        x: canvas.width / 2,
+        y: canvas.height / 2 + band.centreOffset
+      },
+      tree
+    })
+    if (kept.x !== positionX || kept.y !== positionY)
+      controls.setTransform(kept.x, kept.y, scale, 0)
   }
 
   /** A sheet open on arrival is about its person, kept in sight beside it. */
@@ -296,6 +337,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     }
   )
   useLayoutEffect(() => {
+    settleMinScale()
     centreOnFocusOf(scene, coveredBottomShare)
   }, [scene, coveredBottomShare])
 
@@ -311,6 +353,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
       const size = `${wrapper.clientWidth}x${wrapper.clientHeight}`
       if (size === lastSize) return
       lastSize = size
+      settleMinScale()
       centreAfterResize()
     })
     observer.observe(wrapper)
@@ -358,13 +401,14 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
         doubleClick={{ disabled: true }}
         limitToBounds={false}
         maxScale={MAX_SCALE}
-        minScale={MIN_SCALE}
+        minScale={minScale}
         onInit={centreOnArrival}
         onPanningStart={noteVisitorMoved}
         onPinchStart={noteVisitorMoved}
-        onTransform={(_, { positionY, scale }) => {
-          rails.current?.style.setProperty('--pan-y', `${positionY}px`)
-          rails.current?.style.setProperty('--zoom', String(scale))
+        onTransform={(controls, state) => {
+          rails.current?.style.setProperty('--pan-y', `${state.positionY}px`)
+          rails.current?.style.setProperty('--zoom', String(state.scale))
+          holdTreeInSight(controls, state)
         }}
         onWheelStart={noteVisitorMoved}
         onZoomStart={noteVisitorMoved}
