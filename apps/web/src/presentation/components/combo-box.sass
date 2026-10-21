@@ -46,9 +46,11 @@
     border: var(--stroke-thin) solid var(--ghost)
     border-radius: var(--radius-frame)
     box-shadow: var(--shadow-popover)
+    display: flex
+    flex-direction: column
     max-height: 22rem
     min-width: var(--trigger-width)
-    overflow: auto
+    overflow: clip
     padding: var(--space-xs)
     transition: opacity var(--transition-fast, 0s) var(--ease-out)
 
@@ -58,7 +60,9 @@
 
   .combo-box-list
     display: grid
+    min-block-size: 0
     outline: none
+    overflow-y: auto
 
   .combo-box-item
     align-items: center
