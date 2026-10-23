@@ -82,6 +82,21 @@ creation while nothing links to the person yet.
 - A refused edit made against the latest revision answers the refusal (422,
   the client's to fix); one made against an older revision answers
   `revision_conflict` (409): the family moved, reload and retry.
+- **Erasure is the one exception to "nothing is rewritten"**, for a relative
+  who asked the publisher to be taken out (`/legal`).
+  `DELETE /api/families/:familyId/persons/:personId`, with the Worker secret
+  `ADMIN_KEY` as the bearer token, rewrites the log as if the person had never
+  been entered:
+  - every operation on them, and on their unions, filiations, events and
+    photos, goes, groups included, and so does an entry left with nothing;
+  - what they signed is signed by a person no longer in the tree;
+  - their photos' files are deleted;
+  - revisions keep their numbers, and the next one never reuses an erased
+    number.
+
+  The state is then rebuilt from the new log, so replay still matches. Their
+  name typed as free text in someone else's notes stays: a keeper fixes that.
+  A client open at that moment keeps the old tree until it reloads.
 
 ## Rules core must enforce
 

@@ -13,6 +13,7 @@ import {
   API_ROUTES,
   apiErrorResponseSchema,
   changeLogPageSchema,
+  erasedPersonSchema,
   keyListSchema,
   pathFor,
   storageUsageSchema
@@ -21,7 +22,12 @@ import {
 import { MAX_FAILED_KEY_CHECKS } from '@/domain/access/key-check-limit'
 import { DEMO_WRITES_PER_NIGHT } from '@/domain/demo/demo-write-limit'
 
-import { createTestApi, familyPath, TEST_JPEG } from './api-test-harness'
+import {
+  createTestApi,
+  familyPath,
+  TEST_ADMIN_KEY,
+  TEST_JPEG
+} from './api-test-harness'
 
 const api = createTestApi()
 
@@ -722,6 +728,116 @@ describe('[deletion] deleting the family', () => {
 
     expect(refused.status).toBe(403)
     expect(await errorCodeOf(refused)).toBe('forbidden')
+  })
+})
+
+describe('[erasure] erasing one person', () => {
+  const lucieWithPhoto = async () => {
+    const { family, record } = await familyWithOneEdit()
+    await record(
+      [
+        {
+          person: personNamed('lucie', { givenNames: 'Lucie' }),
+          type: 'person.create'
+        },
+        { person: personNamed('jeanne'), type: 'person.create' },
+        {
+          photo: {
+            caption: '',
+            date: null,
+            id: 'lucie-photo',
+            personId: 'lucie'
+          },
+          type: 'photo.create'
+        }
+      ],
+      0
+    )
+    const photoPath = pathFor(API_ROUTES.photo, {
+      familyId: family.familyId,
+      photoId: 'lucie-photo'
+    })
+    const form = new FormData()
+    form.set('full', new File([TEST_JPEG], 'full.jpg'))
+    form.set('thumbnail', new File([TEST_JPEG], 'thumbnail.jpg'))
+    await api.call(photoPath, {
+      body: form,
+      key: family.familyKey,
+      method: 'POST'
+    })
+    const personPath = pathFor(API_ROUTES.person, {
+      familyId: family.familyId,
+      personId: 'lucie'
+    })
+    return { family, personPath, photoPath }
+  }
+
+  it('[erasure] takes the person, their photo file and their log entries out with the admin key', async () => {
+    const { family, personPath, photoPath } = await lucieWithPhoto()
+
+    const erased = await api.call(personPath, {
+      key: TEST_ADMIN_KEY,
+      method: 'DELETE'
+    })
+    const tree = await api.call(familyPath(family.familyId), {
+      key: family.keeperKey
+    })
+    const log = await api.call(familyPath(family.familyId, 'operations'), {
+      key: family.keeperKey
+    })
+    const photo = await api.call(`${photoPath}/full`, {
+      key: family.keeperKey
+    })
+
+    expect(erasedPersonSchema.parse(await erased.json())).toEqual({
+      removedEntries: 0,
+      removedPhotos: 1
+    })
+    expect(
+      familyResponseSchema
+        .parse(await tree.json())
+        .family.persons.map((person) => person.id)
+    ).toEqual(['jeanne'])
+    expect(
+      JSON.stringify(changeLogPageSchema.parse(await log.json()))
+    ).not.toContain('lucie')
+    expect(photo.status).toBe(404)
+  })
+
+  it('[erasure] refuses a family key, a keeper key and no key at all', async () => {
+    const { family, personPath } = await lucieWithPhoto()
+
+    const refusals = await Promise.all(
+      [family.familyKey, family.keeperKey, undefined].map((key) =>
+        api.call(personPath, { key, method: 'DELETE' })
+      )
+    )
+    const tree = await api.call(familyPath(family.familyId), {
+      key: family.keeperKey
+    })
+
+    for (const refused of refusals) {
+      expect(refused.status).toBe(401)
+      expect(await errorCodeOf(refused)).toBe('unauthorized')
+    }
+    expect(
+      familyResponseSchema.parse(await tree.json()).family.persons
+    ).toHaveLength(2)
+  })
+
+  it('[erasure] answers 404 for a person the family never had', async () => {
+    const family = await api.createFamily()
+
+    const response = await api.call(
+      pathFor(API_ROUTES.person, {
+        familyId: family.familyId,
+        personId: 'nobody'
+      }),
+      { key: TEST_ADMIN_KEY, method: 'DELETE' }
+    )
+
+    expect(response.status).toBe(404)
+    expect(await errorCodeOf(response)).toBe('not_found')
   })
 })
 

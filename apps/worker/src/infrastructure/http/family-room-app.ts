@@ -2,7 +2,12 @@ import { Result } from '@adrienlcp/result'
 import { Hono } from 'hono'
 
 import { DEMO_FAMILY_KEY } from '@arbor/protocol/demo-family'
-import type { CreatedFamily, CreateFamilyInput } from '@arbor/protocol/routes'
+import type { EntityId } from '@arbor/protocol/entity-id'
+import type {
+  CreatedFamily,
+  CreateFamilyInput,
+  ErasedPerson
+} from '@arbor/protocol/routes'
 
 import { createSqlAccessStore } from '@/domain/access/sql-access-store'
 import {
@@ -14,6 +19,7 @@ import {
   openDemoFamily
 } from '@/domain/demo/open-demo-family'
 import { createSqlDemoWriteCount } from '@/domain/demo/sql-demo-write-count'
+import { type ErasureRefusal, erasePerson } from '@/domain/family/erase-person'
 import { openFamily } from '@/domain/family/family-service'
 import { createSqlFamilyStore } from '@/domain/family/sql-family-store'
 import { createSqlPhotoStore } from '@/domain/photos/sql-photo-store'
@@ -43,6 +49,10 @@ export type FamilyRoomApp = {
   create: (
     input: CreateFamilyInput
   ) => Promise<Result<FamilyKeys, 'family_exists'>>
+  /** Erases one person of the family for good: see `erasePerson`. */
+  erasePerson: (
+    personId: EntityId
+  ) => Result<ErasedPerson, ErasureRefusal | 'family_not_found'>
   fetch: (request: Request) => Promise<Response>
   /** The demo's API: as `fetch`, until its edits for the night run out. */
   fetchDemo: (request: Request) => Promise<Response>
@@ -115,6 +125,16 @@ export const familyRoomApp = ({
         ? opened
         : Result.success({ familyKey: familyKey.key, keeperKey: keeperKey.key })
     },
+    erasePerson: (personId) =>
+      isOpen
+        ? stores.transaction(() =>
+            erasePerson({
+              personId,
+              photos: stores.photos,
+              store: stores.family
+            })
+          )
+        : Result.failure('family_not_found'),
     fetch: async (request) => app.fetch(request),
     fetchDemo: async (request) => {
       if (isOpen && isWriteRequest(request)) {

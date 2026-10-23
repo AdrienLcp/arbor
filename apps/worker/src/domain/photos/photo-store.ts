@@ -12,5 +12,7 @@ export type PhotoFile = {
 export type PhotoStore = {
   hasFiles: (photoId: EntityId) => boolean
   readFile: (photo: { id: EntityId; variant: PhotoVariant }) => PhotoFile | null
+  /** Deletes every image of a photo, for an erasure: a removed photo otherwise keeps its files, so an undo brings it back whole. */
+  removeFiles: (photoId: EntityId) => void
   writeFiles: (photo: { files: readonly PhotoFile[]; id: EntityId }) => void
 }

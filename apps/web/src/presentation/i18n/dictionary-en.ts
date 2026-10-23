@@ -640,7 +640,7 @@ export const EN_DICTIONARY = defineDictionary({
       readers:
         'The read-only link hides the exact birth date, notes and photos of living people by default.',
       removal:
-        'To be taken out of a tree, ask one of its keepers: they can correct what concerns you or put you in the bin. If no keeper answers, write to me through <contact>the contact page</contact> with the tree’s link: I will have what concerns you erased.',
+        'To be taken out of a tree, ask one of its keepers: they can correct what concerns you or put you in the bin. If no keeper answers, write to me through <contact>the contact page</contact> with the tree’s link: I will erase you from it for good, with your photos and every trace in its history.',
       responsibility:
         'The people in a tree did not all choose to be there. The keeper who creates a family, and each relative who adds someone to it, is responsible for the people they add, living ones above all: put in only what the family would share among itself, and keep the link within the family.'
     },

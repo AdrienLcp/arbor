@@ -1,9 +1,11 @@
 import { DurableObject } from 'cloudflare:workers'
 import type { Result } from '@adrienlcp/result'
 
-import type { CreateFamilyInput } from '@arbor/protocol/routes'
+import type { EntityId } from '@arbor/protocol/entity-id'
+import type { CreateFamilyInput, ErasedPerson } from '@arbor/protocol/routes'
 
 import { nextDemoResetAfter } from '@/domain/demo/demo-reset'
+import type { ErasureRefusal } from '@/domain/family/erase-person'
 import { now } from '@/infrastructure/clock'
 import { DEMO_PHOTO_FILES } from '@/infrastructure/demo-photos/demo-photo-files'
 import {
@@ -63,6 +65,12 @@ export class FamilyRoom extends DurableObject<Env> {
     input: CreateFamilyInput
   ): Promise<Result<FamilyKeys, 'family_exists'>> {
     return this.app.create(input)
+  }
+
+  erasePerson(
+    personId: EntityId
+  ): Result<ErasedPerson, ErasureRefusal | 'family_not_found'> {
+    return this.app.erasePerson(personId)
   }
 
   override fetch(request: Request): Promise<Response> {

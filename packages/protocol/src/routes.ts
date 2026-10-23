@@ -20,6 +20,8 @@ export const API_ROUTES = {
   key: `${FAMILY}/keys/:keyId`,
   keys: `${FAMILY}/keys`,
   operations: `${FAMILY}/operations`,
+  /** The publisher's erasure of one person, behind the admin key: no client calls it. */
+  person: `${FAMILY}/persons/:personId`,
   photo: `${FAMILY}/photos/:photoId`,
   photoFile: `${FAMILY}/photos/:photoId/:variant`,
   restore: `${FAMILY}/restore`,
@@ -143,6 +145,13 @@ export const storageUsageSchema = z.object({
   usedBytes: z.int().min(0)
 })
 export type StorageUsage = z.infer<typeof storageUsageSchema>
+
+/** What erasing a person took out: the log entries left with nothing, and the photos whose files were deleted. */
+export const erasedPersonSchema = z.object({
+  removedEntries: z.int().min(0),
+  removedPhotos: z.int().min(0)
+})
+export type ErasedPerson = z.infer<typeof erasedPersonSchema>
 
 export const keyListSchema = z.object({ keys: z.array(keyViewSchema) })
 export type KeyList = z.infer<typeof keyListSchema>

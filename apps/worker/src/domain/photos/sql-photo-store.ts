@@ -35,6 +35,9 @@ export const createSqlPhotoStore = (database: SqlDatabase): PhotoStore => ({
       variant: stored.variant
     }
   },
+  removeFiles: (photoId) => {
+    database.exec('DELETE FROM photo_files WHERE photo_id = ?', photoId)
+  },
   writeFiles: ({ files, id }) => {
     for (const file of files) {
       database.exec(

@@ -15,9 +15,14 @@ export type FamilyStore = {
   readFamily: () => FamilyState
   /** The log entries after revision `after`, oldest first: at most `limit` of them, all of them without one. */
   readLog: (page: { after: number; limit?: number }) => ChangeLogEntry[]
-  /** The revision of the last entry, 0 for a family no one has edited yet. */
+  /** The highest revision ever recorded, 0 for a family no one has edited yet: an erasure that removes the last entries never lowers it. */
   readRevision: () => number
   readSettings: () => FamilySettings | null
   record: (change: RecordedChange) => void
+  /** Replaces the whole log and the state it leads to, for an erasure: `family` must be the replay of `entries`. */
+  rewriteLog: (rewrite: {
+    entries: ChangeLogEntry[]
+    family: FamilyState
+  }) => void
   writeSettings: (settings: FamilySettings) => void
 }

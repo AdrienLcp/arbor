@@ -20,6 +20,7 @@ import {
   apiError,
   apiJson
 } from '@/infrastructure/http/api-response'
+import { registerErasureRoutes } from '@/infrastructure/http/erasure-routes'
 import { invalidInput } from '@/infrastructure/http/invalid-input'
 import { serveWebApp } from '@/infrastructure/http/serve-web-app'
 import { newFamilyId } from '@/infrastructure/ids'
@@ -69,6 +70,7 @@ export const createApp = (): WorkerApp => {
     }
   )
 
+  registerErasureRoutes(app)
   app.all(API_ROUTES.family, forwardToFamily)
   app.all(`${API_ROUTES.family}/*`, forwardToFamily)
   app.all(`${API_PREFIX}/*`, () =>

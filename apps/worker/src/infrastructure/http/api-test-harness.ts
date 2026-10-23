@@ -18,12 +18,15 @@ const WEB_APP_DIRECTORY = resolve(WORKER_DIRECTORY, '../web/dist')
 /** `name` in `wrangler.jsonc`. */
 const WORKER_NAME = 'arbor'
 
+/** The `ADMIN_KEY` secret the test Worker runs with. */
+export const TEST_ADMIN_KEY = 'test-admin-key'
+
 /** The smallest bytes a JPEG sniff accepts. */
 export const TEST_JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10])
 
 type Call = {
   body?: BodyInit | object
-  key?: AccessKey
+  key?: AccessKey | typeof TEST_ADMIN_KEY
   method?: 'DELETE' | 'GET' | 'PATCH' | 'POST'
 }
 
@@ -40,7 +43,12 @@ const isJsonBody = (body: Call['body']): body is object =>
 export const createTestApi = () => {
   mkdirSync(WEB_APP_DIRECTORY, { recursive: true })
   const server = createTestHarness({
-    workers: [{ configPath: resolve(WORKER_DIRECTORY, 'wrangler.jsonc') }]
+    workers: [
+      {
+        configPath: resolve(WORKER_DIRECTORY, 'wrangler.jsonc'),
+        secrets: { ADMIN_KEY: TEST_ADMIN_KEY }
+      }
+    ]
   })
   /**
    * Straight to the Worker's runtime. `server.fetch` goes through wrangler's

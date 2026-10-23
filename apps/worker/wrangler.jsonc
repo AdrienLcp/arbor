@@ -38,5 +38,7 @@
   "routes": [{ "custom_domain": true, "pattern": "arbor.adrienlcp.com" }],
   // The demo family's photos ride in the bundle as bytes.
   "rules": [{ "fallthrough": true, "globs": ["**/*.webp"], "type": "Data" }],
+  // The publisher's key for erasing one person: `wrangler secret put ADMIN_KEY`.
+  "secrets": { "required": ["ADMIN_KEY"] },
   "workers_dev": false
 }

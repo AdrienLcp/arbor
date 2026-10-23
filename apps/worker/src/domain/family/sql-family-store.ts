@@ -14,13 +14,15 @@ import { personSchema } from '@arbor/protocol/person'
 import { photoSchema } from '@arbor/protocol/photo'
 import { unionSchema } from '@arbor/protocol/union'
 
-import type { FamilyState } from '@arbor/core/family/family-state'
+import { EMPTY_FAMILY, type FamilyState } from '@arbor/core/family/family-state'
 
 import type { SqlDatabase } from '@/infrastructure/durable-objects/sql-database'
 
 import type { FamilyStore } from './family-store'
 
 const SETTINGS_KEY = 'family'
+/** Under `settings`: the revision the log reached before an erasure removed its last entries, so it is never handed out twice. */
+const ISSUED_REVISION_KEY = 'issued_revision'
 
 /** What SQLite reads as no limit at all. */
 const NO_LIMIT = -1
@@ -145,6 +147,36 @@ export const createSqlFamilyStore = (database: SqlDatabase): FamilyStore => {
     }
   }
 
+  const insertEntry = (entry: ChangeLogEntry) => {
+    database.exec(
+      'INSERT INTO operations (revision, at, author, cause, operation) VALUES (?, ?, ?, ?, ?)',
+      entry.revision,
+      entry.at,
+      JSON.stringify(entry.author),
+      entry.cause === null ? null : JSON.stringify(entry.cause),
+      JSON.stringify(entry.operation)
+    )
+  }
+
+  const writeState = (before: FamilyState, after: FamilyState) => {
+    writePersons(before, after)
+    writeEntities(ENTITY_TABLES.unions, before.unions, after.unions)
+    writeEntities(ENTITY_TABLES.filiations, before.filiations, after.filiations)
+    writeEntities(ENTITY_TABLES.events, before.events, after.events)
+    writeEntities(ENTITY_TABLES.photos, before.photos, after.photos)
+    cachedFamily = after
+  }
+
+  const readRevision = () => {
+    const row = database
+      .exec(
+        'SELECT MAX(COALESCE((SELECT MAX(revision) FROM operations), 0), COALESCE((SELECT CAST(value AS INTEGER) FROM settings WHERE key = ?), 0)) AS revision',
+        ISSUED_REVISION_KEY
+      )
+      .at(0)
+    return revisionRowSchema.parse(row).revision
+  }
+
   return {
     readFamily: () => {
       cachedFamily ??= loadFamily()
@@ -170,12 +202,7 @@ export const createSqlFamilyStore = (database: SqlDatabase): FamilyStore => {
             revision: stored.revision
           }
         }),
-    readRevision: () => {
-      const row = database
-        .exec('SELECT COALESCE(MAX(revision), 0) AS revision FROM operations')
-        .at(0)
-      return revisionRowSchema.parse(row).revision
-    },
+    readRevision,
     readSettings: () => {
       const row = database
         .exec('SELECT value FROM settings WHERE key = ?', SETTINGS_KEY)
@@ -185,24 +212,25 @@ export const createSqlFamilyStore = (database: SqlDatabase): FamilyStore => {
         : parseStored(familySettingsSchema, valueRowSchema.parse(row).value)
     },
     record: ({ after, before, entry }) => {
+      insertEntry(entry)
+      writeState(before, after)
+    },
+    rewriteLog: ({ entries, family }) => {
+      const issued = readRevision()
       database.exec(
-        'INSERT INTO operations (revision, at, author, cause, operation) VALUES (?, ?, ?, ?, ?)',
-        entry.revision,
-        entry.at,
-        JSON.stringify(entry.author),
-        entry.cause === null ? null : JSON.stringify(entry.cause),
-        JSON.stringify(entry.operation)
+        'INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)',
+        ISSUED_REVISION_KEY,
+        JSON.stringify(issued)
       )
-      writePersons(before, after)
-      writeEntities(ENTITY_TABLES.unions, before.unions, after.unions)
-      writeEntities(
-        ENTITY_TABLES.filiations,
-        before.filiations,
-        after.filiations
-      )
-      writeEntities(ENTITY_TABLES.events, before.events, after.events)
-      writeEntities(ENTITY_TABLES.photos, before.photos, after.photos)
-      cachedFamily = after
+      for (const table of [
+        'operations',
+        'persons',
+        ...Object.values(ENTITY_TABLES)
+      ]) {
+        database.exec(`DELETE FROM ${table}`)
+      }
+      for (const entry of entries) insertEntry(entry)
+      writeState(EMPTY_FAMILY, family)
     },
     writeSettings: (settings) => {
       database.exec(

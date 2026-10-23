@@ -645,7 +645,7 @@ export const FR_DICTIONARY = defineDictionary({
       readers:
         'Le lien en lecture seule cache par défaut la date de naissance exacte, les notes et les photos des personnes vivantes.',
       removal:
-        'Pour ne plus figurer dans un arbre, demandez-le à l’un de ses gardiens : il peut corriger ce qui vous concerne ou vous mettre à la corbeille. Si aucun gardien ne vous répond, écrivez-moi par <contact>la page de contact</contact> avec le lien de l’arbre : je ferai effacer ce qui vous concerne.',
+        'Pour ne plus figurer dans un arbre, demandez-le à l’un de ses gardiens : il peut corriger ce qui vous concerne ou vous mettre à la corbeille. Si aucun gardien ne vous répond, écrivez-moi par <contact>la page de contact</contact> avec le lien de l’arbre : je vous en effacerai pour de bon, avec vos photos et toute trace dans son historique.',
       responsibility:
         'Les personnes d’un arbre n’ont pas toutes choisi d’y être. Le gardien qui crée une famille, et chaque proche qui y ajoute quelqu’un, est responsable des personnes qu’il ajoute, surtout des vivantes : n’y mettez que ce que la famille partagerait entre elle, et gardez le lien dans la famille.'
     },

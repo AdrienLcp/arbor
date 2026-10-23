@@ -1,7 +1,6 @@
 import { createMiddleware } from 'hono/factory'
 
 import { accessKeySchema, type Role } from '@arbor/protocol/access'
-import { AUTHORIZATION_SCHEME } from '@arbor/protocol/routes'
 
 import { admit } from '@/domain/access/access-service'
 import { canActAs } from '@/domain/access/role-rank'
@@ -9,11 +8,12 @@ import { digestOf } from '@/infrastructure/access-keys'
 import { now } from '@/infrastructure/clock'
 
 import { apiError } from './api-response'
+import { bearerTokenOf } from './bearer-token'
 import type { RoomVariables } from './room-context'
 
 const presentedKey = (authorization: string | undefined) => {
-  const [scheme, key] = (authorization ?? '').split(' ')
-  return scheme === AUTHORIZATION_SCHEME ? accessKeySchema.safeParse(key) : null
+  const token = bearerTokenOf(authorization)
+  return token === null ? null : accessKeySchema.safeParse(token)
 }
 
 /** Lets a route run for a live key of the family whose role reaches `needed`: the key first, then the role. */
