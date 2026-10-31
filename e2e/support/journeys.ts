@@ -1,7 +1,7 @@
 import { expect, type Page } from '@playwright/test'
 
 import {
-  addRelativeDialog,
+  addPersonDialog,
   createFamilyPage,
   familyAppBar,
   formDialog,
@@ -90,14 +90,24 @@ export const openSheetFromTree = async (
 /** Adds a relative from the open sheet, through the "add" dialog, and waits for it to close. */
 export const addRelative = async (
   page: Page,
-  relation: string,
+  addRow: string,
   person: { givenNames: string; surname?: string }
 ): Promise<void> => {
-  await personSheet(page).addRelative.click()
-  const dialog = addRelativeDialog(page)
-  await dialog.choice(relation).click()
+  await personSheet(page).addRow(addRow).click()
+  const dialog = addPersonDialog(page)
   await dialog.givenNames.fill(person.givenNames)
   if (person.surname !== undefined) await dialog.surname.fill(person.surname)
   await dialog.save.click()
   await expect(formDialog(page)).toBeHidden()
 }
+
+/**
+ * Brings a phone's sheet back to its top, risen to its whole height, as a
+ * finger would. Playwright scrolls a control above the fold into view by
+ * scrolling the sheet's swipe area down too, which swipes the sheet away.
+ */
+export const backToSheetTop = (page: Page): Promise<void> =>
+  page.locator('[data-sheet-scroll]').evaluate((swipeArea) => {
+    swipeArea.scrollTo({ top: swipeArea.scrollHeight })
+    swipeArea.querySelector('.bottom-sheet-content')?.scrollTo({ top: 0 })
+  })

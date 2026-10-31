@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 
 import {
   addRelative,
+  backToSheetTop,
   createFamilyFromHome,
   openHydrated,
   openSheetFromTree,
@@ -57,7 +58,7 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   await openSheetFromTree(founder, FOUNDER_NAME)
   const sheet = personSheet(founder)
 
-  await addRelative(founder, 'A partner', FIRST_SPOUSE)
+  await addRelative(founder, 'Add a partner', FIRST_SPOUSE)
   await expect(
     sheet.relative(FIRST_SPOUSE_NAME),
     'the first spouse joins the sheet’s unions'
@@ -66,19 +67,20 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   await openHydrated(relative, link)
   await expect(treePage(relative).find).toBeVisible()
 
-  await addRelative(founder, 'A child', { givenNames: 'Rose' })
+  await addRelative(founder, 'Add a child', { givenNames: 'Rose' })
   await expect(
     sheet.relative(CHILD_NAME),
     'the child of the couple shows on the sheet'
   ).toBeVisible()
 
-  await addRelative(founder, 'A partner', SECOND_SPOUSE)
+  await addRelative(founder, 'Add a partner', SECOND_SPOUSE)
   await expect(
     sheet.relative(SECOND_SPOUSE_NAME),
     'a second spouse sits beside the first'
   ).toBeVisible()
   await expect(sheet.relative(FIRST_SPOUSE_NAME)).toBeVisible()
 
+  await backToSheetTop(founder)
   await sheet.editPerson.click()
   const edit = editPersonDialog(founder)
   await edit.birthCertainty.click()

@@ -16,15 +16,21 @@ const UNION_WORDS_EN = {
 
 export const EN_DICTIONARY = defineDictionary({
   add: {
-    alone: 'No other parent known',
+    already: 'Already in the tree',
+    anchor: {
+      change: 'Change',
+      label: 'of'
+    },
+    birthYear: 'Year of birth',
+    birthYearProblem: 'Write the year alone, for example 1936.',
     childKind: {
       adoption: 'Adoption',
       birth: 'Birth',
       foster: 'Fostering',
       step: 'Raised'
     },
+    chooseTie: 'Choose how they are related',
     existing: {
-      chooseFirst: 'Tap a person in the list',
       noMatch: 'Nobody in the tree has that name.',
       people: 'The people in the tree',
       refused: {
@@ -33,65 +39,45 @@ export const EN_DICTIONARY = defineDictionary({
           'Already brother or sister, through the same parents.',
         ancestry_cycle: 'Impossible: someone would become their own ancestor.',
         duplicate_filiation: 'This link is already there.',
-        no_known_parent: 'Add one of their parents first.',
         other: 'This link is not possible.',
         same_person: 'This is the same person.',
         too_many_birth_parents: 'That would make three birth parents.'
       },
-      save: 'Link to {name}',
       search: {
         clear: 'Clear',
         label: 'Search by name',
         placeholder: 'First name or surname'
       }
     },
+    link: 'Link {name}',
     linkKind: 'Their link to {name}',
-    open: 'Add a child, a parent, a partner…',
-    otherChoice: 'Choose another link',
     parentKind: {
       adoption: 'Adoption',
       birth: 'Birth',
       foster: 'Fostering',
       step: 'Step-parent'
     },
-    quick: {
+    pick: 'Choose',
+    row: {
       child: 'Add a child',
-      parent: 'Add a parent'
+      parent: 'Add a parent',
+      partner: 'Add a partner',
+      sibling: 'Add a brother or a sister'
     },
-    relation: {
-      child: {
-        dialog: 'Add a child of {name}',
-        hint: 'born to, adopted or raised by {name}',
-        title: 'A child'
-      },
-      parent: {
-        dialog: 'Add a parent of {name}',
-        hint: 'the mother or father of {name}, or who raised them',
-        title: 'A parent'
-      },
-      partner: {
-        dialog: 'Add a partner of {name}',
-        hint: 'marriage, civil partnership or living together with {name}',
-        title: 'A partner'
-      },
-      sibling: {
-        dialog: 'Add a brother or sister of {name}',
-        hint: 'another child of the parents of {name}',
-        needsParent:
-          'Add one of their parents first: the brother or sister will be their child.',
-        title: 'A brother or a sister'
-      }
+    save: 'Add {name}',
+    saveUnnamed: 'Add',
+    someoneElse: 'Someone else',
+    tie: {
+      child: 'The child',
+      label: 'They are',
+      none: 'Not linked yet',
+      parent: 'The parent',
+      partner: 'The partner',
+      sibling: 'The brother or sister'
     },
-    save: 'Add to the tree',
-    siblingParents: 'Child of {names}, like {name}.',
-    title: 'Add a relative of {name}',
-    who: {
-      existing: 'Someone already in the tree',
-      label: 'Who is it?',
-      new: 'A new person'
-    },
-    withPartner: 'With {name}',
-    withWhom: 'With whom?'
+    title: 'Add someone',
+    with: 'With',
+    withNobody: 'Nobody'
   },
   app: {
     name: 'Arbor'
@@ -683,50 +669,6 @@ export const EN_DICTIONARY = defineDictionary({
     title: 'Legal notice and privacy'
   },
   link: {
-    banner: {
-      anchor: 'Touch the person to add someone to',
-      cancel: 'Cancel',
-      drag: 'or draw a line from one sticker to the other',
-      first: {
-        couple: 'Touch the first person of the couple',
-        parentChild: 'Touch the parent',
-        siblings: 'Touch one of the two'
-      },
-      refused: '{name}: {reason}',
-      second: {
-        couple: 'Touch the person in a couple with {name}',
-        parentChild: 'Touch {name}’s child',
-        siblings: 'Touch {name}’s brother or sister'
-      }
-    },
-    choose: {
-      couple: {
-        hint: 'marriage, civil partnership or living together',
-        title: 'Couple'
-      },
-      existing: 'Or link two people already in the tree',
-      newPerson: {
-        hint: 'a child, a parent, a partner, a brother or sister',
-        title: 'Someone new'
-      },
-      parentChild: {
-        hint: 'you will touch the parent, then their child',
-        title: 'Parent → child'
-      },
-      siblings: {
-        hint: 'two children of the same parents',
-        title: 'Brother / sister'
-      },
-      title: 'What would you like to add?'
-    },
-    confirm: {
-      couple: '{first} and {second} are a couple.',
-      other: 'Choose someone else',
-      parentChild: '{child} becomes {parent}’s child.',
-      save: 'Yes, link them',
-      siblings: '{relative} becomes the child of {parents}, like {anchor}.',
-      title: 'Add this link?'
-    },
     open: 'Add'
   },
   me: {
@@ -1065,6 +1007,7 @@ export const EN_DICTIONARY = defineDictionary({
       label: 'Add {name}’s unknown parent',
       title: 'Unknown'
     },
+    unplaced: 'Not placed yet',
     years: '{first} – {last}',
     zoom: {
       fit: 'See the whole tree',

@@ -6,7 +6,6 @@ const EXPLAINED_REFUSALS = [
   'already_siblings',
   'ancestry_cycle',
   'duplicate_filiation',
-  'no_known_parent',
   'same_person',
   'too_many_birth_parents'
 ] as const satisfies readonly LinkRefusal[]

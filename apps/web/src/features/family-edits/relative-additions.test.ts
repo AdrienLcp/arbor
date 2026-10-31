@@ -8,7 +8,8 @@ import {
   type NewRelative,
   parentAddition,
   partnerAddition,
-  siblingAddition
+  siblingAddition,
+  unplacedAddition
 } from './relative-additions'
 
 const counter = () => {
@@ -148,6 +149,7 @@ describe('the other additions', () => {
       ...siblingAddition({
         newId,
         parentFiliations: parentLinks,
+        personId: anne.person.id,
         sibling: relative('Simone')
       })
     ]
@@ -155,5 +157,42 @@ describe('the other additions', () => {
     const family = applyInOrder(EMPTY_FAMILY, operations)
     expect(family.status).toBe('success')
     expect(family.status === 'success' && family.data.persons.size).toBe(7)
+  })
+})
+
+describe('siblingAddition', () => {
+  it('gives a person with no parent in the tree a brother through an unknown parent they share', () => {
+    const newId = counter()
+    const operations = [
+      person('claire'),
+      ...siblingAddition({
+        newId,
+        parentFiliations: [],
+        personId: 'claire',
+        sibling: relative('Henri')
+      })
+    ]
+
+    const family = applyInOrder(EMPTY_FAMILY, operations)
+    if (family.status !== 'success') throw new Error('refused')
+    const unknownParent = [...family.data.persons.values()].find(
+      ({ givenNames }) => givenNames === ''
+    )
+    const childrenOfUnknown = [...family.data.filiations.values()]
+      .filter(({ parentId }) => parentId === unknownParent?.id)
+      .map(({ childId }) => family.data.persons.get(childId)?.givenNames)
+    expect(childrenOfUnknown.toSorted()).toEqual(['Henri', 'claire'])
+  })
+})
+
+describe('unplacedAddition', () => {
+  it('adds someone tied to no one', () => {
+    const family = applyInOrder(
+      EMPTY_FAMILY,
+      unplacedAddition({ newId: counter(), person: relative('Odette') })
+    )
+    if (family.status !== 'success') throw new Error('refused')
+    expect(family.data.persons.size).toBe(1)
+    expect(family.data.filiations.size + family.data.unions.size).toBe(0)
   })
 })

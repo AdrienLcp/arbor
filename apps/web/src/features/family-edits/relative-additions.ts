@@ -5,6 +5,8 @@ import type { EntityOperation } from '@arbor/protocol/operation'
 import type { Person } from '@arbor/protocol/person'
 import type { Union } from '@arbor/protocol/union'
 
+import { siblingsThroughUnknownParent } from '@arbor/core/relatives/unknown-parent'
+
 /** What the add form asks of a new relative; everything else starts empty. */
 export type NewRelative = Pick<
   Person,
@@ -122,18 +124,26 @@ export const partnerAddition = ({
   ]
 }
 
-/** A brother or a sister, made a child of each of the person's parents, by the same kind of link. */
+/** A brother or a sister, made a child of each of the person's parents by the same kind of link, or of an unknown parent they share when the person has none yet. */
 export const siblingAddition = ({
   newId,
   parentFiliations,
+  personId,
   sibling
 }: {
   newId: NewId
   /** The person's own links to their parents. */
   parentFiliations: readonly Filiation[]
+  personId: EntityId
   sibling: NewRelative
 }): EntityOperation[] => {
   const siblingId = newId()
+  if (parentFiliations.length === 0) {
+    return [
+      created(sibling, siblingId),
+      ...siblingsThroughUnknownParent({ newId, personId, siblingId })
+    ]
+  }
   return [
     created(sibling, siblingId),
     ...parentFiliations.map(({ kind, parentId }) =>
@@ -141,3 +151,12 @@ export const siblingAddition = ({
     )
   ]
 }
+
+/** Someone nobody knows where to place yet: in the family, tied to no one. */
+export const unplacedAddition = ({
+  newId,
+  person
+}: {
+  newId: NewId
+  person: NewRelative
+}): EntityOperation[] => [created(person, newId())]

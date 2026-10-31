@@ -17,15 +17,21 @@ const UNION_WORDS_FR = {
 /** The reference dictionary: its keys are the type every other locale is checked against. */
 export const FR_DICTIONARY = defineDictionary({
   add: {
-    alone: 'Sans autre parent connu',
+    already: 'Déjà dans l’arbre',
+    anchor: {
+      change: 'Changer',
+      label: 'de'
+    },
+    birthYear: 'Année de naissance',
+    birthYearProblem: 'Écrivez l’année seule, par exemple 1936.',
     childKind: {
       adoption: 'Adoption',
       birth: 'Naissance',
       foster: 'Accueil',
       step: 'Élevé'
     },
+    chooseTie: 'Choisissez son lien',
     existing: {
-      chooseFirst: 'Touchez une personne de la liste',
       noMatch: 'Personne ne porte ce nom dans l’arbre.',
       people: 'Les personnes de l’arbre',
       refused: {
@@ -34,65 +40,45 @@ export const FR_DICTIONARY = defineDictionary({
         ancestry_cycle:
           'Impossible : quelqu’un deviendrait son propre ancêtre.',
         duplicate_filiation: 'Ce lien existe déjà.',
-        no_known_parent: 'Ajoutez d’abord un de ses parents.',
         other: 'Ce lien n’est pas possible.',
         same_person: 'C’est la même personne.',
         too_many_birth_parents: 'Cela ferait trois parents de naissance.'
       },
-      save: 'Relier à {name}',
       search: {
         clear: 'Effacer',
         label: 'Chercher par nom',
         placeholder: 'Prénom ou nom'
       }
     },
+    link: 'Relier {name}',
     linkKind: 'Son lien avec {name}',
-    open: 'Ajouter un enfant, un parent, un conjoint…',
-    otherChoice: 'Choisir un autre lien',
     parentKind: {
       adoption: 'Adoption',
       birth: 'Naissance',
       foster: 'Accueil',
       step: 'Beau-parent'
     },
-    quick: {
+    pick: 'Choisir',
+    row: {
       child: 'Ajouter un enfant',
-      parent: 'Ajouter un parent'
+      parent: 'Ajouter un parent',
+      partner: 'Ajouter un conjoint',
+      sibling: 'Ajouter un frère ou une sœur'
     },
-    relation: {
-      child: {
-        dialog: 'Ajouter un enfant de {name}',
-        hint: 'né, adopté ou élevé par {name}',
-        title: 'Un enfant'
-      },
-      parent: {
-        dialog: 'Ajouter un parent de {name}',
-        hint: 'la mère ou le père de {name}, ou qui l’a élevé',
-        title: 'Un parent'
-      },
-      partner: {
-        dialog: 'Ajouter un conjoint de {name}',
-        hint: 'mariage, PACS ou union libre avec {name}',
-        title: 'Un conjoint'
-      },
-      sibling: {
-        dialog: 'Ajouter un frère ou une sœur de {name}',
-        hint: 'un autre enfant des parents de {name}',
-        needsParent:
-          'Ajoutez d’abord un de ses parents : le frère ou la sœur sera leur enfant.',
-        title: 'Un frère ou une sœur'
-      }
+    save: 'Ajouter {name}',
+    saveUnnamed: 'Ajouter',
+    someoneElse: 'Quelqu’un d’autre',
+    tie: {
+      child: 'L’enfant',
+      label: 'C’est',
+      none: 'Sans lien pour l’instant',
+      parent: 'Le parent',
+      partner: 'Le conjoint',
+      sibling: 'Le frère ou la sœur'
     },
-    save: 'Ajouter à l’arbre',
-    siblingParents: 'Enfant de {names}, comme {name}.',
-    title: 'Ajouter un proche de {name}',
-    who: {
-      existing: 'Quelqu’un déjà dans l’arbre',
-      label: 'Qui est-ce ?',
-      new: 'Une nouvelle personne'
-    },
-    withPartner: 'Avec {name}',
-    withWhom: 'Avec qui ?'
+    title: 'Ajouter quelqu’un',
+    with: 'Avec',
+    withNobody: 'Personne'
   },
   app: {
     name: 'Arbor'
@@ -689,47 +675,6 @@ export const FR_DICTIONARY = defineDictionary({
     title: 'Mentions légales et confidentialité'
   },
   link: {
-    banner: {
-      anchor: 'Touchez la personne à qui ajouter quelqu’un',
-      cancel: 'Annuler',
-      drag: 'ou tirez un trait d’une vignette à l’autre',
-      first: {
-        couple: 'Touchez la première personne du couple',
-        parentChild: 'Touchez le parent',
-        siblings: 'Touchez l’un des deux'
-      },
-      refused: '{name} : {reason}',
-      second: {
-        couple: 'Touchez la personne en couple avec {name}',
-        parentChild: 'Touchez l’enfant de {name}',
-        siblings: 'Touchez le frère ou la sœur de {name}'
-      }
-    },
-    choose: {
-      couple: { hint: 'mariage, PACS ou union libre', title: 'Couple' },
-      existing: 'Ou relier deux personnes déjà dans l’arbre',
-      newPerson: {
-        hint: 'un enfant, un parent, un conjoint, un frère ou une sœur',
-        title: 'Une nouvelle personne'
-      },
-      parentChild: {
-        hint: 'vous toucherez le parent, puis son enfant',
-        title: 'Parent → enfant'
-      },
-      siblings: {
-        hint: 'deux enfants des mêmes parents',
-        title: 'Frère / sœur'
-      },
-      title: 'Que voulez-vous ajouter ?'
-    },
-    confirm: {
-      couple: '{first} et {second} forment un couple.',
-      other: 'Choisir une autre personne',
-      parentChild: '{child} devient l’enfant de {parent}.',
-      save: 'Oui, relier',
-      siblings: '{relative} devient l’enfant de {parents}, comme {anchor}.',
-      title: 'Ajouter ce lien ?'
-    },
     open: 'Ajouter'
   },
   me: {
@@ -1087,6 +1032,7 @@ export const FR_DICTIONARY = defineDictionary({
       label: 'Ajouter le parent inconnu de {name}',
       title: 'Inconnu'
     },
+    unplaced: 'Pas encore placés',
     years: '{first} – {last}',
     zoom: {
       fit: 'Voir tout l’arbre',

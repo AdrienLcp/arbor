@@ -52,9 +52,9 @@ test('[e2e] the keeper puts the tree back as it was before a contributor binned 
 
   const link = await createFamilyFromHome(keeper, KEEPER)
   await openSheetFromTree(keeper, KEEPER_NAME)
-  await addRelative(keeper, 'A partner', PARTNER)
+  await addRelative(keeper, 'Add a partner', PARTNER)
   for (const { givenNames } of CHILDREN) {
-    await addRelative(keeper, 'A child', { givenNames })
+    await addRelative(keeper, 'Add a child', { givenNames })
   }
 
   await openHydrated(contributor, link)

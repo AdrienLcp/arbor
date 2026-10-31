@@ -9,6 +9,7 @@ import type { Union } from '@arbor/protocol/union'
 
 import { applyInOrder } from '../family/apply-operation'
 import type { FamilyState } from '../family/family-state'
+import { siblingsThroughUnknownParent } from './unknown-parent'
 
 /** A tie between a person and a relative who is already in the family. */
 export type ExistingRelativeLink = {
@@ -26,13 +27,11 @@ export type ExistingRelativeLink = {
  * - `'same_person'` — the relative is the person
  * - `'already_partners'` — an ongoing union of that kind ties them already
  * - `'already_siblings'` — the relative is already a child of each of the person's parents
- * - `'no_known_parent'` — a brother or a sister is tied through parents the person does not have yet
  */
 export type LinkRefusal =
   | OperationRefusal
   | 'already_partners'
   | 'already_siblings'
-  | 'no_known_parent'
   | 'same_person'
 
 /** Makes a fresh id for each entity the link creates. */
@@ -62,19 +61,44 @@ const isOngoingUnionOfKind = (
   union.kind === kind &&
   partnerIds.every((partnerId) => union.partnerIds.includes(partnerId))
 
-/** A brother or a sister becomes a child of each of the person's parents they are not a child of yet, by the same kind of link. */
+const parentLinksOf = (family: FamilyState, childId: EntityId) =>
+  family.filiations
+    .values()
+    .filter((filiation) => filiation.childId === childId)
+    .toArray()
+
+/**
+ * A brother or a sister becomes a child of each of the person's parents they
+ * are not a child of yet, by the same kind of link. A person with no parent
+ * in the tree takes the relative's instead; when neither has one, they share
+ * a parent nobody knows yet.
+ */
 const siblingOperations = (
   family: FamilyState,
   { anchorId, relativeId }: ExistingRelativeLink,
   newId: NewId
 ): Result<EntityOperation[], LinkRefusal> => {
-  const anchorParents = family.filiations
-    .values()
-    .filter(({ childId }) => childId === anchorId)
-    .toArray()
-  if (anchorParents.length === 0) return Result.failure('no_known_parent')
+  if (parentLinksOf(family, anchorId).length === 0) {
+    return parentLinksOf(family, relativeId).length === 0
+      ? Result.success(
+          siblingsThroughUnknownParent({
+            newId,
+            personId: anchorId,
+            siblingId: relativeId
+          })
+        )
+      : siblingOperations(
+          family,
+          {
+            anchorId: relativeId,
+            relation: 'sibling',
+            relativeId: anchorId
+          },
+          newId
+        )
+  }
 
-  const missing = anchorParents.filter(
+  const missing = parentLinksOf(family, anchorId).filter(
     ({ parentId }) =>
       !family.filiations
         .values()

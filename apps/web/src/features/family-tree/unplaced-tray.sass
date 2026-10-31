@@ -1,0 +1,30 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  // Dashed like every slot still to fill: these people have no place in the tree yet.
+  .unplaced-tray
+    align-items: center
+    background: var(--paper-2)
+    border: var(--stroke-bold) dashed var(--ghost)
+    border-radius: var(--radius-frame)
+    display: flex
+    gap: var(--space-m)
+    flex-basis: 100%
+    min-width: 0
+    padding: var(--space-xs) var(--space-s) var(--space-xs) var(--space-m)
+
+    .unplaced-tray-title
+      @include typography.label-strong
+      color: var(--ink-soft)
+      flex: none
+      margin: 0
+      max-width: 6rem
+
+    .unplaced-tray-people
+      display: flex
+      gap: var(--space-xs)
+      overflow-x: auto
+
+      .relative-button
+        flex: none
+        width: auto

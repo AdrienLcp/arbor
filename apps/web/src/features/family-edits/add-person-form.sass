@@ -1,0 +1,56 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .add-person-form
+    display: grid
+    gap: var(--space-xl)
+
+    .add-person-names
+      @include layout.container
+      display: grid
+      gap: var(--space-l)
+
+      @include layout.container-wide(28rem)
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    // The sentence's own words, "They are", "of": its structure, in the album's printed voice.
+    .add-person-word
+      @include typography.title
+      margin: 0
+
+    .add-person-already
+      display: grid
+      gap: var(--space-xs)
+
+    .add-person-suggestion
+      gap: var(--space-m)
+      justify-content: space-between
+      text-align: start
+
+    .add-person-pick
+      @include typography.name
+      text-decoration: underline
+      text-underline-offset: 0.2em
+
+    .add-person-existing, .add-person-row
+      align-items: baseline
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-s) var(--space-m)
+
+    .add-person-existing-name, .add-person-anchor
+      @include typography.name
+
+    .add-person-row .existing-relative-picker
+      flex-basis: 100%
+
+    .add-person-details
+      border-top: var(--stroke-thin) solid var(--ghost-soft)
+      display: grid
+      gap: var(--space-l)
+      padding-top: var(--space-l)
+
+    .add-person-refusal
+      @include typography.body
+      color: var(--warn)

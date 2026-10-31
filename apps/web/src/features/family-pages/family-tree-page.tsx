@@ -8,18 +8,18 @@ import type { FamilyState } from '@arbor/core/family/family-state'
 import { familyStateOfSnapshot } from '@arbor/core/family/family-state-of-snapshot'
 import { describeKinship } from '@arbor/core/kinship/describe-kinship'
 import type { KinPath } from '@arbor/core/kinship/kinship'
+import { unplacedPeople } from '@arbor/core/relatives/unplaced-people'
 import { familyLineage } from '@arbor/core/tree-layout/family-lineage'
 
 import { DemoNotice } from '@/features/demo/demo-notice'
 import { personIdOfMe } from '@/features/family-access/family-access'
-import {
-  type Adding,
-  AddRelativeDialog
-} from '@/features/family-edits/add-relative-dialog'
+import { AddPersonDialog } from '@/features/family-edits/add-person-dialog'
+import type { AddingStart, Tie } from '@/features/family-edits/tie'
 import { useFamilyEdit } from '@/features/family-edits/use-family-edit'
 import { FocusCard } from '@/features/family-tree/focus-card'
 import type { PersonFace } from '@/features/family-tree/person-face'
 import { PersonSearch } from '@/features/family-tree/person-search'
+import { TreeAddButton } from '@/features/family-tree/tree-add-button'
 import { TreeCanvas } from '@/features/family-tree/tree-canvas'
 import { TreeOutline } from '@/features/family-tree/tree-outline'
 import { treeScene } from '@/features/family-tree/tree-scene'
@@ -30,12 +30,10 @@ import {
   layoutOfView,
   type TreeScope
 } from '@/features/family-tree/tree-view'
+import { UnplacedTray } from '@/features/family-tree/unplaced-tray'
 import { useTreeView } from '@/features/family-tree/use-tree-view'
 import { familyKinship, kinPathOf } from '@/features/kinship/family-kinship'
 import { SIDE_SHEET_WIDTH } from '@/features/person-sheet/side-sheet'
-import { TreeLinkButton } from '@/features/tree-link/tree-link-button'
-import { TreeLinkControls } from '@/features/tree-link/tree-link-controls'
-import { useTreeLink } from '@/features/tree-link/use-tree-link'
 import { today } from '@/infrastructure/clock'
 import {
   familyTreePathFor,
@@ -162,24 +160,15 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   })
   const faces = usePersonFaces()
   const edit = useFamilyEdit()
-  const [adding, setAdding] = useState<Adding | null>(null)
-  /** Whom the add dialog adds to; `null` for the person in the middle of the tree. */
-  const [addingToId, setAddingToId] = useState<EntityId | null>(null)
-  const startAdding = (relation: Adding, personId: EntityId | null) => {
-    setAddingToId(personId)
-    setAdding(relation)
-  }
-  const link = useTreeLink({
-    edit,
-    family,
-    onAddTo: (personId) => startAdding('choose', personId)
-  })
+  const [adding, setAdding] = useState<AddingStart | null>(null)
+  /** Opens "Add someone" next to a person, the one in the middle of the tree by default. */
+  const startAdding = (tie: Tie | null, personId: EntityId | null) =>
+    setAdding({ anchorId: personId ?? view.focusId, tie })
   const closeSheet = useGoBack(familyTreePathFor(familyId))
   const isSpread = isPhone && view.scope === 'spread'
   const lit = isSpread ? null : litKinship
   const focusId = lit?.relativeId ?? view.focusId
   const focus = faces.get(focusId)
-  const addingTo = faces.get(addingToId ?? focusId)
   const focusSheetPath = personSheetPathFor({ familyId, personId: focusId })
   /** Touching anyone on the canvas opens their sheet, every change at hand; the tree turns to them behind it. */
   const openSheetOf = (personId: EntityId) => {
@@ -200,8 +189,8 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     isPhone,
     scope: view.scope
   })
-  /** Links are drawn on the canvas: neither the list nor a page of the spread, nor a lit kinship. */
-  const canLink =
+  /** The add button heads the canvas's tools: neither the list nor a page of the spread has them, nor a lit kinship. */
+  const canAdd =
     edit.canEdit &&
     lit === null &&
     shownScope !== 'list' &&
@@ -270,11 +259,14 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     return (
       <>
         <TreeCanvas
+          addTool={
+            canAdd ? (
+              <TreeAddButton onPress={() => startAdding(null, focusId)} />
+            ) : undefined
+          }
           coveredBottomShare={sheet !== null && isPhone ? BOTTOM_SHEET_PEEK : 0}
           focusId={focusId}
           label={title}
-          linking={link.linking}
-          linkTool={canLink ? <TreeLinkButton link={link} /> : undefined}
           litPath={lit?.path ?? null}
           onPressPerson={openSheetOf}
           onPressUnknownParent={
@@ -295,14 +287,6 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
         {focus === undefined || sheet !== null ? null : (
           <FocusCard face={focus} sheetPath={focusSheetPath} />
         )}
-        {canLink ? (
-          <TreeLinkControls
-            edit={edit}
-            faces={faces}
-            family={family}
-            link={link}
-          />
-        ) : null}
       </>
     )
   }
@@ -354,6 +338,11 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
             )}
             <PersonSearch onPick={showAround} people={[...faces.values()]} />
           </div>
+          <UnplacedTray
+            faces={faces}
+            onPressPerson={openSheetOf}
+            personIds={unplacedPeople(family)}
+          />
         </div>
         <div
           className='family-tree-stage'
@@ -371,13 +360,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
             {sheet}
           </BottomSheet>
         ) : null}
-        {addingTo === undefined ? null : (
-          <AddRelativeDialog
-            adding={adding}
-            anchor={addingTo}
-            onChange={setAdding}
-          />
-        )}
+        <AddPersonDialog onClose={() => setAdding(null)} start={adding} />
       </Main>
     </>
   )

@@ -1,11 +1,16 @@
 import type React from 'react'
+import { useState } from 'react'
 
 import type { EntityId } from '@arbor/protocol/entity-id'
 
 import type { FamilyState } from '@arbor/core/family/family-state'
 import { closeFamilyOf } from '@arbor/core/relatives/close-family'
+import type { Relation } from '@arbor/core/relatives/relation'
 import { familyLineage } from '@arbor/core/tree-layout/family-lineage'
 
+import { AddPersonDialog } from '@/features/family-edits/add-person-dialog'
+import type { AddingStart } from '@/features/family-edits/tie'
+import { useFamilyEdit } from '@/features/family-edits/use-family-edit'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
 import { useKinWords } from '@/features/family-tree/kin-words'
 import {
@@ -22,6 +27,7 @@ import {
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { EditUnionAction } from './edit-union-action'
+import { SheetAddRow } from './sheet-add-row'
 import { useUnionStory } from './union-story'
 
 type SheetRelativesProps = {
@@ -29,6 +35,9 @@ type SheetRelativesProps = {
   faces: ReadonlyMap<EntityId, PersonFace>
   family: FamilyState
 }
+
+/** A sheet offers to add a parent until two are known, as the phone's page does. */
+const PARENTS_ASKED_FOR = 2
 
 const SheetGroup: React.FC<{ children: React.ReactNode; title: string }> = ({
   children,
@@ -43,7 +52,7 @@ const SheetGroup: React.FC<{ children: React.ReactNode; title: string }> = ({
 const yearsLine = (relative: PersonFace): string[] =>
   relative.years === '' ? [] : [relative.years]
 
-/** The person's parents, brothers and sisters, unions and children, each one touch away from their own sheet. */
+/** The person's parents, brothers and sisters, unions and children, each one touch away from their own sheet; for anyone who may change the tree, every group ends with an empty slot that adds one more. */
 export const SheetRelatives: React.FC<SheetRelativesProps> = ({
   face,
   faces,
@@ -54,6 +63,15 @@ export const SheetRelatives: React.FC<SheetRelativesProps> = ({
   const { familyId } = useOpenFamily()
   const kin = useKinWords()
   const unionStory = useUnionStory()
+  const edit = useFamilyEdit()
+  const [adding, setAdding] = useState<AddingStart | null>(null)
+  const addRow = (relation: Relation) =>
+    edit.canEdit ? (
+      <SheetAddRow
+        label={translate(`add.row.${relation}`)}
+        onPress={() => setAdding({ anchorId: face.id, tie: relation })}
+      />
+    ) : null
   const close = closeFamilyOf(familyLineage(family), face.id)
   // Sheet to sheet replaces: Back closes the sheet rather than walking back through every relative visited.
   const openSheetOf = (personId: EntityId) => () =>
@@ -103,7 +121,7 @@ export const SheetRelatives: React.FC<SheetRelativesProps> = ({
 
   return (
     <>
-      {parents.length === 0 ? null : (
+      {parents.length === 0 && !edit.canEdit ? null : (
         <SheetGroup title={translate('tree.spread.parents')}>
           {parents.map(({ filiation, parent }) => (
             <RelativeButton
@@ -114,9 +132,10 @@ export const SheetRelatives: React.FC<SheetRelativesProps> = ({
               onPress={openSheetOf(parent.id)}
             />
           ))}
+          {parents.length < PARENTS_ASKED_FOR ? addRow('parent') : null}
         </SheetGroup>
       )}
-      {siblings.length === 0 ? null : (
+      {siblings.length === 0 && !edit.canEdit ? null : (
         <SheetGroup title={translate('tree.spread.siblings')}>
           {siblings.map(({ kind, sharedParent, sibling }) => (
             <RelativeButton
@@ -130,9 +149,10 @@ export const SheetRelatives: React.FC<SheetRelativesProps> = ({
               onPress={openSheetOf(sibling.id)}
             />
           ))}
+          {addRow('sibling')}
         </SheetGroup>
       )}
-      {unions.length === 0 ? null : (
+      {unions.length === 0 && !edit.canEdit ? null : (
         <SheetGroup title={translate('sheet.unions')}>
           {unions.map(({ partner, union }) => (
             <div className='sheet-union' key={union.id}>
@@ -166,9 +186,10 @@ export const SheetRelatives: React.FC<SheetRelativesProps> = ({
               />
             </div>
           ))}
+          {addRow('partner')}
         </SheetGroup>
       )}
-      {children.length === 0 ? null : (
+      {children.length === 0 && !edit.canEdit ? null : (
         <SheetGroup title={translate('tree.spread.children')}>
           {children.map(({ child, filiation, otherParent }) => (
             <RelativeButton
@@ -183,8 +204,10 @@ export const SheetRelatives: React.FC<SheetRelativesProps> = ({
               swatch={filiationLineStyle(filiation.kind)}
             />
           ))}
+          {addRow('child')}
         </SheetGroup>
       )}
+      <AddPersonDialog onClose={() => setAdding(null)} start={adding} />
     </>
   )
 }

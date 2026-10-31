@@ -67,6 +67,8 @@ export const linkRefusedScreen = (page: Page) => ({
 export const formDialog = (page: Page) => page.locator('.form-dialog')
 
 export const treePage = (page: Page) => ({
+  /** The tree's add button, heading its zoom buttons. */
+  add: page.getByRole('button', { exact: true, name: 'Add' }),
   /** Finding someone by name turns the tree around them. */
   find: page.getByRole('combobox', { name: 'Find someone' }),
   /** Touching a person on the tree opens their sheet. */
@@ -80,14 +82,19 @@ export const treePage = (page: Page) => ({
       level: 1,
       name: `The tree, around ${focusName}`
     }),
+  /** Someone tied to no one yet, in the tray beside the tree. */
+  unplaced: (name: string) =>
+    page
+      .getByRole('region', { name: 'Not placed yet' })
+      .getByRole('button', { name: new RegExp(`^${name}`) }),
   youAre: (name: string) => page.getByText(`You are ${name}.`)
 })
 
 export const personSheet = (page: Page) => ({
   addPhoto: page.getByRole('button', { name: 'Add a photo' }),
-  addRelative: page.getByRole('button', {
-    name: 'Add a child, a parent, a partner…'
-  }),
+  /** The empty slot that ends one of the sheet's groups: "Add a child", "Add a partner"… */
+  addRow: (label: string) =>
+    page.locator('.person-sheet').getByRole('button', { name: label }),
   bin: page.getByRole('button', { name: 'Put in the bin' }),
   close: page.getByRole('button', { exact: true, name: 'Close' }),
   /** The dialog repeats the button's name, so the confirmation is found inside it. */
@@ -105,14 +112,15 @@ export const personSheet = (page: Page) => ({
       .getByRole('button', { name: new RegExp(`^${name}`) })
 })
 
-export const addRelativeDialog = (page: Page) => {
+/** "Add someone": names, how they are related, and the button that says whom it adds. */
+export const addPersonDialog = (page: Page) => {
   const dialog = formDialog(page)
   return {
-    choice: (title: string) =>
-      dialog.getByRole('button', { name: new RegExp(`^${title}`) }),
     givenNames: dialog.getByLabel('Given names'),
-    save: dialog.getByRole('button', { name: 'Add to the tree' }),
-    surname: dialog.getByLabel('Surname')
+    save: dialog.getByRole('button', { name: /^Add / }),
+    surname: dialog.getByLabel('Surname'),
+    /** One of the tiles that say how they are related: "The child", "Not linked yet"… */
+    tie: (label: string) => dialog.locator('.tie-tile', { hasText: label })
   }
 }
 

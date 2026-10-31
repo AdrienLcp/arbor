@@ -102,6 +102,9 @@ creation while nothing links to the person yet.
 
 - No one is their own ancestor (cycle check on every filiation write).
 - At most two `birth` parents per child.
+- Brothers and sisters are tied through parents. A person with none in the
+  tree takes their sibling's; when neither has any, both become children of
+  one person recorded with nothing known, drawn as an unknown slot to fill.
 - A union's partners are two distinct people.
 - No new link (union, filiation, event, photo) points at a person in the bin.
 - A photo used as someone's portrait cannot be removed.

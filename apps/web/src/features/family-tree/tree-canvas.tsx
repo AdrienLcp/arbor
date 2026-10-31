@@ -21,7 +21,6 @@ import type { TreeCard } from '@arbor/core/tree-layout/tree-layout'
 import { CARD_HEIGHT, CARD_WIDTH } from '@arbor/core/tree-layout/tree-metrics'
 
 import { Button } from '@/presentation/components/button'
-import { FINE_POINTER } from '@/presentation/components/fine-pointer'
 import {
   FitIcon,
   RecenterIcon,
@@ -33,7 +32,6 @@ import { Toolbar } from '@/presentation/components/toolbar'
 import { useMediaQuery } from '@/presentation/components/use-media-query'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
-import { type CanvasLinking, LINK_DRAG_START_CLASS } from './canvas-linking'
 import { fitView } from './fit-view'
 import { GenerationRails } from './generation-rails'
 import { arrowDirectionOf, nearestCardToward } from './nearest-card'
@@ -73,10 +71,8 @@ type TreeCanvasProps = {
   label: string
   /** A kinship path to trace and fit on screen; `null` to centre on the focus person. */
   litPath: KinPath | null
-  /** The "+ Lien" mode, while it is on. */
-  linking?: CanvasLinking
-  /** A tool of the tree's own, set atop the zoom buttons: the "+ Lien" button. */
-  linkTool?: React.ReactNode
+  /** The tree's add button, heading its zoom buttons. */
+  addTool?: React.ReactNode
   onPressPerson: (personId: EntityId) => void
   /** Opens the way to add the unknown other parent of this child; left out for a visitor who may not change the tree. */
   onPressUnknownParent?: (childId: EntityId) => void
@@ -93,11 +89,10 @@ type TreeCanvasProps = {
 
 /** The tree on a canvas to pan, pinch and zoom, and to walk through person by person with the arrow keys. */
 export const TreeCanvas: React.FC<TreeCanvasProps> = ({
+  addTool,
   coveredBottomShare = 0,
   focusId,
   label,
-  linking,
-  linkTool,
   litPath,
   onPressPerson,
   onPressUnknownParent,
@@ -107,7 +102,6 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   today,
   wholeTreeView = null
 }) => {
-  const hasFinePointer = useMediaQuery(FINE_POINTER)
   /** A phone held upright lays the tools in one row under the canvas. */
   const isToolbarRow = useMediaQuery(FOLDED_BAR_SCREEN)
   const translate = useTranslate()
@@ -128,7 +122,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
 
   const walkableCards = scene.layout.cards.filter((card) =>
     isWalkableCard(card, {
-      canFillIn: onPressUnknownParent !== undefined && linking === undefined
+      canFillIn: onPressUnknownParent !== undefined
     })
   )
   const focusKey = focusKeyIn(scene, focusId)
@@ -386,10 +380,6 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   }
 
   const pressPerson = (card: PersonCard) => {
-    if (linking !== undefined) {
-      linking.pick(card.personId)
-      return
-    }
     setActiveKey(null)
     onPressPerson(card.personId)
     if (card.personId === focusId) centreOn(focusKey, GLIDE_MS)
@@ -412,7 +402,6 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
         }}
         onWheelStart={noteVisitorMoved}
         onZoomStart={noteVisitorMoved}
-        panning={{ excluded: [LINK_DRAG_START_CLASS] }}
         ref={viewport}
       >
         {(controls) => (
@@ -420,10 +409,8 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
             <TransformComponent wrapperClass='tree-viewport'>
               <TreePlane
                 activeKey={currentKey}
-                canDrawLinks={hasFinePointer}
                 focusId={focusId}
                 instructionsId={instructionsId}
-                linking={linking}
                 litPath={litPath}
                 onArrowKey={walkWithArrows}
                 onFocusCard={(card) => setActiveKey(card.key)}
@@ -448,7 +435,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
               orientation={isToolbarRow ? 'horizontal' : 'vertical'}
               ref={zoomTools}
             >
-              {linkTool}
+              {addTool}
               <Button
                 aria-label={translate('tree.zoom.in')}
                 onPress={() => {

@@ -170,7 +170,7 @@ export const TreeSpread: React.FC<TreeSpreadProps> = ({
         )}
         {onAdd === undefined || parents.length >= 2 ? null : (
           <AddButton
-            label={translate('add.quick.parent')}
+            label={translate('add.row.parent')}
             onPress={() => onAdd('parent')}
           />
         )}
@@ -229,7 +229,7 @@ export const TreeSpread: React.FC<TreeSpreadProps> = ({
         )}
         {onAdd === undefined ? null : (
           <AddButton
-            label={translate('add.quick.child')}
+            label={translate('add.row.child')}
             onPress={() => onAdd('child')}
           />
         )}

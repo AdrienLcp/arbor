@@ -1,0 +1,37 @@
+@use '../../presentation/styles/focus'
+@use '../../presentation/styles/typography'
+
+@layer components
+  .tie-tiles
+    display: grid
+    gap: var(--space-s)
+
+    .tie-tiles-choices
+      display: grid
+      gap: var(--space-s)
+      grid-template-columns: repeat(2, minmax(0, 1fr))
+
+    .tie-tile
+      @include focus.ring
+      @include typography.name
+      align-items: center
+      border: var(--stroke-thin) solid var(--ghost)
+      border-radius: var(--radius-frame)
+      cursor: pointer
+      display: flex
+      justify-content: center
+      min-height: var(--control-height)
+      padding: var(--space-xs) var(--space-s)
+      text-align: center
+      transition: background-color var(--transition-fast) var(--ease-out), color var(--transition-fast) var(--ease-out)
+
+      &.wide
+        grid-column: 1 / -1
+
+      &[data-hovered]:not([data-selected])
+        background: var(--paper-2)
+
+      &[data-selected]
+        background: var(--action)
+        border-color: var(--action)
+        color: var(--on-action)

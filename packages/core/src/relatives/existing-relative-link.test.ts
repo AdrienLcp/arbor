@@ -135,15 +135,6 @@ describe('linkRefusal', () => {
         relativeId: 'simone-morel'
       },
       'already_siblings'
-    ],
-    [
-      'a brother of someone whose parents are unknown',
-      {
-        anchorId: 'auguste-morel',
-        relation: 'sibling',
-        relativeId: 'jeanne-morel'
-      },
-      'no_known_parent'
     ]
   ])('refuses %s', (_, link, refusal) => {
     expect(linkRefusal(demoFamily(), link)).toBe(refusal)
@@ -196,5 +187,59 @@ describe('existingRelativeLinkOperations', () => {
     const applied = applyInOrder(family, operations.data)
 
     expect(applied.status).toBe('success')
+  })
+})
+
+describe('a brother or a sister of someone whose parents are unknown', () => {
+  const counter = () => {
+    let created = 0
+    return () => {
+      created += 1
+      return `new-${created}`
+    }
+  }
+
+  it('takes the parents of a relative who has some', () => {
+    const operations = existingRelativeLinkOperations(
+      demoFamily(),
+      {
+        anchorId: 'claire-dubois',
+        relation: 'sibling',
+        relativeId: 'louis-morel'
+      },
+      counter()
+    )
+    if (operations.status !== 'success') throw new Error(operations.error)
+    expect(
+      operations.data.map((operation) =>
+        operation.type === 'filiation.create'
+          ? `${operation.filiation.parentId} > ${operation.filiation.childId}`
+          : operation.type
+      )
+    ).toEqual([
+      'auguste-morel > claire-dubois',
+      'marie-le-goff > claire-dubois'
+    ])
+  })
+
+  it('shares a parent nobody knows yet when neither has one in the tree', () => {
+    const link = {
+      anchorId: 'auguste-morel',
+      relation: 'sibling',
+      relativeId: 'claire-dubois'
+    } as const
+    const operations = existingRelativeLinkOperations(
+      demoFamily(),
+      link,
+      counter()
+    )
+    if (operations.status !== 'success') throw new Error(operations.error)
+    const people = operations.data.flatMap((operation) =>
+      operation.type === 'person.create' ? [operation.person] : []
+    )
+    expect(
+      people.map(({ givenNames, surname }) => `${givenNames}${surname}`)
+    ).toEqual([''])
+    expect(linkRefusal(demoFamily(), link)).toBeNull()
   })
 })

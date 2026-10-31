@@ -1,0 +1,49 @@
+@use '../../presentation/styles/focus'
+@use '../../presentation/styles/typography'
+
+@layer components
+  // Sized like a relative's row, its slot printed in dashes: "empty, to fill".
+  .sheet-add-row
+    @include focus.ring
+    align-items: center
+    background: none
+    border: 0
+    border-radius: var(--radius-control)
+    color: var(--ink)
+    cursor: pointer
+    display: flex
+    gap: var(--space-m)
+    min-height: var(--relative-row-height)
+    padding: var(--space-xs)
+    text-align: start
+    width: 100%
+
+    .sheet-add-slot
+      align-items: center
+      background: var(--paper-2)
+      border: var(--stroke-bold) dashed var(--ghost)
+      border-radius: var(--radius-sticker)
+      display: flex
+      flex: none
+      height: 4rem
+      justify-content: center
+      transition: border-color var(--transition-fast) var(--ease-out)
+      width: 3.25rem
+
+      svg
+        height: 1.5rem
+        width: 1.5rem
+
+    .sheet-add-label
+      @include typography.name
+      color: var(--ink-soft)
+
+    &[data-hovered]
+      .sheet-add-slot
+        border-color: var(--ink)
+
+      .sheet-add-label
+        color: var(--ink)
+
+    &[data-pressed]
+      background: color-mix(in oklab, var(--ink) 6%, transparent)

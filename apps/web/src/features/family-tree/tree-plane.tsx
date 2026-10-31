@@ -22,12 +22,6 @@ import { SlotButton } from '@/presentation/components/slot-button'
 import { Sticker } from '@/presentation/components/sticker'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
-import {
-  type CanvasLinking,
-  LINK_DRAG_START_CLASS,
-  PERSON_ID_ATTRIBUTE
-} from './canvas-linking'
-import { LinkDragLine } from './link-drag-line'
 import { RelationWords } from './relation-words'
 import { pathOf, TreeLines } from './tree-lines'
 import type { TreeScene } from './tree-scene'
@@ -46,15 +40,11 @@ type PersonCard = Extract<TreeCard, { kind: 'person' }>
 export type TreePlaneProps = {
   /** The card arrow keys and Tab land on: the only one in the tab order. */
   activeKey: string | null
-  /** Whether a line can be drawn from one sticker to another: with a mouse, in the "+ Lien" mode. */
-  canDrawLinks?: boolean
   focusId: EntityId
   /** Describes how to move between the stickers, on each of them. */
   instructionsId: string
   /** How two people are related, traced over the tree with everyone else faded; `null` when nothing is lit. */
   litPath: KinPath | null
-  /** The "+ Lien" mode, while it is on: touching a person picks them, unknown parents rest. */
-  linking?: CanvasLinking
   /** An arrow key pressed on a card; `true` when the key was an arrow, so its default scroll is kept from happening. */
   onArrowKey: (card: TreeCard, key: string) => boolean
   onFocusCard: (card: TreeCard) => void
@@ -73,10 +63,8 @@ export type TreePlaneProps = {
 /** The drawing at its natural size: generation bands when shown, relation lines, their words and the stickers, placed by the layout. */
 export const TreePlane: React.FC<TreePlaneProps> = ({
   activeKey,
-  canDrawLinks = false,
   focusId,
   instructionsId,
-  linking,
   litPath,
   onArrowKey,
   onFocusCard,
@@ -135,11 +123,7 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
     if (card.kind === 'unknown-parent') {
       const [childId] = card.childIds
       const words = unknownParentWords(calledName(childId))
-      if (
-        onPressUnknownParent === undefined ||
-        childId === undefined ||
-        linking !== undefined
-      ) {
+      if (onPressUnknownParent === undefined || childId === undefined) {
         return (
           <GhostSlot
             className={cardClassName}
@@ -178,44 +162,52 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
     const isDeceased = !isLiving(person, today)
     const years = lifeYears(person, !isDeceased)
     const isUnnamed = personName(person) === null
+    // Someone recorded with nothing known, like the parent two siblings share, reads as an empty slot: touching it opens their sheet to complete.
+    const isUnknown =
+      isUnnamed && years === '' && person.portraitPhotoId === null
     const sticker = (
       <SlotButton
         aria-describedby={instructionsId}
         aria-label={
-          isUnnamed
-            ? [translate('common.unnamedPerson'), years]
-                .filter((words) => words !== '')
-                .join(', ')
-            : undefined
+          isUnknown
+            ? translate('tree.unknownParent.title')
+            : isUnnamed
+              ? [translate('common.unnamedPerson'), years]
+                  .filter((words) => words !== '')
+                  .join(', ')
+              : undefined
         }
-        className={classNames(
-          cardClassName,
-          linking !== undefined && 'link-candidate',
-          linking !== undefined && canDrawLinks && LINK_DRAG_START_CLASS,
-          linking?.isRefused(card.personId) && 'link-refused',
-          linking?.firstId === card.personId && 'link-first'
-        )}
-        {...{ [PERSON_ID_ATTRIBUTE]: card.personId }}
+        className={cardClassName}
         key={card.key}
         onPress={() => onPressPerson(card)}
         style={placeOf(card)}
         {...walkingProps(card)}
       >
-        <Sticker
-          className={classNames(
-            card.personId === focusId && !card.isRepeated && 'focus',
-            card.isRepeated && 'repeated'
-          )}
-          generation={card.generation}
-          givenNames={person.givenNames}
-          isDeceased={isDeceased}
-          isOpen={card.personId === openPersonId && !card.isRepeated}
-          lifeYears={years}
-          monogram={monogramOf(person)}
-          portrait={<PortraitImage photoId={person.portraitPhotoId} />}
-          style={SLOT_SIZE}
-          surname={person.surname}
-        />
+        {isUnknown ? (
+          <GhostSlot
+            action={translate('tree.unknownParent.action')}
+            generation={card.generation}
+            hint={unknownParentWords(null).hint}
+            style={SLOT_SIZE}
+            title={translate('tree.unknownParent.title')}
+          />
+        ) : (
+          <Sticker
+            className={classNames(
+              card.personId === focusId && !card.isRepeated && 'focus',
+              card.isRepeated && 'repeated'
+            )}
+            generation={card.generation}
+            givenNames={person.givenNames}
+            isDeceased={isDeceased}
+            isOpen={card.personId === openPersonId && !card.isRepeated}
+            lifeYears={years}
+            monogram={monogramOf(person)}
+            portrait={<PortraitImage photoId={person.portraitPhotoId} />}
+            style={SLOT_SIZE}
+            surname={person.surname}
+          />
+        )}
       </SlotButton>
     )
 
@@ -270,9 +262,6 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
       )}
       {scene.layout.cards.map(cardOf)}
       <RelationWords scene={scene} />
-      {linking !== undefined && canDrawLinks ? (
-        <LinkDragLine linking={linking} />
-      ) : null}
     </div>
   )
 }
