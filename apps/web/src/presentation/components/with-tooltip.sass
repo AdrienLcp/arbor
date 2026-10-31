@@ -1,0 +1,19 @@
+@use '../styles/typography'
+
+@layer components
+  // A floating slip of paper, like the list under a field.
+  .tooltip
+    @include typography.body-small
+    @include typography.strong
+    background: var(--paper)
+    border: var(--stroke-thin) solid var(--ghost)
+    border-radius: var(--radius-control)
+    box-shadow: var(--shadow-popover)
+    color: var(--ink)
+    max-width: 16rem
+    padding: var(--space-xs) var(--space-s)
+    transition: opacity var(--transition-fast) var(--ease-out)
+
+    &[data-entering],
+    &[data-exiting]
+      opacity: 0

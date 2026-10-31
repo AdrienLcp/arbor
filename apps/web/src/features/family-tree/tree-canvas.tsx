@@ -30,6 +30,7 @@ import {
 import { FOLDED_BAR_SCREEN } from '@/presentation/components/phone-screen'
 import { Toolbar } from '@/presentation/components/toolbar'
 import { useMediaQuery } from '@/presentation/components/use-media-query'
+import { WithTooltip } from '@/presentation/components/with-tooltip'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { fitView } from './fit-view'
@@ -104,6 +105,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
 }) => {
   /** A phone held upright lays the tools in one row under the canvas. */
   const isToolbarRow = useMediaQuery(FOLDED_BAR_SCREEN)
+  const tooltipPlacement = isToolbarRow ? 'top' : 'start'
   const translate = useTranslate()
   const instructionsId = useId()
   const viewport = useRef<ReactZoomPanPinchRef>(null)
@@ -436,43 +438,66 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
               ref={zoomTools}
             >
               {addTool}
-              <Button
-                aria-label={translate('tree.zoom.in')}
-                onPress={() => {
-                  noteVisitorMoved()
-                  void controls.zoomIn()
-                }}
-                variant='quiet'
+              <WithTooltip
+                label={translate('tree.zoom.in')}
+                placement={tooltipPlacement}
               >
-                <ZoomInIcon aria-hidden='true' />
-              </Button>
-              <Button
-                aria-label={translate('tree.zoom.out')}
-                onPress={() => {
-                  noteVisitorMoved()
-                  void controls.zoomOut()
-                }}
-                variant='quiet'
+                <Button
+                  aria-label={translate('tree.zoom.in')}
+                  onPress={() => {
+                    noteVisitorMoved()
+                    void controls.zoomIn()
+                  }}
+                  variant='quiet'
+                >
+                  <ZoomInIcon aria-hidden='true' />
+                </Button>
+              </WithTooltip>
+              <WithTooltip
+                label={translate('tree.zoom.out')}
+                placement={tooltipPlacement}
               >
-                <ZoomOutIcon aria-hidden='true' />
-              </Button>
-              <Button
-                aria-label={translate('tree.zoom.recentre')}
-                onPress={() => centreOn(focusKey, GLIDE_MS)}
-                variant='quiet'
+                <Button
+                  aria-label={translate('tree.zoom.out')}
+                  onPress={() => {
+                    noteVisitorMoved()
+                    void controls.zoomOut()
+                  }}
+                  variant='quiet'
+                >
+                  <ZoomOutIcon aria-hidden='true' />
+                </Button>
+              </WithTooltip>
+              <WithTooltip
+                label={translate('tree.zoom.recentre')}
+                placement={tooltipPlacement}
               >
-                <RecenterIcon aria-hidden='true' />
-              </Button>
-              <Button
-                aria-label={translate('tree.zoom.fit')}
-                onPress={() => {
-                  noteVisitorMoved()
-                  showWholeTree({ animationMs: GLIDE_MS, maxScale: MAX_SCALE })
-                }}
-                variant='quiet'
+                <Button
+                  aria-label={translate('tree.zoom.recentre')}
+                  onPress={() => centreOn(focusKey, GLIDE_MS)}
+                  variant='quiet'
+                >
+                  <RecenterIcon aria-hidden='true' />
+                </Button>
+              </WithTooltip>
+              <WithTooltip
+                label={translate('tree.zoom.fit')}
+                placement={tooltipPlacement}
               >
-                <FitIcon aria-hidden='true' />
-              </Button>
+                <Button
+                  aria-label={translate('tree.zoom.fit')}
+                  onPress={() => {
+                    noteVisitorMoved()
+                    showWholeTree({
+                      animationMs: GLIDE_MS,
+                      maxScale: MAX_SCALE
+                    })
+                  }}
+                  variant='quiet'
+                >
+                  <FitIcon aria-hidden='true' />
+                </Button>
+              </WithTooltip>
             </Toolbar>
           </>
         )}
