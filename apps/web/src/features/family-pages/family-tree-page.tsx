@@ -6,6 +6,10 @@ import type { EntityId } from '@arbor/protocol/entity-id'
 
 import type { FamilyState } from '@arbor/core/family/family-state'
 import { familyStateOfSnapshot } from '@arbor/core/family/family-state-of-snapshot'
+import {
+  familyWarnings,
+  peopleToCheck
+} from '@arbor/core/family/family-warnings'
 import { withoutPeople } from '@arbor/core/family/without-people'
 import { describeKinship } from '@arbor/core/kinship/describe-kinship'
 import type { KinPath } from '@arbor/core/kinship/kinship'
@@ -336,6 +340,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
               : undefined
           }
           openPersonId={sheetPersonId}
+          peopleToCheck={peopleToCheck(familyWarnings(family))}
           persons={family.persons}
           scene={scene}
           today={day}

@@ -59,6 +59,8 @@ export type TreePlaneProps = {
   onPressUnknownParent?: (childId: EntityId) => void
   /** The person whose sheet is open beside or under the tree, `null` when none is. */
   openPersonId: EntityId | null
+  /** People whose sticker carries the amber tag: one of their dates looks wrong. */
+  peopleToCheck: ReadonlySet<EntityId>
   persons: ReadonlyMap<EntityId, Person>
   /** Keeps a card's element, so the keyboard can move focus to it and the canvas centre on it. */
   registerCard: (key: string, element: HTMLElement | null) => void
@@ -79,6 +81,7 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
   onPressPerson,
   onPressUnknownParent,
   openPersonId,
+  peopleToCheck,
   persons,
   registerCard,
   scene,
@@ -225,6 +228,11 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
           />
         ) : (
           <Sticker
+            checkTag={
+              peopleToCheck.has(card.personId)
+                ? translate('tree.checkTag')
+                : undefined
+            }
             className={classNames(
               card.personId === focusId && !card.isRepeated && 'focus',
               card.isRepeated && 'repeated'

@@ -169,6 +169,30 @@
       &::before
         border-color: var(--ink)
 
+  // Stuck on askew over the top-right corner, above the sticker and the open ribbon, when a date looks wrong.
+  .slot .verify-tag
+    @include typography.label-strong
+    align-items: center
+    background: var(--warn-bg)
+    border-radius: var(--radius-tag)
+    box-shadow: var(--shadow-sticker)
+    color: var(--warn)
+    display: inline-flex
+    font-size: var(--text-xs)
+    gap: 0.1875rem
+    padding: 0.125rem 0.25rem
+    position: absolute
+    right: -0.5rem
+    rotate: 4deg
+    top: -0.4375rem
+    white-space: nowrap
+    z-index: 2
+
+  .slot .verify-tag-icon
+    flex: none
+    height: 1.1em
+    width: 1.1em
+
   // A person drawn a second time: flattened back into the page, in a dashed frame.
   .slot.repeated
     .slot-bed::before

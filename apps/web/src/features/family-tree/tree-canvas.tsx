@@ -80,6 +80,8 @@ type TreeCanvasProps = {
   onPressUnknownParent?: (childId: EntityId) => void
   /** The person whose sheet is open, marked on their sticker; `null` when no sheet is. */
   openPersonId: EntityId | null
+  /** People whose sticker carries the amber tag: one of their dates looks wrong. */
+  peopleToCheck: ReadonlySet<EntityId>
   persons: ReadonlyMap<EntityId, Person>
   scene: TreeScene
   today: Temporal.PlainDate
@@ -105,6 +107,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   onPressPerson,
   onPressUnknownParent,
   openPersonId,
+  peopleToCheck,
   persons,
   scene,
   today,
@@ -441,6 +444,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
                 onPressPerson={pressPerson}
                 onPressUnknownParent={onPressUnknownParent}
                 openPersonId={openPersonId}
+                peopleToCheck={peopleToCheck}
                 persons={persons}
                 registerCard={registerCard}
                 scene={scene}

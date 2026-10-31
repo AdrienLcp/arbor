@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { DEMO_FAMILY_OPERATIONS } from './demo-family'
-import { familyWarnings } from './family-warnings'
+import { familyWarnings, peopleToCheck } from './family-warnings'
 import { replayOperations } from './replay-operations'
 
 const warningsAfter = (operationCount: number) => {
@@ -32,5 +32,14 @@ describe('[warnings] implausible dates', () => {
     }
     expect(warningsAfter(reneCorrection)).toContainEqual(childWarning)
     expect(warningsAfter(reneCorrection + 1)).not.toContainEqual(childWarning)
+  })
+
+  it('[warnings] names everyone a warning touches, the child and the parent alike', () => {
+    expect(
+      peopleToCheck([
+        { kind: 'death_before_birth', personId: 'marie' },
+        { childId: 'paul', kind: 'born_before_parent', parentId: 'louis' }
+      ])
+    ).toEqual(new Set(['marie', 'paul', 'louis']))
   })
 })

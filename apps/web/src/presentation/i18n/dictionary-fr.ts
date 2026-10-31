@@ -877,6 +877,7 @@ export const FR_DICTIONARY = defineDictionary({
     system: 'Comme l’appareil'
   },
   tree: {
+    checkTag: 'À vérifier',
     choose: {
       action: 'Choisir qui afficher',
       back: 'De retour : {name}.',

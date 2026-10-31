@@ -2,10 +2,13 @@ import { classNames } from '@adrienlcp/react'
 import type React from 'react'
 
 import { generationClass } from './generation-class'
+import { WarningIcon } from './icons'
 
 import './slot.sass'
 
 type StickerProps = {
+  /** The words of the amber tag stuck on the top-right corner when one of the person's dates looks wrong; left out when none does. */
+  checkTag?: string
   className?: string
   /** Counted from the oldest generation, 1 first: it picks the sticker's ink. */
   generation: number
@@ -30,6 +33,7 @@ type StickerProps = {
  * Its words are spaced in the markup, where the layout drops the spaces: a name read from the content must not run "MarieMorel1932".
  */
 export const Sticker: React.FC<StickerProps> = ({
+  checkTag,
   className,
   generation,
   givenNames,
@@ -67,6 +71,15 @@ export const Sticker: React.FC<StickerProps> = ({
           ) : null}
         </span>
       </span>
+      {checkTag ? (
+        <>
+          {' '}
+          <span className='verify-tag'>
+            <WarningIcon aria-hidden='true' className='verify-tag-icon' />
+            {checkTag}
+          </span>
+        </>
+      ) : null}
     </span>
   </span>
 )

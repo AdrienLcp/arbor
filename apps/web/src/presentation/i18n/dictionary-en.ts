@@ -868,6 +868,7 @@ export const EN_DICTIONARY = defineDictionary({
     system: 'Same as the device'
   },
   tree: {
+    checkTag: 'To check',
     choose: {
       action: 'Choose who to show',
       back: 'Back: {name}.',

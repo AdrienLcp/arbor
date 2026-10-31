@@ -48,6 +48,18 @@ const birthsBeforeParent = (family: FamilyState): FamilyWarning[] =>
     )
     .toArray()
 
+/** Everyone a warning names: the one whose death comes first, both the child and the parent born after them. */
+export const peopleToCheck = (
+  warnings: readonly FamilyWarning[]
+): ReadonlySet<EntityId> =>
+  new Set(
+    warnings.flatMap((warning) =>
+      warning.kind === 'death_before_birth'
+        ? [warning.personId]
+        : [warning.childId, warning.parentId]
+    )
+  )
+
 /** Every implausible date in the family, people in the bin left out. */
 export const familyWarnings = (family: FamilyState): FamilyWarning[] => [
   ...deathsBeforeBirth(family),
