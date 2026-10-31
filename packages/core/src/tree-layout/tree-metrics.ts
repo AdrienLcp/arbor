@@ -16,6 +16,9 @@ export const PARTNER_GAP = UNION_WORDS_WIDTH + 2 * UNION_LINE_SHOWING
 /** Between the blocks of two siblings; cousins get twice as much. */
 export const SIBLING_BLOCK_GAP = 40
 
+/** Between two families drawn side by side on one canvas: the family and the one someone married in from. */
+export const FAMILIES_GAP = SIBLING_BLOCK_GAP * 4
+
 /** From one generation's cards to the next one's: room for the sibling bars and the union brackets. */
 export const ROW_HEIGHT = 262
 

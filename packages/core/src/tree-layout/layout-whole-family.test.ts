@@ -42,6 +42,11 @@ const descentTo = (layout: TreeLayout, childId: string) =>
 const drawnPersonIds = (layout: TreeLayout) =>
   layout.cards.flatMap((card) => (card.kind === 'person' ? card.personId : []))
 
+const firstDrawnPersonIds = (layout: TreeLayout) =>
+  layout.cards.flatMap((card) =>
+    card.kind === 'person' && !card.isRepeated ? card.personId : []
+  )
+
 describe('[tree-layout] the whole family', () => {
   it('[tree-layout] draws every person of the demo family once, leaving the bin out', () => {
     const family = demoFamily()
@@ -72,7 +77,7 @@ describe('[tree-layout] the whole family', () => {
     )
   })
 
-  it('[tree-layout] leaves out the parents of whoever married in', () => {
+  it('[tree-layout] draws everyone of a 300-person family once, the parents of whoever married in beside the family', () => {
     const family = generatedFamily(300)
     const layout = layoutWholeFamily(family)
 
@@ -80,9 +85,42 @@ describe('[tree-layout] the whole family', () => {
       ({ surname }) => surname === MARRIED_IN_PARENTS_SURNAME
     )
     expect(marriedInParents.length).toBeGreaterThan(0)
-    expect(drawnPersonIds(layout)).toHaveLength(
-      family.persons.size - marriedInParents.length
+    expect(firstDrawnPersonIds(layout).toSorted()).toEqual(
+      [...family.persons.keys()].toSorted()
     )
+  })
+
+  it('[tree-layout] repeats whoever married in under their own parents, without their children again', () => {
+    const family = generatedFamily(300)
+    const layout = layoutWholeFamily(family)
+
+    const repeats = layout.cards.filter(
+      (card) => card.kind === 'person' && card.isRepeated
+    )
+    const parentIdsOf = (personId: string) =>
+      [...family.filiations.values()]
+        .filter(({ childId }) => childId === personId)
+        .map(({ parentId }) => family.persons.get(parentId)?.surname)
+    expect(repeats.length).toBeGreaterThan(0)
+    expect(
+      repeats.every(
+        (card) =>
+          card.kind === 'person' &&
+          parentIdsOf(card.personId).includes(MARRIED_IN_PARENTS_SURNAME)
+      )
+    ).toBe(true)
+  })
+
+  it('[tree-layout] leaves someone tied to no one off the canvas', () => {
+    const family = demoFamily()
+    const marie = family.persons.get('marie-le-goff')
+    if (marie === undefined) throw new Error('Marie is not in the demo family')
+    const loner = { ...marie, id: 'loner' }
+    const persons = new Map(family.persons).set('loner', loner)
+
+    expect(
+      drawnPersonIds(layoutWholeFamily({ ...family, persons }))
+    ).not.toContain('loner')
   })
 
   it('[tree-layout] keeps every couple side by side', () => {

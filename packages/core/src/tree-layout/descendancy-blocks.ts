@@ -38,13 +38,27 @@ type GroupDraft = {
   union: Union | null
 }
 
-/** `rootId`'s descendants down to `depth` generations, each person drawn once. */
+type BuiltBlock = {
+  block: DescendancyBlock
+  /** Whether the block draws anyone not in `drawnBefore`, itself or below. */
+  bringsSomeoneNew: boolean
+}
+
+/**
+ * `rootId`'s descendants down to `depth` generations, each person drawn once.
+ * Someone in `drawnBefore` — already in another tree of the same canvas — is
+ * drawn as a repeat, and below a repeat only the branches leading to someone
+ * new are kept: the bride stands under her parents, without her children
+ * again.
+ */
 export const descendancyBlocks = ({
   depth,
+  drawnBefore = new Set(),
   lineage,
   rootId
 }: {
   depth: number
+  drawnBefore?: ReadonlySet<EntityId>
   lineage: FamilyLineage
   rootId: EntityId
 }): DescendancyBlock => {
@@ -92,45 +106,75 @@ export const descendancyBlocks = ({
     return groups
   }
 
-  const blockOf = (personId: EntityId, depthLeft: number): DescendancyBlock => {
+  const blockOf = (personId: EntityId, depthLeft: number): BuiltBlock => {
+    const isRepeated = drawnBefore.has(personId)
     drawn.add(personId)
     const groups = groupsOf(personId, depthLeft > 0)
     const known = groups.filter((group) => group.partnerId !== null)
     const unknown = groups.filter((group) => group.partnerId === null)
     const ordered = [...known.slice(0, 1), null, ...known.slice(1), ...unknown]
 
-    const slots = ordered.map((group): BlockSlot => {
-      if (group === null) return { isRepeated: false, kind: 'person', personId }
-      if (group.partnerId === null) {
-        return {
-          childIds: group.children.map(({ childId }) => childId),
+    const partnerSlots = ordered.map((group): BlockSlot | null => {
+      if (group === null || group.partnerId === null) return null
+      const isPartnerRepeated =
+        drawn.has(group.partnerId) || drawnBefore.has(group.partnerId)
+      drawn.add(group.partnerId)
+      return {
+        isRepeated: isPartnerRepeated,
+        kind: 'person',
+        personId: group.partnerId
+      }
+    })
+
+    const columns = ordered.map((group, slotIndex) => {
+      if (group === null) return null
+      const children = group.children
+        .map(({ childId, filiations }) => ({
+          built: blockOf(childId, depthLeft - 1),
+          filiations
+        }))
+        .filter(({ built }) => !isRepeated || built.bringsSomeoneNew)
+      const partnerSlot = partnerSlots[slotIndex] ?? null
+      const isKept =
+        !isRepeated ||
+        children.length > 0 ||
+        (partnerSlot?.kind === 'person' && !partnerSlot.isRepeated)
+      return isKept ? { children, partnerSlot, union: group.union } : undefined
+    })
+    const kept = columns.filter((column) => column !== undefined)
+
+    const slots = kept.map((column): BlockSlot => {
+      if (column === null) return { isRepeated, kind: 'person', personId }
+      return (
+        column.partnerSlot ?? {
+          childIds: column.children.map(({ built }) => built.block.personId),
           kind: 'unknown-parent'
         }
-      }
-      const isRepeated = drawn.has(group.partnerId)
-      drawn.add(group.partnerId)
-      return { isRepeated, kind: 'person', personId: group.partnerId }
+      )
     })
 
     return {
-      generation: lineage.generationOf(personId),
-      groups: ordered.flatMap((group, slotIndex) =>
-        group === null
-          ? []
-          : {
-              children: group.children.map(({ childId, filiations }) => ({
-                block: blockOf(childId, depthLeft - 1),
-                filiations
-              })),
-              partnerSlotIndex: slotIndex,
-              union: group.union
-            }
-      ),
-      personId,
-      selfSlotIndex: ordered.indexOf(null),
-      slots
+      block: {
+        generation: lineage.generationOf(personId),
+        groups: kept.flatMap((column, slotIndex) =>
+          column === null
+            ? []
+            : {
+                children: column.children.map(({ built, filiations }) => ({
+                  block: built.block,
+                  filiations
+                })),
+                partnerSlotIndex: slotIndex,
+                union: column.union
+              }
+        ),
+        personId,
+        selfSlotIndex: kept.indexOf(null),
+        slots
+      },
+      bringsSomeoneNew: !isRepeated || kept.length > 1
     }
   }
 
-  return blockOf(rootId, depth)
+  return blockOf(rootId, depth).block
 }

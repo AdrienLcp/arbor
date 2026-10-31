@@ -14,16 +14,19 @@ const childrenOf = (block: DescendancyBlock) =>
 /** `rootId` and their descendants down to `depth` generations, partners beside them. */
 export const layoutDescendancy = ({
   depth,
+  drawnBefore,
   lineage,
   rootId
 }: {
   depth: number
+  /** People another tree of the same canvas already draws: see `descendancyBlocks`. */
+  drawnBefore?: ReadonlySet<EntityId>
   lineage: FamilyLineage
   rootId: EntityId
 }): TreeLayout => {
   const root = tidyTree({
     childrenOf,
-    root: descendancyBlocks({ depth, lineage, rootId })
+    root: descendancyBlocks({ depth, drawnBefore, lineage, rootId })
   })
 
   const nodes = root.descendants()
