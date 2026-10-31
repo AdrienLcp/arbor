@@ -45,7 +45,7 @@ Every write is an **operation** — `<entity>.create | update | remove` for
 unions, filiations, life events and photos, `person.create | update | bin |
 restore | remove`, and `group` for several applied all-or-nothing — appended to
 the family's log with `revision`, author (the person picked in "Who are you?",
-or a typed name) and timestamp. An update carries the before and after values
+a typed name, or `anonymous` when the visitor never said) and timestamp. An update carries the before and after values
 of the fields it changes; a removal carries the whole entity. Inverting one
 swaps them, so any operation followed by its inverse leaves the family as it
 was (tested over the demo family).

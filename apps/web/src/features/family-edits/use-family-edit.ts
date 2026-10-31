@@ -1,7 +1,7 @@
 import type { Result } from '@adrienlcp/result'
 import { useState, useTransition } from 'react'
 
-import type { Author } from '@arbor/protocol/change-log'
+import { type Author, authorKey } from '@arbor/protocol/change-log'
 import type { Operation } from '@arbor/protocol/operation'
 import {
   OPERATION_REFUSALS,
@@ -45,12 +45,7 @@ const failureOf = (error: ApiFailure): EditFailure => {
 
 /** Everyone who signed a change, each once, in the order they wrote. */
 const distinctAuthors = (authors: readonly Author[]): Author[] => [
-  ...new Map(
-    authors.map((author) => [
-      author.kind === 'person' ? author.personId : `named:${author.name}`,
-      author
-    ])
-  ).values()
+  ...new Map(authors.map((author) => [authorKey(author), author])).values()
 ]
 
 /**
@@ -63,7 +58,7 @@ export const useFamilyEdit = () => {
   const refreshFamily = useRefreshRouteData()
   const [isPending, startTransition] = useTransition()
   const [failure, setFailure] = useState<EditFailure | null>(null)
-  const { author, signFirst } = useWhoAmI()
+  const { author } = useWhoAmI()
 
   const authorsSince = async (revision: number): Promise<Author[]> => {
     const log = await readChangeLog({ after: revision, familyId, key })
@@ -81,7 +76,7 @@ export const useFamilyEdit = () => {
     afterRecording?: AfterRecording
   ) => {
     const signer = rememberedAuthor(familyId)
-    if (signer === null || operations.length === 0) return
+    if (operations.length === 0) return
     const baseRevision = response.revision
     setFailure(null)
     startTransition(async () => {
@@ -112,7 +107,7 @@ export const useFamilyEdit = () => {
   }
 
   return {
-    /** Who signs the changes; `null` until the visitor says who they are. */
+    /** Who signs the changes: who the visitor said they are, or someone of the family. */
     author,
     /** A reader's link shows the tree without changing it. */
     canEdit: response.role !== 'reader',
@@ -120,9 +115,7 @@ export const useFamilyEdit = () => {
     dismissFailure: () => setFailure(null),
     failure,
     isPending,
-    save,
-    /** Opens a change: at once for a visitor who said who they are, after "Who are you?" for anyone else. */
-    signFirst
+    save
   }
 }
 

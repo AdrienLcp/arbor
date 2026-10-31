@@ -12,8 +12,7 @@ import {
   editPersonDialog,
   formDialog,
   personSheet,
-  treePage,
-  whoAmIDialog
+  treePage
 } from './support/locators'
 
 const PHONE = { height: 844, width: 390 }
@@ -129,7 +128,6 @@ test('[e2e] a sheet adds a couple’s child, a second spouse, an approximate dat
   await expect(relativeSheet.photo(PHOTO_CAPTION)).toBeVisible()
 
   await relativeSheet.editPerson.click()
-  await whoAmIDialog(relative).person(FIRST_SPOUSE_NAME).click()
   const relativeEdit = editPersonDialog(relative)
   await relativeEdit.birthYear.fill('1947')
   await openSheetFromTree(founder, FOUNDER_NAME)

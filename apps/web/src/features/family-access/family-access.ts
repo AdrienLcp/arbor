@@ -7,7 +7,11 @@ import {
   ROLES,
   type Role
 } from '@arbor/protocol/access'
-import { type Author, authorSchema } from '@arbor/protocol/change-log'
+import {
+  ANONYMOUS_AUTHOR,
+  type Author,
+  declaredAuthorSchema
+} from '@arbor/protocol/change-log'
 import { DEMO_FAMILY_ID, DEMO_FAMILY_KEY } from '@arbor/protocol/demo-family'
 import type { EntityId } from '@arbor/protocol/entity-id'
 
@@ -21,7 +25,7 @@ export const ONLOOKER = 'onlooker'
 export const familyAccessSchema = z.object({
   keys: z.partialRecord(z.enum(ROLES), accessKeySchema),
   /** Who this device's visitor said they are; `null` until they answer. */
-  me: z.union([authorSchema, z.literal(ONLOOKER)]).nullable(),
+  me: z.union([declaredAuthorSchema, z.literal(ONLOOKER)]).nullable(),
   /** The family's name the last time it opened, for the list of trees on the landing page. */
   name: z.string().nullable(),
   /** A key just received in a link, until the family accepts or refuses it. */
@@ -29,9 +33,9 @@ export const familyAccessSchema = z.object({
 })
 export type FamilyAccess = z.infer<typeof familyAccessSchema>
 
-/** Who signs the visitor's changes: their answer to "Who are you?", `null` while they gave none or only look. */
-export const signingAuthor = (me: FamilyAccess['me']): Author | null =>
-  me === null || me === ONLOOKER ? null : me
+/** Who signs the visitor's changes: their answer to "Who are you?", or someone of the family while they gave none. */
+export const signingAuthor = (me: FamilyAccess['me']): Author =>
+  me === null || me === ONLOOKER ? ANONYMOUS_AUTHOR : me
 
 /** The person the visitor said they are, `null` for an onlooker, a newcomer or someone not in the tree yet. */
 export const personIdOfMe = (me: FamilyAccess['me']): EntityId | null =>

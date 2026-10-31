@@ -77,7 +77,7 @@ export const rememberedMe = (familyId: FamilyId): FamilyAccess['me'] =>
   rememberedFamily(familyId).me
 
 /** Who signs a change made now, read at the moment it is sent: an answer given since the last render counts. */
-export const rememberedAuthor = (familyId: FamilyId): Author | null =>
+export const rememberedAuthor = (familyId: FamilyId): Author =>
   signingAuthor(rememberedMe(familyId))
 
 /** Remembers the visitor's answer to "Who are you?": it signs every change they make from this device. */

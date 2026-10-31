@@ -14,7 +14,6 @@ import { FormDialog } from '@/presentation/components/form-dialog'
 import {
   CheckIcon,
   CopyIcon,
-  PersonIcon,
   PreviousIcon,
   QrCodeIcon,
   SendIcon
@@ -196,10 +195,6 @@ const SendSheetSteps: React.FC<SendSheetStepsProps> = ({
             title={translate('sheet.send.qr')}
           />
         </Button>
-        <p className='send-sheet-note'>
-          <PersonIcon aria-hidden='true' />
-          {translate('sheet.send.note')}
-        </p>
       </section>
     </div>
   )

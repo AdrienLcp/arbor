@@ -122,6 +122,7 @@ export const EN_DICTIONARY = defineDictionary({
     title: 'The bin'
   },
   common: {
+    anonymousAuthor: 'Someone in the family',
     failed:
       'That did not work. Check your Internet connection, then try again.',
     home: 'Back to the home page',
@@ -885,7 +886,6 @@ export const EN_DICTIONARY = defineDictionary({
       message:
         'Hello! I’m completing our family tree. Could you add what you know about {name}? A date, a photo, a memory… The link opens their sheet directly.',
       messageLabel: 'The message',
-      note: 'Before their first change, the tree will ask who they are. Everything stays in the history.',
       open: 'Send to be completed',
       preview: 'What they will receive',
       qr: 'Show a QR code',
@@ -1097,14 +1097,10 @@ export const EN_DICTIONARY = defineDictionary({
     place: 'Place of the union'
   },
   whoAmI: {
-    beforeEdit: 'Before you change anything: who are you in this tree?',
-    intro:
-      'So the family knows who made each change, tap your name: it will sign them.',
     noMatch: 'Nobody in the tree has that name.',
     notInTree: {
       action: 'I am not in the tree',
       field: 'Your first and last name',
-      hint: 'They will sign your changes until you have your own sticker.',
       missing: 'Write your first and last name.',
       submit: 'Continue'
     },

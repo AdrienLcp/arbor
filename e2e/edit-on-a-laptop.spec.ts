@@ -1,18 +1,12 @@
 import { expect, test } from '@playwright/test'
 
 import { openHydrated } from './support/journeys'
-import {
-  editPersonDialog,
-  formDialog,
-  personSheet,
-  whoAmIDialog
-} from './support/locators'
+import { editPersonDialog, formDialog, personSheet } from './support/locators'
 
 /** A common laptop screen: shorter than the person form, which must scroll inside its floating panel. */
 const LAPTOP = { height: 768, width: 1366 }
 
 const DEMO_FAMILY_PATH = '/f/dem0fam1ym0re100'
-const VISITOR_NAME = 'Michel Morel'
 const RENAMED_GIVEN_NAMES = 'Auguste Jean'
 
 test('[e2e] on a laptop, the person form scrolls to its save button and saves', async ({
@@ -23,11 +17,6 @@ test('[e2e] on a laptop, the person form scrolls to its save button and saves', 
   await openHydrated(page, `${DEMO_FAMILY_PATH}/tree/auguste-morel`)
 
   await personSheet(page).editPerson.click()
-  await expect(
-    whoAmIDialog(page).beforeEdit,
-    'a visitor who never said who they are is asked before their first change'
-  ).toBeVisible()
-  await whoAmIDialog(page).person(VISITOR_NAME).click()
   const dialog = editPersonDialog(page)
   await dialog.givenNames.fill(RENAMED_GIVEN_NAMES)
   await dialog.save.click()

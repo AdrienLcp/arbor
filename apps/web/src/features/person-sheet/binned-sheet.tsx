@@ -46,9 +46,7 @@ export const BinnedSheet: React.FC<{ personId: EntityId }> = ({ personId }) => {
         <Button
           isPending={edit.isPending}
           onPress={() =>
-            edit.signFirst(() =>
-              edit.save([{ personId, type: 'person.restore' }], () => undefined)
-            )
+            edit.save([{ personId, type: 'person.restore' }], () => undefined)
           }
         >
           <UnbinIcon aria-hidden='true' />

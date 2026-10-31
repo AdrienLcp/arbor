@@ -72,15 +72,11 @@ export const SheetActions: React.FC<SheetActionsProps> = ({
 
   return (
     <div className='sheet-actions'>
-      <Button isBlock onPress={() => edit.signFirst(() => setAdding('choose'))}>
+      <Button isBlock onPress={() => setAdding('choose')}>
         <AddIcon aria-hidden='true' />
         {translate('add.open')}
       </Button>
-      <Button
-        isBlock
-        onPress={() => edit.signFirst(() => setIsEditing(true))}
-        variant='ghost'
-      >
+      <Button isBlock onPress={() => setIsEditing(true)} variant='ghost'>
         <EditIcon aria-hidden='true' />
         {translate('edit.person.open')}
       </Button>

@@ -1,4 +1,8 @@
-import type { Author, ChangeLogEntry } from '@arbor/protocol/change-log'
+import {
+  type Author,
+  authorKey,
+  type ChangeLogEntry
+} from '@arbor/protocol/change-log'
 
 /** Consecutive entries one person made: the history shows them under a single signature. */
 export type AuthorRun = {
@@ -10,12 +14,6 @@ export type HistoryDay = {
   dayKey: string
   runs: AuthorRun[]
 }
-
-/** The same signature reads the same: a person of the tree by their id, anyone else by the name they typed. */
-export const authorKey = (author: Author): string =>
-  author.kind === 'person'
-    ? `person:${author.personId}`
-    : `named:${author.name}`
 
 /** Entries newest first, cut into days, then into runs of one author within a day. */
 export const historyDays = ({

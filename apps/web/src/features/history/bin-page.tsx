@@ -160,7 +160,7 @@ export const BinPage: React.FC = () => {
                   <Button
                     isDisabled={edit.isPending && restoring !== id}
                     isPending={edit.isPending && restoring === id}
-                    onPress={() => edit.signFirst(() => takeOut(id))}
+                    onPress={() => takeOut(id)}
                     variant='ghost'
                   >
                     <UnbinIcon aria-hidden='true' />

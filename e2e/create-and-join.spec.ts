@@ -38,13 +38,14 @@ test('[e2e] a family is created, joined through its link, renamed, and locked ou
   ).toBeVisible()
   await expect(
     treePage(relative).sayWhoYouAre,
-    'the tree invites the relative to say who they are, without asking first'
-  ).toBeVisible()
+    'the tree asks the relative nothing: the link is enough to change it'
+  ).toBeHidden()
+  await familyAppBar(relative).settings.click()
   await treePage(relative).sayWhoYouAre.click()
   await whoAmIDialog(relative).person(FOUNDER_NAME).click()
   await expect(
     treePage(relative).youAre(FOUNDER_NAME),
-    'the relative’s choice is remembered'
+    'the relative may still say who they are, and the choice is remembered'
   ).toBeVisible()
 
   await familyAppBar(founder).settings.click()

@@ -10,7 +10,6 @@ import type { RecordedOperations } from '@arbor/protocol/routes'
 
 import { rememberedAuthor } from '@/features/family-access/remembered-families'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
-import { useWhoAmI } from '@/features/family-pages/who-am-i-provider'
 import {
   type ApiFailure,
   restoreFamily,
@@ -48,7 +47,6 @@ export const useUndo = () => {
   const refreshFamily = useRefreshRouteData()
   const [isPending, startTransition] = useTransition()
   const [failure, setFailure] = useState<UndoFailure | null>(null)
-  const { signFirst } = useWhoAmI()
 
   const send = (
     write: (
@@ -57,7 +55,6 @@ export const useUndo = () => {
     onDone: () => void
   ) => {
     const signer = rememberedAuthor(familyId)
-    if (signer === null) return
     setFailure(null)
     startTransition(async () => {
       const written = await write(signer)
@@ -106,8 +103,6 @@ export const useUndo = () => {
     failure,
     isPending,
     restore,
-    /** Opens an undo or a restore: at once for a visitor who said who they are, after "Who are you?" for anyone else. */
-    signFirst,
     undo
   }
 }

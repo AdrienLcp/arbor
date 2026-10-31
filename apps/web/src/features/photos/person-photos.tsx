@@ -93,7 +93,7 @@ export const PersonPhotos: React.FC<PersonPhotosProps> = ({
             acceptedFileTypes={['image/*']}
             onSelect={(files) => {
               const file = files?.[0]
-              if (file !== undefined) edit.signFirst(() => setPicked(file))
+              if (file !== undefined) setPicked(file)
             }}
           >
             <Button className='photo-drop-slot' variant='quiet'>

@@ -138,7 +138,7 @@ export const useTreeLink = ({
     },
     current,
     linking,
-    start: () => edit.signFirst(() => dispatch({ type: 'start' }))
+    start: () => dispatch({ type: 'start' })
   }
 }
 

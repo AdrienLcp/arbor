@@ -12,8 +12,15 @@ import { useWhoAmI } from './who-am-i-provider'
 
 import './me-summary.sass'
 
-/** Who this device's visitor said they are, and the way to change it; a visitor who never said, or whose person left the tree, is invited to. */
-export const MeSummary: React.FC = () => {
+type MeSummaryProps = {
+  /** Whether a visitor who never said who they are, or whose person left the tree, is invited to; the tree's head stays quiet about it. */
+  invitesToSay?: boolean
+}
+
+/** Who this device's visitor said they are, and the way to change it. */
+export const MeSummary: React.FC<MeSummaryProps> = ({
+  invitesToSay = false
+}) => {
   const translate = useTranslate()
   const { familyId } = useOpenFamily()
   const { ask } = useWhoAmI()
@@ -23,6 +30,7 @@ export const MeSummary: React.FC = () => {
     case 'reader':
       return <p className='me-summary'>{translate('me.reader')}</p>
     case 'unsaid':
+      if (!invitesToSay) return null
       return (
         <p className='me-summary'>
           <PersonIcon aria-hidden='true' className='me-summary-icon' />

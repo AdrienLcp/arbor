@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import type { Author } from '@arbor/protocol/change-log'
+import { ANONYMOUS_AUTHOR, type Author } from '@arbor/protocol/change-log'
 import { DEMO_FAMILY_ID, DEMO_FAMILY_KEY } from '@arbor/protocol/demo-family'
 
 import {
@@ -97,8 +97,8 @@ describe('family access', () => {
     }
     const named: Author = { kind: 'named', name: 'Claire Morel' }
 
-    expect(signingAuthor(null)).toBeNull()
-    expect(signingAuthor(ONLOOKER)).toBeNull()
+    expect(signingAuthor(null)).toEqual(ANONYMOUS_AUTHOR)
+    expect(signingAuthor(ONLOOKER)).toEqual(ANONYMOUS_AUTHOR)
     expect(signingAuthor(person)).toEqual(person)
     expect(signingAuthor(named)).toEqual(named)
   })

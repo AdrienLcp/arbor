@@ -123,6 +123,7 @@ export const FR_DICTIONARY = defineDictionary({
     title: 'La corbeille'
   },
   common: {
+    anonymousAuthor: 'Quelqu’un de la famille',
     failed:
       'Ça n’a pas marché. Vérifiez votre connexion à Internet, puis réessayez.',
     home: 'Revenir à l’accueil',
@@ -890,7 +891,6 @@ export const FR_DICTIONARY = defineDictionary({
       message:
         'Bonjour ! Je complète notre arbre de famille. Peux-tu ajouter ce que tu sais sur {name} ? Une date, une photo, un souvenir… Le lien ouvre directement sa fiche.',
       messageLabel: 'Le message',
-      note: 'Avant sa première modification, l’arbre demandera à la personne qui elle est. Tout restera dans l’historique.',
       open: 'Envoyer à compléter',
       preview: 'Ce que la personne recevra',
       qr: 'Montrer un QR code',
@@ -1119,14 +1119,10 @@ export const FR_DICTIONARY = defineDictionary({
     place: 'Lieu de l’union'
   },
   whoAmI: {
-    beforeEdit: 'Avant de modifier : qui êtes-vous dans l’arbre ?',
-    intro:
-      'Pour que la famille sache qui a fait chaque modification, touchez votre nom : il les signera.',
     noMatch: 'Personne ne porte ce nom dans l’arbre.',
     notInTree: {
       action: 'Je ne suis pas dans l’arbre',
       field: 'Votre prénom et votre nom',
-      hint: 'Ils signeront vos modifications, en attendant que vous ayez votre vignette.',
       missing: 'Écrivez votre prénom et votre nom.',
       submit: 'Continuer'
     },

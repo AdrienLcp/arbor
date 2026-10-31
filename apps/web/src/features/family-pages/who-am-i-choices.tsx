@@ -1,7 +1,7 @@
 import type React from 'react'
 import { useState } from 'react'
 
-import type { Author } from '@arbor/protocol/change-log'
+import type { DeclaredAuthor } from '@arbor/protocol/change-log'
 import type { EntityId } from '@arbor/protocol/entity-id'
 
 import { personName } from '@/features/people/person-name'
@@ -29,7 +29,7 @@ type WhoAmIChoicesProps = {
   /** The person the visitor said they are last time, marked in the list. */
   myPersonId: EntityId | null
   /** The visitor's answer: their own person, or the name they sign with until they have a sticker. */
-  onChoose: (me: Author) => void
+  onChoose: (me: DeclaredAuthor) => void
 }
 
 /** The living people of the tree to tap one's own name in, and "I am not in the tree" to sign with a typed name instead. */
@@ -98,7 +98,6 @@ export const WhoAmIChoices: React.FC<WhoAmIChoicesProps> = ({
             <TextField
               autoComplete='name'
               autoFocus
-              description={translate('whoAmI.notInTree.hint')}
               errorMessage={translate('whoAmI.notInTree.missing')}
               isRequired
               label={translate('whoAmI.notInTree.field')}

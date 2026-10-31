@@ -1,11 +1,10 @@
-import type { ChangeLogEntry } from '@arbor/protocol/change-log'
+import { authorKey, type ChangeLogEntry } from '@arbor/protocol/change-log'
 
 import { useAuthorName } from '@/features/family-edits/use-author-name'
 import { useLocale, useTranslate } from '@/presentation/i18n/i18n-context'
 import { useWordList } from '@/presentation/i18n/word-list'
 
 import type { NamedPerson, StoryLine } from './entry-story'
-import { authorKey } from './history-days'
 import { ofName, thatName } from './of-name'
 import { useEntryClock } from './use-entry-clock'
 

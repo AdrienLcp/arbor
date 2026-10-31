@@ -172,9 +172,7 @@ export const HistoryPage: React.FC = () => {
                     authorName={authorName(run.author)}
                     key={run.entries[0]?.revision}
                     onUndoAll={() =>
-                      undo.signFirst(() =>
-                        setChoosing(undoable.map(({ revision }) => revision))
-                      )
+                      setChoosing(undoable.map(({ revision }) => revision))
                     }
                     undoableCount={undoable.length}
                   >
@@ -185,18 +183,12 @@ export const HistoryPage: React.FC = () => {
                         lines={stories.get(entry.revision)?.lines ?? []}
                         onRestore={
                           canRestore(entry)
-                            ? () =>
-                                undo.signFirst(() =>
-                                  setRestoringTo(entry.revision)
-                                )
+                            ? () => setRestoringTo(entry.revision)
                             : null
                         }
                         onUndo={
                           canUndo(entry)
-                            ? () =>
-                                undo.signFirst(() =>
-                                  setChoosing([entry.revision])
-                                )
+                            ? () => setChoosing([entry.revision])
                             : null
                         }
                         takenBackBy={takenBackBy(entry)}

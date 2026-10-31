@@ -39,7 +39,7 @@ export const EditUnionAction: React.FC<EditUnionActionProps> = ({
     <>
       <Button
         className='sheet-union-edit'
-        onPress={() => edit.signFirst(() => setIsEditing(true))}
+        onPress={() => setIsEditing(true)}
         variant='link'
       >
         <EditIcon aria-hidden='true' />

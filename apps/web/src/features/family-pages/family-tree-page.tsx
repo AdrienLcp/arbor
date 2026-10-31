@@ -151,7 +151,6 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   const isPhone = useMediaQuery(PHONE_SCREEN)
   const sheet = useChildPage()
   const sheetPersonId = useSheetPersonId()
-  const { answeredBeforeEdit } = useWhoAmI()
   const { setFocus, setScope, showAround, view } = useTreeView({
     fallbackFocusId,
     initialFocusId,
@@ -159,18 +158,17 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     myPersonId,
     // A computer's side sheet lies over the tree, which stays still beneath it; a phone's bottom sheet would hide the person touched, so the tree turns to them.
     shownPersonId: isPhone ? sheetPersonId : null,
-    turnsToMe: sheetPersonId === null && !answeredBeforeEdit
+    turnsToMe: sheetPersonId === null
   })
   const faces = usePersonFaces()
   const edit = useFamilyEdit()
   const [adding, setAdding] = useState<Adding | null>(null)
   /** Whom the add dialog adds to; `null` for the person in the middle of the tree. */
   const [addingToId, setAddingToId] = useState<EntityId | null>(null)
-  const startAdding = (relation: Adding, personId: EntityId | null) =>
-    edit.signFirst(() => {
-      setAddingToId(personId)
-      setAdding(relation)
-    })
+  const startAdding = (relation: Adding, personId: EntityId | null) => {
+    setAddingToId(personId)
+    setAdding(relation)
+  }
   const link = useTreeLink({
     edit,
     family,

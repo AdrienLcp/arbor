@@ -37,16 +37,11 @@ export const familyAppBar = (page: Page) => ({
   share: page.getByRole('banner').getByRole('link', { name: 'Share' })
 })
 
-/** "Who are you?" over the tree: asked before the first change, or when the visitor offers to say it. */
-export const whoAmIDialog = (page: Page) => {
-  const dialog = page.locator('.who-am-i-dialog')
-  return {
-    beforeEdit: page.getByRole('heading', {
-      name: 'Before you change anything: who are you in this tree?'
-    }),
-    person: (name: string) => dialog.getByRole('button', { name })
-  }
-}
+/** "Who are you?" over the page, when the visitor offers to say it. */
+export const whoAmIDialog = (page: Page) => ({
+  person: (name: string) =>
+    page.locator('.who-am-i-dialog').getByRole('button', { name })
+})
 
 export const familySettingsPage = (page: Page) => ({
   confirmDelete: formDialog(page).getByRole('button', {
@@ -76,7 +71,7 @@ export const treePage = (page: Page) => ({
   find: page.getByRole('combobox', { name: 'Find someone' }),
   /** Touching a person on the tree opens their sheet. */
   person: (name: string) => page.getByRole('button', { name }).first(),
-  /** The invitation of a visitor who has not said who they are yet. */
+  /** The invitation of a visitor who has not said who they are yet, on the settings page. */
   sayWhoYouAre: page.getByRole('button', { name: 'Say who you are' }),
   /** The same invitation on a phone held upright, a row of the bar's "More" menu. */
   sayWhoYouAreInMenu: page.getByRole('menuitem', { name: /Say who you are/ }),

@@ -55,7 +55,6 @@ export const WhoAmIPage: React.FC = () => {
         <h1 className='who-am-i-title' id={titleId}>
           {translate('whoAmI.title')}
         </h1>
-        <p className='who-am-i-intro'>{translate('whoAmI.intro')}</p>
         <DemoNotice familyId={familyId} />
       </div>
       <WhoAmIChoices myPersonId={personIdOfMe(me)} onChoose={choose}>

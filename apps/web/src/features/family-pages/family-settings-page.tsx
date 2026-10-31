@@ -36,7 +36,7 @@ export const FamilySettingsPage: React.FC = () => {
             {translate('familySettings.device.title')}
           </h2>
           <div className='settings-item'>
-            <MeSummary />
+            <MeSummary invitesToSay />
           </div>
           <div className='settings-item'>
             <ThemeSwitch />
