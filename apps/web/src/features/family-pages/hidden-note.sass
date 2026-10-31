@@ -1,0 +1,22 @@
+@use '../../presentation/styles/typography'
+
+@layer components
+  .hidden-note
+    align-items: center
+    display: flex
+    gap: var(--space-s)
+    text-wrap: pretty
+
+    .hidden-note-icon
+      flex: none
+      height: 1.25rem
+      width: 1.25rem
+
+    // A button that reads like the sentence's link: inline, in the sentence's own type, its padding widening the target.
+    .button.hidden-note-choose
+      color: var(--ink)
+      display: inline
+      font: inherit
+      @include typography.strong
+      min-height: 0
+      padding: 0.6em 0

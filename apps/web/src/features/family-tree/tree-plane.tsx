@@ -17,11 +17,13 @@ import { personName } from '@/features/people/person-name'
 import { PortraitImage } from '@/features/photos/portrait-image'
 import { generationClass } from '@/presentation/components/generation-class'
 import { GhostSlot } from '@/presentation/components/ghost-slot'
+import { CheckIcon } from '@/presentation/components/icons'
 import { monogramOf } from '@/presentation/components/monogram'
 import { SlotButton } from '@/presentation/components/slot-button'
 import { Sticker } from '@/presentation/components/sticker'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
+import { hiddenConnectors, isCardHidden } from './hidden-connectors'
 import { RelationWords } from './relation-words'
 import { pathOf, TreeLines } from './tree-lines'
 import type { TreeScene } from './tree-scene'
@@ -41,6 +43,10 @@ export type TreePlaneProps = {
   /** The card arrow keys and Tab land on: the only one in the tab order. */
   activeKey: string | null
   focusId: EntityId
+  /** Children whose other parent the visitor chose to hide: the empty slot beside them says so, and offers no adding. */
+  hiddenParentChildIds: ReadonlySet<EntityId>
+  /** The people hidden while choosing who to show: each card carries a tick, a press toggles it, the hidden fade in place. `null` outside that mode. */
+  hiddenWhileChoosing: ReadonlySet<EntityId> | null
   /** Describes how to move between the stickers, on each of them. */
   instructionsId: string
   /** How two people are related, traced over the tree with everyone else faded; `null` when nothing is lit. */
@@ -64,6 +70,8 @@ export type TreePlaneProps = {
 export const TreePlane: React.FC<TreePlaneProps> = ({
   activeKey,
   focusId,
+  hiddenParentChildIds,
+  hiddenWhileChoosing,
   instructionsId,
   litPath,
   onArrowKey,
@@ -82,6 +90,13 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
     litPath === null ? null : kinHighlightOf(scene.layout, litPath)
   const isUnlit = (card: TreeCard): boolean =>
     highlight !== null && !highlight.cardKeys.has(card.key)
+  const isChoosing = hiddenWhileChoosing !== null
+  const isFaded = (card: TreeCard): boolean =>
+    hiddenWhileChoosing !== null && isCardHidden(card, hiddenWhileChoosing)
+  const hiddenLines =
+    hiddenWhileChoosing === null
+      ? new Set<never>()
+      : hiddenConnectors(scene.layout, hiddenWhileChoosing)
   const placeOf = ({
     x,
     y
@@ -118,12 +133,24 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
   })
 
   const cardOf = (card: TreeCard) => {
-    const cardClassName = classNames('tree-card', isUnlit(card) && 'unlit')
+    const cardClassName = classNames(
+      'tree-card',
+      isUnlit(card) && 'unlit',
+      isFaded(card) && 'is-hidden'
+    )
 
     if (card.kind === 'unknown-parent') {
       const [childId] = card.childIds
       const words = unknownParentWords(calledName(childId))
-      if (onPressUnknownParent === undefined || childId === undefined) {
+      const isParentHidden = card.childIds.some((id) =>
+        hiddenParentChildIds.has(id)
+      )
+      if (
+        onPressUnknownParent === undefined ||
+        childId === undefined ||
+        isChoosing ||
+        isParentHidden
+      ) {
         return (
           <GhostSlot
             className={cardClassName}
@@ -131,7 +158,11 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
             hint={words.hint}
             key={card.key}
             style={{ ...SLOT_SIZE, ...placeOf(card) }}
-            title={translate('tree.unknownParent.title')}
+            title={translate(
+              isParentHidden
+                ? 'tree.choose.hiddenParent'
+                : 'tree.unknownParent.title'
+            )}
           />
         )
       }
@@ -177,6 +208,7 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
                   .join(', ')
               : undefined
         }
+        aria-pressed={isChoosing ? !isFaded(card) : undefined}
         className={cardClassName}
         key={card.key}
         onPress={() => onPressPerson(card)}
@@ -208,6 +240,11 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
             surname={person.surname}
           />
         )}
+        {isChoosing ? (
+          <span aria-hidden='true' className='tree-tick'>
+            <CheckIcon className='tree-tick-mark' />
+          </span>
+        ) : null}
       </SlotButton>
     )
 
@@ -222,7 +259,11 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
 
   return (
     <div
-      className={classNames('tree-plane', highlight !== null && 'is-lit')}
+      className={classNames(
+        'tree-plane',
+        highlight !== null && 'is-lit',
+        isChoosing && 'is-choosing'
+      )}
       style={{
         '--plane-height': `${scene.height}px`,
         '--plane-width': `${scene.width}px`
@@ -241,7 +282,7 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
           }}
         />
       ))}
-      <TreeLines scene={scene} />
+      <TreeLines hiddenLines={hiddenLines} scene={scene} />
       {highlight === null ? null : (
         <svg
           aria-hidden='true'
@@ -261,7 +302,7 @@ export const TreePlane: React.FC<TreePlaneProps> = ({
         </svg>
       )}
       {scene.layout.cards.map(cardOf)}
-      <RelationWords scene={scene} />
+      <RelationWords hiddenLines={hiddenLines} scene={scene} />
     </div>
   )
 }

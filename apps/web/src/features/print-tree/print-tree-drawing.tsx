@@ -2,6 +2,7 @@ import type React from 'react'
 
 import type { EntityId } from '@arbor/protocol/entity-id'
 
+import { useHiddenPeople } from '@/features/family-pages/hidden-people-provider'
 import { lineStyleOf } from '@/features/family-tree/line-style'
 import type { PersonFace } from '@/features/family-tree/person-face'
 import {
@@ -91,6 +92,7 @@ export const PrintTreeDrawing: React.FC<PrintTreeDrawingProps> = ({
   const translate = useTranslate()
   const wordsOf = useRelationWords({ isDated: content.hasDates })
   const unknownParentWords = useUnknownParentWords()
+  const { hiddenParentChildIds } = useHiddenPeople()
   const calledName = (personId: EntityId | undefined): string | null => {
     const face = personId === undefined ? undefined : faces.get(personId)
     return face === undefined ? null : face.givenNames || face.name
@@ -120,7 +122,13 @@ export const PrintTreeDrawing: React.FC<PrintTreeDrawingProps> = ({
             <PrintGhostSlot
               hint={unknownParentWords(calledName(card.childIds[0])).hint}
               key={card.key}
-              title={translate('tree.unknownParent.title')}
+              title={translate(
+                card.childIds.some((childId) =>
+                  hiddenParentChildIds.has(childId)
+                )
+                  ? 'tree.choose.hiddenParent'
+                  : 'tree.unknownParent.title'
+              )}
               x={card.x}
               y={card.y}
             />

@@ -1,7 +1,10 @@
 import { classNames } from '@adrienlcp/react'
 import type React from 'react'
 
-import type { TreePoint } from '@arbor/core/tree-layout/tree-layout'
+import type {
+  TreeConnector,
+  TreePoint
+} from '@arbor/core/tree-layout/tree-layout'
 
 import { type LineStyle, lineStyleOf } from './line-style'
 import type { TreeScene } from './tree-scene'
@@ -26,21 +29,38 @@ export const cutPath = ({ x, y }: TreePoint): string =>
     .join('')
 
 /** One relation line, stroked for its kind; an adoption is a double line, a paper core in a wide stroke. */
-export const RelationLine: React.FC<{ path: string; style: LineStyle }> = ({
-  path,
-  style
-}) =>
+export const RelationLine: React.FC<{
+  isHidden?: boolean
+  path: string
+  style: LineStyle
+}> = ({ isHidden = false, path, style }) =>
   style === 'adoption' ? (
     <>
-      <path className='tree-line adoption' d={path} />
-      <path className='tree-line adoption-core' d={path} />
+      <path
+        className={classNames('tree-line adoption', isHidden && 'is-hidden')}
+        d={path}
+      />
+      <path
+        className={classNames(
+          'tree-line adoption-core',
+          isHidden && 'is-hidden'
+        )}
+        d={path}
+      />
     </>
   ) : (
-    <path className={classNames('tree-line', style)} d={path} />
+    <path
+      className={classNames('tree-line', style, isHidden && 'is-hidden')}
+      d={path}
+    />
   )
 
 /** Every relation line of the scene, drawn under the stickers. */
-export const TreeLines: React.FC<{ scene: TreeScene }> = ({ scene }) => (
+export const TreeLines: React.FC<{
+  /** Lines to someone unticked while choosing who to show, drawn faded. */
+  hiddenLines: ReadonlySet<TreeConnector>
+  scene: TreeScene
+}> = ({ hiddenLines, scene }) => (
   <svg
     aria-hidden='true'
     className='tree-lines'
@@ -50,6 +70,7 @@ export const TreeLines: React.FC<{ scene: TreeScene }> = ({ scene }) => (
     <g transform={`translate(${-scene.origin.x} ${-scene.origin.y})`}>
       {scene.layout.connectors.map((connector) => (
         <RelationLine
+          isHidden={hiddenLines.has(connector)}
           key={`${connector.kind}${pathOf(connector.points)}`}
           path={pathOf(connector.points)}
           style={lineStyleOf(connector)}

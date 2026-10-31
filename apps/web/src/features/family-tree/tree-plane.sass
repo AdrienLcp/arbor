@@ -81,3 +81,46 @@
     &.is-lit
       .tree-lines, .relation-words, .tree-card.unlit
         opacity: 0.32
+
+    // Choosing who to show: a tick on every card, the same size on screen whatever the zoom; the unticked fade in place, nothing moves until the choice ends.
+    .tree-tick
+      align-items: center
+      background: var(--action)
+      border: calc(var(--stroke-bold) / var(--zoom, 1)) solid var(--ink)
+      border-radius: calc(var(--radius-box) / var(--zoom, 1))
+      color: var(--on-action)
+      display: flex
+      height: calc(1.75rem / var(--zoom, 1))
+      inset-block-start: calc(-0.875rem / var(--zoom, 1))
+      inset-inline-start: calc(-0.875rem / var(--zoom, 1))
+      justify-content: center
+      position: absolute
+      transition: background-color var(--transition-fast) var(--ease-out)
+      width: calc(1.75rem / var(--zoom, 1))
+
+    .tree-tick-mark
+      height: 78%
+      stroke-width: 3
+      transition: opacity var(--transition-fast) var(--ease-out)
+      width: 78%
+
+    &.is-choosing
+      .tree-card > :not(.tree-tick)
+        transition: opacity var(--transition-fast) var(--ease-out), filter var(--transition-fast) var(--ease-out)
+
+      .tree-card.is-hidden
+        > :not(.tree-tick)
+          filter: grayscale(1)
+          opacity: 0.3
+
+        .tree-tick
+          background: var(--paper)
+
+        .tree-tick-mark
+          opacity: 0
+
+      .tree-line.is-hidden
+        opacity: 0.16
+
+      .relation-words.is-hidden
+        opacity: 0.25

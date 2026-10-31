@@ -12,6 +12,11 @@
     .tree-instructions
       @include accessibility.visually-hidden
 
+    // Choosing who to show: an ink frame says the canvas is in another mode, where a press ticks instead of opening.
+    &.is-choosing
+      outline: var(--outline-thick) solid var(--ink)
+      outline-offset: calc(-1 * var(--outline-thick))
+
     .tree-zoom
       background: var(--paper)
       border: var(--stroke-thin) solid var(--ghost-soft)

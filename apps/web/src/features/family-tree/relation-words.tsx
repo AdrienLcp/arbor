@@ -76,7 +76,11 @@ export const useRelationWords = ({
 }
 
 /** The words on the relation lines — "married 1957", "adoption" — so a link reads without its stroke. */
-export const RelationWords: React.FC<{ scene: TreeScene }> = ({ scene }) => {
+export const RelationWords: React.FC<{
+  /** Lines to someone unticked while choosing who to show: their words fade with them. */
+  hiddenLines: ReadonlySet<TreeConnector>
+  scene: TreeScene
+}> = ({ hiddenLines, scene }) => {
   const wordsOf = useRelationWords()
 
   return scene.layout.connectors.map((connector) => {
@@ -86,7 +90,11 @@ export const RelationWords: React.FC<{ scene: TreeScene }> = ({ scene }) => {
     return (
       <span
         aria-hidden='true'
-        className={classNames('relation-words', words.isDashed && 'dashed')}
+        className={classNames(
+          'relation-words',
+          words.isDashed && 'dashed',
+          hiddenLines.has(connector) && 'is-hidden'
+        )}
         key={words.key}
         style={{
           '--x': `${words.at.x - scene.origin.x}px`,

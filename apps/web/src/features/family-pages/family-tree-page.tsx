@@ -6,8 +6,10 @@ import type { EntityId } from '@arbor/protocol/entity-id'
 
 import type { FamilyState } from '@arbor/core/family/family-state'
 import { familyStateOfSnapshot } from '@arbor/core/family/family-state-of-snapshot'
+import { withoutPeople } from '@arbor/core/family/without-people'
 import { describeKinship } from '@arbor/core/kinship/describe-kinship'
 import type { KinPath } from '@arbor/core/kinship/kinship'
+import { linkBackOf } from '@arbor/core/relatives/hidden-people'
 import { unplacedPeople } from '@arbor/core/relatives/unplaced-people'
 import { familyLineage } from '@arbor/core/tree-layout/family-lineage'
 
@@ -50,17 +52,23 @@ import {
   BottomSheet
 } from '@/presentation/components/bottom-sheet'
 import { Button } from '@/presentation/components/button'
+import { ChooseIcon } from '@/presentation/components/icons'
 import { Main } from '@/presentation/components/main'
 import { PHONE_SCREEN } from '@/presentation/components/phone-screen'
 import { SegmentedControl } from '@/presentation/components/segmented-control'
 import { useMediaQuery } from '@/presentation/components/use-media-query'
+import { WithTooltip } from '@/presentation/components/with-tooltip'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useLocale, useTranslate } from '@/presentation/i18n/i18n-context'
 
+import { ChooseBar } from './choose-bar'
 import { FamilyAppBar } from './family-app-bar'
 import { useOpenFamily } from './family-loader'
+import { HiddenNote } from './hidden-note'
+import { useHiddenPeople } from './hidden-people-provider'
 import { MeSummary } from './me-summary'
 import { TreeMenuSections } from './tree-menu-sections'
+import { useHiddenPeopleWords } from './use-hidden-people-words'
 import { usePersonFaces } from './use-person-faces'
 import { useWhoAmI } from './who-am-i-provider'
 
@@ -69,7 +77,10 @@ import './family-tree-page.sass'
 type FamilyTreeProps = {
   /** Where the tree turns when the person in its middle is put in the bin. */
   fallbackFocusId: EntityId | null
+  /** The family as drawn: without the people this device hides, unless a kinship path or the choice of who to show needs everyone. */
   family: FamilyState
+  /** Children whose other parent is hidden on this device. */
+  hiddenParentChildIds: ReadonlySet<EntityId>
   initialFocusId: EntityId
   /** How two people are related, traced over the whole tree. */
   litKinship: LitKinship | null
@@ -138,6 +149,7 @@ const useLitKinship = (
 const FamilyTree: React.FC<FamilyTreeProps> = ({
   fallbackFocusId,
   family,
+  hiddenParentChildIds,
   initialFocusId,
   litKinship,
   myPersonId
@@ -159,6 +171,8 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     turnsToMe: sheetPersonId === null
   })
   const faces = usePersonFaces()
+  const choice = useHiddenPeople()
+  const hiddenWords = useHiddenPeopleWords(faces)
   const edit = useFamilyEdit()
   const [adding, setAdding] = useState<AddingStart | null>(null)
   /** Opens "Add someone" next to a person, the one in the middle of the tree by default. */
@@ -167,6 +181,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   const closeSheet = useGoBack(familyTreePathFor(familyId))
   const isSpread = isPhone && view.scope === 'spread'
   const lit = isSpread ? null : litKinship
+  const isChoosing = choice.isChoosing && lit === null
   const focusId = lit?.relativeId ?? view.focusId
   const focus = faces.get(focusId)
   const focusSheetPath = personSheetPathFor({ familyId, personId: focusId })
@@ -189,10 +204,11 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     isPhone,
     scope: view.scope
   })
-  /** The add button heads the canvas's tools: neither the list nor a page of the spread has them, nor a lit kinship. */
+  /** The add button heads the canvas's tools: neither the list nor a page of the spread has them, nor a lit kinship, nor the choice of who to show. */
   const canAdd =
     edit.canEdit &&
     lit === null &&
+    !isChoosing &&
     shownScope !== 'list' &&
     shownScope !== 'spread'
 
@@ -225,10 +241,50 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
         { label: translate('tree.scope.list'), value: 'list' as const }
       ]
 
+  /** A phone's page of the spread has no ticks: choosing starts on the list. */
+  const startChoosing = () => {
+    if (shownScope === 'spread') setScope('list')
+    choice.startChoosing()
+  }
+  /** Picking someone hidden in the search shows them again, with their link to the tree. */
+  const pickPerson = (personId: EntityId) => {
+    if (choice.hidden.hiddenIds.has(personId)) choice.toggle(personId)
+    showAround(personId)
+  }
+  const carriedLineOf = (personId: EntityId): string | null =>
+    choice.hidden.carriedIds.has(personId)
+      ? translate('tree.choose.carriedBy', {
+          names: hiddenWords.namesOf(
+            linkBackOf(familyLineage(family), choice.hidden, personId)
+          )
+        })
+      : null
+  const chooseTool =
+    isPhone && lit === null && !isChoosing ? (
+      <WithTooltip label={translate('tree.choose.action')} placement='top'>
+        <Button
+          aria-label={translate('tree.choose.action')}
+          onPress={startChoosing}
+          variant='quiet'
+        >
+          <ChooseIcon aria-hidden='true' />
+        </Button>
+      </WithTooltip>
+    ) : null
+
   const drawing = () => {
     if (shownScope === 'list') {
       return (
         <TreeOutline
+          choosing={
+            isChoosing
+              ? {
+                  carriedLineOf,
+                  hiddenIds: choice.hidden.hiddenIds,
+                  onToggle: choice.toggle
+                }
+              : null
+          }
           faces={faces}
           lineage={familyLineage(family)}
           onPressPerson={showAround}
@@ -260,15 +316,20 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
       <>
         <TreeCanvas
           addTool={
-            canAdd ? (
-              <TreeAddButton onPress={() => startAdding(null, focusId)} />
-            ) : undefined
+            <>
+              {canAdd ? (
+                <TreeAddButton onPress={() => startAdding(null, focusId)} />
+              ) : null}
+              {chooseTool}
+            </>
           }
           coveredBottomShare={sheet !== null && isPhone ? BOTTOM_SHEET_PEEK : 0}
           focusId={focusId}
+          hiddenParentChildIds={hiddenParentChildIds}
+          hiddenWhileChoosing={isChoosing ? choice.hidden.hiddenIds : null}
           label={title}
           litPath={lit?.path ?? null}
-          onPressPerson={openSheetOf}
+          onPressPerson={isChoosing ? choice.toggle : openSheetOf}
           onPressUnknownParent={
             edit.canEdit
               ? (childId) => startAdding('parent', childId)
@@ -284,7 +345,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
               : null
           }
         />
-        {focus === undefined || sheet !== null ? null : (
+        {focus === undefined || sheet !== null || isChoosing ? null : (
           <FocusCard face={focus} sheetPath={focusSheetPath} />
         )}
       </>
@@ -296,6 +357,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
       <FamilyAppBar
         menuSections={
           <TreeMenuSections
+            onChoose={lit === null && !isChoosing ? startChoosing : undefined}
             onViewChange={setScope}
             view={shownScope}
             // A lit kinship path is drawn on the whole family: its head offers only to clear it.
@@ -316,33 +378,73 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
             </h1>
             <div className='family-tree-notes'>
               <DemoNotice familyId={familyId} />
+              {isChoosing || lit !== null ? null : (
+                <HiddenNote
+                  count={choice.hidden.hiddenIds.size}
+                  onChoose={startChoosing}
+                />
+              )}
               <MeSummary />
             </div>
           </div>
-          <div className='family-tree-controls'>
-            {lit === null ? null : (
-              <Button
-                onPress={() => navigateTo(familyTreePathFor(familyId))}
-                variant='ghost'
-              >
-                {translate('kinship.clear')}
-              </Button>
-            )}
-            {lit !== null ? null : (
-              <SegmentedControl<TreeScope>
-                label={translate('tree.scope.label')}
-                onChange={setScope}
-                options={scopeOptions}
-                value={shownScope}
+          {isChoosing ? (
+            <ChooseBar
+              help={translate(
+                shownScope === 'list'
+                  ? 'tree.choose.helpList'
+                  : 'tree.choose.help'
+              )}
+              hiddenCount={choice.hidden.hiddenIds.size}
+              onDone={choice.stopChoosing}
+              onOpenList={
+                isPhone && shownScope !== 'list'
+                  ? () => setScope('list')
+                  : undefined
+              }
+              onShowEveryone={choice.showEveryone}
+              sentence={hiddenWords.sentenceOf(choice.lastChange)}
+            />
+          ) : (
+            <>
+              <div className='family-tree-controls'>
+                {lit === null ? null : (
+                  <Button
+                    onPress={() => navigateTo(familyTreePathFor(familyId))}
+                    variant='ghost'
+                  >
+                    {translate('kinship.clear')}
+                  </Button>
+                )}
+                {lit !== null ? null : (
+                  <SegmentedControl<TreeScope>
+                    label={translate('tree.scope.label')}
+                    onChange={setScope}
+                    options={scopeOptions}
+                    value={shownScope}
+                  />
+                )}
+                <PersonSearch
+                  onPick={pickPerson}
+                  people={[...faces.values()]}
+                />
+                {lit === null ? (
+                  <Button
+                    className='family-tree-choose'
+                    onPress={startChoosing}
+                    variant='ghost'
+                  >
+                    <ChooseIcon aria-hidden='true' />
+                    {translate('tree.choose.action')}
+                  </Button>
+                ) : null}
+              </div>
+              <UnplacedTray
+                faces={faces}
+                onPressPerson={openSheetOf}
+                personIds={unplacedPeople(family)}
               />
-            )}
-            <PersonSearch onPick={showAround} people={[...faces.values()]} />
-          </div>
-          <UnplacedTray
-            faces={faces}
-            onPressPerson={openSheetOf}
-            personIds={unplacedPeople(family)}
-          />
+            </>
+          )}
         </div>
         <div
           className='family-tree-stage'
@@ -371,11 +473,17 @@ export const FamilyTreePage: React.FC = () => {
   const translate = useTranslate()
   const { family: response } = useOpenFamily()
   const { me } = useWhoAmI()
+  const { hidden, hiddenParentChildIds, isChoosing } = useHiddenPeople()
   const myPersonId = personIdOfMe(me)
-  const family = familyStateOfSnapshot(response.family)
+  const everyone = familyStateOfSnapshot(response.family)
   const sheetPersonId = useSheetPersonId()
   const faces = usePersonFaces()
-  const litKinship = useLitKinship(family, faces, myPersonId)
+  const litKinship = useLitKinship(everyone, faces, myPersonId)
+  // A lit kinship path is traced over everyone; choosing who to show draws everyone too, the hidden faded in place.
+  const isEveryoneDrawn = litKinship !== null || isChoosing
+  const family = isEveryoneDrawn
+    ? everyone
+    : withoutPeople(everyone, hidden.hiddenIds)
   const arrivalFocusId = firstFocusId({ family, me: myPersonId })
   const focusId =
     sheetPersonId !== null && isInTree(family, sheetPersonId)
@@ -396,6 +504,9 @@ export const FamilyTreePage: React.FC = () => {
         <FamilyTree
           fallbackFocusId={arrivalFocusId}
           family={family}
+          hiddenParentChildIds={
+            isEveryoneDrawn ? new Set() : hiddenParentChildIds
+          }
           initialFocusId={focusId}
           litKinship={litKinship}
           myPersonId={myPersonId}

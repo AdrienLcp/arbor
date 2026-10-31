@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { familyLinkFor } from '@arbor/protocol/family-link'
 
 import { familyStateOfSnapshot } from '@arbor/core/family/family-state-of-snapshot'
+import { withoutPeople } from '@arbor/core/family/without-people'
 
 import { ONLOOKER } from '@/features/family-access/family-access'
 import {
@@ -12,6 +13,7 @@ import {
 } from '@/features/family-access/remembered-families'
 import { FamilyAppBar } from '@/features/family-pages/family-app-bar'
 import { useOpenFamily } from '@/features/family-pages/family-loader'
+import { useHiddenPeople } from '@/features/family-pages/hidden-people-provider'
 import { usePersonFaces } from '@/features/family-pages/use-person-faces'
 import { treeScene } from '@/features/family-tree/tree-scene'
 import { firstFocusId } from '@/features/family-tree/tree-view'
@@ -112,7 +114,11 @@ export const PrintTreePage: React.FC = () => {
   const { family: response, familyId } = useOpenFamily()
   const fonts = usePrintFonts()
   const faces = usePersonFaces()
-  const family = familyStateOfSnapshot(response.family)
+  const { hidden } = useHiddenPeople()
+  const family = withoutPeople(
+    familyStateOfSnapshot(response.family),
+    hidden.hiddenIds
+  )
   const me = rememberedMe(familyId)
   const [choices, setChoices] = useState<PrintChoices>(() => ({
     content: DEFAULT_PRINT_CONTENT,

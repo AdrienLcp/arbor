@@ -69,6 +69,14 @@ export const formDialog = (page: Page) => page.locator('.form-dialog')
 export const treePage = (page: Page) => ({
   /** The tree's add button, heading its zoom buttons. */
   add: page.getByRole('button', { exact: true, name: 'Add' }),
+  /** "Choose who to show": beside the search on a computer, and in the note that says people are hidden. */
+  choose: page
+    .getByRole('button', { exact: true, name: 'Choose who to show' })
+    .first(),
+  /** Ends choosing who to show: the tree lays out without the hidden people. */
+  chooseDone: page.getByRole('button', { exact: true, name: 'Done' }),
+  /** What the last tick did, read out while choosing who to show. */
+  chooseSentence: page.locator('.choose-bar-live'),
   /** Finding someone by name turns the tree around them. */
   find: page.getByRole('combobox', { name: 'Find someone' }),
   /** Touching a person on the tree opens their sheet. */

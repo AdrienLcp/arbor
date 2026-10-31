@@ -13,7 +13,7 @@ import {
   declaredAuthorSchema
 } from '@arbor/protocol/change-log'
 import { DEMO_FAMILY_ID, DEMO_FAMILY_KEY } from '@arbor/protocol/demo-family'
-import type { EntityId } from '@arbor/protocol/entity-id'
+import { type EntityId, entityIdSchema } from '@arbor/protocol/entity-id'
 
 /** Someone who opened the tree only to look, and said so on "Who are you?". */
 export const ONLOOKER = 'onlooker'
@@ -23,6 +23,8 @@ export const ONLOOKER = 'onlooker'
  * keeper who taps the shared family link keeps the keeper key beside it.
  */
 export const familyAccessSchema = z.object({
+  /** The people this device's visitor unticked in "Choose who to show"; whoever hangs on the tree only through them is hidden too. */
+  hiddenIds: z.array(entityIdSchema).optional(),
   keys: z.partialRecord(z.enum(ROLES), accessKeySchema),
   /** Who this device's visitor said they are; `null` until they answer. */
   me: z.union([declaredAuthorSchema, z.literal(ONLOOKER)]).nullable(),

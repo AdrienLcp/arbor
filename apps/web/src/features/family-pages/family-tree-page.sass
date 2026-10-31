@@ -89,6 +89,9 @@
       max-width: 100%
       width: 22rem
 
+    .family-tree-choose
+      gap: var(--space-s)
+
     // The drawing fills the stage; a person's sheet slides over its right side, the album still in sight.
     .family-tree-stage
       // The phone's bottom toolbar: one row of targets, over the home indicator.
@@ -123,6 +126,7 @@
     // A phone held upright: the view and who the visitor is fold into the app bar's "More" menu, the canvas takes the height.
     @include layout.folded-bar
       .family-tree-controls .segmented-control,
+      .family-tree-controls .family-tree-choose,
       .family-tree-notes .me-summary
         display: none
 

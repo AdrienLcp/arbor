@@ -1,0 +1,61 @@
+@use '../../presentation/styles/layout'
+@use '../../presentation/styles/typography'
+
+@layer components
+  // In place of the tree's controls while choosing who to show: an ink rule above says the head changed mode.
+  .choose-bar
+    align-items: end
+    border-top: var(--stroke-bold) solid var(--ink)
+    display: grid
+    flex: 1 1 100%
+    gap: var(--space-s) var(--space-xl)
+    grid-template-columns: minmax(0, 1fr) auto
+    padding-top: var(--space-m)
+
+    .choose-bar-title
+      @include typography.title
+      margin-block-end: var(--space-xs)
+
+    .choose-bar-help
+      @include typography.body-small
+      color: var(--ink-soft)
+      max-width: var(--measure)
+
+    .choose-bar-actions
+      align-items: center
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-m)
+      justify-content: end
+
+    .choose-bar-count
+      @include typography.label-strong
+      color: var(--ink-soft)
+      font-variant-numeric: tabular-nums lining-nums
+
+    .choose-bar-actions .button
+      gap: var(--space-s)
+
+    // Empty until the first tick, yet holding its line, so the head does not jump when it speaks.
+    .choose-bar-live
+      @include typography.body-small
+      grid-column: 1 / -1
+      min-height: 1lh
+
+    // On a phone the buttons share the width under the count; the help is the bar's title said again.
+    @include layout.folded-bar
+      gap: var(--space-s)
+      grid-template-columns: minmax(0, 1fr)
+      padding-top: var(--space-s)
+
+      .choose-bar-help
+        display: none
+
+      .choose-bar-actions
+        justify-content: stretch
+
+      .choose-bar-count
+        flex-basis: 100%
+
+      .choose-bar-actions .button
+        flex: 1 1 auto

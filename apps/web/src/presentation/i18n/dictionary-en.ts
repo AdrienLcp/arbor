@@ -606,7 +606,7 @@ export const EN_DICTIONARY = defineDictionary({
     device: {
       body: 'Arbor sets no cookies. What it remembers stays in your browser, for this site only, until you clear it:',
       families:
-        'The families opened on this device: their name, the links that open them, and who you said you are in each.',
+        'The families opened on this device: their name, the links that open them, who you said you are in each, and the people you chose to hide.',
       heading: 'What your device keeps',
       theme: 'The theme you picked, light or dark.'
     },
@@ -868,6 +868,47 @@ export const EN_DICTIONARY = defineDictionary({
     system: 'Same as the device'
   },
   tree: {
+    choose: {
+      action: 'Choose who to show',
+      back: 'Back: {name}.',
+      backThrough: 'Back: {name}, and {links}, their link with the tree.',
+      backThroughWith:
+        'Back: {name}, and {links}, their link with the tree, with {names}.',
+      backWith: 'Back: {name}, with {names}.',
+      carriedBy: 'Holds to the tree only through {names}',
+      done: 'Done',
+      everyone: 'Everyone is shown',
+      everyoneBack: 'Everyone is shown.',
+      help: 'Touch someone to hide them or show them again. This choice stays on this device, and printing follows it.',
+      helpList:
+        'Untick whoever you do not want to see. This choice stays on this device, and printing follows it.',
+      hidden: 'Hidden: {name}.',
+      hiddenCount: defineTranslation('{count:plural}', {
+        plural: {
+          count: { one: 'One person hidden', other: '{?} people hidden' }
+        }
+      }),
+      hiddenNote: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'One person hidden on this device.',
+            other: '{?} people hidden on this device.'
+          }
+        }
+      }),
+      hiddenParent: 'Hidden',
+      hiddenWithMany:
+        'Hidden: {name}. Leaving with them: {names}, who hold to the tree only through them.',
+      hiddenWithOne:
+        'Hidden: {name}. Leaving with them: {names}, who holds to the tree only through them.',
+      inList: 'Tick in the list',
+      showAll: 'Show everyone',
+      unknownParents: defineTranslation('{count:plural}', {
+        plural: {
+          count: { one: 'an unknown parent', other: '{?} unknown parents' }
+        }
+      })
+    },
     dated: '{word} {year}',
     descent: {
       adoption: 'adoption',

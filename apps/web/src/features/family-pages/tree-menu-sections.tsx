@@ -2,7 +2,11 @@ import type React from 'react'
 import { Header, MenuItem, MenuSection } from 'react-aria-components'
 
 import { whoAmIPathFor } from '@/infrastructure/router/navigation'
-import { CheckIcon, PersonIcon } from '@/presentation/components/icons'
+import {
+  CheckIcon,
+  ChooseIcon,
+  PersonIcon
+} from '@/presentation/components/icons'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { useOpenFamily } from './family-loader'
@@ -12,6 +16,8 @@ import { useWhoAmI } from './who-am-i-provider'
 type ViewOption<View extends string> = { label: string; value: View }
 
 type TreeMenuSectionsProps<View extends string> = {
+  /** Opens "Choose who to show"; left out while it is open, or while a kinship path is lit. */
+  onChoose?: () => void
   onViewChange: (view: View) => void
   view: View
   viewOptions: readonly ViewOption<View>[]
@@ -19,6 +25,7 @@ type TreeMenuSectionsProps<View extends string> = {
 
 /** What the tree's head holds on a computer, folded into the phone's "More" menu: the ways to show the tree (none while a kinship path is lit), and who the visitor is. */
 export const TreeMenuSections = <View extends string>({
+  onChoose,
   onViewChange,
   view,
   viewOptions
@@ -54,6 +61,18 @@ export const TreeMenuSections = <View extends string>({
               {label}
             </MenuItem>
           ))}
+        </MenuSection>
+      )}
+      {onChoose === undefined ? null : (
+        <MenuSection className='family-bar-menu-section'>
+          <MenuItem
+            className='family-bar-menu-item'
+            id='choose'
+            onAction={onChoose}
+          >
+            <ChooseIcon aria-hidden='true' />
+            {translate('tree.choose.action')}
+          </MenuItem>
         </MenuSection>
       )}
       {line.kind === 'reader' ? null : (

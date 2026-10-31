@@ -1,5 +1,6 @@
 import type { AccessKey, FamilyId, Role } from '@arbor/protocol/access'
 import type { Author } from '@arbor/protocol/change-log'
+import type { EntityId } from '@arbor/protocol/entity-id'
 
 import { warnOnFailure } from '@/infrastructure/diagnostics'
 
@@ -86,6 +87,21 @@ export const rememberMe = (
   me: FamilyAccess['me']
 ): void => {
   rememberFamily(familyId, (access) => ({ ...access, me }))
+}
+
+/** The people this device's visitor unticked in the family, none until they choose. */
+export const rememberedHiddenIds = (familyId: FamilyId): readonly EntityId[] =>
+  rememberedFamily(familyId).hiddenIds ?? []
+
+/** Remembers who the visitor unticked: the tree, its list and its print leave them out on this device. */
+export const rememberHiddenIds = (
+  familyId: FamilyId,
+  hiddenIds: readonly EntityId[]
+): void => {
+  rememberFamily(familyId, (access) => ({
+    ...access,
+    hiddenIds: [...hiddenIds]
+  }))
 }
 
 /** Keeps a key this device was just handed by the family — a new family link, a read-only link. */

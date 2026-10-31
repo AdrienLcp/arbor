@@ -1,3 +1,4 @@
+import { classNames } from '@adrienlcp/react'
 import type React from 'react'
 
 import type { EntityId } from '@arbor/protocol/entity-id'
@@ -9,19 +10,78 @@ import {
 } from '@arbor/core/relatives/family-outline'
 import type { FamilyLineage } from '@arbor/core/tree-layout/family-lineage'
 
+import { Checkbox } from '@/presentation/components/checkbox'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import { useKinWords } from './kin-words'
-import { unionLineStyle } from './line-style'
+import { type LineStyle, unionLineStyle } from './line-style'
 import type { PersonFace } from './person-face'
-import { RelativeButton } from './relative-button'
+import { RelativeButton, RelativeLine } from './relative-button'
 import { useUnionWords } from './union-words'
 
 import './tree-outline.sass'
 
+/** While choosing who to show: each line is a tick instead of a way to the person. */
+export type OutlineChoosing = {
+  /** "Holds to the tree only through Pierre Morel" for someone carried away with an unticked person, `null` for anyone else. */
+  carriedLineOf: (personId: EntityId) => string | null
+  hiddenIds: ReadonlySet<EntityId>
+  onToggle: (personId: EntityId) => void
+}
+
 type OutlineProps = {
+  /** `null` outside "Choose who to show". */
+  choosing: OutlineChoosing | null
   faces: ReadonlyMap<EntityId, PersonFace>
   onPressPerson: (personId: EntityId) => void
+}
+
+type OutlinePersonProps = {
+  choosing: OutlineChoosing | null
+  face: PersonFace
+  lines: readonly string[]
+  onPress: () => void
+  swatch?: LineStyle
+}
+
+/** One person of the outline: a way to them, or their tick while choosing who to show. */
+const OutlinePerson: React.FC<OutlinePersonProps> = ({
+  choosing,
+  face,
+  lines,
+  onPress,
+  swatch
+}) => {
+  if (choosing === null) {
+    return (
+      <RelativeButton
+        face={face}
+        isMorphing={false}
+        lines={lines}
+        onPress={onPress}
+        swatch={swatch}
+      />
+    )
+  }
+
+  const isHidden = choosing.hiddenIds.has(face.id)
+  const carriedLine = choosing.carriedLineOf(face.id)
+  return (
+    <Checkbox
+      className={classNames('outline-tick', isHidden && 'is-hidden')}
+      isSelected={!isHidden}
+      onChange={() => choosing.onToggle(face.id)}
+    >
+      <span className='relative-button'>
+        <RelativeLine
+          face={face}
+          isMorphing={false}
+          lines={carriedLine === null ? lines : [carriedLine]}
+          swatch={carriedLine === null ? swatch : undefined}
+        />
+      </span>
+    </Checkbox>
+  )
 }
 
 const yearsLines = (face: PersonFace): string[] =>
@@ -29,7 +89,7 @@ const yearsLines = (face: PersonFace): string[] =>
 
 const CoupleItem: React.FC<
   OutlineProps & { couple: OutlineCouple; person: PersonFace }
-> = ({ couple, faces, onPressPerson, person }) => {
+> = ({ choosing, couple, faces, onPressPerson, person }) => {
   const translate = useTranslate()
   const kin = useKinWords()
   const unionWords = useUnionWords()
@@ -44,9 +104,9 @@ const CoupleItem: React.FC<
           {translate('tree.outline.withUnknown')}
         </p>
       ) : (
-        <RelativeButton
+        <OutlinePerson
+          choosing={choosing}
           face={partner}
-          isMorphing={false}
           lines={[kin.partner(partner, couple.union), ...when]}
           onPress={() => onPressPerson(partner.id)}
           swatch={unionLineStyle(couple.union)}
@@ -65,6 +125,7 @@ const CoupleItem: React.FC<
           {couple.children.map((child) => (
             <BranchItem
               branch={child}
+              choosing={choosing}
               faces={faces}
               key={child.personId}
               onPressPerson={onPressPerson}
@@ -78,6 +139,7 @@ const CoupleItem: React.FC<
 
 const BranchItem: React.FC<OutlineProps & { branch: OutlineBranch }> = ({
   branch,
+  choosing,
   faces,
   onPressPerson
 }) => {
@@ -95,9 +157,9 @@ const BranchItem: React.FC<OutlineProps & { branch: OutlineBranch }> = ({
 
   return (
     <li className='outline-branch'>
-      <RelativeButton
+      <OutlinePerson
+        choosing={choosing}
         face={face}
-        isMorphing={false}
         lines={yearsLines(face)}
         onPress={() => onPressPerson(face.id)}
       />
@@ -105,6 +167,7 @@ const BranchItem: React.FC<OutlineProps & { branch: OutlineBranch }> = ({
         <ul className='outline-couples'>
           {branch.couples.map((couple) => (
             <CoupleItem
+              choosing={choosing}
               couple={couple}
               faces={faces}
               key={couple.union?.id ?? couple.partnerId ?? 'alone'}
@@ -121,7 +184,7 @@ const BranchItem: React.FC<OutlineProps & { branch: OutlineBranch }> = ({
 /** The whole family as nested lists, founders first: the tree a screen reader can walk, and a plain read on any screen. */
 export const TreeOutline: React.FC<
   OutlineProps & { lineage: FamilyLineage }
-> = ({ faces, lineage, onPressPerson }) => {
+> = ({ choosing, faces, lineage, onPressPerson }) => {
   const translate = useTranslate()
 
   return (
@@ -133,6 +196,7 @@ export const TreeOutline: React.FC<
         {familyOutline(lineage).map((branch) => (
           <BranchItem
             branch={branch}
+            choosing={choosing}
             faces={faces}
             key={branch.personId}
             onPressPerson={onPressPerson}

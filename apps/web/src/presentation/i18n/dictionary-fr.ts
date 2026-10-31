@@ -611,7 +611,7 @@ export const FR_DICTIONARY = defineDictionary({
     device: {
       body: 'Arbor ne dépose aucun cookie. Ce dont il se souvient reste dans votre navigateur, pour ce site seulement, jusqu’à ce que vous l’effaciez :',
       families:
-        'Les familles ouvertes sur cet appareil : leur nom, les liens qui les ouvrent et la personne que vous avez dit être dans chacune.',
+        'Les familles ouvertes sur cet appareil : leur nom, les liens qui les ouvrent, la personne que vous avez dit être dans chacune et les personnes que vous avez choisi de cacher.',
       heading: 'Ce que garde votre appareil',
       theme: 'Le thème choisi, clair ou sombre.'
     },
@@ -877,6 +877,47 @@ export const FR_DICTIONARY = defineDictionary({
     system: 'Comme l’appareil'
   },
   tree: {
+    choose: {
+      action: 'Choisir qui afficher',
+      back: 'De retour : {name}.',
+      backThrough: 'De retour : {name}, et {links}, son lien avec l’arbre.',
+      backThroughWith:
+        'De retour : {name}, et {links}, son lien avec l’arbre, avec {names}.',
+      backWith: 'De retour : {name}, avec {names}.',
+      carriedBy: 'Ne tient à l’arbre que par {names}',
+      done: 'Terminé',
+      everyone: 'Tout le monde est affiché',
+      everyoneBack: 'Tout le monde est affiché.',
+      help: 'Touchez une personne pour la cacher ou la remontrer. Ce choix reste sur cet appareil, et l’impression le suit.',
+      helpList:
+        'Décochez qui vous ne voulez pas voir. Ce choix reste sur cet appareil, et l’impression le suit.',
+      hidden: 'Caché : {name}.',
+      hiddenCount: defineTranslation('{count:plural}', {
+        plural: {
+          count: { one: 'Une personne cachée', other: '{?} personnes cachées' }
+        }
+      }),
+      hiddenNote: defineTranslation('{count:plural}', {
+        plural: {
+          count: {
+            one: 'Une personne cachée sur cet appareil.',
+            other: '{?} personnes cachées sur cet appareil.'
+          }
+        }
+      }),
+      hiddenParent: 'Caché',
+      hiddenWithMany:
+        'Caché : {name}. Partent avec : {names}, qui ne tiennent à l’arbre que par là.',
+      hiddenWithOne:
+        'Caché : {name}. Part avec : {names}, qui ne tient à l’arbre que par là.',
+      inList: 'Cocher dans la liste',
+      showAll: 'Tout remontrer',
+      unknownParents: defineTranslation('{count:plural}', {
+        plural: {
+          count: { one: 'un parent inconnu', other: '{?} parents inconnus' }
+        }
+      })
+    },
     dated: '{word} {year}',
     descent: {
       adoption: 'adoption',

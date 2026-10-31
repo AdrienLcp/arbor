@@ -1,3 +1,4 @@
+import { classNames } from '@adrienlcp/react'
 import type React from 'react'
 import {
   useEffect,
@@ -84,6 +85,10 @@ type TreeCanvasProps = {
   today: Temporal.PlainDate
   /** The share of the window's height a bottom sheet hides, so the focus person is centred in what stays in sight. */
   coveredBottomShare?: number
+  /** Children whose other parent the visitor chose to hide. */
+  hiddenParentChildIds?: ReadonlySet<EntityId>
+  /** The people hidden while choosing who to show: a press toggles a card instead of opening it. `null` outside that mode. */
+  hiddenWhileChoosing?: ReadonlySet<EntityId> | null
   /** The whole-family view the canvas opens on with every card fitted in sight, never past the stickers' own size, unless a sheet is open; `null` opens on the focus person. Switching to another such view fits the tree again. */
   wholeTreeView?: string | null
 }
@@ -93,6 +98,8 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   addTool,
   coveredBottomShare = 0,
   focusId,
+  hiddenParentChildIds = new Set(),
+  hiddenWhileChoosing = null,
   label,
   litPath,
   onPressPerson,
@@ -111,6 +118,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   const viewport = useRef<ReactZoomPanPinchRef>(null)
   const cardElements = useRef(new Map<string, HTMLElement>())
   const rails = useRef<HTMLDivElement>(null)
+  const canvas = useRef<HTMLElement>(null)
   const zoomTools = useRef<HTMLDivElement>(null)
   const [activeKey, setActiveKey] = useState<string | null>(null)
   const [minScale, setMinScale] = useState(MIN_SCALE)
@@ -382,13 +390,24 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   }
 
   const pressPerson = (card: PersonCard) => {
+    if (hiddenWhileChoosing !== null) {
+      onPressPerson(card.personId)
+      return
+    }
     setActiveKey(null)
     onPressPerson(card.personId)
     if (card.personId === focusId) centreOn(focusKey, GLIDE_MS)
   }
 
   return (
-    <section aria-label={label} className='tree-canvas'>
+    <section
+      aria-label={label}
+      className={classNames(
+        'tree-canvas',
+        hiddenWhileChoosing !== null && 'is-choosing'
+      )}
+      ref={canvas}
+    >
       <TransformWrapper
         doubleClick={{ disabled: true }}
         limitToBounds={false}
@@ -400,6 +419,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
         onTransform={(controls, state) => {
           rails.current?.style.setProperty('--pan-y', `${state.positionY}px`)
           rails.current?.style.setProperty('--zoom', String(state.scale))
+          canvas.current?.style.setProperty('--zoom', String(state.scale))
           holdTreeInSight(controls, state)
         }}
         onWheelStart={noteVisitorMoved}
@@ -412,6 +432,8 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
               <TreePlane
                 activeKey={currentKey}
                 focusId={focusId}
+                hiddenParentChildIds={hiddenParentChildIds}
+                hiddenWhileChoosing={hiddenWhileChoosing}
                 instructionsId={instructionsId}
                 litPath={litPath}
                 onArrowKey={walkWithArrows}

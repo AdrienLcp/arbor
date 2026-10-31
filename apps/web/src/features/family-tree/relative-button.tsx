@@ -25,12 +25,13 @@ type RelativeButtonProps = {
   swatch?: LineStyle
 }
 
-/** A relative as one line of a page: their small sticker and name; touching it turns the page to them. */
-export const RelativeButton: React.FC<RelativeButtonProps> = ({
+type RelativeLineProps = Omit<RelativeButtonProps, 'onPress'>
+
+/** What a relative's line shows: their small sticker, their name, and the lines read under it. */
+export const RelativeLine: React.FC<RelativeLineProps> = ({
   face,
   isMorphing = true,
   lines,
-  onPress,
   swatch
 }) => {
   const sticker = (
@@ -43,7 +44,7 @@ export const RelativeButton: React.FC<RelativeButtonProps> = ({
   )
 
   return (
-    <Button className='relative-button' onPress={onPress}>
+    <>
       {isMorphing ? (
         <ViewTransition name={`person-${face.id}`}>{sticker}</ViewTransition>
       ) : (
@@ -60,6 +61,16 @@ export const RelativeButton: React.FC<RelativeButtonProps> = ({
           </span>
         ))}
       </span>
-    </Button>
+    </>
   )
 }
+
+/** A relative as one line of a page: their small sticker and name; touching it turns the page to them. */
+export const RelativeButton: React.FC<RelativeButtonProps> = ({
+  onPress,
+  ...line
+}) => (
+  <Button className='relative-button' onPress={onPress}>
+    <RelativeLine {...line} />
+  </Button>
+)
