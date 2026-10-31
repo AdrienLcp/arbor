@@ -144,7 +144,7 @@ export const TreeSpread: React.FC<TreeSpreadProps> = ({
         aside={
           close.parentsUnion === null
             ? undefined
-            : unionWords(close.parentsUnion).join(', ')
+            : unionWords(close.parentsUnion)
         }
         generation={
           parents[0]?.face.generation ?? Math.max(1, focus.generation - 1)

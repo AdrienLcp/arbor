@@ -35,8 +35,7 @@ const CoupleItem: React.FC<
   const unionWords = useUnionWords()
   const partner =
     couple.partnerId === null ? undefined : faces.get(couple.partnerId)
-  const when =
-    couple.union === null ? [] : [unionWords(couple.union).join(', ')]
+  const when = couple.union === null ? [] : [unionWords(couple.union)]
 
   return (
     <li className='outline-couple'>

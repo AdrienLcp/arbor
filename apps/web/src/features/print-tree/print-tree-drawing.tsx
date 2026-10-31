@@ -8,13 +8,13 @@ import {
   type PlacedWords,
   useRelationWords
 } from '@/features/family-tree/relation-words'
-import { cutPath, pathOf } from '@/features/family-tree/tree-lines'
+import { pathOf } from '@/features/family-tree/tree-lines'
 import type { TreeScene } from '@/features/family-tree/tree-scene'
 import { useUnknownParentWords } from '@/features/family-tree/use-unknown-parent-words'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
 import type { PrintContent } from './print-content'
-import { CUT_WIDTH, PrintLine } from './print-line'
+import { PrintLine } from './print-line'
 import { PRINT_PALETTE } from './print-palette'
 import { Halftone, PrintGhostSlot, PrintSticker } from './print-sticker'
 import { printedWidth } from './print-text'
@@ -26,48 +26,16 @@ const WORD_LEADING = 15
 const PILL_PADDING_X = 8
 const PILL_PADDING_Y = 4
 
-/** The room the two slashes of an ended union take between its start and its end. */
-const CUT_LEADING = 16
-
 const WordsPill: React.FC<{ words: PlacedWords }> = ({ words }) => {
-  const lines = words.moments.flat()
-  const cutCount = words.isCut ? words.moments.length - 1 : 0
   const width =
     Math.max(
-      ...lines.map((line) =>
+      ...words.lines.map((line) =>
         printedWidth({ size: WORD_SIZE, text: line, voice: 'label' })
       )
     ) +
     2 * PILL_PADDING_X
-  const height =
-    lines.length * WORD_LEADING + cutCount * CUT_LEADING + 2 * PILL_PADDING_Y
+  const height = words.lines.length * WORD_LEADING + 2 * PILL_PADDING_Y
   const top = words.at.y - height / 2
-
-  const placed = words.moments.reduce<{
-    cuts: number[]
-    lines: { text: string; y: number }[]
-    y: number
-  }>(
-    (acc, moment, index) => {
-      const cuts =
-        index > 0 && words.isCut
-          ? [...acc.cuts, acc.y + CUT_LEADING / 2]
-          : acc.cuts
-      const start = index > 0 && words.isCut ? acc.y + CUT_LEADING : acc.y
-      return {
-        cuts,
-        lines: [
-          ...acc.lines,
-          ...moment.map((text, line) => ({
-            text,
-            y: start + (line + 1) * WORD_LEADING - 3.5
-          }))
-        ],
-        y: start + moment.length * WORD_LEADING
-      }
-    },
-    { cuts: [], lines: [], y: top + PILL_PADDING_Y }
-  )
 
   return (
     <g>
@@ -82,28 +50,18 @@ const WordsPill: React.FC<{ words: PlacedWords }> = ({ words }) => {
         x={words.at.x - width / 2}
         y={top}
       />
-      {placed.lines.map(({ text, y }) => (
+      {words.lines.map((text, line) => (
         <text
           fill={PRINT_PALETTE.ink}
           fontFamily={PRINT_VOICES.label.family}
           fontSize={WORD_SIZE}
-          key={`${text}${y}`}
+          key={text}
           textAnchor='middle'
           x={words.at.x}
-          y={y}
+          y={top + PILL_PADDING_Y + (line + 1) * WORD_LEADING - 3.5}
         >
           {text}
         </text>
-      ))}
-      {placed.cuts.map((y) => (
-        <path
-          d={cutPath({ x: words.at.x, y })}
-          fill='none'
-          key={y}
-          stroke={PRINT_PALETTE.line}
-          strokeLinecap='round'
-          strokeWidth={CUT_WIDTH}
-        />
       ))}
     </g>
   )

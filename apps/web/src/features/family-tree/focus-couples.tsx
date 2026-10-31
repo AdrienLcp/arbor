@@ -74,7 +74,7 @@ export const FocusCouples: React.FC<FocusCouplesProps> = ({
     partner === null
       ? translate('tree.spread.unknownPartner.hint')
       : kin.partner(partner, union),
-    ...(union === null ? [] : [unionWords(union).join(', ')])
+    ...(union === null ? [] : [unionWords(union)])
   ]
 
   const keyOf = ({ partner, union }: FocusCouple): string =>
