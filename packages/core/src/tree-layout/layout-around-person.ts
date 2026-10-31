@@ -129,6 +129,7 @@ const layoutAncestors = ({
     })
     const unions = pairs.map(({ index, slots }) => ({
       path: unionPath({
+        areNeighbours: true,
         firstLeft: slotLeft({ index, left }),
         secondLeft: slotLeft({ index: index + 1, left }),
         stagger: 0,

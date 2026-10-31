@@ -11,6 +11,7 @@ import {
 describe('unionPath', () => {
   it('joins neighbours straight across the gap, at mid-card, with their children hanging from its middle', () => {
     const { anchor, points } = unionPath({
+      areNeighbours: true,
       firstLeft: 0,
       secondLeft: CARD_WIDTH + PARTNER_GAP,
       stagger: 0,
@@ -33,6 +34,7 @@ describe('unionPath', () => {
 
   it('bridges partners further apart with a bracket over their row', () => {
     const { points } = unionPath({
+      areNeighbours: false,
       firstLeft: 0,
       secondLeft: 2 * (CARD_WIDTH + PARTNER_GAP),
       stagger: 0,

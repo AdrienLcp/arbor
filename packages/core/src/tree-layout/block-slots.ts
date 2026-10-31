@@ -2,7 +2,7 @@ import type { EntityId } from '@arbor/protocol/entity-id'
 
 import type { FamilyLineage } from './family-lineage'
 import type { TreeCard } from './tree-layout'
-import { slotLeft } from './tree-metrics'
+import { type ExtraGaps, slotLeft } from './tree-metrics'
 
 /** One place in a row of cards drawn together: a person, or an unknown other parent. */
 export type BlockSlot =
@@ -21,6 +21,7 @@ export type BlockSlot =
 /** The cards of a block whose first slot starts at `left`; `blockKey` keeps the keys of repeats and unknown parents unique. */
 export const slotCards = ({
   blockKey,
+  extraGaps,
   generation,
   left,
   lineage,
@@ -28,6 +29,7 @@ export const slotCards = ({
   y
 }: {
   blockKey: string
+  extraGaps?: ExtraGaps
   generation: number
   left: number
   lineage: FamilyLineage
@@ -35,7 +37,7 @@ export const slotCards = ({
   y: number
 }): TreeCard[] =>
   slots.map((slot, index) => {
-    const x = slotLeft({ index, left })
+    const x = slotLeft({ extraGaps, index, left })
     if (slot.kind === 'unknown-parent') {
       return {
         childIds: slot.childIds,

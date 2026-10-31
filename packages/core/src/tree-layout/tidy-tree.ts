@@ -9,19 +9,23 @@ import { SIBLING_BLOCK_GAP, slotsWidth } from './tree-metrics'
  */
 export const tidyTree = <Block extends { slots: readonly unknown[] }>({
   childrenOf,
-  root
+  root,
+  spaceBefore = () => 0,
+  widthOf = (block) => slotsWidth(block.slots.length)
 }: {
   childrenOf: (block: Block) => readonly Block[]
   root: Block
+  /** Room left free on a block's left on top of the usual gap. */
+  spaceBefore?: (block: Block) => number
+  widthOf?: (block: Block) => number
 }): HierarchyPointNode<Block> =>
   tree<Block>()
     .nodeSize([1, 1])
     .separation(
       (left, right) =>
-        (slotsWidth(left.data.slots.length) +
-          slotsWidth(right.data.slots.length)) /
-          2 +
+        (widthOf(left.data) + widthOf(right.data)) / 2 +
         (left.parent === right.parent
           ? SIBLING_BLOCK_GAP
-          : SIBLING_BLOCK_GAP * 2)
+          : SIBLING_BLOCK_GAP * 2) +
+        spaceBefore(right.data)
     )(hierarchy(root, childrenOf))

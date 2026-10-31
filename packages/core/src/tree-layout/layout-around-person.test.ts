@@ -31,6 +31,7 @@ const drawnPersonIds = (layout: TreeLayout) =>
     .toSorted()
 
 const NO_DEFECT = {
+  crossingLines: [],
   duplicateKeys: [],
   linesUnderCards: [],
   offTheirRow: [],

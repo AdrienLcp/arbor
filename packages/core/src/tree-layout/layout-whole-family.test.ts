@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
+import type { Operation } from '@arbor/protocol/operation'
+
 import { DEMO_FAMILY_OPERATIONS } from '../family/demo-family'
 import { replayOperations } from '../family/replay-operations'
 import { generatedFamily, MARRIED_IN_PARENTS_SURNAME } from './generated-family'
@@ -14,7 +16,61 @@ const demoFamily = () => {
   return family.data
 }
 
+/** The demo family with as many more children of Louis and Hélène, each married, as it takes for their bar to reach under Louis and Yvonne. */
+const demoFamilyWithManyChildrenOfHelene = () => {
+  const extraChildren = ['odette', 'paul', 'rose', 'jean'].flatMap(
+    (givenNames): Operation[] => {
+      const childId = `${givenNames}-morel`
+      const partnerId = `${givenNames}-partner`
+      const person = (id: string, given: string): Operation => ({
+        person: {
+          birth: null,
+          birthSurname: null,
+          death: null,
+          givenNames: given,
+          id,
+          livingOverride: null,
+          notes: '',
+          portraitPhotoId: null,
+          sex: 'unknown',
+          surname: 'Morel'
+        },
+        type: 'person.create'
+      })
+      return [
+        person(childId, givenNames),
+        person(partnerId, `${givenNames} partner`),
+        ...['louis-morel', 'helene-roux'].map(
+          (parentId): Operation => ({
+            filiation: {
+              childId,
+              id: `${parentId}--${childId}`,
+              kind: 'birth',
+              parentId
+            },
+            type: 'filiation.create'
+          })
+        ),
+        {
+          type: 'union.create',
+          union: {
+            end: null,
+            id: `${childId}--${partnerId}`,
+            kind: 'marriage',
+            partnerIds: [childId, partnerId],
+            start: null
+          }
+        }
+      ]
+    }
+  )
+  const family = replayOperations([...DEMO_FAMILY_OPERATIONS, ...extraChildren])
+  if (family.status === 'failure') throw new Error('The family is refused')
+  return family.data
+}
+
 const NO_DEFECT = {
+  crossingLines: [],
   duplicateKeys: [],
   linesUnderCards: [],
   offTheirRow: [],
@@ -69,6 +125,12 @@ describe('[tree-layout] the whole family', () => {
 
   it('[tree-layout] lays the demo family out with no misreadable card or line', () => {
     expect(layoutDefects(layoutWholeFamily(demoFamily()))).toEqual(NO_DEFECT)
+  })
+
+  it('[tree-layout] keeps the children of each of two unions under their own side, no line crossing another', () => {
+    expect(
+      layoutDefects(layoutWholeFamily(demoFamilyWithManyChildrenOfHelene()))
+    ).toEqual(NO_DEFECT)
   })
 
   it('[tree-layout] lays a 300-person family out with no misreadable card or line', () => {

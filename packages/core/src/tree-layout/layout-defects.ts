@@ -1,4 +1,9 @@
-import type { TreeCard, TreeLayout, TreePoint } from './tree-layout'
+import type {
+  TreeCard,
+  TreeConnector,
+  TreeLayout,
+  TreePoint
+} from './tree-layout'
 import { CARD_HEIGHT, CARD_WIDTH, rowY } from './tree-metrics'
 
 /** How far a line's end may sit from a card's edge and still belong to it. */
@@ -37,7 +42,48 @@ const crosses = (card: TreeCard, from: TreePoint, to: TreePoint) => {
   return enter < leave
 }
 
-/** What would make a layout misread: a card off its generation's row, two cards on top of each other, a line passing under a card. */
+type Segment = { from: TreePoint; kind: TreeConnector['kind']; to: TreePoint }
+
+const segmentsOf = (connectors: readonly TreeConnector[]) =>
+  connectors.flatMap(({ kind, points }) =>
+    points.slice(1).flatMap((to, index): Segment[] => {
+      const from = points[index]
+      return from === undefined ? [] : [{ from, kind, to }]
+    })
+  )
+
+const isStrictlyBetween = (value: number, ends: readonly [number, number]) =>
+  value > Math.min(...ends) && value < Math.max(...ends)
+
+const sharesAStretch = (
+  [firstStart, firstEnd]: readonly [number, number],
+  [secondStart, secondEnd]: readonly [number, number]
+) =>
+  Math.min(Math.max(firstStart, firstEnd), Math.max(secondStart, secondEnd)) >
+  Math.max(Math.min(firstStart, firstEnd), Math.min(secondStart, secondEnd))
+
+/**
+ * Whether two orthogonal segments cross, or run along each other: a line
+ * meeting another at its end is a join, not a crossing.
+ */
+const meet = (first: Segment, second: Segment) => {
+  const isFirstFlat = first.from.y === first.to.y
+  const isSecondFlat = second.from.y === second.to.y
+  if (isFirstFlat !== isSecondFlat) {
+    const [flat, upright] = isFirstFlat ? [first, second] : [second, first]
+    return (
+      isStrictlyBetween(upright.from.x, [flat.from.x, flat.to.x]) &&
+      isStrictlyBetween(flat.from.y, [upright.from.y, upright.to.y])
+    )
+  }
+  return isFirstFlat
+    ? first.from.y === second.from.y &&
+        sharesAStretch([first.from.x, first.to.x], [second.from.x, second.to.x])
+    : first.from.x === second.from.x &&
+        sharesAStretch([first.from.y, first.to.y], [second.from.y, second.to.y])
+}
+
+/** What would make a layout misread: a card off its generation's row, two cards on top of each other, a line passing under a card, two lines crossing. */
 export const layoutDefects = ({ cards, connectors }: TreeLayout) => {
   const offTheirRow = cards
     .filter((card) => card.y !== rowY(card.generation))
@@ -71,8 +117,25 @@ export const layoutDefects = ({ cards, connectors }: TreeLayout) => {
     })
   })
 
+  const segments = segmentsOf(connectors)
+  const crossingLines = segments.flatMap((segment, index) =>
+    segments
+      .slice(index + 1)
+      .filter((other) => meet(segment, other))
+      .map(
+        (other) =>
+          `${segment.kind} ${JSON.stringify(segment.from)} / ${other.kind} ${JSON.stringify(other.from)}`
+      )
+  )
+
   const keys = cards.map(({ key }) => key)
   const duplicateKeys = keys.filter((key, index) => keys.indexOf(key) !== index)
 
-  return { duplicateKeys, linesUnderCards, offTheirRow, overlapping }
+  return {
+    crossingLines,
+    duplicateKeys,
+    linesUnderCards,
+    offTheirRow,
+    overlapping
+  }
 }

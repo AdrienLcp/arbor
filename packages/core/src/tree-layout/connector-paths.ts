@@ -1,5 +1,5 @@
 import type { TreePoint } from './tree-layout'
-import { CARD_HEIGHT, CARD_WIDTH, PARTNER_GAP } from './tree-metrics'
+import { CARD_HEIGHT, CARD_WIDTH } from './tree-metrics'
 
 const BRACKET_RISE = 24
 const BRACKET_STAGGER = 6
@@ -12,11 +12,14 @@ const BAR_STAGGER = 10
  * apart by a bracket above the cards, staggered so brackets never merge.
  */
 export const unionPath = ({
+  areNeighbours,
   firstLeft,
   secondLeft,
   stagger,
   y
 }: {
+  /** Whether no card stands between the partners. */
+  areNeighbours: boolean
   firstLeft: number
   secondLeft: number
   stagger: number
@@ -26,7 +29,7 @@ export const unionPath = ({
   const rightmost = Math.max(firstLeft, secondLeft)
   const middleY = y + CARD_HEIGHT / 2
 
-  if (rightmost - leftmost === CARD_WIDTH + PARTNER_GAP) {
+  if (areNeighbours) {
     const from = { x: leftmost + CARD_WIDTH, y: middleY }
     const to = { x: rightmost, y: middleY }
     return {

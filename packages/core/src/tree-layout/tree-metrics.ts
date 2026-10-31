@@ -26,10 +26,28 @@ export const ROW_HEIGHT = 262
 export const rowY = (generation: number) =>
   (generation - FIRST_GENERATION) * ROW_HEIGHT
 
+/**
+ * How much wider than `PARTNER_GAP` each gap between two cards of a row is,
+ * by gap index — the gap after the first card first. A missing entry is none.
+ */
+export type ExtraGaps = readonly number[]
+
+const extraUpTo = (extraGaps: ExtraGaps, gapCount: number) =>
+  extraGaps.slice(0, gapCount).reduce((total, extra) => total + extra, 0)
+
 /** The width of cards laid side by side, partners apart. */
-export const slotsWidth = (slotCount: number) =>
-  slotCount * CARD_WIDTH + (slotCount - 1) * PARTNER_GAP
+export const slotsWidth = (slotCount: number, extraGaps: ExtraGaps = []) =>
+  slotCount * CARD_WIDTH +
+  (slotCount - 1) * PARTNER_GAP +
+  extraUpTo(extraGaps, slotCount - 1)
 
 /** The left edge of a card in a row of slots starting at `left`. */
-export const slotLeft = ({ index, left }: { index: number; left: number }) =>
-  left + index * (CARD_WIDTH + PARTNER_GAP)
+export const slotLeft = ({
+  extraGaps = [],
+  index,
+  left
+}: {
+  extraGaps?: ExtraGaps
+  index: number
+  left: number
+}) => left + index * (CARD_WIDTH + PARTNER_GAP) + extraUpTo(extraGaps, index)
