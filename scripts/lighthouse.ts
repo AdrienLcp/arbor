@@ -37,7 +37,6 @@ import desktopConfig from 'lighthouse/core/config/desktop-config.js'
 
 const ROOT = join(import.meta.dirname, '..')
 const REPORT_DIR = join(ROOT, 'lighthouse-reports')
-const WORKER_PORT = 8792
 
 /** A port nothing listens on, as the system hands it out. */
 const freePort = (): Promise<number> =>
@@ -127,21 +126,11 @@ const startLocalWorker = async (): Promise<{
   origin: string
   server: ChildProcess
 }> => {
-  const origin = `http://127.0.0.1:${WORKER_PORT}`
-  const isPortTaken = await fetch(origin).then(
-    () => true,
-    () => false
-  )
-
-  if (isPortTaken) {
-    throw new Error(
-      `${origin} already answers: another server holds the port, and its pages would be audited instead of the build`
-    )
-  }
-
+  const workerPort = await freePort()
+  const origin = `http://127.0.0.1:${workerPort}`
   const state = await mkdtemp(join(tmpdir(), 'arbor-lighthouse-'))
   const server = spawn(
-    `pnpm --filter @arbor/worker exec wrangler dev --ip 127.0.0.1 --port ${WORKER_PORT} --persist-to ${state}`,
+    `pnpm --filter @arbor/worker exec wrangler dev --ip 127.0.0.1 --port ${workerPort} --persist-to ${state}`,
     {
       cwd: ROOT,
       detached: process.platform !== 'win32',
