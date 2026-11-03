@@ -354,7 +354,9 @@ export const FR_DICTIONARY = defineDictionary({
     title: 'Partager l’arbre'
   },
   footer: {
-    legal: 'Mentions légales et confidentialité'
+    credit: 'Réalisé par <author>{name}</author>',
+    legal: 'Mentions légales et confidentialité',
+    source: 'Code source'
   },
   history: {
     allHistory: 'Voir tout l’historique',

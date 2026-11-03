@@ -1,11 +1,12 @@
 import type React from 'react'
-import { createElement, Fragment, useId } from 'react'
+import { useId } from 'react'
 
 import { FAMILIES_STORAGE_KEY } from '@/features/family-access/family-access-storage'
 import { Main } from '@/presentation/components/main'
 import { TextLink } from '@/presentation/components/text-link'
 import { DocumentTitle } from '@/presentation/head/document-title'
 import { useLocale, useTranslate } from '@/presentation/i18n/i18n-context'
+import { RichText } from '@/presentation/i18n/rich-text'
 import { SiteHeader } from '@/presentation/site-header'
 import { THEME_STORAGE_KEY } from '@/presentation/theme/theme-store'
 
@@ -17,10 +18,6 @@ import {
 } from './legal-details'
 
 import './legal-page.sass'
-
-/** Spreads what `translate.rich` returned as children, so React asks none of the parts for a key. */
-const RichText: React.FC<{ parts: readonly React.ReactNode[] }> = ({ parts }) =>
-  createElement(Fragment, null, ...parts)
 
 type LegalSectionProps = {
   children: React.ReactNode

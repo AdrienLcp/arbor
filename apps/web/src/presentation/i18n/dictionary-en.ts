@@ -348,7 +348,9 @@ export const EN_DICTIONARY = defineDictionary({
     title: 'Share the tree'
   },
   footer: {
-    legal: 'Legal notice and privacy'
+    credit: 'Made by <author>{name}</author>',
+    legal: 'Legal notice and privacy',
+    source: 'Source code'
   },
   history: {
     allHistory: 'See the whole history',
