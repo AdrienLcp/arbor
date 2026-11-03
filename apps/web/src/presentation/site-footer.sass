@@ -1,3 +1,4 @@
+@use 'styles/focus'
 @use 'styles/layout'
 @use 'styles/typography'
 
@@ -12,10 +13,23 @@
     margin-top: auto
     padding: var(--space-m) var(--gutter-right) max(var(--space-m), var(--safe-area-bottom)) var(--gutter-left)
 
-    // Under the tree's canvas the line stays thin, so the drawing keeps the height.
+    // Under the tree's canvas the line stays one line, so the drawing keeps the height: on a screen narrower than its words it scrolls sideways, like the unplaced tray.
     :root:has(.family-tree-screen) &
       column-gap: var(--space-m)
+      flex: none
+      flex-wrap: nowrap
+      overflow-x: auto
+      overscroll-behavior-inline: contain
       padding-block: var(--space-xs) max(var(--space-xs), var(--safe-area-bottom))
+      scroll-padding-inline: var(--gutter-left) var(--gutter-right)
+      scrollbar-width: none
+
+      > *
+        flex: none
+
+      // The scroller cuts whatever passes its padding, so the ring keeps inside it.
+      a
+        @include focus.ring($offset: calc(var(--space-xs) - var(--outline-thick)))
 
     // A phone held upright gives the tree the whole screen: the legal notice is a row of the app bar's "More" menu.
     @include layout.folded-bar
