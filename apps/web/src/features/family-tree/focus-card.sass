@@ -22,6 +22,10 @@
       max-width: none
       right: var(--space-l)
 
+    // A phone held sideways: closer to the bottom, so the row of tools over the canvas's top stays clear of it.
+    @include layout.short
+      bottom: max(var(--space-s), var(--safe-area-bottom))
+
     // A phone held upright: the card sits above the bottom toolbar, which pays the home indicator.
     @include layout.folded-bar
       bottom: calc(var(--tree-toolbar-height) + var(--space-l))

@@ -7,5 +7,8 @@ import { SCREEN_SIZES } from '@/presentation/styles/screen-sizes'
  */
 export const PHONE_SCREEN = `(width < ${SCREEN_SIZES.wideScreen}), (height < ${SCREEN_SIZES.shortScreen})`
 
+/** A phone held sideways, too short for a column of the canvas's tools: the condition of `layout.short`. */
+export const SHORT_SCREEN = `(height < ${SCREEN_SIZES.shortScreen})`
+
 /** A phone held upright, where the app bar folds its actions into "More": the complement of `layout.folded-bar` on a full-width bar. */
 export const FOLDED_BAR_SCREEN = `(width < ${SCREEN_SIZES.foldedBar})`

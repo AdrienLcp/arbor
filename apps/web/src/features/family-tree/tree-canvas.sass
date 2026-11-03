@@ -39,9 +39,17 @@
         min-width: var(--target)
         padding: 0
 
+    // A phone held sideways: too short for a column, the tools lie in one row over the canvas's top.
+    @include layout.short
+      .tree-zoom
+        bottom: auto
+        display: flex
+        top: var(--space-s)
+
     // A phone held upright: the canvas's tools are one toolbar pinned under it, the drawing taking the height above.
     @include layout.folded-bar
       display: grid
+      grid-template-columns: minmax(0, 1fr)
       grid-template-rows: minmax(0, 1fr) auto
 
       .tree-zoom
@@ -51,6 +59,7 @@
         border-radius: 0
         border-top: var(--hairline)
         display: flex
+        gap: 0
         justify-content: space-around
         padding: var(--space-xs) var(--gutter-right) max(var(--space-xs), var(--safe-area-bottom)) var(--gutter-left)
         position: static

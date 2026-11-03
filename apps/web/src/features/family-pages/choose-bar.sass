@@ -59,3 +59,24 @@
 
       .choose-bar-actions .button
         flex: 1 1 auto
+
+    // A phone held sideways: the title, the count and the buttons in one flow, on as few rows as the width allows; the help is the title said again.
+    @include layout.short
+      align-items: center
+      display: flex
+      flex-wrap: wrap
+      gap: var(--space-s) var(--space-m)
+      padding-top: var(--space-s)
+
+      .choose-bar-text,
+      .choose-bar-actions
+        display: contents
+
+      .choose-bar-title
+        margin-block-end: 0
+
+      .choose-bar-help
+        display: none
+
+      .choose-bar-live
+        flex-basis: 100%

@@ -28,7 +28,10 @@ import {
   ZoomInIcon,
   ZoomOutIcon
 } from '@/presentation/components/icons'
-import { FOLDED_BAR_SCREEN } from '@/presentation/components/phone-screen'
+import {
+  FOLDED_BAR_SCREEN,
+  SHORT_SCREEN
+} from '@/presentation/components/phone-screen'
 import { Toolbar } from '@/presentation/components/toolbar'
 import { useMediaQuery } from '@/presentation/components/use-media-query'
 import { WithTooltip } from '@/presentation/components/with-tooltip'
@@ -115,7 +118,10 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
 }) => {
   /** A phone held upright lays the tools in one row under the canvas. */
   const isToolbarRow = useMediaQuery(FOLDED_BAR_SCREEN)
-  const tooltipPlacement = isToolbarRow ? 'top' : 'start'
+  /** A phone held sideways, too short for a column, lays them in one row over the canvas's top. */
+  const isTopRow = useMediaQuery(SHORT_SCREEN) && !isToolbarRow
+  const isToolsRow = isToolbarRow || isTopRow
+  const tooltipPlacement = isTopRow ? 'bottom' : isToolbarRow ? 'top' : 'start'
   const translate = useTranslate()
   const instructionsId = useId()
   const viewport = useRef<ReactZoomPanPinchRef>(null)
@@ -218,10 +224,10 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
       windowHeight: window.innerHeight
     })
     const bandTop = canvas.height / 2 + band.centreOffset - band.height / 2
-    // A column of tools stands over the canvas's right; a phone's toolbar lies under it and hides nothing.
-    const toolsLeft = isToolbarRow
-      ? undefined
-      : zoomTools.current?.getBoundingClientRect().left
+    // A column of tools stands over the canvas's right, a phone's row over its top; a phone's toolbar lies under it and hides nothing.
+    const tools = zoomTools.current?.getBoundingClientRect()
+    const toolsLeft = isToolsRow ? undefined : tools?.left
+    const toolsBottom = isTopRow ? tools?.bottom : undefined
     const railsRight = Math.max(
       canvas.left,
       ...[...(rails.current?.children ?? [])].map(
@@ -248,7 +254,10 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
           toolsLeft === undefined
             ? canvas.width
             : Math.min(canvas.width, toolsLeft - canvas.left),
-        top: bandTop
+        top:
+          toolsBottom === undefined
+            ? bandTop
+            : Math.max(bandTop, toolsBottom - canvas.top)
       }
     })
   }
@@ -460,7 +469,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
             <Toolbar
               aria-label={translate('tree.zoom.label')}
               className='tree-zoom'
-              orientation={isToolbarRow ? 'horizontal' : 'vertical'}
+              orientation={isToolsRow ? 'horizontal' : 'vertical'}
               ref={zoomTools}
             >
               {addTool}

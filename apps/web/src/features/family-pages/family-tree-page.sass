@@ -14,11 +14,14 @@
   .family-tree-screen
     display: grid
     flex: 1 1 auto
+    grid-template-columns: minmax(0, 1fr)
     grid-template-rows: auto minmax(0, 1fr)
     min-height: 0
 
+  // As wide as the screen whatever the head holds: a control too wide for it would widen the bar and the canvas past the screen's edge.
   .family-tree-page
     display: grid
+    grid-template-columns: minmax(0, 1fr)
     grid-template-rows: auto minmax(0, 1fr)
     min-height: 0
 
@@ -39,6 +42,14 @@
       flex-wrap: wrap
       gap: var(--space-s) var(--space-2xl)
       min-width: 0
+
+    // Where the title is for screen readers only, a heading with no note to show takes no room in the head.
+    .family-tree-heading:has(.family-tree-notes:empty)
+      @include layout.narrow
+        position: absolute
+
+      @include layout.short
+        position: absolute
 
     .family-tree-title
       @include typography.headline
@@ -137,24 +148,27 @@
     @include layout.short
       .family-tree-head
         align-items: center
-        flex-wrap: nowrap
+        gap: var(--space-xs) var(--space-xl)
         padding-block: var(--space-xs)
 
       .family-tree-title
         @include accessibility.visually-hidden
 
-      // Who the visitor is wraps in the room the controls leave it.
+      // The notes keep their sentences whole: beside the controls when the row has room for both, on a line above them when it has not.
       .family-tree-heading
         flex: 0 1 auto
-        min-width: 0
 
       .family-tree-controls
         align-items: center
         display: flex
-        flex: 1 0 auto
-        flex-wrap: nowrap
-        gap: var(--space-l)
+        flex: 1 1 auto
+        flex-wrap: wrap
+        gap: var(--space-s) var(--space-m)
         justify-content: start
+        min-width: 0
+
+      .segmented-control
+        flex: none
 
       .segmented-options
         flex-wrap: nowrap
@@ -163,10 +177,20 @@
       .combo-box-label
         @include accessibility.visually-hidden
 
+      // The field takes the width the view switcher leaves it, on a row of its own when that is too little for its words.
       .person-search
-        flex: 1
-        min-width: 10rem
+        flex: 1 1 9rem
+        grid-template-columns: minmax(0, 1fr)
+        min-width: 9rem
         width: auto
+
+      // A small phone: the view switcher's choices and the field draw closer, so the field keeps room for its words.
+      @include layout.narrow
+        .family-tree-controls
+          column-gap: var(--space-s)
+
+        .segmented-option
+          padding-inline: var(--space-s)
 
   .family-tree-empty
     @include layout.column(var(--page-width))

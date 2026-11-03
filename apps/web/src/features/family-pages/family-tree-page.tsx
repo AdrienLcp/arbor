@@ -58,7 +58,10 @@ import {
 import { Button } from '@/presentation/components/button'
 import { ChooseIcon } from '@/presentation/components/icons'
 import { Main } from '@/presentation/components/main'
-import { PHONE_SCREEN } from '@/presentation/components/phone-screen'
+import {
+  PHONE_SCREEN,
+  SHORT_SCREEN
+} from '@/presentation/components/phone-screen'
 import { SegmentedControl } from '@/presentation/components/segmented-control'
 import { useMediaQuery } from '@/presentation/components/use-media-query'
 import { WithTooltip } from '@/presentation/components/with-tooltip'
@@ -163,6 +166,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
   const { family: response, familyId } = useOpenFamily()
   const day = today()
   const isPhone = useMediaQuery(PHONE_SCREEN)
+  const isShort = useMediaQuery(SHORT_SCREEN)
   const sheet = useChildPage()
   const sheetPersonId = useSheetPersonId()
   const { setFocus, setScope, showAround, view } = useTreeView({
@@ -208,13 +212,10 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     isPhone,
     scope: view.scope
   })
-  /** The add button heads the canvas's tools: neither the list nor a page of the spread has them, nor a lit kinship, nor the choice of who to show. */
-  const canAdd =
-    edit.canEdit &&
-    lit === null &&
-    !isChoosing &&
-    shownScope !== 'list' &&
-    shownScope !== 'spread'
+  /** Neither the list nor a page of the spread has the canvas, nor its tools. */
+  const isCanvasShown = shownScope !== 'list' && shownScope !== 'spread'
+  /** The add button heads the canvas's tools: not while a kinship is lit, nor while choosing who to show. */
+  const canAdd = edit.canEdit && lit === null && !isChoosing && isCanvasShown
 
   const aroundTitle = translate('tree.titleAround', { name: focusName })
   const title =
@@ -265,7 +266,10 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
       : null
   const chooseTool =
     isPhone && lit === null && !isChoosing ? (
-      <WithTooltip label={translate('tree.choose.action')} placement='top'>
+      <WithTooltip
+        label={translate('tree.choose.action')}
+        placement={isShort ? 'bottom' : 'top'}
+      >
         <Button
           aria-label={translate('tree.choose.action')}
           onPress={startChoosing}
@@ -274,6 +278,20 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
           <ChooseIcon aria-hidden='true' />
         </Button>
       </WithTooltip>
+    ) : null
+
+  /** A phone held sideways has room in the head for the icon alone, beside the view it changes, and leaves it to the canvas's tools when the canvas is shown. */
+  const sidewaysChooseTool = isShort && !isCanvasShown ? chooseTool : null
+  const chooseButton =
+    lit === null && !isShort ? (
+      <Button
+        className='family-tree-choose'
+        onPress={startChoosing}
+        variant='ghost'
+      >
+        <ChooseIcon aria-hidden='true' />
+        {translate('tree.choose.action')}
+      </Button>
     ) : null
 
   const drawing = () => {
@@ -428,20 +446,12 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
                     value={shownScope}
                   />
                 )}
+                {sidewaysChooseTool}
                 <PersonSearch
                   onPick={pickPerson}
                   people={[...faces.values()]}
                 />
-                {lit === null ? (
-                  <Button
-                    className='family-tree-choose'
-                    onPress={startChoosing}
-                    variant='ghost'
-                  >
-                    <ChooseIcon aria-hidden='true' />
-                    {translate('tree.choose.action')}
-                  </Button>
-                ) : null}
+                {chooseButton}
               </div>
               <UnplacedTray
                 faces={faces}

@@ -1,6 +1,12 @@
 @use '../../presentation/styles/layout'
 @use '../../presentation/styles/typography'
 
+@mixin beside-its-word
+  display: inline-flex
+  min-height: var(--target)
+  padding-inline: var(--space-m)
+  width: auto
+
 @layer components
   // An icon over its word, heading the zoom column: the one tool there that changes the family, so it says so.
   .tree-canvas .tree-zoom .button.tree-add-open
@@ -11,9 +17,9 @@
     min-height: calc(var(--target) + var(--space-l))
     padding-block: var(--space-xs)
 
-    // In the phone's bottom toolbar: the icon beside its word, one row high.
+    // In a phone's row of tools, under the canvas or over its top: the icon beside its word, one row high.
+    @include layout.short
+      @include beside-its-word
+
     @include layout.folded-bar
-      display: inline-flex
-      min-height: var(--target)
-      padding-inline: var(--space-m)
-      width: auto
+      @include beside-its-word
