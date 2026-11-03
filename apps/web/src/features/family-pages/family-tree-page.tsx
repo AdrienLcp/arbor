@@ -335,43 +335,41 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
       persons: family.persons
     })
     return (
-      <>
-        <TreeCanvas
-          addTool={
-            <>
-              {canAdd ? (
-                <TreeAddButton onPress={() => startAdding(null, focusId)} />
-              ) : null}
-              {chooseTool}
-            </>
-          }
-          coveredBottomShare={sheet !== null && isPhone ? BOTTOM_SHEET_PEEK : 0}
-          focusId={focusId}
-          hiddenParentChildIds={hiddenParentChildIds}
-          hiddenWhileChoosing={isChoosing ? choice.hidden.hiddenIds : null}
-          label={title}
-          litPath={lit?.path ?? null}
-          onPressPerson={isChoosing ? choice.toggle : openSheetOf}
-          onPressUnknownParent={
-            edit.canEdit
-              ? (childId) => startAdding('parent', childId)
-              : undefined
-          }
-          openPersonId={sheetPersonId}
-          peopleToCheck={peopleToCheck(familyWarnings(family))}
-          persons={family.persons}
-          scene={scene}
-          today={day}
-          wholeTreeView={
-            shownScope === 'whole' || shownScope === 'generations'
-              ? shownScope
-              : null
-          }
-        />
-        {focus === undefined || sheet !== null || isChoosing ? null : (
-          <FocusCard face={focus} sheetPath={focusSheetPath} />
-        )}
-      </>
+      <TreeCanvas
+        addTool={
+          <>
+            {canAdd ? (
+              <TreeAddButton onPress={() => startAdding(null, focusId)} />
+            ) : null}
+            {chooseTool}
+          </>
+        }
+        coveredBottomShare={sheet !== null && isPhone ? BOTTOM_SHEET_PEEK : 0}
+        focusCard={
+          focus === undefined || sheet !== null || isChoosing ? null : (
+            <FocusCard face={focus} sheetPath={focusSheetPath} />
+          )
+        }
+        focusId={focusId}
+        hiddenParentChildIds={hiddenParentChildIds}
+        hiddenWhileChoosing={isChoosing ? choice.hidden.hiddenIds : null}
+        label={title}
+        litPath={lit?.path ?? null}
+        onPressPerson={isChoosing ? choice.toggle : openSheetOf}
+        onPressUnknownParent={
+          edit.canEdit ? (childId) => startAdding('parent', childId) : undefined
+        }
+        openPersonId={sheetPersonId}
+        peopleToCheck={peopleToCheck(familyWarnings(family))}
+        persons={family.persons}
+        scene={scene}
+        today={day}
+        wholeTreeView={
+          shownScope === 'whole' || shownScope === 'generations'
+            ? shownScope
+            : null
+        }
+      />
     )
   }
 

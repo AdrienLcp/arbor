@@ -63,6 +63,12 @@
         justify-content: space-around
         padding: var(--space-xs) var(--gutter-right) max(var(--space-xs), var(--safe-area-bottom)) var(--gutter-left)
         position: static
+  .tree-focus-card
+    display: contents
+
+    // Hidden rather than removed: a person centred again keeps clear of where the card comes back.
+    &.is-aside
+      visibility: hidden
 
 // Outside the layers: react-zoom-pan-pinch injects its `fit-content` size outside any layer, and that beats every layered rule.
 // Inherited values stay put while panning: the library sets `user-select` inline on every pan, and a changed inherited value (that or a `grabbing` cursor) restyles the whole drawing — 300 ms on a slow phone.

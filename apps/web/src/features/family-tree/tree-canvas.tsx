@@ -37,20 +37,22 @@ import { useMediaQuery } from '@/presentation/components/use-media-query'
 import { WithTooltip } from '@/presentation/components/with-tooltip'
 import { useTranslate } from '@/presentation/i18n/i18n-context'
 
-import { fitView } from './fit-view'
+import { type Box, fitView } from './fit-view'
 import { GenerationRails } from './generation-rails'
 import { arrowDirectionOf, nearestCardToward } from './nearest-card'
 import { placementOf } from './scene-placement'
 import { TreePlane } from './tree-plane'
 import type { TreeScene } from './tree-scene'
-import { keepTreeInSight, treeBoxOf } from './tree-sight'
-import { visibleBandOf } from './visible-band'
+import { cardBoxOf, keepTreeInSight, treeBoxOf } from './tree-sight'
+import { boxOfBand, visibleBandOf } from './visible-band'
 import { isWalkableCard } from './walkable-card'
 
 import './tree-canvas.sass'
 
+/** The smallest a sticker gets on screen, in pixels: still a mark in its generation's ink, so a large family seen whole keeps its shape. */
+const MIN_STICKER_HEIGHT_ON_SCREEN = 6
 /** The farthest a large tree zooms out; a smaller one stops once it fits whole in sight. */
-const MIN_SCALE = 0.15
+const MIN_SCALE = MIN_STICKER_HEIGHT_ON_SCREEN / CARD_HEIGHT
 const MAX_SCALE = 2
 /** The stickers at their own size: the scale the canvas opens at, whatever it was left at. */
 const ARRIVAL_SCALE = 1
@@ -62,6 +64,13 @@ const BAND_MARGIN = 16
 const GLIDE_MS = 200
 
 type PersonCard = Extract<TreeCard, { kind: 'person' }>
+
+const boxOnCanvas = (canvas: DOMRect, element: DOMRect): Box => ({
+  bottom: element.bottom - canvas.top,
+  left: element.left - canvas.left,
+  right: element.right - canvas.left,
+  top: element.top - canvas.top
+})
 
 /** The key of the focus person's own card: the first one drawn for them, not a repeat. */
 const focusKeyIn = (scene: TreeScene, focusId: EntityId): string | null =>
@@ -78,6 +87,8 @@ type TreeCanvasProps = {
   litPath: KinPath | null
   /** The tree's add button, heading its zoom buttons. */
   addTool?: React.ReactNode
+  /** The card naming the person in the centre, floating over the canvas; on a phone held sideways it steps aside while the whole tree is in sight, and comes back with a person in the centre. */
+  focusCard?: React.ReactNode
   onPressPerson: (personId: EntityId) => void
   /** Opens the way to add the unknown other parent of this child; left out for a visitor who may not change the tree. */
   onPressUnknownParent?: (childId: EntityId) => void
@@ -102,6 +113,7 @@ type TreeCanvasProps = {
 export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   addTool,
   coveredBottomShare = 0,
+  focusCard,
   focusId,
   hiddenParentChildIds = new Set(),
   hiddenWhileChoosing = null,
@@ -131,6 +143,10 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   const zoomTools = useRef<HTMLDivElement>(null)
   const [activeKey, setActiveKey] = useState<string | null>(null)
   const [minScale, setMinScale] = useState(MIN_SCALE)
+  /** Whether the canvas last fitted the whole tree in sight, rather than centring a person. */
+  const [isWholeTreeInSight, setWholeTreeInSight] = useState(false)
+  /** On a phone held sideways the tools' row and the focus card leave the tree too little height: the card steps aside while the whole tree shows. */
+  const isFocusCardAside = isTopRow && isWholeTreeInSight
   /** Whether the visitor panned or zoomed since the canvas last centred itself: from then on a resize leaves the view where they put it. */
   const hasVisitorMoved = useRef(false)
   const centred = useRef<{
@@ -149,6 +165,22 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     ? activeKey
     : focusKey
 
+  /** What floats over the paper of a phone held sideways, measured on the canvas: the tools' row, and the focus card when it is counted. */
+  const overlaysOn = (
+    canvas: DOMRect,
+    { withFocusCard }: { withFocusCard: boolean }
+  ): Box[] =>
+    isTopRow
+      ? [
+          zoomTools.current,
+          withFocusCard ? document.querySelector('.focus-card') : null
+        ].flatMap((element) =>
+          element == null
+            ? []
+            : [boxOnCanvas(canvas, element.getBoundingClientRect())]
+        )
+      : []
+
   const centreOn = (
     key: string | null,
     animationMs: number,
@@ -161,11 +193,26 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     const controls = viewport.current
     const wrapper = controls?.instance.wrapperComponent
     if (element === undefined || controls == null || wrapper == null) return
+    setWholeTreeInSight(false)
+    const canvasBox = wrapper.getBoundingClientRect()
     const band = visibleBandOf({
-      canvas: wrapper.getBoundingClientRect(),
+      canvas: canvasBox,
       coveredBottomShare: bottomShare,
       windowHeight: window.innerHeight
     })
+    const sticker = key === null ? null : cardBoxOf(scene, key)
+    if (isTopRow && sticker !== null) {
+      const fitted = fitView({
+        content: sticker,
+        margin: BAND_MARGIN,
+        maxScale: scale ?? controls.state.scale,
+        minScale: MIN_SCALE,
+        overlays: overlaysOn(canvasBox, { withFocusCard: true }),
+        view: boxOfBand(canvasBox, band)
+      })
+      controls.setTransform(fitted.x, fitted.y, fitted.scale, animationMs)
+      return
+    }
     const fittingScale =
       bottomShare === 0
         ? Number.POSITIVE_INFINITY
@@ -190,6 +237,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
       (card) => card.kind === 'person' && litIds.has(card.personId)
     )
     if (litCards.length === 0) return false
+    setWholeTreeInSight(false)
 
     const left = Math.min(...litCards.map(({ x }) => x)) - placed.origin.x
     const top = Math.min(...litCards.map(({ y }) => y)) - placed.origin.y
@@ -211,40 +259,43 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     return true
   }
 
-  /** Where every card fits in the part of the canvas left in sight by the generation rails, the zoom column, the focus card and a phone's sheet. */
+  /** Where every card fits in the part of the canvas left in sight by the generation rails, the zoom tools, the focus card and a phone's sheet. */
   const wholeTreeFit = (maxScale: number) => {
     const wrapper = viewport.current?.instance.wrapperComponent
     const tree = treeBoxOf(scene)
     if (wrapper == null || tree === null) return null
 
     const canvas = wrapper.getBoundingClientRect()
-    const band = visibleBandOf({
+    const sight = boxOfBand(
       canvas,
-      coveredBottomShare,
-      windowHeight: window.innerHeight
-    })
-    const bandTop = canvas.height / 2 + band.centreOffset - band.height / 2
-    // A column of tools stands over the canvas's right, a phone's row over its top; a phone's toolbar lies under it and hides nothing.
-    const tools = zoomTools.current?.getBoundingClientRect()
-    const toolsLeft = isToolsRow ? undefined : tools?.left
-    const toolsBottom = isTopRow ? tools?.bottom : undefined
+      visibleBandOf({
+        canvas,
+        coveredBottomShare,
+        windowHeight: window.innerHeight
+      })
+    )
+    // A column of tools stands over the canvas's right; a phone's row over its top leaves the tree the column beside it or the band under it, the focus card stepping aside; a phone's toolbar lies under the canvas and hides nothing.
+    const toolsLeft = isToolsRow
+      ? undefined
+      : zoomTools.current?.getBoundingClientRect().left
     const railsRight = Math.max(
       canvas.left,
       ...[...(rails.current?.children ?? [])].map(
         (rail) => rail.getBoundingClientRect().right
       )
     )
-    const focusCardTop = document
-      .querySelector('.focus-card')
-      ?.getBoundingClientRect().top
+    const focusCardTop = isTopRow
+      ? undefined
+      : document.querySelector('.focus-card')?.getBoundingClientRect().top
     return fitView({
       content: tree,
       margin: BAND_MARGIN,
       maxScale,
       minScale: MIN_SCALE,
+      overlays: overlaysOn(canvas, { withFocusCard: false }),
       view: {
         bottom: Math.min(
-          bandTop + band.height,
+          sight.bottom,
           focusCardTop === undefined
             ? Number.POSITIVE_INFINITY
             : focusCardTop - canvas.top
@@ -254,10 +305,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
           toolsLeft === undefined
             ? canvas.width
             : Math.min(canvas.width, toolsLeft - canvas.left),
-        top:
-          toolsBottom === undefined
-            ? bandTop
-            : Math.max(bandTop, toolsBottom - canvas.top)
+        top: sight.top
       }
     })
   }
@@ -270,13 +318,14 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     maxScale: number
   }) => {
     const fitted = wholeTreeFit(maxScale)
-    if (fitted !== null)
-      viewport.current?.setTransform(
-        fitted.x,
-        fitted.y,
-        fitted.scale,
-        animationMs
-      )
+    if (fitted === null) return
+    setWholeTreeInSight(true)
+    viewport.current?.setTransform(
+      fitted.x,
+      fitted.y,
+      fitted.scale,
+      animationMs
+    )
   }
 
   const settleMinScale = useEffectEvent(() => {
@@ -285,7 +334,7 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     )
   })
 
-  /** Once the visitor moves the tree, it may not leave the middle of what is in sight. */
+  /** Once the visitor moves the tree, it may not leave what is in sight: a tree larger than it keeps covering its middle. */
   const holdTreeInSight = (
     controls: ReactZoomPanPinchRef,
     {
@@ -298,18 +347,17 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
     const tree = treeBoxOf(scene)
     if (!hasVisitorMoved.current || wrapper == null || tree === null) return
     const canvas = wrapper.getBoundingClientRect()
-    const band = visibleBandOf({
-      canvas,
-      coveredBottomShare,
-      windowHeight: window.innerHeight
-    })
     const kept = keepTreeInSight({
       position: { x: positionX, y: positionY },
       scale,
-      sightCentre: {
-        x: canvas.width / 2,
-        y: canvas.height / 2 + band.centreOffset
-      },
+      sight: boxOfBand(
+        canvas,
+        visibleBandOf({
+          canvas,
+          coveredBottomShare,
+          windowHeight: window.innerHeight
+        })
+      ),
       tree
     })
     if (kept.x !== positionX || kept.y !== positionY)
@@ -412,131 +460,143 @@ export const TreeCanvas: React.FC<TreeCanvasProps> = ({
   }
 
   return (
-    <section
-      aria-label={label}
-      className={classNames(
-        'tree-canvas',
-        hiddenWhileChoosing !== null && 'is-choosing'
-      )}
-      ref={canvas}
-    >
-      <TransformWrapper
-        doubleClick={{ disabled: true }}
-        limitToBounds={false}
-        maxScale={MAX_SCALE}
-        minScale={minScale}
-        onInit={centreOnArrival}
-        onPanningStart={noteVisitorMoved}
-        onPinchStart={noteVisitorMoved}
-        onTransform={(controls, state) => {
-          rails.current?.style.setProperty('--pan-y', `${state.positionY}px`)
-          rails.current?.style.setProperty('--zoom', String(state.scale))
-          canvas.current?.style.setProperty('--zoom', String(state.scale))
-          holdTreeInSight(controls, state)
-        }}
-        onWheelStart={noteVisitorMoved}
-        onZoomStart={noteVisitorMoved}
-        ref={viewport}
-      >
-        {(controls) => (
-          <>
-            <TransformComponent wrapperClass='tree-viewport'>
-              <TreePlane
-                activeKey={currentKey}
-                focusId={focusId}
-                hiddenParentChildIds={hiddenParentChildIds}
-                hiddenWhileChoosing={hiddenWhileChoosing}
-                instructionsId={instructionsId}
-                litPath={litPath}
-                onArrowKey={walkWithArrows}
-                onFocusCard={(card) => setActiveKey(card.key)}
-                onPressPerson={pressPerson}
-                onPressUnknownParent={onPressUnknownParent}
-                openPersonId={openPersonId}
-                peopleToCheck={peopleToCheck}
-                persons={persons}
-                registerCard={registerCard}
-                scene={scene}
-                today={today}
-              />
-            </TransformComponent>
-            {scene.hasGenerationBands ? (
-              <GenerationRails ref={rails} scene={scene} />
-            ) : null}
-            <p className='tree-instructions' id={instructionsId}>
-              {translate('tree.instructions')}
-            </p>
-            <Toolbar
-              aria-label={translate('tree.zoom.label')}
-              className='tree-zoom'
-              orientation={isToolsRow ? 'horizontal' : 'vertical'}
-              ref={zoomTools}
-            >
-              {addTool}
-              <WithTooltip
-                label={translate('tree.zoom.in')}
-                placement={tooltipPlacement}
-              >
-                <Button
-                  aria-label={translate('tree.zoom.in')}
-                  onPress={() => {
-                    noteVisitorMoved()
-                    void controls.zoomIn()
-                  }}
-                  variant='quiet'
-                >
-                  <ZoomInIcon aria-hidden='true' />
-                </Button>
-              </WithTooltip>
-              <WithTooltip
-                label={translate('tree.zoom.out')}
-                placement={tooltipPlacement}
-              >
-                <Button
-                  aria-label={translate('tree.zoom.out')}
-                  onPress={() => {
-                    noteVisitorMoved()
-                    void controls.zoomOut()
-                  }}
-                  variant='quiet'
-                >
-                  <ZoomOutIcon aria-hidden='true' />
-                </Button>
-              </WithTooltip>
-              <WithTooltip
-                label={translate('tree.zoom.recentre')}
-                placement={tooltipPlacement}
-              >
-                <Button
-                  aria-label={translate('tree.zoom.recentre')}
-                  onPress={() => centreOn(focusKey, GLIDE_MS)}
-                  variant='quiet'
-                >
-                  <RecenterIcon aria-hidden='true' />
-                </Button>
-              </WithTooltip>
-              <WithTooltip
-                label={translate('tree.zoom.fit')}
-                placement={tooltipPlacement}
-              >
-                <Button
-                  aria-label={translate('tree.zoom.fit')}
-                  onPress={() => {
-                    noteVisitorMoved()
-                    showWholeTree({
-                      animationMs: GLIDE_MS,
-                      maxScale: MAX_SCALE
-                    })
-                  }}
-                  variant='quiet'
-                >
-                  <FitIcon aria-hidden='true' />
-                </Button>
-              </WithTooltip>
-            </Toolbar>
-          </>
+    <>
+      <section
+        aria-label={label}
+        className={classNames(
+          'tree-canvas',
+          hiddenWhileChoosing !== null && 'is-choosing'
         )}
-      </TransformWrapper>
-    </section>
+        ref={canvas}
+      >
+        <TransformWrapper
+          doubleClick={{ disabled: true }}
+          limitToBounds={false}
+          maxScale={MAX_SCALE}
+          minScale={minScale}
+          onInit={centreOnArrival}
+          onPanningStart={noteVisitorMoved}
+          onPinchStart={noteVisitorMoved}
+          onTransform={(controls, state) => {
+            rails.current?.style.setProperty('--pan-y', `${state.positionY}px`)
+            rails.current?.style.setProperty('--zoom', String(state.scale))
+            canvas.current?.style.setProperty('--zoom', String(state.scale))
+            holdTreeInSight(controls, state)
+          }}
+          onWheelStart={noteVisitorMoved}
+          onZoomStart={noteVisitorMoved}
+          ref={viewport}
+        >
+          {(controls) => (
+            <>
+              <TransformComponent wrapperClass='tree-viewport'>
+                <TreePlane
+                  activeKey={currentKey}
+                  focusId={focusId}
+                  hiddenParentChildIds={hiddenParentChildIds}
+                  hiddenWhileChoosing={hiddenWhileChoosing}
+                  instructionsId={instructionsId}
+                  litPath={litPath}
+                  onArrowKey={walkWithArrows}
+                  onFocusCard={(card) => setActiveKey(card.key)}
+                  onPressPerson={pressPerson}
+                  onPressUnknownParent={onPressUnknownParent}
+                  openPersonId={openPersonId}
+                  peopleToCheck={peopleToCheck}
+                  persons={persons}
+                  registerCard={registerCard}
+                  scene={scene}
+                  today={today}
+                />
+              </TransformComponent>
+              {scene.hasGenerationBands ? (
+                <GenerationRails ref={rails} scene={scene} />
+              ) : null}
+              <p className='tree-instructions' id={instructionsId}>
+                {translate('tree.instructions')}
+              </p>
+              <Toolbar
+                aria-label={translate('tree.zoom.label')}
+                className='tree-zoom'
+                orientation={isToolsRow ? 'horizontal' : 'vertical'}
+                ref={zoomTools}
+              >
+                {addTool}
+                <WithTooltip
+                  label={translate('tree.zoom.in')}
+                  placement={tooltipPlacement}
+                >
+                  <Button
+                    aria-label={translate('tree.zoom.in')}
+                    onPress={() => {
+                      noteVisitorMoved()
+                      void controls.zoomIn()
+                    }}
+                    variant='quiet'
+                  >
+                    <ZoomInIcon aria-hidden='true' />
+                  </Button>
+                </WithTooltip>
+                <WithTooltip
+                  label={translate('tree.zoom.out')}
+                  placement={tooltipPlacement}
+                >
+                  <Button
+                    aria-label={translate('tree.zoom.out')}
+                    onPress={() => {
+                      noteVisitorMoved()
+                      void controls.zoomOut()
+                    }}
+                    variant='quiet'
+                  >
+                    <ZoomOutIcon aria-hidden='true' />
+                  </Button>
+                </WithTooltip>
+                <WithTooltip
+                  label={translate('tree.zoom.recentre')}
+                  placement={tooltipPlacement}
+                >
+                  <Button
+                    aria-label={translate('tree.zoom.recentre')}
+                    onPress={() => centreOn(focusKey, GLIDE_MS)}
+                    variant='quiet'
+                  >
+                    <RecenterIcon aria-hidden='true' />
+                  </Button>
+                </WithTooltip>
+                <WithTooltip
+                  label={translate('tree.zoom.fit')}
+                  placement={tooltipPlacement}
+                >
+                  <Button
+                    aria-label={translate('tree.zoom.fit')}
+                    onPress={() => {
+                      noteVisitorMoved()
+                      showWholeTree({
+                        animationMs: GLIDE_MS,
+                        maxScale: MAX_SCALE
+                      })
+                    }}
+                    variant='quiet'
+                  >
+                    <FitIcon aria-hidden='true' />
+                  </Button>
+                </WithTooltip>
+              </Toolbar>
+            </>
+          )}
+        </TransformWrapper>
+      </section>
+      {focusCard == null ? null : (
+        <div
+          className={classNames(
+            'tree-focus-card',
+            isFocusCardAside && 'is-aside'
+          )}
+        >
+          {focusCard}
+        </div>
+      )}
+    </>
   )
 }

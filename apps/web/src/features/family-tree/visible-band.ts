@@ -1,3 +1,5 @@
+import type { Box } from './fit-view'
+
 /** The part of the canvas a phone's bottom sheet leaves in sight: its height, and how far its middle sits from the canvas's middle. */
 export type VisibleBand = {
   centreOffset: number
@@ -27,4 +29,13 @@ export const visibleBandOf = ({
     centreOffset: bandTop + height / 2 - (canvas.top + canvas.height / 2),
     height
   }
+}
+
+/** The band as a box on the canvas, measured from the canvas's top left corner. */
+export const boxOfBand = (
+  canvas: Pick<DOMRect, 'height' | 'width'>,
+  band: VisibleBand
+): Box => {
+  const top = canvas.height / 2 + band.centreOffset - band.height / 2
+  return { bottom: top + band.height, left: 0, right: canvas.width, top }
 }
