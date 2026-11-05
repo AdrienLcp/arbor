@@ -190,23 +190,27 @@ The world is playful in its materials and sober in its behaviour: one foil stick
 A cool, blue-grey matte paper and navy ink carry every screen; five saturated generation inks and a vermilion cover supply all the colour, each with its own readable "on" and "ink" partners.
 
 ### Primary
+
 - **Album Vermilion** (`cover`, same value as `g2`): the album cover. The landing page surface, the tree mark next to the family name in app bars and the first-visit screen. It is the brand; outside the cover it appears only as the mark or as the generation-2 ink.
 - **Navy Ink** (`action`): primary buttons in light theme. In dark theme `action` switches to Generation Ochre (`oklch(0.82 0.14 82)`) with navy text, so the main action always reads as the brightest solid on the page.
 
 ### Secondary: the generation inks
+
 Each generation `gN` has three tokens: `gN` (the band and sticker art fill), `on-gN` (text on that fill), `gN-ink` (the hue darkened to pass as text on paper: band titles on phone, counts). Components receive them through the scoped `--gc`, `--on-gc`, `--gc-ink` properties set by a `.gN` class.
 - **Generation Ochre** (`g1`): the oldest generation; also the text-selection colour and the "on" state of switches.
 - **Generation Vermilion** (`g2`).
 - **Generation Pine** (`g3`): also the current-tab fill in the tree navigation and the phone spread bar.
 - **Generation Ultramarine** (`g4`).
 - **Generation Magenta** (`g5`): the youngest; the welcome screen tint.
-A sixth or later generation cycles back to `g1`.
+  A sixth or later generation cycles back to `g1`.
 
 ### Tertiary
+
 - **Foil** (`foil-a` to `foil-d`): pale cyan, straw, pink and mint stops of the holographic gradient on the focus person's sticker. Only ever used together, as one 128deg gradient.
 - **Check Amber** (`warn` on `warn-bg`): the "date à vérifier" tag stuck on a sticker corner. The only status colour in the system.
 
 ### Neutral
+
 - **Matte Paper** (`paper`): the page. Never pure white.
 - **Shaded Paper** (`paper-2`): hover fills, ghost-slot fill, scrollbar track.
 - **Spine Paper** (`paper-deep`): the deepest recess (browser chrome, dark-mode wells).
@@ -222,6 +226,7 @@ A sixth or later generation cycles back to `g1`.
 Dark theme (`prefers-color-scheme: dark` unless `data-theme="light"`, or `data-theme="dark"`): the paper becomes deep navy (`oklch(0.205 0.028 262)`), stickers become a raised navy (`oklch(0.300 0.030 262)`), inks lighten to around L 0.73 with dark navy text on them. The printed sheet (`.paper-light`) forces the light palette with pure-white paper whatever the screen theme.
 
 ### Named Rules
+
 **The Generation Ink Rule.** A generation hue means "this generation" and nothing else: its band, its sticker art, its tinted band (ink at 9% into paper, top border at 55%). Never use a generation ink for status, emphasis or decoration.
 
 **The Matte Means Gone Rule.** A deceased person's sticker loses its varnish and its halftone, its art is dulled toward `matte`, a thin ink rule sits over the caption, and the dates carry a "†". Death is never told by colour alone and never by removing the person from view.
@@ -236,6 +241,7 @@ Dark theme (`prefers-color-scheme: dark` unless `data-theme="light"`, or `data-t
 **Character:** the condensed uppercase is the printed furniture of a sticker album: band titles, dates and labels, packed tight and loud. Atkinson Hyperlegible is the voice that talks to the reader, chosen for low-vision legibility; it carries sentences, buttons and given names.
 
 ### Hierarchy
+
 - **Display** (800, clamp(2.875rem, 0.875rem + 5vw, 5rem), 0.92, uppercase): the cover headline only. The A3 print title uses the same voice at 104px.
 - **Headline** (800, clamp(1.75rem, 1.0441rem + 1.7647vw, 2.5rem), 1, uppercase): band ribbons, a person's name at the top of their sheet (40px, 0.95), welcome and first-visit titles (40px).
 - **Title** (800, 18 to 22px, 1, uppercase, 0.04em): generation band heads, group headings in the person sheet, the app bar family name (24px, 28px on desktop).
@@ -246,6 +252,7 @@ Dark theme (`prefers-color-scheme: dark` unless `data-theme="light"`, or `data-t
 - **Name** (700, 16 to 24px, 1.1, Atkinson): given names on stickers and in relation rows; also button labels (18px/1.15).
 
 ### Named Rules
+
 **The Two Voices Rule.** Anything read as a sentence, a button label or a given name is Atkinson Hyperlegible; anything that is a heading, a number, a date or a printed label is Barlow Condensed uppercase. Surnames are labels (uppercase, tracked); given names are names.
 
 **The 16px Floor Rule.** On phone views nothing is smaller than 16px, including surnames, dates, the verify tag and the ghost-slot text. Smaller sizes (12 to 15px) exist only inside the zoomable desktop tree canvas and the print sheet, where stickers are scaled as a whole.
@@ -267,6 +274,7 @@ Spacing is loose rather than a strict scale: 4, 8, 12, 16, 24, 32, 48 and 88px a
 Hybrid: paper is flat and divided by 1px `ghost-soft` rules and tinted bands; only stickers, the primary button and floating panels are lifted. Every shadow is built from the `shadow-ink` token through `color-mix`, layered as a tight contact shadow plus a soft negative-spread drop, so depth reads as "a thing lying on paper", not as hovering cards.
 
 ### Shadow Vocabulary
+
 Each shadow is a token holding the whole `box-shadow`, named by role in `_tokens.sass`:
 
 - **Sticker** (`--shadow-sticker`: the die-cut edge, a contact shadow at 30% and a drop at 55%): every living person's sticker, together with a varnish gloss overlay (`linear-gradient(118deg, oklch(1 0 0 / 0.42) 0%, oklch(1 0 0 / 0.08) 22%, transparent 38%, transparent 78%, oklch(1 0 0 / 0.14) 100%)`).
@@ -279,6 +287,7 @@ Each shadow is a token holding the whole `box-shadow`, named by role in `_tokens
 - **Bottom sheet** (`--shadow-bottom-sheet`: the side sheet's shadow turned upward): the phone person sheet, 20px top corners and a grab handle, over a 14% veil.
 
 ### Named Rules
+
 **The Stickers Stand Proud Rule.** Only stickers carry a gloss and a drop shadow. Bands, cards, lists, fields and panels are paper: flat, separated by rules and tints. If a new surface wants a shadow, it should either be a sticker or a floating panel.
 
 ## Shapes
@@ -292,9 +301,11 @@ Dashed 2px outlines in `ghost` always mean "empty, to fill": ghost slots, the ph
 ## Components
 
 ### Tree mark
+
 Arbor's mark is an hourglass tree drawn in one 3-unit round stroke on a 32-unit grid: a trunk, a crown that branches upward (the descendants) and roots that spread downward (the ancestors), the genealogist's hourglass chart. It is one colour (`currentColor`): vermilion on paper (`mark`, lifted to a lighter vermilion in dark theme so a 3-unit stroke still reads on the dark bar), `on-cover` on the cover, black in print. The same paths serve the favicon, the iOS home-screen icon, the share card and the app bars (`TreeMark`); it stays legible at 16px because every stroke lands on a 2-unit pixel at that size.
 
 ### Buttons
+
 Solid, tall, plain-spoken.
 - **Shape:** gently rounded (8px), 52px tall, 22px side padding, Atkinson 700 18px, optional 24px leading icon.
 - **Primary:** `action` fill with `on-action` text; one per view. On the cover, inverted: `on-cover` fill with vermilion text, 60px tall, 20px label.
@@ -304,40 +315,52 @@ Solid, tall, plain-spoken.
 - **Icon button:** 44px square, transparent, `paper-2` on hover.
 
 ### Sticker (signature)
+
 The person. A `sticker`-white card (7px, 5px padding) inside a printed slot. Top 47% is the art: the generation ink with a fine 5px halftone dot and a 1px inner rule in `on-gc`, holding a Barlow 800 monogram or a greyscale photo. Below, centred: given name (Atkinson 700), surname (Barlow 600 uppercase, tracked 0.08em, `ink-soft`), dates (Barlow 600 tabular, "†" before a death date). Variants: **deceased** (matte, see Colors), **focus** (foil gradient and double ring inside the slot frame, which it hides), **open** (the bookmark ribbon, below), **far** (flattened). Focus and open are told apart by shape, never by colour, and one person may carry both. A **verify tag** (amber, Barlow 700 uppercase, rotated 4deg, alert icon) is stuck on the top-right corner when a date is inconsistent.
 
 ### Bookmark ribbon
+
 Marks the person whose sheet is open, on the canvas and on the sheet itself, the two ends of one bookmark. A 22 by 46px strip of `ink` tucked behind the sticker, its forked end standing 30px above the slot near its right edge, clear of the parents' line that lands in the middle; the slot's printed frame turns `ink`. On a mini sticker it shrinks to 14 by 26px. It covers nothing and moves nothing: the tree stays still when a sheet opens.
 
 ### Send a sheet
+
 "Envoyer à compléter", a ghost button under the person's name in the sheet, for anyone who may change the tree. It opens a dialog: first "Ce que la personne recevra", the message as it lands in a chat (a `paper-2` bubble with the editable words and a link card carrying the ribboned mini sticker), then "Comment l’envoyer": the device's share sheet as the primary 72px way, "Copier le message et le lien", and "Montrer un QR code", which swaps the dialog's content for the code at 256px. The link is made by the app, the family key in its fragment, because the address bar no longer carries it.
 
 ### Ghost slot
+
 An empty slot: 2px dashed `ghost` outline, `paper-2` wash, "INCONNU" in Barlow 800, a one-line hint naming whose parent is missing ("parent de Louis"), and, where the visitor may change the tree, a round "+ Compléter" pill in `action`. The whole slot is the button, reached with the arrow keys like the stickers; hover darkens the outline to `ink`. A person recorded with nothing known (no name, no date, no photo), like the parent two siblings share before anyone knows them, is drawn as the same slot ("parent inconnu") and opens their sheet.
 
 ### Add someone
+
 One screen adds anyone, read as a sentence: "Prénoms", "Nom de famille", then "C’EST" over five whole tiles (L’enfant, Le parent, Le conjoint, Le frère ou la sœur, and, full width, Sans lien pour l’instant), then "DE" and the person, with "Changer". The sentence words are Barlow titles; the tiles are Atkinson 700 in 52px boxes, the chosen one filled with `action`. Below a rule, only what a tree needs at once: the year of birth, "Femme ou homme", and for a child or a parent the kind of link, preset to birth; a child of someone with a partner gets "Avec" (the partners' given names, then "Personne"). Typing a given name offers, under "DÉJÀ DANS L’ARBRE", up to three people already there with "Choisir": picked, the screen ties them instead of creating anyone. The button names what it does ("Ajouter Henri", "Relier Pierre Morel"). It opens from the tree's "Ajouter", next to the person in the middle, from a sheet's empty slots and from an unknown parent; nothing on the canvas changes mode.
 
 ### Sheet add rows
+
 Every group of a person's sheet (parents, brothers and sisters, unions, children) ends, for anyone who may change the tree, with a row the size of a relation row: a mini sticker's outline in 2px `ghost` dashes on `paper-2` holding a "+", and "Ajouter un enfant" in Atkinson 700 `ink-soft`. An empty group shows the row alone, so a sheet always shows what is missing.
 
 ### Unplaced tray
+
 People tied to no one wait in a dashed tray under the tree's head ("PAS ENCORE PLACÉS"), as relation rows in one scrolling line; touching one opens their sheet, where they are tied to the family. The tray leaves once nobody waits.
 
 ### Generation band
+
 Secondary: shown only on a computer's "Par générations" view, or on the phone's "Page par page" spreads. A full-width strip tinted with the generation ink at 9% into paper, a 2px top border at 55%. Its head is the slanted band block ("GÉNÉRATION 3") with the year range and a count in `gc-ink` below it.
 
 ### Relation lines and pills
+
 SVG strokes in `line`, round caps (see The Line Speaks Rule). Union lines carry a pill: paper fill, 1.5px `line` border, Barlow 600 14px with the kind and year ("mariés 1957"); a dashed pill border for a free union. Between partners side by side the pill sits on the union line, in the middle of the gap, each word over its year; the gap is the widest pill plus 12px of line on each side, so a pill never hangs below the row where it could read as a child's line, and the children's line leaves from under it. An ended union says only how it ended, over the years it lasted ("divorcés 1956–1968"): a divorced couple is never called married; the two slashes stay on the line itself. A bracket joining partners further apart carries its pill on its top, on one line per moment.
 
 ### Inputs / Fields
+
 - **Style:** 2px `ink` border, 10px radius, 56px tall, paper fill, 18px Atkinson text, leading search icon; placeholder in `ink-soft`.
 - **Focus:** the 3px `focus` outline, offset 2px, on the whole field.
 
 ### Switch
+
 52 by 30px track in `ghost-soft` with a `ghost` border and an `ink` knob; checked fills Generation Ochre and slides the knob 22px over 200ms.
 
 ### Navigation
+
 - **Tree app bar:** the tree mark in vermilion, family name in Barlow 800 uppercase, search field, then actions and "who am I" on the right, divided by a `ghost-soft` rule. It sticks to the top of every family page on paper of its own, so a long page scrolls under it and its actions stay in reach. Below a 30rem bar, "what changed" and "share" stay as icons and the bin, print and settings fold into one "Plus" menu (labelled rows, 44px), so the family name and its mark keep their full width on a phone. The menu ends with the legal notice; on the tree it also opens with the view ("Afficher", a ticked choice per view: L’arbre, Page par page, En liste) and who the visitor is ("Vous êtes …", a row with "Changer" under it), which leave the tree's head.
 - **Phone tree:** below the same 30rem, the tree takes the whole screen between the sticky app bar and one bottom toolbar: no footer, a head reduced to the search field. The toolbar holds the canvas's tools in one row ("Ajouter", zoom in, zoom out, recentre, see the whole tree), 44px targets on paper under the `ghost-soft` rule, padded by the bottom safe area; the focus card floats above it and an open person sheet rises over it. "Page par page" and "En liste" have no canvas, hence no toolbar: the spread keeps its Pine bar at the top.
 - **Phone held sideways:** below 30rem of height, the head is one row of controls, the view switcher and the search field (on a row of its own when the switcher leaves it too little for its words), under the notes when the row has no room for them too. The canvas's tools lie in one row over its top, "Choisir qui afficher" among them; the list and a page of the spread, without a canvas, keep it as an icon beside the view switcher. What the canvas shows keeps clear of that row and of the focus card: a person centred sits in the largest part they leave, under the stickers' own size when that part is shorter than a sticker, and "Voir tout l’arbre" fits the whole tree beside the row or under it while the focus card steps aside, back as soon as a person is centred again.
@@ -345,14 +368,17 @@ SVG strokes in `line`, round caps (see The Line Speaks Rule). Union lines carry 
 - **Phone spread bar:** Generation Pine bar with previous / next icon buttons and the generation title in Barlow 800.
 
 ### Relation row
+
 A 68px row in the person sheet: a mini sticker (48 by 60), the name in Atkinson 700 18px, the relation in `ink-soft` 16px, a 40px line sample showing the relation kind, a chevron. Unions group their rows in a 10px rounded `ghost-soft` box headed by the union line and its dates.
 
 ### Motion
+
 One motion: when a person is added, their sticker presses into its slot (starts lifted 16px, tilted -3.5deg, scaled 1.07 with a deep shadow; overshoots to 0.985; settles), 560ms on `cubic-bezier(0.16, 1, 0.3, 1)`. It is switched off under `prefers-reduced-motion`. Everything else is a 160 to 200ms state transition, the focus ring's arrival included: on a computer a person's sheet slides in from the right as it opens, 200ms on `--ease-out` (it disappears at once when closed: it is a page of the address, gone with it), and on a phone the bottom sheet rises and leaves by its own scroll, the swipe it answers to.
 
 ## Do's and Don'ts
 
 ### Do:
+
 - **Do** give every person a slot, including unknown ones; show absence as a dashed `ghost` outline with "Inconnu" and a "Compléter" action.
 - **Do** colour a person only by their generation (`.g1` to `.g5`, cycling), through `--gc`, `--on-gc`, `--gc-ink`.
 - **Do** mark the deceased with all four signs: matte sticker, dulled art, ink rule over the caption, "†" in the dates.
@@ -363,6 +389,7 @@ One motion: when a person is added, their sticker presses into its slot (starts 
 - **Do** render the print sheet on the forced light palette, and check it in greyscale: every meaning must survive black and white.
 
 ### Don't:
+
 - **Don't** number the slots or the people: an order among relatives reads as a ranking.
 - **Don't** print a person's generation number ("génération 3") anywhere but the generation views: on a sheet, a list or the printed tree it reads as a rank too; the generation ink already says it.
 - **Don't** use a generation ink for status, warnings or emphasis; amber `warn` is the only status colour.

@@ -63,7 +63,7 @@ export default defineConfig({
       // Swaps a dropped locale's module in resolveId, which only works ahead of Vite's resolver.
       enforce: 'pre'
     },
-    react({ compiler: { logDiagnostics: true } }),
+    react({ compiler: { reportDiagnostics: true } }),
     themePreferencePlugin(themeStore),
     swapFontsWhileServing
   ],

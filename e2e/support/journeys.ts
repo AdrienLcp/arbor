@@ -46,7 +46,7 @@ export const createFamilyFromHome = async (
     familyLink,
     'the share page shows the family link once the tree exists'
   ).toHaveText(/#/)
-  const link = await familyLink.innerText()
+  const link = (await familyLink.textContent()) ?? ''
   await sharePage(page).openTree.click()
   return link
 }

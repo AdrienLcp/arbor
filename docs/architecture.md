@@ -27,15 +27,15 @@ seed script loads the fictional fixture family into a local family.
 
 Checked 2026-10-07 on developers.cloudflare.com. Past any daily allowance, further operations of that kind fail with an error until 00:00 UTC.
 
-| Piece | Free allowance | This project's use |
-|---|---|---|
-| Workers requests | 100,000 / day | a family visit is a few dozen requests |
-| Durable Objects requests | 100,000 / day (HTTP, RPC, WebSocket messages, alarms) | same order |
-| Durable Objects storage | **10 GB per object, 5 GB per account**, SQLite only | one family's text is a few MB; photos dominate |
+| Piece                       | Free allowance                                                           | This project's use                                    |
+| --------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------- |
+| Workers requests            | 100,000 / day                                                            | a family visit is a few dozen requests                |
+| Durable Objects requests    | 100,000 / day (HTTP, RPC, WebSocket messages, alarms)                    | same order                                            |
+| Durable Objects storage     | **10 GB per object, 5 GB per account**, SQLite only                      | one family's text is a few MB; photos dominate        |
 | Durable Objects SQLite rows | 5 million read / **100,000 written** per day; 13,000 GB-s duration / day | every edit writes change-log rows: the limit to watch |
-| Workers CPU | 10 ms per request | |
-| Static assets | free, unlimited requests; 20,000 files per version, 25 MiB per file | the whole web app |
-| Custom domain | `arbor.adrienlcp.com`, zone already on Cloudflare | free |
+| Workers CPU                 | 10 ms per request                                                        |                                                       |
+| Static assets               | free, unlimited requests; 20,000 files per version, 25 MiB per file      | the whole web app                                     |
+| Custom domain               | `arbor.adrienlcp.com`, zone already on Cloudflare                        | free                                                  |
 
 **Photos drive the storage budget.** The browser resizes before upload (long
 side 1600 px, WebP ~0.8 → ~150–250 kB, plus a 320 px thumbnail ~20 kB), and the
@@ -130,10 +130,10 @@ Decided 2026-10-07, against the fixture family and a generated 300-person one
 married-in spouses with their own parents). No genealogy layout library
 survives the fixture:
 
-| Library | Fails on |
-|---|---|
-| `relatives-tree` 3.2 | Anne + Sophie: crashes on a same-sex couple; Thomas: no step filiation, he and Emma vanish |
-| `family-chart` 0.9 | Louis's and Pierre's unions: partners drawn as a chain, Odile reads as married to Claire; half-siblings under one bracket |
+| Library                                           | Fails on                                                                                                                     |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `relatives-tree` 3.2                              | Anne + Sophie: crashes on a same-sex couple; Thomas: no step filiation, he and Emma vanish                                   |
+| `family-chart` 0.9                                | Louis's and Pierre's unions: partners drawn as a chain, Odile reads as married to Claire; half-siblings under one bracket    |
 | `elkjs` 0.12 (union nodes, generation partitions) | Simone placed between Claire and Pierre, René between Michel and Françoise; 440 kB gzip and seconds of layout for 300 people |
 
 So the genealogy part is ours and the tree geometry is not: `packages/core`

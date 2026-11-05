@@ -7,17 +7,17 @@ its file; what it taught goes into `docs/architecture.md` or
 
 Steps run in order: each one ends deployed and seen in a browser.
 
-| # | Step | In one line | State |
-|---|---|---|---|
-| 01 | Bootstrap | Workspace, Worker + web skeleton, CI, deploy to `arbor.adrienlcp.com` | done 2026-10-07 |
-| 02 | Genealogy core | Schemas, operations, log projection, fuzzy dates, rules, fixture family | done 2026-10-07 |
-| 03 | Family storage | FamilyRoom Durable Object: SQLite schema, keys, change log, API | done 2026-10-07 |
-| 04 | Design direction | `impeccable`: full example pages per direction, Adrien picks, DESIGN.md + tokens | done 2026-10-07 |
-| 05 | Create and join | Landing, create a family, links + QR, "Who are you?", keeper settings | done 2026-10-07 |
-| 06 | Tree view | Layout of real families, pan/zoom, focus on a person, mobile first | done 2026-10-08 |
-| 07 | Person sheet and editing | Add/edit people, unions, filiations, events, photos | done 2026-10-08 |
-| 08 | History and undo | Change log screen, undo, bin, restore to a moment | done 2026-10-08 |
-| 09 | Printable tree | The drawing exported as a print-ready PDF: scope, paper size, tiling, QR code | done 2026-10-08 |
-| 10 | How are we related? | Kinship between two people, named in plain French | done 2026-10-08 |
-| 11 | Launch | Public demo family, Lighthouse, README, portfolio project page, the father onboarded | to do |
-| 12 | GEDCOM import and export | Bring in the father's existing tree; export back; full backup zip | on hold, after launch, only if Adrien asks |
+| #   | Step                     | In one line                                                                          | State                                      |
+| --- | ------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------ |
+| 01  | Bootstrap                | Workspace, Worker + web skeleton, CI, deploy to `arbor.adrienlcp.com`                | done 2026-10-07                            |
+| 02  | Genealogy core           | Schemas, operations, log projection, fuzzy dates, rules, fixture family              | done 2026-10-07                            |
+| 03  | Family storage           | FamilyRoom Durable Object: SQLite schema, keys, change log, API                      | done 2026-10-07                            |
+| 04  | Design direction         | `impeccable`: full example pages per direction, Adrien picks, DESIGN.md + tokens     | done 2026-10-07                            |
+| 05  | Create and join          | Landing, create a family, links + QR, "Who are you?", keeper settings                | done 2026-10-07                            |
+| 06  | Tree view                | Layout of real families, pan/zoom, focus on a person, mobile first                   | done 2026-10-08                            |
+| 07  | Person sheet and editing | Add/edit people, unions, filiations, events, photos                                  | done 2026-10-08                            |
+| 08  | History and undo         | Change log screen, undo, bin, restore to a moment                                    | done 2026-10-08                            |
+| 09  | Printable tree           | The drawing exported as a print-ready PDF: scope, paper size, tiling, QR code        | done 2026-10-08                            |
+| 10  | How are we related?      | Kinship between two people, named in plain French                                    | done 2026-10-08                            |
+| 11  | Launch                   | Public demo family, Lighthouse, README, portfolio project page, the father onboarded | to do                                      |
+| 12  | GEDCOM import and export | Bring in the father's existing tree; export back; full backup zip                    | on hold, after launch, only if Adrien asks |

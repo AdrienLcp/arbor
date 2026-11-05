@@ -8,7 +8,7 @@ layout input) in `packages/core`.
 ## Entities
 
 **Person** — `id`, given names, surname, birth surname, sex (`female`,
-`male`, `unknown`), birth and death (each an *occurrence*: a fuzzy date and a
+`male`, `unknown`), birth and death (each an _occurrence_: a fuzzy date and a
 place, both optional; a death with neither says "died, details unknown"),
 `livingOverride`, notes, portrait photo id. Living is derived (no death and
 born less than 110 years ago, or no birth date at all) unless overridden.
