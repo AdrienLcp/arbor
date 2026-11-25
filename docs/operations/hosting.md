@@ -43,7 +43,7 @@ pnpm install --frozen-lockfile; pnpm build
 ```
 
 ```powershell
-$secrets = New-TemporaryFile; "ADMIN_KEY=$(bw get password "arbor ADMIN_KEY")" | Set-Content $secrets; pnpm --filter @arbor/worker exec wrangler deploy --secrets-file $secrets; Remove-Item $secrets
+$secrets = Join-Path $env:TEMP "arbor-secrets.json"; @{ ADMIN_KEY = (bw get password "arbor ADMIN_KEY") } | ConvertTo-Json | Set-Content $secrets; pnpm --filter @arbor/worker exec wrangler deploy --secrets-file $secrets; Remove-Item $secrets
 ```
 
 The custom domain answers once its certificate is issued, a few minutes
