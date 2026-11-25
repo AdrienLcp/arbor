@@ -51,23 +51,12 @@ pnpm lighthouse:quick  # accessibility, best practices and SEO audit
 ## Deploy
 
 Every push to `main` that passes CI is deployed by `wrangler deploy` to
-`arbor.adrienlcp.com`. The workflow needs two repository secrets,
-`CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`. The account id is not
-secret (`431a529079f2d76802b95056e39950f0`); the token is the item
-`Cloudflare Pages token` of Adrien's personal Bitwarden.
+`arbor.adrienlcp.com`; `pnpm ship` pushes and watches the run. Its CI secrets
+come from the personal Bitwarden through `pnpm secrets:sync`, and the Worker's
+`ADMIN_KEY` from the item `arbor ADMIN_KEY`.
 
-The Worker itself needs one secret, `ADMIN_KEY`, the publisher's key for
-erasing a person (`docs/data-model.md`). Its value is the item
-`arbor ADMIN_KEY` in the personal Bitwarden, folder `Projects`; for a local
-`wrangler dev` that has to erase someone, the git-ignored
-`apps/worker/.dev.vars` takes the same item. Through the personal Bitwarden
-CLI profile:
-
-```powershell
-$env:BITWARDENCLI_APPDATA_DIR = "$HOME\bitwarden-personal"
-bw get password "Cloudflare Pages token" | gh secret set CLOUDFLARE_API_TOKEN -R AdrienLcp/arbor
-bw get password "arbor ADMIN_KEY" | pnpm exec wrangler secret put ADMIN_KEY  # from apps/worker
-```
+Deploying, hosting, secrets, dependency updates and what to do when a step
+breaks: [`docs/operations/`](docs/operations/README.md).
 
 ## License
 
