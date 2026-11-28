@@ -61,7 +61,7 @@ test('[e2e] the keeper puts the tree back as it was before a contributor binned 
   await familyAppBar(contributor).more.click()
   await treePage(contributor).sayWhoYouAreInMenu.click()
   await whoAmIDialog(contributor).person(PARTNER_NAME).click()
-  await expect(treePage(contributor).title(PARTNER_NAME)).toBeAttached()
+  await expect(treePage(contributor).focusName(PARTNER_NAME)).toBeVisible()
   const sheet = personSheet(contributor)
   for (const { name } of CHILDREN) {
     await openSheetFromTree(contributor, name)
@@ -114,7 +114,7 @@ test('[e2e] the keeper puts the tree back as it was before a contributor binned 
 
   await openHydrated(keeper, `${familyPath}/tree`)
   await expect(
-    keeper.getByRole('heading', { name: `The tree, around ${KEEPER_NAME}` }),
+    treePage(keeper).focusName(KEEPER_NAME),
     'the keeper has their name of before'
   ).toBeVisible()
   for (const name of [PARTNER_NAME, ...CHILDREN.map(({ name }) => name)]) {

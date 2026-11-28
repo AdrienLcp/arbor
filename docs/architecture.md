@@ -152,9 +152,12 @@ family with no overlap and no line under a card, in 3 ms.
 - **Around a person** is an hourglass: ancestors above (each parent's own
   parents, as far back as the tree goes), descendants below, both laid out by the same
   tidy tree from the focus block.
-- On a phone the tree is not this canvas but one spread around the focus
-  person (`DESIGN.md`, Layout), which needs no layout at all. "Whole family"
-  there is the same page; the other way through is the nested list.
+- On a phone, "L'arbre" is this canvas on the whole family, centred on the
+  focus person at the stickers' own size: touching someone centres them and
+  never narrows the tree to their lineage, which left no way back to the rest
+  of the family. "Page par page" is one spread around the focus person
+  (`DESIGN.md`, Layout), which needs no layout at all; the other way through
+  is the nested list.
 
 The view, built in step 06 and measured 2026-10-08 with the 300-person family
 on Chromium at CPU ×4:

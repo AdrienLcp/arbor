@@ -79,17 +79,15 @@ export const treePage = (page: Page) => ({
   chooseSentence: page.locator('.choose-bar-live'),
   /** Finding someone by name turns the tree around them. */
   find: page.getByRole('combobox', { name: 'Find someone' }),
+  /** The person the canvas is centred on, named under it with the way to their sheet. */
+  focusName: (name: string) =>
+    page.locator('.focus-card-name').getByText(name, { exact: true }),
   /** Touching a person on the tree opens their sheet. */
   person: (name: string) => page.getByRole('button', { name }).first(),
   /** The invitation of a visitor who has not said who they are yet, on the settings page. */
   sayWhoYouAre: page.getByRole('button', { name: 'Say who you are' }),
   /** The same invitation on a phone held upright, a row of the bar's "More" menu. */
   sayWhoYouAreInMenu: page.getByRole('menuitem', { name: /Say who you are/ }),
-  title: (focusName: string) =>
-    page.getByRole('heading', {
-      level: 1,
-      name: `The tree, around ${focusName}`
-    }),
   /** Someone tied to no one yet, in the tray beside the tree. */
   unplaced: (name: string) =>
     page

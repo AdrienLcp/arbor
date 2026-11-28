@@ -96,7 +96,7 @@ type FamilyTreeProps = {
 
 type LitKinship = { path: KinPath; relativeId: EntityId; sentence: string }
 
-/** What the screen draws of the chosen scope: a lit path needs the whole family, a phone's canvas turns around one person, and each screen reads generations its own way (a computer's bands, a phone's page by page). */
+/** What the screen draws of the chosen scope: a lit path needs the whole family, a phone's canvas always draws everyone (touching a person only centres them), and each screen reads generations its own way (a computer's bands, a phone's page by page). */
 const scopeOnScreen = ({
   isLit,
   isPhone,
@@ -108,7 +108,7 @@ const scopeOnScreen = ({
 }): TreeScope => {
   if (isLit) return 'whole'
   if (isPhone) {
-    if (scope === 'whole') return 'around'
+    if (scope === 'around') return 'whole'
     return scope === 'generations' ? 'spread' : scope
   }
   return scope === 'spread' ? 'generations' : scope
@@ -232,7 +232,7 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
     translate('common.unnamedPerson')
   const scopeOptions = isPhone
     ? [
-        { label: translate('tree.scope.tree'), value: 'around' as const },
+        { label: translate('tree.scope.tree'), value: 'whole' as const },
         { label: translate('tree.scope.page'), value: 'spread' as const },
         { label: translate('tree.scope.list'), value: 'list' as const }
       ]
@@ -364,8 +364,9 @@ const FamilyTree: React.FC<FamilyTreeProps> = ({
         persons={family.persons}
         scene={scene}
         today={day}
+        // A phone's canvas opens on the focus person at the stickers' own size: the whole tree fitted on its screen would be too small to read.
         wholeTreeView={
-          shownScope === 'whole' || shownScope === 'generations'
+          !isPhone && (shownScope === 'whole' || shownScope === 'generations')
             ? shownScope
             : null
         }
