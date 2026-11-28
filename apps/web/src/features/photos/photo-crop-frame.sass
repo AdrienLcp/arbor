@@ -1,0 +1,28 @@
+@layer components
+  .photo-crop-frame
+    // Each handle is a full touch target, centred on the frame's edge: half of it overhangs the picture, and only a dot in its middle shows.
+    --rc-drag-handle-size: var(--target)
+    --rc-drag-handle-mobile-size: var(--target)
+    --rc-drag-handle-bg-colour: transparent
+    --rc-border-color: var(--sticker)
+    --rc-focus-color: transparent
+    justify-self: center
+    margin: calc(var(--target) / 2)
+    max-height: 45dvh
+
+    .ReactCrop__drag-handle
+      --rc-border-color: transparent
+
+      &::after
+        background: var(--sticker)
+        border-radius: var(--radius-pill)
+        box-shadow: 0 0 0 var(--outline-thick) var(--ink)
+        content: ''
+        inset: 30%
+        position: absolute
+
+      &:focus-visible::after
+        box-shadow: 0 0 0 var(--outline-thick) var(--focus)
+
+    .photo-crop-image
+      max-height: 45dvh

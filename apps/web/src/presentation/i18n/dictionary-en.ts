@@ -707,6 +707,11 @@ export const EN_DICTIONARY = defineDictionary({
     captionHint:
       'Who, where, when: “Louis and Jeanne’s wedding, Quimper, 1931”.',
     close: 'Close',
+    crop: {
+      area: 'Part of the photo kept',
+      handle: 'Drag to crop',
+      whole: 'The whole photo'
+    },
     dialogTitle: 'A photo of {name}',
     isPortrait: 'This is {name}’s portrait, on their sticker.',
     makePortrait: 'Make it their portrait',

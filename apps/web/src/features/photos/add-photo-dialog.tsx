@@ -20,7 +20,12 @@ import './add-photo-dialog.sass'
 /** Where a picked picture stands: being made lighter, ready to save, or not a photo that can be kept. */
 type Picking =
   | { status: 'resizing' }
-  | { previewUrl: string; resized: ResizedPhoto; status: 'ready' }
+  | {
+      file: File
+      previewUrl: string
+      resized: ResizedPhoto
+      status: 'ready'
+    }
   | { problem: PhotoResizeFailure; status: 'refused' }
 
 type AddPhotoDialogProps = {
@@ -32,7 +37,7 @@ type AddPhotoDialogProps = {
   person: Person
 }
 
-/** Turns a picked file into a light photo, then asks for its caption and whether it is the portrait. */
+/** Turns a picked file into a light photo, then asks how to crop it, its caption and whether it is the portrait. */
 export const AddPhotoDialog: React.FC<AddPhotoDialogProps> = ({
   edit,
   file,
@@ -55,7 +60,12 @@ export const AddPhotoDialog: React.FC<AddPhotoDialogProps> = ({
         return
       }
       previewUrl = URL.createObjectURL(resized.data.full)
-      setPicking({ previewUrl, resized: resized.data, status: 'ready' })
+      setPicking({
+        file,
+        previewUrl,
+        resized: resized.data,
+        status: 'ready'
+      })
     })
     return () => {
       isPicked = false
@@ -82,6 +92,7 @@ export const AddPhotoDialog: React.FC<AddPhotoDialogProps> = ({
         return (
           <AddPhotoForm
             edit={edit}
+            file={picking.file}
             name={name}
             onDone={close}
             person={person}

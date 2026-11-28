@@ -713,6 +713,11 @@ export const FR_DICTIONARY = defineDictionary({
     captionHint:
       'Qui, où, quand : « Mariage de Louis et Jeanne, Quimper, 1931 ».',
     close: 'Fermer',
+    crop: {
+      area: 'Partie gardée de la photo',
+      handle: 'Tirer pour recadrer',
+      whole: 'Toute la photo'
+    },
     dialogTitle: 'Une photo de {name}',
     isPortrait: 'C’est le portrait de {name}, sur sa vignette.',
     makePortrait: 'En faire son portrait',
